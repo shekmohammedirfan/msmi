@@ -313,6 +313,12 @@
                                     </div>
                                 </div>
 
+                                <div>
+                                    <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1" for="user-message">Personalized Message *</label>
+                                    <textarea id="user-message" rows="2" required placeholder="Welcome message displayed on user login..." 
+                                        class="white-input w-full px-3.5 py-2 rounded-xl text-xs font-sans"></textarea>
+                                </div>
+
                                 <button type="submit" id="btn-save-user"
                                     class="w-full mt-2 py-3.5 rounded-xl vibrant-gradient vibrant-gradient-hover text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-msmi-600/20 active:scale-[0.99] flex items-center justify-center gap-2">
                                     <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
@@ -346,6 +352,7 @@
                                             <th class="px-4 py-3">User Details</th>
                                             <th class="px-4 py-3">Department</th>
                                             <th class="px-4 py-3">Password</th>
+                                            <th class="px-4 py-3">Personal Message</th>
                                             <th class="px-4 py-3 text-right">Actions</th>
                                         </tr>
                                     </thead>
@@ -389,6 +396,17 @@
                         <i class="fa-solid fa-right-from-bracket"></i>
                         <span>Logout</span>
                     </button>
+                </div>
+
+                <!-- Personal Welcome Broadcast Message Card -->
+                <div class="p-5 rounded-2xl bg-gradient-to-r from-msmi-500 to-msmi-700 text-white shadow-xl shadow-msmi-600/20 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid fa-envelope-open-text"></i>
+                    </div>
+                    <div>
+                        <div class="text-[10px] font-mono font-extrabold uppercase tracking-widest text-msmi-100 mb-0.5">PERSONAL SYSTEM BROADCAST</div>
+                        <p id="display-user-message" class="text-sm font-semibold leading-relaxed">Loading message...</p>
+                    </div>
                 </div>
 
                 <!-- User Grid Cards -->
@@ -574,10 +592,10 @@
         const ADMIN_PASS = "MSMI2008@";
 
         // ==========================================
-        // 2. HARDCODED USER ARRAY (Dictionary)
+        // 2. HARDCODED USER ARRAY WITH MESSAGES
         // ==========================================
         const HARDCODED_USERS = [
-            { id: "22387", name: "SHEK MOHAMMED IRFAN M", email: "shekmohammedirfan412_bec29@mepcoeng.ac.in", password: "MSMISMART2008@.", dept: "ECE", status: "Active" },
+            V{ id: "22387", name: "SHEK MOHAMMED IRFAN M", email: "shekmohammedirfan412_bec29@mepcoeng.ac.in", password: "MSMISMART2008@.", dept: "ECE", status: "Active" },
             { id: "22264", name: "MINORENS G R", email: "gnanajosemerlin_bec29@mepcoeng.ac.in", password: "10/03/2007", dept: "ECE", status: "Active" }
         ];
 
@@ -668,7 +686,7 @@
                 }
 
                 if (fetchedUsers) {
-                    // Merge cloud users with hardcoded default users (ensuring hardcoded users always exist)
+                    // Merge cloud users with hardcoded default users
                     const mergedMap = new Map();
                     HARDCODED_USERS.forEach(u => mergedMap.set(String(u.id), u));
                     fetchedUsers.forEach(u => mergedMap.set(String(u.id), u));
@@ -825,11 +843,12 @@
             const password = document.getElementById('user-password').value.trim();
             const dept = document.getElementById('user-dept').value;
             const status = document.getElementById('user-status').value;
+            const message = document.getElementById('user-message').value.trim();
 
             if (docId) {
                 const idx = state.users.findIndex(u => String(u.id) === docId);
                 if (idx !== -1) {
-                    state.users[idx] = { ...state.users[idx], name, id: idNum, email, password, dept, status };
+                    state.users[idx] = { ...state.users[idx], name, id: idNum, email, password, dept, status, message };
                     showToast("User updated successfully", "success");
                 }
             } else {
@@ -838,7 +857,7 @@
                     return;
                 }
 
-                const newUser = { id: idNum, name, email, password, dept, status };
+                const newUser = { id: idNum, name, email, password, dept, status, message };
                 state.users.push(newUser);
                 showToast("New User Provisioned & Saved", "success");
             }
@@ -868,6 +887,7 @@
             document.getElementById('user-password').value = u.password;
             document.getElementById('user-dept').value = u.dept || 'Computer Science';
             document.getElementById('user-status').value = u.status || 'Active';
+            document.getElementById('user-message').value = u.message || '';
 
             document.getElementById('form-title').innerText = "Edit User Credential";
             document.getElementById('save-btn-text').innerText = "Update User Record";
@@ -893,7 +913,7 @@
             );
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-slate-400 font-mono">No records found</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="px-4 py-8 text-center text-slate-400 font-mono">No records found</td></tr>`;
                 return;
             }
 
@@ -917,6 +937,9 @@
                                 <i id="pass-eye-${u.id}" class="fa-solid fa-eye text-[11px]"></i>
                             </button>
                         </div>
+                    </td>
+                    <td class="px-4 py-3 text-slate-600 font-sans max-w-[150px] truncate" title="${u.message || ''}">
+                        ${u.message || 'No message set.'}
                     </td>
                     <td class="px-4 py-3 text-right space-x-2">
                         <button onclick="editUser('${u.id}')" class="px-2.5 py-1 rounded-lg bg-msmi-100 hover:bg-msmi-200 text-msmi-700 text-[11px] font-bold">
@@ -943,6 +966,7 @@
             document.getElementById('display-user-id').innerText = u.id;
             document.getElementById('display-user-dept').innerText = u.dept || 'Engineering';
             document.getElementById('user-workspace-title').innerText = `${u.name}'s Workspace`;
+            document.getElementById('display-user-message').innerText = u.message || 'Welcome to your MSMI credentials portal workspace!';
         }
 
         async function handleUserPasswordChange(e) {
@@ -1003,9 +1027,9 @@
         }
 
         function exportUserDataCSV() {
-            let csv = "ID,Name,Email,Department,Status\n";
+            let csv = "ID,Name,Email,Department,Status,Message\n";
             state.users.forEach(u => {
-                csv += `"${u.id}","${u.name}","${u.email}","${u.dept}","${u.status}"\n`;
+                csv += `"${u.id}","${u.name}","${u.email}","${u.dept}","${u.status}","${u.message || ''}"\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = window.URL.createObjectURL(blob);
