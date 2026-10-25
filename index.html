@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETHERIS // Dual Credential Portal</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            50: '#f0fdfa',
+                            500: '#06b6d4',
+                            600: '#0891b2',
+                            900: '#164e63',
+                            950: '#083344',
+                        },
+                        neon: {
+                            cyan: '#00f3ff',
+                            purple: '#b026ff',
+                            pink: '#ff007f',
+                            emerald: '#10b981',
+                            amber: '#f59e0b'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px rgba(0,243,255,0.2), 0 0 10px rgba(0,243,255,0.2)' },
+                            '100%': { boxShadow: '0 0 20px rgba(0,243,255,0.6), 0 0 30px rgba(176,38,255,0.4)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Canvas Confetti Library for visual rewards -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            background: radial-gradient(circle at 50% 0%, #0f172a 0%, #020617 100%);
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .glass-panel-glow {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.15);
+        }
+        .glass-input {
+            background: rgba(2, 6, 23, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-input:focus {
+            background: rgba(2, 6, 23, 0.85);
+            border-color: #00f3ff;
+            box-shadow: 0 0 12px rgba(0, 243, 255, 0.3);
+            outline: none;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(2, 6, 23, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(6, 182, 212, 0.3);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 243, 255, 0.6);
+        }
+
+        /* Ambient Animated Grid Background */
+        .cyber-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        /* Cyber Hologram scanline */
+        .scanline {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 243, 255, 0.02) 51%);
+            background-size: 100% 4px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col justify-between relative selection:bg-cyan-500 selection:text-slate-950 cyber-grid">
+
+    <!-- Background Animated Particles & Light Orbs -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div class="absolute top-1/2 -right-40 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 1.5s;"></div>
+        <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 3s;"></div>
+        <canvas id="bg-canvas" class="absolute inset-0 w-full h-full opacity-40"></canvas>
+    </div>
+
+    <div class="scanline z-10"></div>
+
+    <!-- Notification Toast System -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none"></div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="relative z-20 flex-1 flex items-center justify-center p-4 md:p-8">
+
+        <!-- ========================================== -->
+        <!-- 1. LOGIN SECTION                            -->
+        <!-- ========================================== -->
+        <section id="login-section" class="w-full max-w-md transition-all duration-500 transform scale-100 opacity-100">
+            <div class="glass-panel-glow rounded-3xl p-8 shadow-2xl border border-cyan-500/30 relative overflow-hidden">
+                
+                <!-- Glowing Top Stripe -->
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500"></div>
+
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500/20 to-purple-500/20 border border-cyan-500/40 text-neon-cyan mb-4 shadow-lg shadow-cyan-500/20 animate-float">
+                        <i class="fa-solid fa-shield-halved text-2xl"></i>
+                    </div>
+                    <h1 class="text-2xl md:text-3xl font-extrabold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-sky-200 to-purple-400">
+                        AETHERIS OS
+                    </h1>
+                    <p class="text-xs font-mono text-cyan-400/80 tracking-widest uppercase mt-1">
+                        Secure Authentication Node
+                    </p>
+                </div>
+
+                <!-- Login Form -->
+                <form id="login-form" class="space-y-5" onsubmit="handleLogin(event)">
+                    
+                    <!-- ID Input -->
+                    <div>
+                        <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-2" for="login-id">
+                            <i class="fa-solid fa-id-card text-cyan-400 mr-1.5"></i> ID Number / Credential
+                        </label>
+                        <div class="relative">
+                            <input type="text" id="login-id" required
+                                placeholder="Enter ID (Admin: 11964)" 
+                                class="glass-input w-full px-4 py-3.5 rounded-xl text-slate-100 placeholder-slate-500 text-sm font-mono tracking-wide">
+                            <span class="absolute right-3.5 top-3.5 text-slate-500 text-xs font-mono" id="id-type-badge">ID</span>
+                        </div>
+                    </div>
+
+                    <!-- Password Input -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="block text-xs font-mono uppercase tracking-wider text-slate-300" for="login-password">
+                                <i class="fa-solid fa-key text-cyan-400 mr-1.5"></i> Security Key
+                            </label>
+                        </div>
+                        <div class="relative">
+                            <input type="password" id="login-password" required
+                                placeholder="Enter Password" 
+                                class="glass-input w-full pl-4 pr-11 py-3.5 rounded-xl text-slate-100 placeholder-slate-500 text-sm font-mono">
+                            <button type="button" onclick="togglePasswordVisibility('login-password', 'password-toggle-icon')"
+                                class="absolute right-3.5 top-3.5 text-slate-400 hover:text-cyan-400 transition-colors focus:outline-none">
+                                <i id="password-toggle-icon" class="fa-solid fa-eye text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Cloud Connection Status Indicator -->
+                    <div class="flex items-center justify-between text-xs px-1">
+                        <span class="flex items-center gap-2 text-slate-400">
+                            <span id="cloud-pulse" class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                            <span id="cloud-status-text" class="text-[11px] font-mono text-emerald-400">Cloud Sync Active</span>
+                        </span>
+                        <a href="javascript:void(0)" onclick="showModal('forgot-modal')" class="text-cyan-400 hover:text-cyan-300 transition-colors text-xs font-medium">Reset Pass?</a>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="btn-login-submit"
+                        class="w-full relative group overflow-hidden rounded-xl p-px font-semibold text-sm transition-all duration-300 shadow-lg shadow-cyan-500/20 active:scale-[0.98]">
+                        <span class="absolute inset-0 bg-gradient-to-r from-cyan-500 via-sky-500 to-purple-600 transition-all duration-300 group-hover:opacity-90"></span>
+                        <span class="relative block px-6 py-3.5 rounded-[11px] bg-slate-950/40 text-white font-mono uppercase tracking-wider flex items-center justify-center gap-2">
+                            <span>Authenticate Entry</span>
+                            <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+                        </span>
+                    </button>
+                </form>
+
+                <!-- Demo Auto-Fill Shortcuts Section -->
+                <div class="mt-8 pt-6 border-t border-slate-800/80">
+                    <p class="text-center text-[11px] font-mono uppercase tracking-widest text-slate-400 mb-3">
+                        Quick Demo Shortcuts
+                    </p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="quickFillAdmin()" 
+                            class="px-3 py-2 rounded-xl bg-cyan-950/40 border border-cyan-500/30 hover:border-cyan-400/80 text-cyan-300 text-xs font-mono flex items-center justify-center gap-2 transition-all hover:bg-cyan-900/40">
+                            <i class="fa-solid fa-user-shield text-cyan-400"></i> Admin Access
+                        </button>
+                        <button onclick="quickFillDemoUser()" 
+                            class="px-3 py-2 rounded-xl bg-purple-950/40 border border-purple-500/30 hover:border-purple-400/80 text-purple-300 text-xs font-mono flex items-center justify-center gap-2 transition-all hover:bg-purple-900/40">
+                            <i class="fa-solid fa-user text-purple-400"></i> Demo User Access
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Footer info -->
+                <div class="mt-6 text-center text-[10px] font-mono text-slate-500">
+                    AETHERIS CREDENTIAL PROTOCOL v4.9.2 // AES-256 PARALLEL
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- 2. ADMIN DASHBOARD SECTION                  -->
+        <!-- ========================================== -->
+        <section id="admin-section" class="hidden w-full max-w-7xl transition-all duration-500">
+            <div class="glass-panel rounded-3xl p-4 md:p-8 shadow-2xl border border-cyan-500/20">
+                
+                <!-- Admin Header -->
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 text-xl font-bold shadow-lg shadow-cyan-500/20">
+                            <i class="fa-solid fa-user-gear"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h2 class="text-xl md:text-2xl font-bold text-slate-100">System Command Dashboard</h2>
+                                <span class="px-2 py-0.5 text-[10px] font-mono rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">ADMIN LEVEL</span>
+                            </div>
+                            <p class="text-xs text-slate-400 font-mono">Logged in as Administrator ID: <span class="text-cyan-400 font-semibold">11964</span></p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <button onclick="refreshData(true)" 
+                            class="px-3 py-2 rounded-xl bg-slate-900/80 border border-slate-700 hover:border-cyan-500 text-slate-300 hover:text-cyan-400 text-xs font-mono flex items-center gap-2 transition-all">
+                            <i class="fa-solid fa-arrows-rotate" id="refresh-icon"></i>
+                            <span>Sync Data</span>
+                        </button>
+                        <button onclick="logout()" 
+                            class="px-4 py-2 rounded-xl bg-rose-500/20 border border-rose-500/40 hover:bg-rose-500/30 text-rose-300 text-xs font-mono flex items-center gap-2 transition-all">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Logout</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Analytics Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
+                    <!-- Total Users -->
+                    <div class="glass-panel p-5 rounded-2xl border border-slate-800 relative overflow-hidden group hover:border-cyan-500/40 transition-all">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono text-slate-400 uppercase">Total User Accounts</span>
+                            <div class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                        </div>
+                        <div class="text-3xl font-extrabold text-slate-100 mt-2 font-mono" id="stat-total-users">0</div>
+                        <div class="text-[11px] text-cyan-400/80 mt-1 font-mono flex items-center gap-1">
+                            <i class="fa-solid fa-database text-[10px]"></i> Cloud Persistent
+                        </div>
+                    </div>
+
+                    <!-- Active Accounts -->
+                    <div class="glass-panel p-5 rounded-2xl border border-slate-800 relative overflow-hidden group hover:border-emerald-500/40 transition-all">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono text-slate-400 uppercase">Active Status</span>
+                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                                <i class="fa-solid fa-user-check"></i>
+                            </div>
+                        </div>
+                        <div class="text-3xl font-extrabold text-emerald-400 mt-2 font-mono" id="stat-active-users">0</div>
+                        <div class="text-[11px] text-emerald-400/80 mt-1 font-mono flex items-center gap-1">
+                            <i class="fa-solid fa-circle text-[8px] text-emerald-400"></i> Operational
+                        </div>
+                    </div>
+
+                    <!-- System Status -->
+                    <div class="glass-panel p-5 rounded-2xl border border-slate-800 relative overflow-hidden group hover:border-purple-500/40 transition-all">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono text-slate-400 uppercase">Auth Engine</span>
+                            <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center">
+                                <i class="fa-solid fa-microchip"></i>
+                            </div>
+                        </div>
+                        <div class="text-2xl font-bold text-purple-300 mt-2 font-mono">AES-256</div>
+                        <div class="text-[11px] text-purple-400/80 mt-1 font-mono">Encrypted Store</div>
+                    </div>
+
+                    <!-- System Security Health -->
+                    <div class="glass-panel p-5 rounded-2xl border border-slate-800 relative overflow-hidden group hover:border-amber-500/40 transition-all">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono text-slate-400 uppercase">Security Health</span>
+                            <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
+                                <i class="fa-solid fa-shield-virus"></i>
+                            </div>
+                        </div>
+                        <div class="text-2xl font-bold text-amber-300 mt-2 font-mono">OPTIMAL</div>
+                        <div class="text-[11px] text-amber-400/80 mt-1 font-mono">0 Threats Detected</div>
+                    </div>
+                </div>
+
+                <!-- Main Content Tabs & Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+                    
+                    <!-- Left Column: Create / Edit User Form (5 Cols) -->
+                    <div class="lg:col-span-5">
+                        <div class="glass-panel p-6 rounded-2xl border border-slate-800">
+                            <div class="flex items-center justify-between mb-5 pb-3 border-b border-slate-800">
+                                <h3 class="font-bold text-base text-cyan-300 flex items-center gap-2" id="form-title">
+                                    <i class="fa-solid fa-user-plus text-cyan-400"></i>
+                                    <span>Provision New User</span>
+                                </h3>
+                                <button id="btn-cancel-edit" onclick="resetUserForm()" class="hidden text-xs font-mono text-slate-400 hover:text-rose-400">
+                                    <i class="fa-solid fa-xmark"></i> Cancel Edit
+                                </button>
+                            </div>
+
+                            <form id="create-user-form" onsubmit="handleUserSave(event)" class="space-y-4">
+                                <input type="hidden" id="edit-doc-id" value="">
+
+                                <!-- Name Field -->
+                                <div>
+                                    <label class="block text-xs font-mono uppercase text-slate-400 mb-1" for="user-fullname">Full Name *</label>
+                                    <input type="text" id="user-fullname" required placeholder="e.g. Elena Rostova" 
+                                        class="glass-input w-full px-3.5 py-2.5 rounded-xl text-slate-100 text-sm font-sans">
+                                </div>
+
+                                <!-- ID Field & Generate Button -->
+                                <div>
+                                    <div class="flex justify-between items-center mb-1">
+                                        <label class="block text-xs font-mono uppercase text-slate-400" for="user-idnum">Unique ID Number *</label>
+                                        <button type="button" onclick="generateRandomId()" class="text-[11px] text-cyan-400 hover:underline font-mono">
+                                            Auto-Generate ID
+                                        </button>
+                                    </div>
+                                    <input type="text" id="user-idnum" required placeholder="e.g. 55892" 
+                                        class="glass-input w-full px-3.5 py-2.5 rounded-xl text-slate-100 text-sm font-mono">
+                                </div>
+
+                                <!-- Email Field -->
+                                <div>
+                                    <label class="block text-xs font-mono uppercase text-slate-400 mb-1" for="user-email">Email Address</label>
+                                    <input type="email" id="user-email" placeholder="e.g. elena@aetheris.io" 
+                                        class="glass-input w-full px-3.5 py-2.5 rounded-xl text-slate-100 text-sm font-sans">
+                                </div>
+
+                                <!-- Password Field with Generator -->
+                                <div>
+                                    <div class="flex justify-between items-center mb-1">
+                                        <label class="block text-xs font-mono uppercase text-slate-400" for="user-password">Password *</label>
+                                        <button type="button" onclick="generateRandomPassword()" class="text-[11px] text-cyan-400 hover:underline font-mono">
+                                            Generate Strong Pass
+                                        </button>
+                                    </div>
+                                    <div class="relative">
+                                        <input type="text" id="user-password" required placeholder="Min 6 characters" 
+                                            class="glass-input w-full pl-3.5 pr-10 py-2.5 rounded-xl text-slate-100 text-sm font-mono">
+                                        <button type="button" onclick="togglePasswordVisibility('user-password', 'user-pass-icon')" class="absolute right-3 top-3 text-slate-500 hover:text-slate-300">
+                                            <i id="user-pass-icon" class="fa-solid fa-eye text-xs"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Department / Role & Status Grid -->
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-xs font-mono uppercase text-slate-400 mb-1" for="user-dept">Department</label>
+                                        <select id="user-dept" class="glass-input w-full px-3 py-2.5 rounded-xl text-slate-100 text-xs font-mono">
+                                            <option value="Cyber Security" class="bg-slate-900">Cyber Security</option>
+                                            <option value="Research & AI" class="bg-slate-900">Research & AI</option>
+                                            <option value="Engineering" class="bg-slate-900">Engineering</option>
+                                            <option value="Operations" class="bg-slate-900">Operations</option>
+                                            <option value="Executive" class="bg-slate-900">Executive</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-mono uppercase text-slate-400 mb-1" for="user-status">Account Status</label>
+                                        <select id="user-status" class="glass-input w-full px-3 py-2.5 rounded-xl text-slate-100 text-xs font-mono">
+                                            <option value="Active" class="bg-slate-900 text-emerald-400">Active</option>
+                                            <option value="Suspended" class="bg-slate-900 text-rose-400">Suspended</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Submit Form Button -->
+                                <button type="submit" id="btn-save-user"
+                                    class="w-full mt-2 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-slate-950 font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-cyan-500/20 active:scale-[0.99] flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
+                                    <span id="save-btn-text">Save User Credential</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Registered Users Table & System Logs (7 Cols) -->
+                    <div class="lg:col-span-7 space-y-6">
+                        
+                        <!-- Users Management Table -->
+                        <div class="glass-panel p-6 rounded-2xl border border-slate-800">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                                <h3 class="font-bold text-base text-slate-100 flex items-center gap-2">
+                                    <i class="fa-solid fa-users-gear text-purple-400"></i>
+                                    <span>User Database Directory</span>
+                                </h3>
+
+                                <!-- Search Box -->
+                                <div class="relative min-w-[200px]">
+                                    <input type="text" id="search-user" oninput="renderUserTable()" placeholder="Search name or ID..."
+                                        class="glass-input w-full pl-8 pr-3 py-1.5 rounded-lg text-xs font-mono text-slate-200">
+                                    <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-500 text-xs"></i>
+                                </div>
+                            </div>
+
+                            <!-- Table Container -->
+                            <div class="overflow-x-auto max-h-[360px] overflow-y-auto rounded-xl border border-slate-800/80">
+                                <table class="w-full text-left text-xs">
+                                    <thead class="bg-slate-900/90 text-slate-400 font-mono uppercase text-[10px] sticky top-0 backdrop-blur-md z-10 border-b border-slate-800">
+                                        <tr>
+                                            <th class="p-3">User Profile</th>
+                                            <th class="p-3">ID Number</th>
+                                            <th class="p-3">Password</th>
+                                            <th class="p-3">Status</th>
+                                            <th class="p-3 text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="user-table-body" class="divide-y divide-slate-800/50 font-mono text-slate-300">
+                                        <!-- Table Rows will be rendered dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Real-time Activity Audit Logs -->
+                        <div class="glass-panel p-6 rounded-2xl border border-slate-800">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="font-bold text-sm text-slate-200 flex items-center gap-2">
+                                    <i class="fa-solid fa-list-check text-cyan-400"></i>
+                                    <span>Real-Time System Audit Logs</span>
+                                </h3>
+                                <span class="text-[10px] font-mono text-slate-500" id="log-count">0 Events</span>
+                            </div>
+                            <div id="audit-log-container" class="space-y-2 max-h-[160px] overflow-y-auto pr-1 text-xs font-mono">
+                                <!-- Dynamic Log Items -->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- 3. USER PROFILE DASHBOARD                   -->
+        <!-- ========================================== -->
+        <section id="user-section" class="hidden w-full max-w-5xl transition-all duration-500">
+            <div class="glass-panel-glow rounded-3xl p-6 md:p-10 shadow-2xl border border-cyan-500/30 relative">
+                
+                <!-- Top Bar -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></div>
+                        <span class="text-xs font-mono text-emerald-400 tracking-wider">SESSION ACTIVE // SECURITY VERIFIED</span>
+                    </div>
+
+                    <button onclick="logout()" 
+                        class="px-4 py-2 rounded-xl bg-rose-500/20 border border-rose-500/40 hover:bg-rose-500/30 text-rose-300 text-xs font-mono flex items-center gap-2 transition-all self-start sm:self-auto">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Disconnect Portal</span>
+                    </button>
+                </div>
+
+                <!-- Main User Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
+                    
+                    <!-- Left: ID Card Visual Graphic Component (5 Cols) -->
+                    <div class="lg:col-span-5 flex flex-col items-center">
+                        <div id="digital-id-card" class="w-full max-w-sm rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-cyan-950/60 p-6 border border-cyan-500/40 shadow-2xl relative overflow-hidden group">
+                            
+                            <!-- Card Holographic Layer -->
+                            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-all"></div>
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-microchip text-cyan-400 text-2xl"></i>
+                                    <span class="text-xs font-mono text-cyan-300 tracking-widest uppercase">AETHERIS ACCESS</span>
+                                </div>
+                                <span id="user-badge-status" class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                                    ACTIVE
+                                </span>
+                            </div>
+
+                            <!-- Avatar & Details -->
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-16 h-16 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 p-0.5 shadow-md">
+                                    <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center text-cyan-300 text-2xl font-bold font-mono" id="user-avatar-initials">
+                                        US
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-100" id="user-card-name">User Name</h3>
+                                    <p class="text-xs font-mono text-cyan-400" id="user-card-dept">Department</p>
+                                </div>
+                            </div>
+
+                            <!-- Barcode / ID Details -->
+                            <div class="space-y-2 pt-3 border-t border-slate-800">
+                                <div class="flex justify-between text-xs font-mono">
+                                    <span class="text-slate-500">ID NUMBER:</span>
+                                    <span class="text-cyan-300 font-bold" id="user-card-id">12345</span>
+                                </div>
+                                <div class="flex justify-between text-xs font-mono">
+                                    <span class="text-slate-500">CLEARANCE:</span>
+                                    <span class="text-purple-300">LEVEL 4 SECURE</span>
+                                </div>
+                            </div>
+
+                            <!-- Simulated Barcode Graphic -->
+                            <div class="mt-5 pt-3 border-t border-slate-800/80 flex flex-col items-center">
+                                <div class="h-8 w-full bg-[repeating-linear-gradient(90deg,#00f3ff_0,#00f3ff_2px,transparent_0,transparent_4px,#fff_0,#fff_7px,transparent_0,transparent_9px)] opacity-60"></div>
+                                <span class="text-[9px] font-mono text-slate-500 mt-1" id="user-card-barcode-num">AETH-11964-X</span>
+                            </div>
+                        </div>
+
+                        <!-- Card Download Action -->
+                        <button onclick="simulateCardDownload()" 
+                            class="mt-4 px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 hover:border-cyan-500 text-slate-300 hover:text-cyan-300 text-xs font-mono flex items-center gap-2 transition-all">
+                            <i class="fa-solid fa-download"></i>
+                            <span>Export Identity Credentials</span>
+                        </button>
+                    </div>
+
+                    <!-- Right: Detailed Info & Preferences (7 Cols) -->
+                    <div class="lg:col-span-7 space-y-6">
+                        
+                        <!-- Account Details Box -->
+                        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+                            <h3 class="text-base font-bold text-cyan-300 flex items-center gap-2 pb-2 border-b border-slate-800">
+                                <i class="fa-solid fa-address-card"></i>
+                                <span>Personalized Security Profile</span>
+                            </h3>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
+                                <div class="bg-slate-950/50 p-3 rounded-xl border border-slate-800/80">
+                                    <span class="text-slate-500 block text-[10px] uppercase">Registered Email</span>
+                                    <span class="text-slate-200 font-sans text-sm" id="user-detail-email">email@aetheris.io</span>
+                                </div>
+
+                                <div class="bg-slate-950/50 p-3 rounded-xl border border-slate-800/80">
+                                    <span class="text-slate-500 block text-[10px] uppercase">Assigned Role</span>
+                                    <span class="text-slate-200 font-sans text-sm" id="user-detail-role">Standard Operative</span>
+                                </div>
+
+                                <div class="bg-slate-950/50 p-3 rounded-xl border border-slate-800/80">
+                                    <span class="text-slate-500 block text-[10px] uppercase">Registered Date</span>
+                                    <span class="text-slate-200 text-sm" id="user-detail-date">2026-10-25</span>
+                                </div>
+
+                                <div class="bg-slate-950/50 p-3 rounded-xl border border-slate-800/80">
+                                    <span class="text-slate-500 block text-[10px] uppercase">Current Password</span>
+                                    <div class="flex items-center justify-between mt-0.5">
+                                        <span class="text-cyan-300 font-bold" id="user-detail-pass">••••••••</span>
+                                        <button onclick="toggleUserPassView()" class="text-slate-400 hover:text-cyan-400 text-xs">
+                                            <i id="btn-toggle-pass-eye" class="fa-solid fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- System Notice Board -->
+                        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-3">
+                            <h3 class="text-sm font-bold text-slate-200 flex items-center gap-2">
+                                <i class="fa-solid fa-bullhorn text-amber-400"></i>
+                                <span>Security Directives & Notices</span>
+                            </h3>
+                            <div class="bg-amber-500/10 border border-amber-500/30 p-3.5 rounded-xl text-xs text-amber-200/90 leading-relaxed font-sans">
+                                <p class="font-semibold text-amber-300 mb-1">Notice #4092: Cloud Identity Synchronization</p>
+                                Welcome to AETHERIS Terminal. Your credentials were generated via Admin Console and are synced to cloud storage. Please ensure your password is saved securely.
+                            </div>
+                        </div>
+
+                        <!-- Quick Session Stats -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="glass-panel p-4 rounded-xl border border-slate-800 text-center">
+                                <span class="text-[10px] font-mono text-slate-500 uppercase block">Encryption Level</span>
+                                <span class="text-sm font-mono font-bold text-cyan-400">256-Bit Standard</span>
+                            </div>
+                            <div class="glass-panel p-4 rounded-xl border border-slate-800 text-center">
+                                <span class="text-[10px] font-mono text-slate-500 uppercase block">Last Login</span>
+                                <span class="text-xs font-mono font-bold text-emerald-400" id="user-last-login">Just now</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="relative z-20 py-4 text-center text-xs font-mono text-slate-600 border-t border-slate-900 bg-slate-950/80">
+        AETHERIS CREDENTIAL MANAGEMENT NETWORK &copy; 2026 // ALL RIGHTS RESERVED
+    </footer>
+
+
+    <!-- ========================================== -->
+    <!-- MODALS SECTION                              -->
+    <!-- ========================================== -->
+
+    <!-- Generic Confirmation / Message Modal -->
+    <div id="modal-container" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+        <div id="modal-box" class="glass-panel-glow w-full max-w-md rounded-2xl p-6 border border-cyan-500/30 shadow-2xl space-y-4 transform scale-95 transition-transform">
+            <h3 id="modal-title" class="text-lg font-bold text-slate-100 flex items-center gap-2">
+                <i class="fa-solid fa-circle-info text-cyan-400"></i>
+                <span>Notice</span>
+            </h3>
+            <p id="modal-message" class="text-sm text-slate-300 font-sans leading-relaxed">
+                Message content goes here.
+            </p>
+            <div class="flex justify-end gap-3 pt-2" id="modal-actions">
+                <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-cyan-500 text-slate-950 font-bold text-xs font-mono uppercase hover:bg-cyan-400 transition-colors">
+                    Acknowledge
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Reset Modal -->
+    <div id="forgot-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+        <div class="glass-panel w-full max-w-md rounded-2xl p-6 border border-slate-800 space-y-4">
+            <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
+                <i class="fa-solid fa-key text-cyan-400"></i>
+                <span>Reset User Key</span>
+            </h3>
+            <p class="text-xs text-slate-400 font-sans">
+                Enter your ID Number to verify identity. An admin clearance key is required for full password resets.
+            </p>
+            <input type="text" id="reset-id-input" placeholder="Enter ID Number" class="glass-input w-full px-3.5 py-2.5 rounded-xl text-xs font-mono text-slate-200">
+            <div class="flex justify-end gap-3 pt-2">
+                <button onclick="hideModal('forgot-modal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-mono">Cancel</button>
+                <button onclick="handleRequestReset()" class="px-4 py-2 rounded-xl bg-cyan-500 text-slate-950 font-bold text-xs font-mono">Request Reset</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- FIREBASE & APPLICATION LOGIC               -->
+    <!-- ========================================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, getDocs, collection, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global State & Configuration
+        const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'cyber-auth-app';
+        let db = null;
+        let auth = null;
+        let currentUserData = null;
+        let usersList = [];
+        let auditLogs = [];
+        let isFirebaseAvailable = false;
+
+        // Pre-populated Default Users for immediate functionality
+        const DEFAULT_USERS = [
+            {
+                docId: 'demo-user-1',
+                idNumber: '1001',
+                fullName: 'Sarah Connor',
+                email: 'sarah@cyberdyne.io',
+                password: 'User@1001',
+                department: 'Cyber Security',
+                status: 'Active',
+                createdAt: new Date().toISOString()
+            },
+            {
+                docId: 'demo-user-2',
+                idNumber: '1002',
+                fullName: 'Kaelen Voss',
+                email: 'kaelen@aetheris.io',
+                password: 'User@1002',
+                department: 'Research & AI',
+                status: 'Active',
+                createdAt: new Date().toISOString()
+            }
+        ];
+
+        // Initialize App & Firebase
+        async function initApp() {
+            startParticleCanvas();
+            initLocalStorageFallback();
+
+            try {
+                if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                    const firebaseConfig = JSON.parse(__firebase_config);
+                    const app = initializeApp(firebaseConfig);
+                    auth = getAuth(app);
+                    db = getFirestore(app);
+
+                    // Auth first before querying
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+
+                    isFirebaseAvailable = true;
+                    updateCloudStatus(true, "Firebase Live Cloud Connected");
+                    subscribeToFirestore();
+                } else {
+                    throw new Error("No firebase config found");
+                }
+            } catch (err) {
+                console.warn("Firestore initialization fallback to Local Storage:", err);
+                isFirebaseAvailable = false;
+                updateCloudStatus(false, "Local Memory Cache Active");
+                loadFromLocalStorage();
+            }
+
+            // Render Initial Logs
+            addLog("System Engine Initialized.", "system");
+        }
+
+        // Firestore Paths (Strict Rule 1 Compliance)
+        function getUsersCollectionRef() {
+            return collection(db, 'artifacts', APP_ID, 'public', 'data', 'user_credentials');
+        }
+
+        function getLogsCollectionRef() {
+            return collection(db, 'artifacts', APP_ID, 'public', 'data', 'audit_logs');
+        }
+
+        // Live Real-Time Firestore Synchronization
+        function subscribeToFirestore() {
+            if (!db) return;
+
+            // Subscribe to Users
+            onSnapshot(getUsersCollectionRef(), (snapshot) => {
+                const fetchedUsers = [];
+                snapshot.forEach(docSnap => {
+                    fetchedUsers.push({ docId: docSnap.id, ...docSnap.data() });
+                });
+                
+                if (fetchedUsers.length === 0) {
+                    // Seed initial default users to cloud
+                    seedDefaultUsersToCloud();
+                } else {
+                    usersList = fetchedUsers;
+                    localStorage.setItem('aetheris_users', JSON.stringify(usersList));
+                    renderUserTable();
+                    updateAdminStats();
+                }
+            }, (error) => {
+                console.error("Firestore user sync error:", error);
+                showToast("Cloud sync error. Falling back to cached data.", "error");
+            });
+
+            // Subscribe to Audit Logs
+            onSnapshot(getLogsCollectionRef(), (snapshot) => {
+                const fetchedLogs = [];
+                snapshot.forEach(docSnap => {
+                    fetchedLogs.push(docSnap.data());
+                });
+                // Sort logs by time descending
+                fetchedLogs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                auditLogs = fetchedLogs.slice(0, 15);
+                renderAuditLogs();
+            }, (error) => {
+                console.error("Firestore log sync error:", error);
+            });
+        }
+
+        async function seedDefaultUsersToCloud() {
+            if (!db) return;
+            for (const u of DEFAULT_USERS) {
+                const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'user_credentials', u.docId);
+                await setDoc(docRef, u);
+            }
+        }
+
+        // Local Storage Fallback Handlers
+        function initLocalStorageFallback() {
+            if (!localStorage.getItem('aetheris_users')) {
+                localStorage.setItem('aetheris_users', JSON.stringify(DEFAULT_USERS));
+            }
+        }
+
+        function loadFromLocalStorage() {
+            const cached = localStorage.getItem('aetheris_users');
+            usersList = cached ? JSON.parse(cached) : DEFAULT_USERS;
+            renderUserTable();
+            updateAdminStats();
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('aetheris_users', JSON.stringify(usersList));
+            renderUserTable();
+            updateAdminStats();
+        }
+
+        // Audit Logging Logic
+        async function addLog(message, category = 'info') {
+            const logEntry = {
+                message,
+                category,
+                timestamp: new Date().toISOString()
+            };
+
+            auditLogs.unshift(logEntry);
+            if (auditLogs.length > 20) auditLogs.pop();
+            renderAuditLogs();
+
+            if (isFirebaseAvailable && db && auth.currentUser) {
+                try {
+                    const newLogRef = doc(getLogsCollectionRef());
+                    await setDoc(newLogRef, logEntry);
+                } catch (e) {
+                    console.error("Failed to push log:", e);
+                }
+            }
+        }
+
+        // Export Window Functions to global scope for HTML inline handlers
+        window.handleLogin = function(e) {
+            e.preventDefault();
+            const idInput = document.getElementById('login-id').value.trim();
+            const passInput = document.getElementById('login-password').value;
+
+            // 1. Check Hardcoded Admin Credentials
+            if (idInput === '11964' && passInput === 'MSMI2008@') {
+                showToast("Admin Security Clearance Granted!", "success");
+                addLog("Admin (ID: 11964) logged into System Dashboard", "admin");
+                triggerConfetti();
+                switchToSection('admin-section');
+                renderUserTable();
+                updateAdminStats();
+                return;
+            }
+
+            // 2. Check User Credentials Database
+            const foundUser = usersList.find(u => 
+                (u.idNumber === idInput || (u.email && u.email.toLowerCase() === idInput.toLowerCase())) &&
+                u.password === passInput
+            );
+
+            if (foundUser) {
+                if (foundUser.status === 'Suspended') {
+                    showToast("Account Access Suspended! Contact Administrator.", "error");
+                    addLog(`Blocked login attempt for suspended user ID: ${foundUser.idNumber}`, "warning");
+                    return;
+                }
+
+                currentUserData = foundUser;
+                showToast(`Welcome back, ${foundUser.fullName}!`, "success");
+                addLog(`User '${foundUser.fullName}' (ID: ${foundUser.idNumber}) logged in.`, "user");
+                populateUserProfile(foundUser);
+                switchToSection('user-section');
+                triggerConfetti();
+                return;
+            }
+
+            // 3. Invalid Credentials
+            showToast("Invalid Credentials or Access Denied!", "error");
+            addLog(`Failed login attempt for ID: ${idInput}`, "warning");
+        };
+
+        window.quickFillAdmin = function() {
+            document.getElementById('login-id').value = '11964';
+            document.getElementById('login-password').value = 'MSMI2008@';
+            showToast("Admin Credentials Auto-filled", "info");
+        };
+
+        window.quickFillDemoUser = function() {
+            document.getElementById('login-id').value = '1001';
+            document.getElementById('login-password').value = 'User@1001';
+            showToast("Demo User Credentials Auto-filled", "info");
+        };
+
+        window.logout = function() {
+            currentUserData = null;
+            document.getElementById('login-form').reset();
+            switchToSection('login-section');
+            showToast("Session Disconnected", "info");
+            addLog("User session terminated", "info");
+        };
+
+        window.handleUserSave = async function(e) {
+            e.preventDefault();
+            const docIdInput = document.getElementById('edit-doc-id').value;
+            const fullName = document.getElementById('user-fullname').value.trim();
+            const idNumber = document.getElementById('user-idnum').value.trim();
+            const email = document.getElementById('user-email').value.trim();
+            const password = document.getElementById('user-password').value;
+            const department = document.getElementById('user-dept').value;
+            const status = document.getElementById('user-status').value;
+
+            // Check Duplicate ID
+            const duplicate = usersList.find(u => u.idNumber === idNumber && u.docId !== docIdInput);
+            if (duplicate) {
+                showToast(`ID Number '${idNumber}' is already assigned to another user!`, "error");
+                return;
+            }
+
+            const isEdit = !!docIdInput;
+            const targetDocId = isEdit ? docIdInput : 'user-' + Date.now();
+
+            const userData = {
+                docId: targetDocId,
+                fullName,
+                idNumber,
+                email: email || `${idNumber}@aetheris.io`,
+                password,
+                department,
+                status,
+                createdAt: isEdit ? (usersList.find(u=>u.docId === docIdInput)?.createdAt || new Date().toISOString()) : new Date().toISOString()
+            };
+
+            const btnSave = document.getElementById('btn-save-user');
+            btnSave.disabled = true;
+
+            try {
+                if (isFirebaseAvailable && db && auth.currentUser) {
+                    const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'user_credentials', targetDocId);
+                    await setDoc(docRef, userData);
+                } else {
+                    if (isEdit) {
+                        const index = usersList.findIndex(u => u.docId === targetDocId);
+                        if (index !== -1) usersList[index] = userData;
+                    } else {
+                        usersList.push(userData);
+                    }
+                    saveToLocalStorage();
+                }
+
+                showToast(`User Credential ${isEdit ? 'Updated' : 'Created'} Successfully!`, "success");
+                addLog(`Admin ${isEdit ? 'updated' : 'created'} account for '${fullName}' (ID: ${idNumber})`, "admin");
+                resetUserForm();
+            } catch (err) {
+                console.error("Save error:", err);
+                showToast("Error saving user data.", "error");
+            } finally {
+                btnSave.disabled = false;
+            }
+        };
+
+        window.editUser = function(docId) {
+            const user = usersList.find(u => u.docId === docId);
+            if (!user) return;
+
+            document.getElementById('edit-doc-id').value = user.docId;
+            document.getElementById('user-fullname').value = user.fullName;
+            document.getElementById('user-idnum').value = user.idNumber;
+            document.getElementById('user-email').value = user.email || '';
+            document.getElementById('user-password').value = user.password;
+            document.getElementById('user-dept').value = user.department;
+            document.getElementById('user-status').value = user.status;
+
+            document.getElementById('form-title').innerHTML = `<i class="fa-solid fa-user-pen text-amber-400"></i> Edit User Profile`;
+            document.getElementById('save-btn-text').innerText = "Update User Credential";
+            document.getElementById('btn-cancel-edit').classList.remove('hidden');
+        };
+
+        window.resetUserForm = function() {
+            document.getElementById('create-user-form').reset();
+            document.getElementById('edit-doc-id').value = '';
+            document.getElementById('form-title').innerHTML = `<i class="fa-solid fa-user-plus text-cyan-400"></i> Provision New User`;
+            document.getElementById('save-btn-text').innerText = "Save User Credential";
+            document.getElementById('btn-cancel-edit').classList.add('hidden');
+        };
+
+        window.deleteUserPrompt = function(docId, userName) {
+            showConfirmModal(
+                "Revoke Access Credential",
+                `Are you sure you want to permanently delete user entry for '${userName}'? This action cannot be undone.`,
+                async () => {
+                    try {
+                        if (isFirebaseAvailable && db && auth.currentUser) {
+                            const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'user_credentials', docId);
+                            await deleteDoc(docRef);
+                        } else {
+                            usersList = usersList.filter(u => u.docId !== docId);
+                            saveToLocalStorage();
+                        }
+                        showToast(`User '${userName}' removed from system.`, "info");
+                        addLog(`Admin revoked credentials for '${userName}'`, "warning");
+                    } catch (e) {
+                        showToast("Failed to delete user.", "error");
+                    }
+                }
+            );
+        };
+
+        window.generateRandomId = function() {
+            const randomId = Math.floor(10000 + Math.random() * 90000).toString();
+            document.getElementById('user-idnum').value = randomId;
+            showToast(`Generated ID: ${randomId}`, "info");
+        };
+
+        window.generateRandomPassword = function() {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%";
+            let pass = "";
+            for (let i = 0; i < 10; i++) {
+                pass += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('user-password').value = pass;
+            showToast("Strong Password Generated", "info");
+        };
+
+        window.togglePasswordVisibility = function(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = "fa-solid fa-eye-slash text-xs text-cyan-400";
+            } else {
+                input.type = 'password';
+                icon.className = "fa-solid fa-eye text-xs text-slate-400";
+            }
+        };
+
+        window.toggleUserPassView = function() {
+            const elem = document.getElementById('user-detail-pass');
+            const icon = document.getElementById('btn-toggle-pass-eye');
+            if (currentUserData) {
+                if (elem.innerText === '••••••••') {
+                    elem.innerText = currentUserData.password;
+                    icon.className = "fa-solid fa-eye-slash text-cyan-400";
+                } else {
+                    elem.innerText = '••••••••';
+                    icon.className = "fa-solid fa-eye";
+                }
+            }
+        };
+
+        window.refreshData = function(manual = false) {
+            const icon = document.getElementById('refresh-icon');
+            if (icon) icon.classList.add('animate-spin');
+            
+            setTimeout(() => {
+                if (isFirebaseAvailable) {
+                    subscribeToFirestore();
+                } else {
+                    loadFromLocalStorage();
+                }
+                if (icon) icon.classList.remove('animate-spin');
+                if (manual) showToast("Database Synced", "info");
+            }, 600);
+        };
+
+        // UI Helpers
+        function switchToSection(sectionId) {
+            ['login-section', 'admin-section', 'user-section'].forEach(id => {
+                const el = document.getElementById(id);
+                if (id === sectionId) {
+                    el.classList.remove('hidden');
+                    setTimeout(() => {
+                        el.classList.remove('opacity-0', 'scale-95');
+                        el.classList.add('opacity-100', 'scale-100');
+                    }, 50);
+                } else {
+                    el.classList.add('opacity-0', 'scale-95');
+                    setTimeout(() => el.classList.add('hidden'), 300);
+                }
+            });
+        }
+
+        function renderUserTable() {
+            const tbody = document.getElementById('user-table-body');
+            const searchTerm = (document.getElementById('search-user')?.value || '').toLowerCase();
+            
+            const filtered = usersList.filter(u => 
+                u.fullName.toLowerCase().includes(searchTerm) || 
+                u.idNumber.toLowerCase().includes(searchTerm) ||
+                (u.department && u.department.toLowerCase().includes(searchTerm))
+            );
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="p-6 text-center text-slate-500 font-mono">
+                            No matching user records found.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(user => `
+                <tr class="hover:bg-slate-900/60 transition-colors">
+                    <td class="p-3">
+                        <div class="font-sans font-semibold text-slate-200">${escapeHtml(user.fullName)}</div>
+                        <div class="text-[10px] text-slate-500">${escapeHtml(user.email || 'N/A')} &bull; ${escapeHtml(user.department || 'General')}</div>
+                    </td>
+                    <td class="p-3 text-cyan-300 font-bold">${escapeHtml(user.idNumber)}</td>
+                    <td class="p-3 text-slate-400">${escapeHtml(user.password)}</td>
+                    <td class="p-3">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-mono ${user.status === 'Active' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-rose-500/20 text-rose-300 border border-rose-500/40'}">
+                            ${user.status}
+                        </span>
+                    </td>
+                    <td class="p-3 text-right space-x-1">
+                        <button onclick="editUser('${user.docId}')" class="p-1.5 hover:bg-slate-800 rounded text-amber-400 transition-colors" title="Edit User">
+                            <i class="fa-solid fa-pen text-xs"></i>
+                        </button>
+                        <button onclick="deleteUserPrompt('${user.docId}', '${escapeHtml(user.fullName)}')" class="p-1.5 hover:bg-slate-800 rounded text-rose-400 transition-colors" title="Delete User">
+                            <i class="fa-solid fa-trash text-xs"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateAdminStats() {
+            const total = usersList.length;
+            const active = usersList.filter(u => u.status === 'Active').length;
+            
+            const totalEl = document.getElementById('stat-total-users');
+            const activeEl = document.getElementById('stat-active-users');
+            
+            if (totalEl) totalEl.innerText = total;
+            if (activeEl) activeEl.innerText = active;
+        }
+
+        function renderAuditLogs() {
+            const container = document.getElementById('audit-log-container');
+            const countEl = document.getElementById('log-count');
+            if (!container) return;
+
+            if (countEl) countEl.innerText = `${auditLogs.length} Events`;
+
+            container.innerHTML = auditLogs.map(log => {
+                let badgeClass = "text-cyan-400 border-cyan-500/30 bg-cyan-500/10";
+                if (log.category === 'warning') badgeClass = "text-amber-400 border-amber-500/30 bg-amber-500/10";
+                if (log.category === 'admin') badgeClass = "text-purple-400 border-purple-500/30 bg-purple-500/10";
+                
+                const timeStr = new Date(log.timestamp).toLocaleTimeString();
+
+                return `
+                    <div class="p-2 rounded-lg bg-slate-950/60 border border-slate-800/80 flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2 overflow-hidden">
+                            <span class="px-1.5 py-0.5 text-[9px] rounded border ${badgeClass} uppercase">${log.category}</span>
+                            <span class="text-slate-300 truncate">${escapeHtml(log.message)}</span>
+                        </div>
+                        <span class="text-[9px] text-slate-500 shrink-0">${timeStr}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function populateUserProfile(user) {
+            document.getElementById('user-card-name').innerText = user.fullName;
+            document.getElementById('user-card-dept').innerText = user.department || 'Operative';
+            document.getElementById('user-card-id').innerText = user.idNumber;
+            document.getElementById('user-card-barcode-num').innerText = `AETH-${user.idNumber}-X`;
+
+            const initials = user.fullName.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+            document.getElementById('user-avatar-initials').innerText = initials || 'US';
+
+            document.getElementById('user-detail-email').innerText = user.email || `${user.idNumber}@aetheris.io`;
+            document.getElementById('user-detail-role').innerText = `${user.department || 'General'} Operative`;
+            document.getElementById('user-detail-date').innerText = user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '2026-10-25';
+            document.getElementById('user-detail-pass').innerText = '••••••••';
+            document.getElementById('user-last-login').innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        function updateCloudStatus(connected, text) {
+            const statusText = document.getElementById('cloud-status-text');
+            const pulse = document.getElementById('cloud-pulse');
+            if (statusText) statusText.innerText = text;
+            if (pulse) {
+                if (connected) {
+                    pulse.className = "w-2 h-2 rounded-full bg-emerald-400 animate-ping";
+                    if (statusText) statusText.className = "text-[11px] font-mono text-emerald-400";
+                } else {
+                    pulse.className = "w-2 h-2 rounded-full bg-amber-400";
+                    if (statusText) statusText.className = "text-[11px] font-mono text-amber-400";
+                }
+            }
+        }
+
+        // Toast Notification System
+        window.showToast = function(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let icon = 'fa-circle-info';
+            let border = 'border-cyan-500/50';
+            let textColor = 'text-cyan-300';
+            
+            if (type === 'success') {
+                icon = 'fa-circle-check';
+                border = 'border-emerald-500/50';
+                textColor = 'text-emerald-300';
+            } else if (type === 'error') {
+                icon = 'fa-triangle-exclamation';
+                border = 'border-rose-500/50';
+                textColor = 'text-rose-300';
+            }
+
+            toast.className = `glass-panel p-3.5 rounded-xl border ${border} shadow-xl flex items-center gap-3 text-xs font-mono transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-auto`;
+            toast.innerHTML = `
+                <i class="fa-solid ${icon} ${textColor} text-base"></i>
+                <span class="text-slate-200 flex-1">${escapeHtml(message)}</span>
+            `;
+
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        };
+
+        // Modal Helpers
+        window.showModal = function(id) {
+            document.getElementById(id)?.classList.remove('hidden');
+        };
+        window.hideModal = function(id) {
+            document.getElementById(id)?.classList.add('hidden');
+        };
+
+        window.showConfirmModal = function(title, message, onConfirm) {
+            const container = document.getElementById('modal-container');
+            document.getElementById('modal-title').innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-400"></i> ${escapeHtml(title)}`;
+            document.getElementById('modal-message').innerText = message;
+            
+            const actions = document.getElementById('modal-actions');
+            actions.innerHTML = `
+                <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-mono">Cancel</button>
+                <button id="modal-confirm-btn" class="px-4 py-2 rounded-xl bg-rose-500 text-slate-950 font-bold text-xs font-mono uppercase hover:bg-rose-400">Confirm Revoke</button>
+            `;
+
+            document.getElementById('modal-confirm-btn').onclick = () => {
+                closeModal();
+                onConfirm();
+            };
+
+            container.classList.remove('hidden');
+        };
+
+        window.closeModal = function() {
+            document.getElementById('modal-container')?.classList.add('hidden');
+        };
+
+        window.handleRequestReset = function() {
+            const idVal = document.getElementById('reset-id-input')?.value;
+            if (!idVal) {
+                showToast("Please enter a valid ID Number", "error");
+                return;
+            }
+            hideModal('forgot-modal');
+            showToast(`Reset Ticket generated for ID: ${idVal}. Contact Admin.`, "success");
+            addLog(`Password reset requested for ID: ${idVal}`, "info");
+        };
+
+        window.simulateCardDownload = function() {
+            showToast("Generating Digital ID Security Pass...", "info");
+            setTimeout(() => {
+                showToast("Credential Pass exported successfully!", "success");
+            }, 1000);
+        };
+
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 40,
+                    spread: 60,
+                    origin: { y: 0.8 },
+                    colors: ['#00f3ff', '#b026ff', '#10b981']
+                });
+            }
+        }
+
+        function escapeHtml(str) {
+            return String(str || '').replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+            });
+        }
+
+        // Particle Canvas Background Loop
+        function startParticleCanvas() {
+            const canvas = document.getElementById('bg-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            const particles = Array.from({ length: 45 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 1.5 + 0.5,
+                vx: (Math.random() - 0.5) * 0.4,
+                vy: (Math.random() - 0.5) * 0.4,
+                alpha: Math.random() * 0.5 + 0.2
+            }));
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0) p.x = canvas.width;
+                    if (p.x > canvas.width) p.x = 0;
+                    if (p.y < 0) p.y = canvas.height;
+                    if (p.y > canvas.height) p.y = 0;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(0, 243, 255, ${p.alpha})`;
+                    ctx.fill();
+                });
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        // Run App Initialization on Load
+        window.onload = function() {
+            initApp();
+        };
+    </script>
+</body>
+</html>
