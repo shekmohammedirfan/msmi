@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AETHERIS // Dual Credential Portal</title>
+    <title>Enterprise Security Portal // Cyber Auth System</title>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,35 +13,26 @@
             theme: {
                 extend: {
                     colors: {
+                        cobalt: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                            950: '#082f49',
+                        },
                         cyber: {
-                            50: '#f0fdfa',
-                            500: '#06b6d4',
-                            600: '#0891b2',
-                            900: '#164e63',
-                            950: '#083344',
-                        },
-                        neon: {
                             cyan: '#00f3ff',
-                            purple: '#b026ff',
-                            pink: '#ff007f',
                             emerald: '#10b981',
-                            amber: '#f59e0b'
+                            amber: '#f59e0b',
+                            rose: '#f43f5e',
+                            purple: '#a855f7'
                         }
                     },
-                    animation: {
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'glow': 'glow 2s ease-in-out infinite alternate',
-                        'float': 'float 6s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        glow: {
-                            '0%': { boxShadow: '0 0 5px rgba(0,243,255,0.2), 0 0 10px rgba(0,243,255,0.2)' },
-                            '100%': { boxShadow: '0 0 20px rgba(0,243,255,0.6), 0 0 30px rgba(176,38,255,0.4)' }
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-10px)' }
-                        }
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
                     }
                 }
             }
@@ -50,51 +41,49 @@
 
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
-    <!-- Canvas Confetti Library for visual rewards -->
+    <!-- Canvas Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
             background: radial-gradient(circle at 50% 0%, #0f172a 0%, #020617 100%);
-        }
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
+            min-height: 100vh;
         }
         
-        /* Glassmorphism Classes */
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.65);
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
         }
-        .glass-panel-glow {
-            background: rgba(15, 23, 42, 0.75);
+
+        .glass-card-glow {
+            background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            box-shadow: 0 0 25px rgba(0, 243, 255, 0.15);
+            border: 1px solid rgba(2, 132, 199, 0.3);
+            box-shadow: 0 0 25px rgba(2, 132, 199, 0.15);
         }
+
         .glass-input {
-            background: rgba(2, 6, 23, 0.6);
+            background: rgba(2, 6, 23, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.12);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.25s ease-in-out;
         }
+
         .glass-input:focus {
-            background: rgba(2, 6, 23, 0.85);
-            border-color: #00f3ff;
-            box-shadow: 0 0 12px rgba(0, 243, 255, 0.3);
+            background: rgba(2, 6, 23, 0.9);
+            border-color: #0284c7;
+            box-shadow: 0 0 12px rgba(2, 132, 199, 0.3);
             outline: none;
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -103,250 +92,214 @@
             background: rgba(2, 6, 23, 0.5);
         }
         ::-webkit-scrollbar-thumb {
-            background: rgba(6, 182, 212, 0.3);
+            background: rgba(2, 132, 199, 0.3);
             border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 243, 255, 0.6);
-        }
-
-        /* Ambient Animated Grid Background */
-        .cyber-grid {
-            background-size: 40px 40px;
-            background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-        }
-
-        /* Cyber Hologram scanline */
-        .scanline {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(to bottom, transparent 50%, rgba(0, 243, 255, 0.02) 51%);
-            background-size: 100% 4px;
-            pointer-events: none;
         }
     </style>
 </head>
-<body class="h-full flex flex-col justify-between relative selection:bg-cyan-500 selection:text-slate-950 cyber-grid">
+<body class="flex flex-col min-h-screen relative overflow-x-hidden selection:bg-cobalt-500 selection:text-white">
 
-    <!-- Background Animated Particles & Light Orbs -->
-    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div class="absolute -top-40 -left-40 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl animate-pulse-slow"></div>
-        <div class="absolute top-1/2 -right-40 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 1.5s;"></div>
-        <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 3s;"></div>
-        <canvas id="bg-canvas" class="absolute inset-0 w-full h-full opacity-40"></canvas>
-    </div>
+    <!-- Background Particle Canvas -->
+    <canvas id="bg-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
 
-    <div class="scanline z-10"></div>
-
-    <!-- Notification Toast System -->
+    <!-- Notification Toast Container -->
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none"></div>
 
-    <!-- MAIN CONTAINER -->
-    <main class="relative z-20 flex-1 flex items-center justify-center p-4 md:p-8">
+    <!-- MAIN HEADER BAR -->
+    <header class="relative z-20 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md px-4 lg:px-8 py-3.5 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cobalt-600 to-cyber-cyan p-0.5 flex items-center justify-center shadow-lg shadow-cobalt-600/20">
+                <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+                    <i class="fa-solid fa-shield-halved text-cyber-cyan text-lg"></i>
+                </div>
+            </div>
+            <div>
+                <h1 class="text-base font-bold tracking-tight text-slate-100 flex items-center gap-2">
+                    <span>AETHERIS NETWORK</span>
+                    <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-cobalt-500/10 text-cyber-cyan border border-cobalt-500/30">v5.0 LIVE</span>
+                </h1>
+                <p class="text-[11px] font-mono text-slate-400">Cloud Authenticated Workspace Protocol</p>
+            </div>
+        </div>
+
+        <!-- Connection Badge & Config Gear -->
+        <div class="flex items-center gap-3">
+            <button onclick="showModal('firebase-config-modal')" 
+                class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 hover:border-cobalt-500 text-slate-300 hover:text-cyber-cyan text-xs font-mono flex items-center gap-2 transition-all">
+                <i class="fa-solid fa-cloud-gear text-cobalt-500"></i>
+                <span class="hidden sm:inline">Firebase Config</span>
+            </button>
+
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-xs font-mono">
+                <span id="cloud-pulse" class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                <span id="cloud-status-text" class="text-slate-300">Offline Store</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENT WRAPPER -->
+    <main class="relative z-10 flex-1 flex items-center justify-center p-4 md:p-8">
 
         <!-- ========================================== -->
-        <!-- 1. LOGIN SECTION                            -->
+        <!-- 1. LOGIN SECTION                           -->
         <!-- ========================================== -->
-        <section id="login-section" class="w-full max-w-md transition-all duration-500 transform scale-100 opacity-100">
-            <div class="glass-panel-glow rounded-3xl p-8 shadow-2xl border border-cyan-500/30 relative overflow-hidden">
-                
-                <!-- Glowing Top Stripe -->
-                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500"></div>
+        <section id="login-section" class="w-full max-w-md transition-all duration-300">
+            <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-2xl relative overflow-hidden">
+                <div class="absolute -right-12 -top-12 w-40 h-40 bg-cobalt-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
-                <!-- Header -->
                 <div class="text-center mb-8">
-                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500/20 to-purple-500/20 border border-cyan-500/40 text-neon-cyan mb-4 shadow-lg shadow-cyan-500/20 animate-float">
-                        <i class="fa-solid fa-shield-halved text-2xl"></i>
+                    <div class="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-800 mx-auto flex items-center justify-center text-cyber-cyan mb-4 text-2xl shadow-inner">
+                        <i class="fa-solid fa-lock"></i>
                     </div>
-                    <h1 class="text-2xl md:text-3xl font-extrabold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-sky-200 to-purple-400">
-                        AETHERIS OS
-                    </h1>
-                    <p class="text-xs font-mono text-cyan-400/80 tracking-widest uppercase mt-1">
-                        Secure Authentication Node
-                    </p>
+                    <h2 class="text-2xl font-bold text-slate-100 tracking-tight">Identity Authentication</h2>
+                    <p class="text-xs font-mono text-slate-400 mt-1">Enter your assigned ID Number and Security Key</p>
                 </div>
 
-                <!-- Login Form -->
-                <form id="login-form" class="space-y-5" onsubmit="handleLogin(event)">
-                    
-                    <!-- ID Input -->
+                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
                     <div>
-                        <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-2" for="login-id">
-                            <i class="fa-solid fa-id-card text-cyan-400 mr-1.5"></i> ID Number / Credential
+                        <label class="block text-xs font-mono uppercase text-slate-300 mb-2" for="login-id">
+                            <i class="fa-solid fa-id-card text-cobalt-500 mr-1.5"></i> ID Number
                         </label>
-                        <div class="relative">
-                            <input type="text" id="login-id" required
-                                placeholder="Enter ID (Admin: 11964)" 
-                                class="glass-input w-full px-4 py-3.5 rounded-xl text-slate-100 placeholder-slate-500 text-sm font-mono tracking-wide">
-                            <span class="absolute right-3.5 top-3.5 text-slate-500 text-xs font-mono" id="id-type-badge">ID</span>
-                        </div>
+                        <input type="text" id="login-id" required placeholder="Enter ID Number" 
+                            class="glass-input w-full px-4 py-3.5 rounded-xl text-slate-100 placeholder-slate-500 text-sm font-mono tracking-wide">
                     </div>
 
-                    <!-- Password Input -->
                     <div>
-                        <div class="flex justify-between items-center mb-2">
-                            <label class="block text-xs font-mono uppercase tracking-wider text-slate-300" for="login-password">
-                                <i class="fa-solid fa-key text-cyan-400 mr-1.5"></i> Security Key
-                            </label>
-                        </div>
+                        <label class="block text-xs font-mono uppercase text-slate-300 mb-2" for="login-password">
+                            <i class="fa-solid fa-key text-cobalt-500 mr-1.5"></i> Password
+                        </label>
                         <div class="relative">
-                            <input type="password" id="login-password" required
-                                placeholder="Enter Password" 
+                            <input type="password" id="login-password" required placeholder="Enter Password" 
                                 class="glass-input w-full pl-4 pr-11 py-3.5 rounded-xl text-slate-100 placeholder-slate-500 text-sm font-mono">
                             <button type="button" onclick="togglePasswordVisibility('login-password', 'password-toggle-icon')"
-                                class="absolute right-3.5 top-3.5 text-slate-400 hover:text-cyan-400 transition-colors focus:outline-none">
+                                class="absolute right-3.5 top-3.5 text-slate-400 hover:text-cyber-cyan transition-colors focus:outline-none">
                                 <i id="password-toggle-icon" class="fa-solid fa-eye text-sm"></i>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Cloud Connection Status Indicator -->
                     <div class="flex items-center justify-between text-xs px-1">
-                        <span class="flex items-center gap-2 text-slate-400">
-                            <span id="cloud-pulse" class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                            <span id="cloud-status-text" class="text-[11px] font-mono text-emerald-400">Cloud Sync Active</span>
-                        </span>
-                        <a href="javascript:void(0)" onclick="showModal('forgot-modal')" class="text-cyan-400 hover:text-cyan-300 transition-colors text-xs font-medium">Reset Pass?</a>
+                        <label class="flex items-center gap-2 cursor-pointer text-slate-400 font-mono">
+                            <input type="checkbox" id="remember-me" class="rounded bg-slate-900 border-slate-700 text-cobalt-600 focus:ring-cobalt-500">
+                            <span>Keep Session Active</span>
+                        </label>
+                        <a href="javascript:void(0)" onclick="showModal('forgot-modal')" class="text-cobalt-500 hover:text-cyber-cyan transition-colors font-medium">Forgot Pass?</a>
                     </div>
 
-                    <!-- Submit Button -->
                     <button type="submit" id="btn-login-submit"
-                        class="w-full relative group overflow-hidden rounded-xl p-px font-semibold text-sm transition-all duration-300 shadow-lg shadow-cyan-500/20 active:scale-[0.98]">
-                        <span class="absolute inset-0 bg-gradient-to-r from-cyan-500 via-sky-500 to-purple-600 transition-all duration-300 group-hover:opacity-90"></span>
-                        <span class="relative block px-6 py-3.5 rounded-[11px] bg-slate-950/40 text-white font-mono uppercase tracking-wider flex items-center justify-center gap-2">
-                            <span>Authenticate Entry</span>
+                        class="w-full relative group overflow-hidden rounded-xl p-px font-semibold text-sm transition-all duration-300 shadow-lg shadow-cobalt-600/20 active:scale-[0.98]">
+                        <span class="absolute inset-0 bg-gradient-to-r from-cobalt-600 via-cyber-cyan to-cobalt-800 transition-all duration-300 group-hover:opacity-90"></span>
+                        <span class="relative block px-6 py-3.5 rounded-[11px] bg-slate-950/50 text-white font-mono uppercase tracking-wider flex items-center justify-center gap-2">
+                            <span id="login-btn-spinner" class="hidden"><i class="fa-solid fa-spinner animate-spin"></i></span>
+                            <span id="login-btn-text">Authenticate Access</span>
                             <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
                         </span>
                     </button>
                 </form>
 
-                <!-- Demo Auto-Fill Shortcuts Section -->
-                <div class="mt-8 pt-6 border-t border-slate-800/80">
-                    <p class="text-center text-[11px] font-mono uppercase tracking-widest text-slate-400 mb-3">
-                        Quick Demo Shortcuts
-                    </p>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button onclick="quickFillAdmin()" 
-                            class="px-3 py-2 rounded-xl bg-cyan-950/40 border border-cyan-500/30 hover:border-cyan-400/80 text-cyan-300 text-xs font-mono flex items-center justify-center gap-2 transition-all hover:bg-cyan-900/40">
-                            <i class="fa-solid fa-user-shield text-cyan-400"></i> Admin Access
-                        </button>
-                        <button onclick="quickFillDemoUser()" 
-                            class="px-3 py-2 rounded-xl bg-purple-950/40 border border-purple-500/30 hover:border-purple-400/80 text-purple-300 text-xs font-mono flex items-center justify-center gap-2 transition-all hover:bg-purple-900/40">
-                            <i class="fa-solid fa-user text-purple-400"></i> Demo User Access
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Footer info -->
-                <div class="mt-6 text-center text-[10px] font-mono text-slate-500">
-                    AETHERIS CREDENTIAL PROTOCOL v4.9.2 // AES-256 PARALLEL
+                <div class="mt-8 text-center text-[10px] font-mono text-slate-500">
+                    AETHERIS CREDENTIAL PROTOCOL v5.0 // AES-256 PARALLEL
                 </div>
             </div>
         </section>
 
-
         <!-- ========================================== -->
         <!-- 2. ADMIN DASHBOARD SECTION                  -->
         <!-- ========================================== -->
-        <section id="admin-section" class="hidden w-full max-w-7xl transition-all duration-500">
-            <div class="glass-panel rounded-3xl p-4 md:p-8 shadow-2xl border border-cyan-500/20">
+        <section id="admin-section" class="hidden w-full max-w-7xl transition-all duration-300">
+            <div class="glass-card rounded-3xl p-4 md:p-8 shadow-2xl border border-slate-800 space-y-6">
                 
                 <!-- Admin Header -->
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-800">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 text-xl font-bold shadow-lg shadow-cyan-500/20">
+                        <div class="w-12 h-12 rounded-2xl bg-cobalt-600/20 border border-cobalt-500/40 flex items-center justify-center text-cyber-cyan text-xl font-bold shadow-lg shadow-cobalt-600/20">
                             <i class="fa-solid fa-user-gear"></i>
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
-                                <h2 class="text-xl md:text-2xl font-bold text-slate-100">System Command Dashboard</h2>
-                                <span class="px-2 py-0.5 text-[10px] font-mono rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">ADMIN LEVEL</span>
+                                <h2 class="text-xl md:text-2xl font-bold text-slate-100">System Command Workspace</h2>
+                                <span class="px-2 py-0.5 text-[10px] font-mono rounded-full bg-cobalt-500/20 text-cyber-cyan border border-cobalt-500/40">ADMIN PRIVILEGES</span>
                             </div>
-                            <p class="text-xs text-slate-400 font-mono">Logged in as Administrator ID: <span class="text-cyan-400 font-semibold">11964</span></p>
+                            <p class="text-xs text-slate-400 font-mono">Logged in as Administrator</p>
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-3">
-                        <button onclick="refreshData(true)" 
-                            class="px-3 py-2 rounded-xl bg-slate-900/80 border border-slate-700 hover:border-cyan-500 text-slate-300 hover:text-cyan-400 text-xs font-mono flex items-center gap-2 transition-all">
-                            <i class="fa-solid fa-arrows-rotate" id="refresh-icon"></i>
-                            <span>Sync Data</span>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <button onclick="exportUserData('csv')" 
+                            class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-emerald-500 text-emerald-400 text-xs font-mono flex items-center gap-2 transition-all">
+                            <i class="fa-solid fa-file-csv"></i>
+                            <span>Export CSV</span>
+                        </button>
+                        <button onclick="syncData(true)" 
+                            class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-cobalt-500 text-slate-300 hover:text-cyber-cyan text-xs font-mono flex items-center gap-2 transition-all">
+                            <i class="fa-solid fa-rotate" id="refresh-icon"></i>
+                            <span>Sync Database</span>
                         </button>
                         <button onclick="logout()" 
-                            class="px-4 py-2 rounded-xl bg-rose-500/20 border border-rose-500/40 hover:bg-rose-500/30 text-rose-300 text-xs font-mono flex items-center gap-2 transition-all">
+                            class="px-4 py-2 rounded-xl bg-rose-500/10 border border-rose-500/30 hover:bg-rose-500/20 text-rose-300 text-xs font-mono flex items-center gap-2 transition-all">
                             <i class="fa-solid fa-right-from-bracket"></i>
                             <span>Logout</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Analytics Cards -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
-                    <!-- Total Users -->
-                    <div class="glass-panel p-5 rounded-2xl border border-slate-800 relative overflow-hidden group hover:border-cyan-500/40 transition-all">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="glass-card p-5 rounded-2xl border border-slate-800 relative overflow-hidden">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-mono text-slate-400 uppercase">Total User Accounts</span>
-                            <div class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
+                            <div class="w-8 h-8 rounded-lg bg-cobalt-500/10 text-cyber-cyan flex items-center justify-center">
                                 <i class="fa-solid fa-users"></i>
                             </div>
                         </div>
                         <div class="text-3xl font-extrabold text-slate-100 mt-2 font-mono" id="stat-total-users">0</div>
-                        <div class="text-[11px] text-cyan-400/80 mt-1 font-mono flex items-center gap-1">
-                            <i class="fa-solid fa-database text-[10px]"></i> Cloud Persistent
-                        </div>
+                        <div class="text-[11px] text-slate-500 mt-1 font-mono">Registered Credentials</div>
                     </div>
 
-                    <!-- Active Accounts -->
-                    <div class="glass-panel p-5 rounded-2xl border border-slate-800 relative overflow-hidden group hover:border-emerald-500/40 transition-all">
+                    <div class="glass-card p-5 rounded-2xl border border-slate-800 relative overflow-hidden">
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-mono text-slate-400 uppercase">Active Status</span>
-                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                            <span class="text-xs font-mono text-slate-400 uppercase">Active Accounts</span>
+                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-cyber-emerald flex items-center justify-center">
                                 <i class="fa-solid fa-user-check"></i>
                             </div>
                         </div>
-                        <div class="text-3xl font-extrabold text-emerald-400 mt-2 font-mono" id="stat-active-users">0</div>
-                        <div class="text-[11px] text-emerald-400/80 mt-1 font-mono flex items-center gap-1">
-                            <i class="fa-solid fa-circle text-[8px] text-emerald-400"></i> Operational
-                        </div>
+                        <div class="text-3xl font-extrabold text-cyber-emerald mt-2 font-mono" id="stat-active-users">0</div>
+                        <div class="text-[11px] text-emerald-400/80 mt-1 font-mono">Operational Access</div>
                     </div>
 
-                    <!-- System Status -->
-                    <div class="glass-panel p-5 rounded-2xl border border-slate-800 relative overflow-hidden group hover:border-purple-500/40 transition-all">
+                    <div class="glass-card p-5 rounded-2xl border border-slate-800 relative overflow-hidden">
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-mono text-slate-400 uppercase">Auth Engine</span>
-                            <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center">
-                                <i class="fa-solid fa-microchip"></i>
+                            <span class="text-xs font-mono text-slate-400 uppercase">Database Mode</span>
+                            <div class="w-8 h-8 rounded-lg bg-cobalt-500/10 text-cobalt-400 flex items-center justify-center">
+                                <i class="fa-solid fa-database"></i>
                             </div>
                         </div>
-                        <div class="text-2xl font-bold text-purple-300 mt-2 font-mono">AES-256</div>
-                        <div class="text-[11px] text-purple-400/80 mt-1 font-mono">Encrypted Store</div>
+                        <div class="text-xl font-bold text-cobalt-300 mt-2 font-mono" id="stat-db-mode">FIRESTORE</div>
+                        <div class="text-[11px] text-cobalt-400/80 mt-1 font-mono" id="stat-db-desc">Live Cloud Network</div>
                     </div>
 
-                    <!-- System Security Health -->
-                    <div class="glass-panel p-5 rounded-2xl border border-slate-800 relative overflow-hidden group hover:border-amber-500/40 transition-all">
+                    <div class="glass-card p-5 rounded-2xl border border-slate-800 relative overflow-hidden">
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-mono text-slate-400 uppercase">Security Health</span>
-                            <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
-                                <i class="fa-solid fa-shield-virus"></i>
+                            <span class="text-xs font-mono text-slate-400 uppercase">Security Integrity</span>
+                            <div class="w-8 h-8 rounded-lg bg-cyber-amber/10 text-cyber-amber flex items-center justify-center">
+                                <i class="fa-solid fa-shield-cat"></i>
                             </div>
                         </div>
-                        <div class="text-2xl font-bold text-amber-300 mt-2 font-mono">OPTIMAL</div>
-                        <div class="text-[11px] text-amber-400/80 mt-1 font-mono">0 Threats Detected</div>
+                        <div class="text-xl font-bold text-amber-300 mt-2 font-mono">ENCRYPTED</div>
+                        <div class="text-[11px] text-amber-400/80 mt-1 font-mono">AES-256 Protocol</div>
                     </div>
                 </div>
 
-                <!-- Main Content Tabs & Grid -->
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+                <!-- Main Admin Layout Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     
-                    <!-- Left Column: Create / Edit User Form (5 Cols) -->
+                    <!-- Form Column -->
                     <div class="lg:col-span-5">
-                        <div class="glass-panel p-6 rounded-2xl border border-slate-800">
+                        <div class="glass-card p-6 rounded-2xl border border-slate-800">
                             <div class="flex items-center justify-between mb-5 pb-3 border-b border-slate-800">
-                                <h3 class="font-bold text-base text-cyan-300 flex items-center gap-2" id="form-title">
-                                    <i class="fa-solid fa-user-plus text-cyan-400"></i>
-                                    <span>Provision New User</span>
+                                <h3 class="font-bold text-base text-cyber-cyan flex items-center gap-2" id="form-title">
+                                    <i class="fa-solid fa-user-plus text-cobalt-500"></i>
+                                    <span>Provision User Credential</span>
                                 </h3>
                                 <button id="btn-cancel-edit" onclick="resetUserForm()" class="hidden text-xs font-mono text-slate-400 hover:text-rose-400">
                                     <i class="fa-solid fa-xmark"></i> Cancel Edit
@@ -356,38 +309,34 @@
                             <form id="create-user-form" onsubmit="handleUserSave(event)" class="space-y-4">
                                 <input type="hidden" id="edit-doc-id" value="">
 
-                                <!-- Name Field -->
                                 <div>
                                     <label class="block text-xs font-mono uppercase text-slate-400 mb-1" for="user-fullname">Full Name *</label>
                                     <input type="text" id="user-fullname" required placeholder="e.g. Elena Rostova" 
                                         class="glass-input w-full px-3.5 py-2.5 rounded-xl text-slate-100 text-sm font-sans">
                                 </div>
 
-                                <!-- ID Field & Generate Button -->
                                 <div>
                                     <div class="flex justify-between items-center mb-1">
                                         <label class="block text-xs font-mono uppercase text-slate-400" for="user-idnum">Unique ID Number *</label>
-                                        <button type="button" onclick="generateRandomId()" class="text-[11px] text-cyan-400 hover:underline font-mono">
-                                            Auto-Generate ID
+                                        <button type="button" onclick="generateRandomId()" class="text-[11px] text-cyber-cyan hover:underline font-mono">
+                                            Auto-Generate
                                         </button>
                                     </div>
                                     <input type="text" id="user-idnum" required placeholder="e.g. 55892" 
                                         class="glass-input w-full px-3.5 py-2.5 rounded-xl text-slate-100 text-sm font-mono">
                                 </div>
 
-                                <!-- Email Field -->
                                 <div>
                                     <label class="block text-xs font-mono uppercase text-slate-400 mb-1" for="user-email">Email Address</label>
                                     <input type="email" id="user-email" placeholder="e.g. elena@aetheris.io" 
                                         class="glass-input w-full px-3.5 py-2.5 rounded-xl text-slate-100 text-sm font-sans">
                                 </div>
 
-                                <!-- Password Field with Generator -->
                                 <div>
                                     <div class="flex justify-between items-center mb-1">
                                         <label class="block text-xs font-mono uppercase text-slate-400" for="user-password">Password *</label>
-                                        <button type="button" onclick="generateRandomPassword()" class="text-[11px] text-cyan-400 hover:underline font-mono">
-                                            Generate Strong Pass
+                                        <button type="button" onclick="generateRandomPassword()" class="text-[11px] text-cyber-cyan hover:underline font-mono">
+                                            Generate Pass
                                         </button>
                                     </div>
                                     <div class="relative">
@@ -399,7 +348,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Department / Role & Status Grid -->
                                 <div class="grid grid-cols-2 gap-3">
                                     <div>
                                         <label class="block text-xs font-mono uppercase text-slate-400 mb-1" for="user-dept">Department</label>
@@ -420,28 +368,24 @@
                                     </div>
                                 </div>
 
-                                <!-- Submit Form Button -->
                                 <button type="submit" id="btn-save-user"
-                                    class="w-full mt-2 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-slate-950 font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-cyan-500/20 active:scale-[0.99] flex items-center justify-center gap-2">
+                                    class="w-full mt-2 py-3 rounded-xl bg-gradient-to-r from-cobalt-600 to-cyber-cyan hover:from-cobalt-500 hover:to-cyber-cyan text-slate-950 font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-cobalt-600/20 active:scale-[0.99] flex items-center justify-center gap-2">
                                     <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
-                                    <span id="save-btn-text">Save User Credential</span>
+                                    <span id="save-btn-text">Save Credential to Database</span>
                                 </button>
                             </form>
                         </div>
                     </div>
 
-                    <!-- Right Column: Registered Users Table & System Logs (7 Cols) -->
+                    <!-- Table Column -->
                     <div class="lg:col-span-7 space-y-6">
-                        
-                        <!-- Users Management Table -->
-                        <div class="glass-panel p-6 rounded-2xl border border-slate-800">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                        <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                 <h3 class="font-bold text-base text-slate-100 flex items-center gap-2">
-                                    <i class="fa-solid fa-users-gear text-purple-400"></i>
-                                    <span>User Database Directory</span>
+                                    <i class="fa-solid fa-users-gear text-cyber-cyan"></i>
+                                    <span>Cloud User Directory</span>
                                 </h3>
 
-                                <!-- Search Box -->
                                 <div class="relative min-w-[200px]">
                                     <input type="text" id="search-user" oninput="renderUserTable()" placeholder="Search name or ID..."
                                         class="glass-input w-full pl-8 pr-3 py-1.5 rounded-lg text-xs font-mono text-slate-200">
@@ -449,12 +393,11 @@
                                 </div>
                             </div>
 
-                            <!-- Table Container -->
-                            <div class="overflow-x-auto max-h-[360px] overflow-y-auto rounded-xl border border-slate-800/80">
+                            <div class="overflow-x-auto max-h-[380px] overflow-y-auto rounded-xl border border-slate-800">
                                 <table class="w-full text-left text-xs">
                                     <thead class="bg-slate-900/90 text-slate-400 font-mono uppercase text-[10px] sticky top-0 backdrop-blur-md z-10 border-b border-slate-800">
                                         <tr>
-                                            <th class="p-3">User Profile</th>
+                                            <th class="p-3">Profile</th>
                                             <th class="p-3">ID Number</th>
                                             <th class="p-3">Password</th>
                                             <th class="p-3">Status</th>
@@ -462,172 +405,148 @@
                                         </tr>
                                     </thead>
                                     <tbody id="user-table-body" class="divide-y divide-slate-800/50 font-mono text-slate-300">
-                                        <!-- Table Rows will be rendered dynamically -->
                                     </tbody>
                                 </table>
                             </div>
                         </div>
 
-                        <!-- Real-time Activity Audit Logs -->
-                        <div class="glass-panel p-6 rounded-2xl border border-slate-800">
-                            <div class="flex items-center justify-between mb-3">
+                        <!-- System Audit Log -->
+                        <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-3">
+                            <div class="flex items-center justify-between">
                                 <h3 class="font-bold text-sm text-slate-200 flex items-center gap-2">
-                                    <i class="fa-solid fa-list-check text-cyan-400"></i>
-                                    <span>Real-Time System Audit Logs</span>
+                                    <i class="fa-solid fa-list-check text-cobalt-500"></i>
+                                    <span>System Audit Log</span>
                                 </h3>
                                 <span class="text-[10px] font-mono text-slate-500" id="log-count">0 Events</span>
                             </div>
                             <div id="audit-log-container" class="space-y-2 max-h-[160px] overflow-y-auto pr-1 text-xs font-mono">
-                                <!-- Dynamic Log Items -->
                             </div>
                         </div>
-
                     </div>
+
                 </div>
 
             </div>
         </section>
 
-
         <!-- ========================================== -->
-        <!-- 3. USER PROFILE DASHBOARD                   -->
+        <!-- 3. USER WORKSPACE DASHBOARD                -->
         <!-- ========================================== -->
-        <section id="user-section" class="hidden w-full max-w-5xl transition-all duration-500">
-            <div class="glass-panel-glow rounded-3xl p-6 md:p-10 shadow-2xl border border-cyan-500/30 relative">
+        <section id="user-section" class="hidden w-full max-w-5xl transition-all duration-300">
+            <div class="glass-card-glow rounded-3xl p-6 md:p-10 shadow-2xl border border-slate-800 relative space-y-8">
                 
-                <!-- Top Bar -->
+                <!-- User Header -->
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
                     <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></div>
-                        <span class="text-xs font-mono text-emerald-400 tracking-wider">SESSION ACTIVE // SECURITY VERIFIED</span>
+                        <div class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></div>
+                        <span class="text-xs font-mono text-emerald-400 tracking-wider uppercase">AUTHENTICATED SESSION // ACCESS GRANTED</span>
                     </div>
 
                     <button onclick="logout()" 
-                        class="px-4 py-2 rounded-xl bg-rose-500/20 border border-rose-500/40 hover:bg-rose-500/30 text-rose-300 text-xs font-mono flex items-center gap-2 transition-all self-start sm:self-auto">
+                        class="px-4 py-2 rounded-xl bg-rose-500/10 border border-rose-500/30 hover:bg-rose-500/20 text-rose-300 text-xs font-mono flex items-center gap-2 transition-all self-start sm:self-auto">
                         <i class="fa-solid fa-right-from-bracket"></i>
-                        <span>Disconnect Portal</span>
+                        <span>Logout Session</span>
                     </button>
                 </div>
 
-                <!-- Main User Grid -->
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     
-                    <!-- Left: ID Card Visual Graphic Component (5 Cols) -->
+                    <!-- Digital Identity Pass -->
                     <div class="lg:col-span-5 flex flex-col items-center">
-                        <div id="digital-id-card" class="w-full max-w-sm rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-cyan-950/60 p-6 border border-cyan-500/40 shadow-2xl relative overflow-hidden group">
+                        <div id="digital-id-card" class="w-full max-w-sm rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-cobalt-950 p-6 border border-cobalt-500/30 shadow-2xl relative overflow-hidden group">
                             
-                            <!-- Card Holographic Layer -->
-                            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-all"></div>
+                            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-cobalt-600/10 rounded-full blur-2xl"></div>
+                            
                             <div class="flex justify-between items-start mb-6">
                                 <div class="flex items-center gap-2">
-                                    <i class="fa-solid fa-microchip text-cyan-400 text-2xl"></i>
-                                    <span class="text-xs font-mono text-cyan-300 tracking-widest uppercase">AETHERIS ACCESS</span>
+                                    <i class="fa-solid fa-microchip text-cyber-cyan text-2xl"></i>
+                                    <span class="text-xs font-mono text-cobalt-300 tracking-widest uppercase">SECURITY PASS</span>
                                 </div>
                                 <span id="user-badge-status" class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
                                     ACTIVE
                                 </span>
                             </div>
 
-                            <!-- Avatar & Details -->
                             <div class="flex items-center gap-4 mb-6">
-                                <div class="w-16 h-16 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 p-0.5 shadow-md">
-                                    <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center text-cyan-300 text-2xl font-bold font-mono" id="user-avatar-initials">
+                                <div class="w-16 h-16 rounded-xl bg-gradient-to-tr from-cobalt-600 to-cyber-cyan p-0.5 shadow-md">
+                                    <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center text-cyber-cyan text-2xl font-bold font-mono" id="user-avatar-initials">
                                         US
                                     </div>
                                 </div>
                                 <div>
                                     <h3 class="text-lg font-bold text-slate-100" id="user-card-name">User Name</h3>
-                                    <p class="text-xs font-mono text-cyan-400" id="user-card-dept">Department</p>
+                                    <p class="text-xs font-mono text-cyber-cyan" id="user-card-dept">Department</p>
                                 </div>
                             </div>
 
-                            <!-- Barcode / ID Details -->
                             <div class="space-y-2 pt-3 border-t border-slate-800">
                                 <div class="flex justify-between text-xs font-mono">
                                     <span class="text-slate-500">ID NUMBER:</span>
-                                    <span class="text-cyan-300 font-bold" id="user-card-id">12345</span>
+                                    <span class="text-cyber-cyan font-bold" id="user-card-id">12345</span>
                                 </div>
                                 <div class="flex justify-between text-xs font-mono">
                                     <span class="text-slate-500">CLEARANCE:</span>
-                                    <span class="text-purple-300">LEVEL 4 SECURE</span>
+                                    <span class="text-emerald-400">RESTRICTED OPERATIVE</span>
                                 </div>
                             </div>
 
-                            <!-- Simulated Barcode Graphic -->
+                            <!-- Barcode Graphic -->
                             <div class="mt-5 pt-3 border-t border-slate-800/80 flex flex-col items-center">
-                                <div class="h-8 w-full bg-[repeating-linear-gradient(90deg,#00f3ff_0,#00f3ff_2px,transparent_0,transparent_4px,#fff_0,#fff_7px,transparent_0,transparent_9px)] opacity-60"></div>
-                                <span class="text-[9px] font-mono text-slate-500 mt-1" id="user-card-barcode-num">AETH-11964-X</span>
+                                <div class="h-8 w-full bg-[repeating-linear-gradient(90deg,#0284c7_0,#0284c7_2px,transparent_0,transparent_4px,#fff_0,#fff_7px,transparent_0,transparent_9px)] opacity-60"></div>
+                                <span class="text-[9px] font-mono text-slate-500 mt-1" id="user-card-barcode-num">AETH-SEC-PASS</span>
                             </div>
                         </div>
-
-                        <!-- Card Download Action -->
-                        <button onclick="simulateCardDownload()" 
-                            class="mt-4 px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 hover:border-cyan-500 text-slate-300 hover:text-cyan-300 text-xs font-mono flex items-center gap-2 transition-all">
-                            <i class="fa-solid fa-download"></i>
-                            <span>Export Identity Credentials</span>
-                        </button>
                     </div>
 
-                    <!-- Right: Detailed Info & Preferences (7 Cols) -->
+                    <!-- Personal Information & Password Modification -->
                     <div class="lg:col-span-7 space-y-6">
                         
-                        <!-- Account Details Box -->
-                        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
-                            <h3 class="text-base font-bold text-cyan-300 flex items-center gap-2 pb-2 border-b border-slate-800">
-                                <i class="fa-solid fa-address-card"></i>
-                                <span>Personalized Security Profile</span>
+                        <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
+                            <h3 class="text-base font-bold text-slate-100 flex items-center gap-2 pb-2 border-b border-slate-800">
+                                <i class="fa-solid fa-address-card text-cobalt-500"></i>
+                                <span>Personal Credentials & Security</span>
                             </h3>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
-                                <div class="bg-slate-950/50 p-3 rounded-xl border border-slate-800/80">
+                                <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800">
                                     <span class="text-slate-500 block text-[10px] uppercase">Registered Email</span>
                                     <span class="text-slate-200 font-sans text-sm" id="user-detail-email">email@aetheris.io</span>
                                 </div>
 
-                                <div class="bg-slate-950/50 p-3 rounded-xl border border-slate-800/80">
-                                    <span class="text-slate-500 block text-[10px] uppercase">Assigned Role</span>
-                                    <span class="text-slate-200 font-sans text-sm" id="user-detail-role">Standard Operative</span>
+                                <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+                                    <span class="text-slate-500 block text-[10px] uppercase">Account Status</span>
+                                    <span class="text-emerald-400 font-bold text-sm" id="user-detail-status">Active</span>
                                 </div>
+                            </div>
 
-                                <div class="bg-slate-950/50 p-3 rounded-xl border border-slate-800/80">
-                                    <span class="text-slate-500 block text-[10px] uppercase">Registered Date</span>
-                                    <span class="text-slate-200 text-sm" id="user-detail-date">2026-10-25</span>
-                                </div>
-
-                                <div class="bg-slate-950/50 p-3 rounded-xl border border-slate-800/80">
-                                    <span class="text-slate-500 block text-[10px] uppercase">Current Password</span>
-                                    <div class="flex items-center justify-between mt-0.5">
-                                        <span class="text-cyan-300 font-bold" id="user-detail-pass">••••••••</span>
-                                        <button onclick="toggleUserPassView()" class="text-slate-400 hover:text-cyan-400 text-xs">
-                                            <i id="btn-toggle-pass-eye" class="fa-solid fa-eye"></i>
+                            <!-- Change Password Form -->
+                            <form onsubmit="handleUserPasswordChange(event)" class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+                                <h4 class="text-xs font-mono text-slate-300 font-bold uppercase">Change Password</h4>
+                                <div>
+                                    <div class="relative">
+                                        <input type="password" id="user-new-pass" required placeholder="Enter new security password" 
+                                            class="glass-input w-full px-3.5 py-2.5 rounded-xl text-slate-100 text-xs font-mono">
+                                        <button type="button" onclick="togglePasswordVisibility('user-new-pass', 'user-new-pass-icon')" class="absolute right-3 top-2.5 text-slate-500">
+                                            <i id="user-new-pass-icon" class="fa-solid fa-eye text-xs"></i>
                                         </button>
                                     </div>
                                 </div>
-                            </div>
+                                <button type="submit" id="btn-change-pass" 
+                                    class="px-4 py-2.5 rounded-xl bg-cobalt-600 hover:bg-cobalt-500 text-white font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2">
+                                    <i class="fa-solid fa-key"></i> Update Security Key
+                                </button>
+                            </form>
                         </div>
 
-                        <!-- System Notice Board -->
-                        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-3">
-                            <h3 class="text-sm font-bold text-slate-200 flex items-center gap-2">
-                                <i class="fa-solid fa-bullhorn text-amber-400"></i>
-                                <span>Security Directives & Notices</span>
+                        <!-- Directive Card -->
+                        <div class="glass-card p-5 rounded-2xl border border-slate-800">
+                            <h3 class="text-xs font-mono text-slate-300 font-bold uppercase mb-2 flex items-center gap-2">
+                                <i class="fa-solid fa-shield-virus text-amber-400"></i>
+                                <span>Security Directive</span>
                             </h3>
-                            <div class="bg-amber-500/10 border border-amber-500/30 p-3.5 rounded-xl text-xs text-amber-200/90 leading-relaxed font-sans">
-                                <p class="font-semibold text-amber-300 mb-1">Notice #4092: Cloud Identity Synchronization</p>
-                                Welcome to AETHERIS Terminal. Your credentials were generated via Admin Console and are synced to cloud storage. Please ensure your password is saved securely.
-                            </div>
-                        </div>
-
-                        <!-- Quick Session Stats -->
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="glass-panel p-4 rounded-xl border border-slate-800 text-center">
-                                <span class="text-[10px] font-mono text-slate-500 uppercase block">Encryption Level</span>
-                                <span class="text-sm font-mono font-bold text-cyan-400">256-Bit Standard</span>
-                            </div>
-                            <div class="glass-panel p-4 rounded-xl border border-slate-800 text-center">
-                                <span class="text-[10px] font-mono text-slate-500 uppercase block">Last Login</span>
-                                <span class="text-xs font-mono font-bold text-emerald-400" id="user-last-login">Just now</span>
-                            </div>
+                            <p class="text-xs text-slate-400 leading-relaxed font-sans">
+                                Changes to your password write directly to the Cloud Firestore network. If offline, changes sync immediately upon reconnecting.
+                            </p>
                         </div>
 
                     </div>
@@ -648,74 +567,115 @@
     <!-- MODALS SECTION                              -->
     <!-- ========================================== -->
 
-    <!-- Generic Confirmation / Message Modal -->
-    <div id="modal-container" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-        <div id="modal-box" class="glass-panel-glow w-full max-w-md rounded-2xl p-6 border border-cyan-500/30 shadow-2xl space-y-4 transform scale-95 transition-transform">
-            <h3 id="modal-title" class="text-lg font-bold text-slate-100 flex items-center gap-2">
-                <i class="fa-solid fa-circle-info text-cyan-400"></i>
-                <span>Notice</span>
-            </h3>
-            <p id="modal-message" class="text-sm text-slate-300 font-sans leading-relaxed">
-                Message content goes here.
-            </p>
-            <div class="flex justify-end gap-3 pt-2" id="modal-actions">
-                <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-cyan-500 text-slate-950 font-bold text-xs font-mono uppercase hover:bg-cyan-400 transition-colors">
-                    Acknowledge
+    <!-- Firebase Config Setup Modal -->
+    <div id="firebase-config-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+        <div class="glass-card-glow w-full max-w-lg rounded-2xl p-6 border border-cobalt-500/40 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
+                    <i class="fa-solid fa-cloud-gear text-cyber-cyan"></i>
+                    <span>Connect Live Firebase Cloud Database</span>
+                </h3>
+                <button onclick="hideModal('firebase-config-modal')" class="text-slate-400 hover:text-slate-200">
+                    <i class="fa-solid fa-xmark"></i>
                 </button>
+            </div>
+            <p class="text-xs text-slate-300 font-sans leading-relaxed">
+                Paste your custom <strong>Firebase Web Project Configuration</strong> below to connect this portal to your live Firebase Cloud Firestore database.
+            </p>
+            
+            <div class="space-y-3 font-mono text-xs">
+                <div>
+                    <label class="block text-slate-400 mb-1">API Key (apiKey)</label>
+                    <input type="text" id="cfg-apikey" placeholder="AIzaSy..." class="glass-input w-full px-3 py-2 rounded-lg text-slate-200">
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-1">Auth Domain (authDomain)</label>
+                    <input type="text" id="cfg-authdomain" placeholder="project-id.firebaseapp.com" class="glass-input w-full px-3 py-2 rounded-lg text-slate-200">
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-1">Project ID (projectId)</label>
+                    <input type="text" id="cfg-projectid" placeholder="my-cyber-app" class="glass-input w-full px-3 py-2 rounded-lg text-slate-200">
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center pt-3 border-t border-slate-800">
+                <button onclick="clearCustomFirebaseConfig()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 text-xs font-mono hover:text-rose-400">
+                    Reset Config
+                </button>
+                <div class="flex gap-2">
+                    <button onclick="hideModal('firebase-config-modal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-mono">Close</button>
+                    <button onclick="saveCustomFirebaseConfig()" class="px-4 py-2 rounded-xl bg-cobalt-600 hover:bg-cobalt-500 text-white font-bold text-xs font-mono uppercase">Save & Connect</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Password Reset Modal -->
+    <!-- Generic Confirm Modal -->
+    <div id="modal-container" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+        <div id="modal-box" class="glass-card-glow w-full max-w-md rounded-2xl p-6 border border-cobalt-500/30 shadow-2xl space-y-4">
+            <h3 id="modal-title" class="text-lg font-bold text-slate-100 flex items-center gap-2">
+                <i class="fa-solid fa-circle-info text-cyber-cyan"></i>
+                <span>Notice</span>
+            </h3>
+            <p id="modal-message" class="text-sm text-slate-300 font-sans leading-relaxed">
+                Message content.
+            </p>
+            <div class="flex justify-end gap-3 pt-2" id="modal-actions">
+                <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-cobalt-600 text-white font-bold text-xs font-mono uppercase hover:bg-cobalt-500">Acknowledge</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Request Modal -->
     <div id="forgot-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-        <div class="glass-panel w-full max-w-md rounded-2xl p-6 border border-slate-800 space-y-4">
+        <div class="glass-card w-full max-w-md rounded-2xl p-6 border border-slate-800 space-y-4">
             <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
-                <i class="fa-solid fa-key text-cyan-400"></i>
-                <span>Reset User Key</span>
+                <i class="fa-solid fa-key text-cobalt-500"></i>
+                <span>Reset Security Key</span>
             </h3>
             <p class="text-xs text-slate-400 font-sans">
-                Enter your ID Number to verify identity. An admin clearance key is required for full password resets.
+                Enter your assigned ID Number. Password resets require administrator clearance.
             </p>
             <input type="text" id="reset-id-input" placeholder="Enter ID Number" class="glass-input w-full px-3.5 py-2.5 rounded-xl text-xs font-mono text-slate-200">
             <div class="flex justify-end gap-3 pt-2">
                 <button onclick="hideModal('forgot-modal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-mono">Cancel</button>
-                <button onclick="handleRequestReset()" class="px-4 py-2 rounded-xl bg-cyan-500 text-slate-950 font-bold text-xs font-mono">Request Reset</button>
+                <button onclick="handleRequestReset()" class="px-4 py-2 rounded-xl bg-cobalt-600 text-white font-bold text-xs font-mono">Submit Request</button>
             </div>
         </div>
     </div>
 
 
     <!-- ========================================== -->
-    <!-- FIREBASE & APPLICATION LOGIC               -->
+    <!-- APPLICATION SCRIPT & FIREBASE INTEGRATION  -->
     <!-- ========================================== -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, getDocs, collection, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDocs, collection, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Global State & Configuration
-        const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'cyber-auth-app';
+        // APP STATE & CONSTANTS
+        const APP_COLLECTION = "user_credentials";
         let db = null;
         let auth = null;
         let currentUserData = null;
         let usersList = [];
         let auditLogs = [];
-        let isFirebaseAvailable = false;
+        let isFirebaseConnected = false;
 
-        // Pre-populated Default Users for immediate functionality
-        const DEFAULT_USERS = [
+        // Default Seed Data
+        const DEFAULT_SEED_USERS = [
             {
-                docId: 'demo-user-1',
+                docId: 'usr-1001',
                 idNumber: '1001',
                 fullName: 'Sarah Connor',
-                email: 'sarah@cyberdyne.io',
+                email: 'sarah@aetheris.io',
                 password: 'User@1001',
                 department: 'Cyber Security',
                 status: 'Active',
                 createdAt: new Date().toISOString()
             },
             {
-                docId: 'demo-user-2',
+                docId: 'usr-1002',
                 idNumber: '1002',
                 fullName: 'Kaelen Voss',
                 email: 'kaelen@aetheris.io',
@@ -726,205 +686,188 @@
             }
         ];
 
-        // Initialize App & Firebase
+        // 1. INITIALIZATION & SESSION MANAGEMENT
         async function initApp() {
             startParticleCanvas();
-            initLocalStorageFallback();
+            loadLocalStorageData();
+            populateConfigModalFields();
 
+            // Check if Firebase custom config is present
+            let customConfig = null;
             try {
-                if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-                    const firebaseConfig = JSON.parse(__firebase_config);
-                    const app = initializeApp(firebaseConfig);
-                    auth = getAuth(app);
-                    db = getFirestore(app);
+                const saved = localStorage.getItem('custom_firebase_config');
+                if (saved) customConfig = JSON.parse(saved);
+            } catch(e) {}
 
-                    // Auth first before querying
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-
-                    isFirebaseAvailable = true;
-                    updateCloudStatus(true, "Firebase Live Cloud Connected");
-                    subscribeToFirestore();
-                } else {
-                    throw new Error("No firebase config found");
-                }
-            } catch (err) {
-                console.warn("Firestore initialization fallback to Local Storage:", err);
-                isFirebaseAvailable = false;
-                updateCloudStatus(false, "Local Memory Cache Active");
-                loadFromLocalStorage();
+            if (customConfig && customConfig.apiKey) {
+                await initFirebase(customConfig);
+            } else {
+                updateCloudStatus(false, "Local Store Active");
             }
 
-            // Render Initial Logs
-            addLog("System Engine Initialized.", "system");
+            // Check Session Persistence (Auto Login)
+            checkActiveSession();
+            addLog("System Initialized.", "system");
         }
 
-        // Firestore Paths (Strict Rule 1 Compliance)
-        function getUsersCollectionRef() {
-            return collection(db, 'artifacts', APP_ID, 'public', 'data', 'user_credentials');
-        }
+        async function initFirebase(config) {
+            try {
+                const app = initializeApp(config);
+                auth = getAuth(app);
+                db = getFirestore(app);
 
-        function getLogsCollectionRef() {
-            return collection(db, 'artifacts', APP_ID, 'public', 'data', 'audit_logs');
-        }
-
-        // Live Real-Time Firestore Synchronization
-        function subscribeToFirestore() {
-            if (!db) return;
-
-            // Subscribe to Users
-            onSnapshot(getUsersCollectionRef(), (snapshot) => {
-                const fetchedUsers = [];
-                snapshot.forEach(docSnap => {
-                    fetchedUsers.push({ docId: docSnap.id, ...docSnap.data() });
-                });
+                await signInAnonymously(auth);
+                isFirebaseConnected = true;
+                updateCloudStatus(true, "Firebase Live");
                 
-                if (fetchedUsers.length === 0) {
-                    // Seed initial default users to cloud
-                    seedDefaultUsersToCloud();
+                // Subscribe to Firestore changes
+                subscribeToCloudData();
+            } catch (err) {
+                console.warn("Firebase Init Error, falling back to Local Storage:", err);
+                isFirebaseConnected = false;
+                updateCloudStatus(false, "Local Offline Store");
+            }
+        }
+
+        function subscribeToCloudData() {
+            if (!db) return;
+            const usersRef = collection(db, APP_COLLECTION);
+            
+            onSnapshot(usersRef, (snapshot) => {
+                const cloudUsers = [];
+                snapshot.forEach(docSnap => {
+                    cloudUsers.push({ docId: docSnap.id, ...docSnap.data() });
+                });
+
+                if (cloudUsers.length === 0) {
+                    seedCloudUsers();
                 } else {
-                    usersList = fetchedUsers;
+                    usersList = cloudUsers;
                     localStorage.setItem('aetheris_users', JSON.stringify(usersList));
                     renderUserTable();
                     updateAdminStats();
                 }
-            }, (error) => {
-                console.error("Firestore user sync error:", error);
-                showToast("Cloud sync error. Falling back to cached data.", "error");
-            });
-
-            // Subscribe to Audit Logs
-            onSnapshot(getLogsCollectionRef(), (snapshot) => {
-                const fetchedLogs = [];
-                snapshot.forEach(docSnap => {
-                    fetchedLogs.push(docSnap.data());
-                });
-                // Sort logs by time descending
-                fetchedLogs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                auditLogs = fetchedLogs.slice(0, 15);
-                renderAuditLogs();
-            }, (error) => {
-                console.error("Firestore log sync error:", error);
+            }, (err) => {
+                console.error("Firestore sync error:", err);
+                showToast("Cloud sync error. Falling back to local data.", "error");
             });
         }
 
-        async function seedDefaultUsersToCloud() {
+        async function seedCloudUsers() {
             if (!db) return;
-            for (const u of DEFAULT_USERS) {
-                const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'user_credentials', u.docId);
-                await setDoc(docRef, u);
+            for (const u of DEFAULT_SEED_USERS) {
+                await setDoc(doc(db, APP_COLLECTION, u.docId), u);
             }
         }
 
-        // Local Storage Fallback Handlers
-        function initLocalStorageFallback() {
-            if (!localStorage.getItem('aetheris_users')) {
-                localStorage.setItem('aetheris_users', JSON.stringify(DEFAULT_USERS));
-            }
-        }
-
-        function loadFromLocalStorage() {
+        function loadLocalStorageData() {
             const cached = localStorage.getItem('aetheris_users');
-            usersList = cached ? JSON.parse(cached) : DEFAULT_USERS;
+            usersList = cached ? JSON.parse(cached) : DEFAULT_SEED_USERS;
+            if (!cached) localStorage.setItem('aetheris_users', JSON.stringify(usersList));
             renderUserTable();
             updateAdminStats();
         }
 
-        function saveToLocalStorage() {
+        function saveLocalStorageData() {
             localStorage.setItem('aetheris_users', JSON.stringify(usersList));
             renderUserTable();
             updateAdminStats();
         }
 
-        // Audit Logging Logic
-        async function addLog(message, category = 'info') {
-            const logEntry = {
-                message,
-                category,
-                timestamp: new Date().toISOString()
-            };
-
-            auditLogs.unshift(logEntry);
-            if (auditLogs.length > 20) auditLogs.pop();
-            renderAuditLogs();
-
-            if (isFirebaseAvailable && db && auth.currentUser) {
+        function checkActiveSession() {
+            const sessionStr = localStorage.getItem('aetheris_active_session') || sessionStorage.getItem('aetheris_active_session');
+            if (sessionStr) {
                 try {
-                    const newLogRef = doc(getLogsCollectionRef());
-                    await setDoc(newLogRef, logEntry);
-                } catch (e) {
-                    console.error("Failed to push log:", e);
-                }
+                    const session = JSON.parse(sessionStr);
+                    if (session.role === 'admin') {
+                        switchToSection('admin-section');
+                        renderUserTable();
+                        updateAdminStats();
+                        showToast("Restored Admin Session", "info");
+                    } else if (session.role === 'user' && session.userData) {
+                        currentUserData = session.userData;
+                        populateUserProfile(currentUserData);
+                        switchToSection('user-section');
+                        showToast(`Session restored for ${currentUserData.fullName}`, "info");
+                    }
+                } catch(e) {}
             }
         }
 
-        // Export Window Functions to global scope for HTML inline handlers
-        window.handleLogin = function(e) {
+        // 2. AUTHENTICATION ENGINE
+        window.handleLogin = async function(e) {
             e.preventDefault();
             const idInput = document.getElementById('login-id').value.trim();
             const passInput = document.getElementById('login-password').value;
+            const rememberMe = document.getElementById('remember-me').checked;
 
-            // 1. Check Hardcoded Admin Credentials
-            if (idInput === '11964' && passInput === 'MSMI2008@') {
-                showToast("Admin Security Clearance Granted!", "success");
-                addLog("Admin (ID: 11964) logged into System Dashboard", "admin");
-                triggerConfetti();
-                switchToSection('admin-section');
-                renderUserTable();
-                updateAdminStats();
-                return;
-            }
+            setLoginBtnLoading(true);
 
-            // 2. Check User Credentials Database
-            const foundUser = usersList.find(u => 
-                (u.idNumber === idInput || (u.email && u.email.toLowerCase() === idInput.toLowerCase())) &&
-                u.password === passInput
-            );
+            setTimeout(async () => {
+                setLoginBtnLoading(false);
 
-            if (foundUser) {
-                if (foundUser.status === 'Suspended') {
-                    showToast("Account Access Suspended! Contact Administrator.", "error");
-                    addLog(`Blocked login attempt for suspended user ID: ${foundUser.idNumber}`, "warning");
+                // Admin Auth Check
+                if (idInput === '11964' && passInput === 'MSMI2008@') {
+                    showToast("Admin Authentication Successful!", "success");
+                    addLog("Admin logged in", "admin");
+                    
+                    const sessionData = { role: 'admin', timestamp: Date.now() };
+                    if (rememberMe) {
+                        localStorage.setItem('aetheris_active_session', JSON.stringify(sessionData));
+                    } else {
+                        sessionStorage.setItem('aetheris_active_session', JSON.stringify(sessionData));
+                    }
+
+                    switchToSection('admin-section');
+                    renderUserTable();
+                    updateAdminStats();
+                    triggerConfetti();
                     return;
                 }
 
-                currentUserData = foundUser;
-                showToast(`Welcome back, ${foundUser.fullName}!`, "success");
-                addLog(`User '${foundUser.fullName}' (ID: ${foundUser.idNumber}) logged in.`, "user");
-                populateUserProfile(foundUser);
-                switchToSection('user-section');
-                triggerConfetti();
-                return;
-            }
+                // User Auth Check
+                const foundUser = usersList.find(u => u.idNumber === idInput && u.password === passInput);
 
-            // 3. Invalid Credentials
-            showToast("Invalid Credentials or Access Denied!", "error");
-            addLog(`Failed login attempt for ID: ${idInput}`, "warning");
-        };
+                if (foundUser) {
+                    if (foundUser.status === 'Suspended') {
+                        showToast("Account Suspended. Contact Administrator.", "error");
+                        addLog(`Blocked login attempt for suspended ID: ${foundUser.idNumber}`, "warning");
+                        return;
+                    }
 
-        window.quickFillAdmin = function() {
-            document.getElementById('login-id').value = '11964';
-            document.getElementById('login-password').value = 'MSMI2008@';
-            showToast("Admin Credentials Auto-filled", "info");
-        };
+                    currentUserData = foundUser;
+                    showToast(`Welcome, ${foundUser.fullName}!`, "success");
+                    addLog(`User '${foundUser.fullName}' (ID: ${foundUser.idNumber}) logged in.`, "user");
 
-        window.quickFillDemoUser = function() {
-            document.getElementById('login-id').value = '1001';
-            document.getElementById('login-password').value = 'User@1001';
-            showToast("Demo User Credentials Auto-filled", "info");
+                    const sessionData = { role: 'user', userData: foundUser, timestamp: Date.now() };
+                    if (rememberMe) {
+                        localStorage.setItem('aetheris_active_session', JSON.stringify(sessionData));
+                    } else {
+                        sessionStorage.setItem('aetheris_active_session', JSON.stringify(sessionData));
+                    }
+
+                    populateUserProfile(foundUser);
+                    switchToSection('user-section');
+                    triggerConfetti();
+                    return;
+                }
+
+                showToast("Invalid ID Number or Password", "error");
+                addLog(`Failed login attempt for ID: ${idInput}`, "warning");
+            }, 500);
         };
 
         window.logout = function() {
+            localStorage.removeItem('aetheris_active_session');
+            sessionStorage.removeItem('aetheris_active_session');
             currentUserData = null;
             document.getElementById('login-form').reset();
             switchToSection('login-section');
-            showToast("Session Disconnected", "info");
-            addLog("User session terminated", "info");
+            showToast("Logged out safely.", "info");
+            addLog("Session terminated", "info");
         };
 
+        // 3. ADMIN USER MANAGEMENT & CRUD
         window.handleUserSave = async function(e) {
             e.preventDefault();
             const docIdInput = document.getElementById('edit-doc-id').value;
@@ -935,15 +878,15 @@
             const department = document.getElementById('user-dept').value;
             const status = document.getElementById('user-status').value;
 
-            // Check Duplicate ID
+            // Check ID Uniqueness
             const duplicate = usersList.find(u => u.idNumber === idNumber && u.docId !== docIdInput);
             if (duplicate) {
-                showToast(`ID Number '${idNumber}' is already assigned to another user!`, "error");
+                showToast(`ID Number '${idNumber}' is already assigned!`, "error");
                 return;
             }
 
             const isEdit = !!docIdInput;
-            const targetDocId = isEdit ? docIdInput : 'user-' + Date.now();
+            const targetDocId = isEdit ? docIdInput : 'usr-' + Date.now();
 
             const userData = {
                 docId: targetDocId,
@@ -956,31 +899,25 @@
                 createdAt: isEdit ? (usersList.find(u=>u.docId === docIdInput)?.createdAt || new Date().toISOString()) : new Date().toISOString()
             };
 
-            const btnSave = document.getElementById('btn-save-user');
-            btnSave.disabled = true;
-
             try {
-                if (isFirebaseAvailable && db && auth.currentUser) {
-                    const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'user_credentials', targetDocId);
-                    await setDoc(docRef, userData);
+                if (isFirebaseConnected && db) {
+                    await setDoc(doc(db, APP_COLLECTION, targetDocId), userData);
                 } else {
                     if (isEdit) {
-                        const index = usersList.findIndex(u => u.docId === targetDocId);
-                        if (index !== -1) usersList[index] = userData;
+                        const idx = usersList.findIndex(u => u.docId === targetDocId);
+                        if (idx !== -1) usersList[idx] = userData;
                     } else {
                         usersList.push(userData);
                     }
-                    saveToLocalStorage();
+                    saveLocalStorageData();
                 }
 
-                showToast(`User Credential ${isEdit ? 'Updated' : 'Created'} Successfully!`, "success");
-                addLog(`Admin ${isEdit ? 'updated' : 'created'} account for '${fullName}' (ID: ${idNumber})`, "admin");
+                showToast(`User ${isEdit ? 'Updated' : 'Created'} Successfully!`, "success");
+                addLog(`Admin ${isEdit ? 'updated' : 'created'} user '${fullName}' (ID: ${idNumber})`, "admin");
                 resetUserForm();
             } catch (err) {
-                console.error("Save error:", err);
-                showToast("Error saving user data.", "error");
-            } finally {
-                btnSave.disabled = false;
+                console.error("Save User Error:", err);
+                showToast("Failed to save user record.", "error");
             }
         };
 
@@ -997,32 +934,31 @@
             document.getElementById('user-status').value = user.status;
 
             document.getElementById('form-title').innerHTML = `<i class="fa-solid fa-user-pen text-amber-400"></i> Edit User Profile`;
-            document.getElementById('save-btn-text').innerText = "Update User Credential";
+            document.getElementById('save-btn-text').innerText = "Update Credential";
             document.getElementById('btn-cancel-edit').classList.remove('hidden');
         };
 
         window.resetUserForm = function() {
             document.getElementById('create-user-form').reset();
             document.getElementById('edit-doc-id').value = '';
-            document.getElementById('form-title').innerHTML = `<i class="fa-solid fa-user-plus text-cyan-400"></i> Provision New User`;
-            document.getElementById('save-btn-text').innerText = "Save User Credential";
+            document.getElementById('form-title').innerHTML = `<i class="fa-solid fa-user-plus text-cobalt-500"></i> Provision User Credential`;
+            document.getElementById('save-btn-text').innerText = "Save Credential to Database";
             document.getElementById('btn-cancel-edit').classList.add('hidden');
         };
 
         window.deleteUserPrompt = function(docId, userName) {
             showConfirmModal(
-                "Revoke Access Credential",
-                `Are you sure you want to permanently delete user entry for '${userName}'? This action cannot be undone.`,
+                "Revoke Credential Access",
+                `Are you sure you want to permanently delete user record for '${userName}'?`,
                 async () => {
                     try {
-                        if (isFirebaseAvailable && db && auth.currentUser) {
-                            const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'user_credentials', docId);
-                            await deleteDoc(docRef);
+                        if (isFirebaseConnected && db) {
+                            await deleteDoc(doc(db, APP_COLLECTION, docId));
                         } else {
                             usersList = usersList.filter(u => u.docId !== docId);
-                            saveToLocalStorage();
+                            saveLocalStorageData();
                         }
-                        showToast(`User '${userName}' removed from system.`, "info");
+                        showToast(`User '${userName}' removed.`, "info");
                         addLog(`Admin revoked credentials for '${userName}'`, "warning");
                     } catch (e) {
                         showToast("Failed to delete user.", "error");
@@ -1031,6 +967,49 @@
             );
         };
 
+        // 4. USER WORKSPACE PASSWORD CHANGE
+        window.handleUserPasswordChange = async function(e) {
+            e.preventDefault();
+            if (!currentUserData) return;
+
+            const newPass = document.getElementById('user-new-pass').value.trim();
+            if (newPass.length < 6) {
+                showToast("Password must be at least 6 characters", "error");
+                return;
+            }
+
+            currentUserData.password = newPass;
+
+            try {
+                if (isFirebaseConnected && db) {
+                    await setDoc(doc(db, APP_COLLECTION, currentUserData.docId), currentUserData);
+                } else {
+                    const idx = usersList.findIndex(u => u.docId === currentUserData.docId);
+                    if (idx !== -1) usersList[idx] = currentUserData;
+                    saveLocalStorageData();
+                }
+
+                // Update session
+                const sessionStr = localStorage.getItem('aetheris_active_session') || sessionStorage.getItem('aetheris_active_session');
+                if (sessionStr) {
+                    const session = JSON.parse(sessionStr);
+                    session.userData = currentUserData;
+                    if (localStorage.getItem('aetheris_active_session')) {
+                        localStorage.setItem('aetheris_active_session', JSON.stringify(session));
+                    } else {
+                        sessionStorage.setItem('aetheris_active_session', JSON.stringify(session));
+                    }
+                }
+
+                document.getElementById('user-new-pass').value = '';
+                showToast("Password updated in database!", "success");
+                addLog(`User '${currentUserData.fullName}' updated password.`, "user");
+            } catch(e) {
+                showToast("Failed to update password.", "error");
+            }
+        };
+
+        // 5. HELPER UTILITIES
         window.generateRandomId = function() {
             const randomId = Math.floor(10000 + Math.random() * 90000).toString();
             document.getElementById('user-idnum').value = randomId;
@@ -1038,69 +1017,125 @@
         };
 
         window.generateRandomPassword = function() {
-            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%";
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$";
             let pass = "";
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 9; i++) {
                 pass += chars.charAt(Math.floor(Math.random() * chars.length));
             }
             document.getElementById('user-password').value = pass;
-            showToast("Strong Password Generated", "info");
+            showToast("Generated Pass", "info");
         };
+
+        window.copyToClipboard = function(text, successMsg) {
+            const temp = document.createElement('textarea');
+            temp.value = text;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+            showToast(successMsg, "success");
+        };
+
+        window.exportUserData = function(format = 'csv') {
+            if (usersList.length === 0) {
+                showToast("No records to export", "error");
+                return;
+            }
+
+            let content = "ID Number,Full Name,Email,Password,Department,Status\n";
+            usersList.forEach(u => {
+                content += `"${u.idNumber}","${u.fullName}","${u.email}","${u.password}","${u.department}","${u.status}"\n`;
+            });
+
+            const blob = new Blob([content], { type: "text/csv" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `aetheris_credentials_${Date.now()}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast("Database exported to CSV!", "success");
+        };
+
+        window.saveCustomFirebaseConfig = function() {
+            const apiKey = document.getElementById('cfg-apikey').value.trim();
+            const authDomain = document.getElementById('cfg-authdomain').value.trim();
+            const projectId = document.getElementById('cfg-projectid').value.trim();
+
+            if (!apiKey || !projectId) {
+                showToast("API Key and Project ID are required", "error");
+                return;
+            }
+
+            const configObj = { apiKey, authDomain, projectId };
+            localStorage.setItem('custom_firebase_config', JSON.stringify(configObj));
+            showToast("Config Saved! Connecting...", "success");
+            setTimeout(() => window.location.reload(), 800);
+        };
+
+        window.clearCustomFirebaseConfig = function() {
+            localStorage.removeItem('custom_firebase_config');
+            showToast("Config reset to offline store.", "info");
+            setTimeout(() => window.location.reload(), 800);
+        };
+
+        function populateConfigModalFields() {
+            try {
+                const saved = localStorage.getItem('custom_firebase_config');
+                if (saved) {
+                    const cfg = JSON.parse(saved);
+                    if (document.getElementById('cfg-apikey')) document.getElementById('cfg-apikey').value = cfg.apiKey || '';
+                    if (document.getElementById('cfg-authdomain')) document.getElementById('cfg-authdomain').value = cfg.authDomain || '';
+                    if (document.getElementById('cfg-projectid')) document.getElementById('cfg-projectid').value = cfg.projectId || '';
+                }
+            } catch(e){}
+        }
 
         window.togglePasswordVisibility = function(inputId, iconId) {
             const input = document.getElementById(inputId);
             const icon = document.getElementById(iconId);
             if (input.type === 'password') {
                 input.type = 'text';
-                icon.className = "fa-solid fa-eye-slash text-xs text-cyan-400";
+                icon.className = "fa-solid fa-eye-slash text-xs text-cyber-cyan";
             } else {
                 input.type = 'password';
                 icon.className = "fa-solid fa-eye text-xs text-slate-400";
             }
         };
 
-        window.toggleUserPassView = function() {
-            const elem = document.getElementById('user-detail-pass');
-            const icon = document.getElementById('btn-toggle-pass-eye');
-            if (currentUserData) {
-                if (elem.innerText === '••••••••') {
-                    elem.innerText = currentUserData.password;
-                    icon.className = "fa-solid fa-eye-slash text-cyan-400";
-                } else {
-                    elem.innerText = '••••••••';
-                    icon.className = "fa-solid fa-eye";
-                }
-            }
-        };
-
-        window.refreshData = function(manual = false) {
+        window.syncData = function(manual = false) {
             const icon = document.getElementById('refresh-icon');
             if (icon) icon.classList.add('animate-spin');
-            
             setTimeout(() => {
-                if (isFirebaseAvailable) {
-                    subscribeToFirestore();
+                if (isFirebaseConnected) {
+                    subscribeToCloudData();
                 } else {
-                    loadFromLocalStorage();
+                    loadLocalStorageData();
                 }
                 if (icon) icon.classList.remove('animate-spin');
                 if (manual) showToast("Database Synced", "info");
-            }, 600);
+            }, 500);
         };
 
-        // UI Helpers
+        function setLoginBtnLoading(isLoading) {
+            const spinner = document.getElementById('login-btn-spinner');
+            const text = document.getElementById('login-btn-text');
+            if (isLoading) {
+                spinner.classList.remove('hidden');
+                text.innerText = "Authenticating...";
+            } else {
+                spinner.classList.add('hidden');
+                text.innerText = "Authenticate Access";
+            }
+        }
+
         function switchToSection(sectionId) {
             ['login-section', 'admin-section', 'user-section'].forEach(id => {
                 const el = document.getElementById(id);
                 if (id === sectionId) {
                     el.classList.remove('hidden');
-                    setTimeout(() => {
-                        el.classList.remove('opacity-0', 'scale-95');
-                        el.classList.add('opacity-100', 'scale-100');
-                    }, 50);
                 } else {
-                    el.classList.add('opacity-0', 'scale-95');
-                    setTimeout(() => el.classList.add('hidden'), 300);
+                    el.classList.add('hidden');
                 }
             });
         }
@@ -1108,21 +1143,14 @@
         function renderUserTable() {
             const tbody = document.getElementById('user-table-body');
             const searchTerm = (document.getElementById('search-user')?.value || '').toLowerCase();
-            
+
             const filtered = usersList.filter(u => 
                 u.fullName.toLowerCase().includes(searchTerm) || 
-                u.idNumber.toLowerCase().includes(searchTerm) ||
-                (u.department && u.department.toLowerCase().includes(searchTerm))
+                u.idNumber.toLowerCase().includes(searchTerm)
             );
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="p-6 text-center text-slate-500 font-mono">
-                            No matching user records found.
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500 font-mono">No matching records found.</td></tr>`;
                 return;
             }
 
@@ -1130,20 +1158,25 @@
                 <tr class="hover:bg-slate-900/60 transition-colors">
                     <td class="p-3">
                         <div class="font-sans font-semibold text-slate-200">${escapeHtml(user.fullName)}</div>
-                        <div class="text-[10px] text-slate-500">${escapeHtml(user.email || 'N/A')} &bull; ${escapeHtml(user.department || 'General')}</div>
+                        <div class="text-[10px] text-slate-500">${escapeHtml(user.email || 'N/A')}</div>
                     </td>
-                    <td class="p-3 text-cyan-300 font-bold">${escapeHtml(user.idNumber)}</td>
-                    <td class="p-3 text-slate-400">${escapeHtml(user.password)}</td>
+                    <td class="p-3 text-cyber-cyan font-bold">${escapeHtml(user.idNumber)}</td>
+                    <td class="p-3 text-slate-400 font-mono flex items-center gap-1.5">
+                        <span>${escapeHtml(user.password)}</span>
+                        <button onclick="copyToClipboard('${escapeHtml(user.password)}', 'Password copied!')" class="text-slate-500 hover:text-cyber-cyan">
+                            <i class="fa-solid fa-copy text-[10px]"></i>
+                        </button>
+                    </td>
                     <td class="p-3">
                         <span class="px-2 py-0.5 rounded text-[10px] font-mono ${user.status === 'Active' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-rose-500/20 text-rose-300 border border-rose-500/40'}">
                             ${user.status}
                         </span>
                     </td>
                     <td class="p-3 text-right space-x-1">
-                        <button onclick="editUser('${user.docId}')" class="p-1.5 hover:bg-slate-800 rounded text-amber-400 transition-colors" title="Edit User">
+                        <button onclick="editUser('${user.docId}')" class="p-1.5 hover:bg-slate-800 rounded text-amber-400 transition-colors" title="Edit">
                             <i class="fa-solid fa-pen text-xs"></i>
                         </button>
-                        <button onclick="deleteUserPrompt('${user.docId}', '${escapeHtml(user.fullName)}')" class="p-1.5 hover:bg-slate-800 rounded text-rose-400 transition-colors" title="Delete User">
+                        <button onclick="deleteUserPrompt('${user.docId}', '${escapeHtml(user.fullName)}')" class="p-1.5 hover:bg-slate-800 rounded text-rose-400 transition-colors" title="Delete">
                             <i class="fa-solid fa-trash text-xs"></i>
                         </button>
                     </td>
@@ -1155,37 +1188,28 @@
             const total = usersList.length;
             const active = usersList.filter(u => u.status === 'Active').length;
             
-            const totalEl = document.getElementById('stat-total-users');
-            const activeEl = document.getElementById('stat-active-users');
-            
-            if (totalEl) totalEl.innerText = total;
-            if (activeEl) activeEl.innerText = active;
+            if (document.getElementById('stat-total-users')) document.getElementById('stat-total-users').innerText = total;
+            if (document.getElementById('stat-active-users')) document.getElementById('stat-active-users').innerText = active;
+        }
+
+        function addLog(message, category = 'info') {
+            const logEntry = { message, category, timestamp: new Date().toISOString() };
+            auditLogs.unshift(logEntry);
+            if (auditLogs.length > 15) auditLogs.pop();
+            renderAuditLogs();
         }
 
         function renderAuditLogs() {
             const container = document.getElementById('audit-log-container');
-            const countEl = document.getElementById('log-count');
             if (!container) return;
+            document.getElementById('log-count').innerText = `${auditLogs.length} Events`;
 
-            if (countEl) countEl.innerText = `${auditLogs.length} Events`;
-
-            container.innerHTML = auditLogs.map(log => {
-                let badgeClass = "text-cyan-400 border-cyan-500/30 bg-cyan-500/10";
-                if (log.category === 'warning') badgeClass = "text-amber-400 border-amber-500/30 bg-amber-500/10";
-                if (log.category === 'admin') badgeClass = "text-purple-400 border-purple-500/30 bg-purple-500/10";
-                
-                const timeStr = new Date(log.timestamp).toLocaleTimeString();
-
-                return `
-                    <div class="p-2 rounded-lg bg-slate-950/60 border border-slate-800/80 flex items-center justify-between gap-2">
-                        <div class="flex items-center gap-2 overflow-hidden">
-                            <span class="px-1.5 py-0.5 text-[9px] rounded border ${badgeClass} uppercase">${log.category}</span>
-                            <span class="text-slate-300 truncate">${escapeHtml(log.message)}</span>
-                        </div>
-                        <span class="text-[9px] text-slate-500 shrink-0">${timeStr}</span>
-                    </div>
-                `;
-            }).join('');
+            container.innerHTML = auditLogs.map(log => `
+                <div class="flex items-center justify-between p-2 rounded bg-slate-950/40 border border-slate-800/80">
+                    <span class="text-slate-300">${escapeHtml(log.message)}</span>
+                    <span class="text-[9px] text-slate-500">${new Date(log.timestamp).toLocaleTimeString()}</span>
+                </div>
+            `).join('');
         }
 
         function populateUserProfile(user) {
@@ -1198,35 +1222,31 @@
             document.getElementById('user-avatar-initials').innerText = initials || 'US';
 
             document.getElementById('user-detail-email').innerText = user.email || `${user.idNumber}@aetheris.io`;
-            document.getElementById('user-detail-role').innerText = `${user.department || 'General'} Operative`;
-            document.getElementById('user-detail-date').innerText = user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '2026-10-25';
-            document.getElementById('user-detail-pass').innerText = '••••••••';
-            document.getElementById('user-last-login').innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('user-detail-status').innerText = user.status;
         }
 
         function updateCloudStatus(connected, text) {
             const statusText = document.getElementById('cloud-status-text');
             const pulse = document.getElementById('cloud-pulse');
+            const modeStat = document.getElementById('stat-db-mode');
+            const descStat = document.getElementById('stat-db-desc');
+
             if (statusText) statusText.innerText = text;
             if (pulse) {
-                if (connected) {
-                    pulse.className = "w-2 h-2 rounded-full bg-emerald-400 animate-ping";
-                    if (statusText) statusText.className = "text-[11px] font-mono text-emerald-400";
-                } else {
-                    pulse.className = "w-2 h-2 rounded-full bg-amber-400";
-                    if (statusText) statusText.className = "text-[11px] font-mono text-amber-400";
-                }
+                pulse.className = connected ? "w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" : "w-2.5 h-2.5 rounded-full bg-amber-400";
             }
+
+            if (modeStat) modeStat.innerText = connected ? "FIRESTORE" : "LOCAL STORE";
+            if (descStat) descStat.innerText = connected ? "Live Cloud Network" : "Offline Persistence";
         }
 
-        // Toast Notification System
         window.showToast = function(message, type = 'info') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             
             let icon = 'fa-circle-info';
-            let border = 'border-cyan-500/50';
-            let textColor = 'text-cyan-300';
+            let border = 'border-cobalt-500/50';
+            let textColor = 'text-cyber-cyan';
             
             if (type === 'success') {
                 icon = 'fa-circle-check';
@@ -1238,7 +1258,7 @@
                 textColor = 'text-rose-300';
             }
 
-            toast.className = `glass-panel p-3.5 rounded-xl border ${border} shadow-xl flex items-center gap-3 text-xs font-mono transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-auto`;
+            toast.className = `glass-card p-3.5 rounded-xl border ${border} shadow-xl flex items-center gap-3 text-xs font-mono transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-auto`;
             toast.innerHTML = `
                 <i class="fa-solid ${icon} ${textColor} text-base"></i>
                 <span class="text-slate-200 flex-1">${escapeHtml(message)}</span>
@@ -1253,23 +1273,17 @@
             }, 3500);
         };
 
-        // Modal Helpers
-        window.showModal = function(id) {
-            document.getElementById(id)?.classList.remove('hidden');
-        };
-        window.hideModal = function(id) {
-            document.getElementById(id)?.classList.add('hidden');
-        };
+        window.showModal = function(id) { document.getElementById(id)?.classList.remove('hidden'); };
+        window.hideModal = function(id) { document.getElementById(id)?.classList.add('hidden'); };
 
         window.showConfirmModal = function(title, message, onConfirm) {
-            const container = document.getElementById('modal-container');
             document.getElementById('modal-title').innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-400"></i> ${escapeHtml(title)}`;
             document.getElementById('modal-message').innerText = message;
             
             const actions = document.getElementById('modal-actions');
             actions.innerHTML = `
                 <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-mono">Cancel</button>
-                <button id="modal-confirm-btn" class="px-4 py-2 rounded-xl bg-rose-500 text-slate-950 font-bold text-xs font-mono uppercase hover:bg-rose-400">Confirm Revoke</button>
+                <button id="modal-confirm-btn" class="px-4 py-2 rounded-xl bg-rose-600 text-white font-bold text-xs font-mono uppercase hover:bg-rose-500">Confirm Revoke</button>
             `;
 
             document.getElementById('modal-confirm-btn').onclick = () => {
@@ -1277,12 +1291,10 @@
                 onConfirm();
             };
 
-            container.classList.remove('hidden');
+            document.getElementById('modal-container').classList.remove('hidden');
         };
 
-        window.closeModal = function() {
-            document.getElementById('modal-container')?.classList.add('hidden');
-        };
+        window.closeModal = function() { document.getElementById('modal-container')?.classList.add('hidden'); };
 
         window.handleRequestReset = function() {
             const idVal = document.getElementById('reset-id-input')?.value;
@@ -1291,25 +1303,13 @@
                 return;
             }
             hideModal('forgot-modal');
-            showToast(`Reset Ticket generated for ID: ${idVal}. Contact Admin.`, "success");
+            showToast(`Reset ticket logged for ID: ${idVal}.`, "success");
             addLog(`Password reset requested for ID: ${idVal}`, "info");
-        };
-
-        window.simulateCardDownload = function() {
-            showToast("Generating Digital ID Security Pass...", "info");
-            setTimeout(() => {
-                showToast("Credential Pass exported successfully!", "success");
-            }, 1000);
         };
 
         function triggerConfetti() {
             if (typeof confetti === 'function') {
-                confetti({
-                    particleCount: 40,
-                    spread: 60,
-                    origin: { y: 0.8 },
-                    colors: ['#00f3ff', '#b026ff', '#10b981']
-                });
+                confetti({ particleCount: 35, spread: 60, origin: { y: 0.8 } });
             }
         }
 
@@ -1319,7 +1319,6 @@
             });
         }
 
-        // Particle Canvas Background Loop
         function startParticleCanvas() {
             const canvas = document.getElementById('bg-canvas');
             if (!canvas) return;
@@ -1332,12 +1331,12 @@
             resize();
             window.addEventListener('resize', resize);
 
-            const particles = Array.from({ length: 45 }, () => ({
+            const particles = Array.from({ length: 40 }, () => ({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
                 radius: Math.random() * 1.5 + 0.5,
-                vx: (Math.random() - 0.5) * 0.4,
-                vy: (Math.random() - 0.5) * 0.4,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3,
                 alpha: Math.random() * 0.5 + 0.2
             }));
 
@@ -1354,7 +1353,7 @@
 
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(0, 243, 255, ${p.alpha})`;
+                    ctx.fillStyle = `rgba(2, 132, 199, ${p.alpha})`;
                     ctx.fill();
                 });
                 requestAnimationFrame(draw);
@@ -1362,7 +1361,6 @@
             draw();
         }
 
-        // Run App Initialization on Load
         window.onload = function() {
             initApp();
         };
