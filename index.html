@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Security Portal // Cyber Auth System</title>
+    <title>Enterprise Credential & Cloud Portal</title>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,21 +13,20 @@
             theme: {
                 extend: {
                     colors: {
-                        cobalt: {
-                            50: '#f0f7ff',
-                            100: '#e0effe',
-                            500: '#0284c7',
-                            600: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                            950: '#082f49',
+                        supa: {
+                            400: '#4ade80',
+                            500: '#3ecf8e',
+                            600: '#24b47e',
+                            900: '#134e35',
+                            950: '#0a2e1f'
                         },
                         cyber: {
                             cyan: '#00f3ff',
                             emerald: '#10b981',
                             amber: '#f59e0b',
                             rose: '#f43f5e',
-                            purple: '#a855f7'
+                            purple: '#a855f7',
+                            blue: '#3b82f6'
                         }
                     },
                     fontFamily: {
@@ -39,140 +38,129 @@
         }
     </script>
 
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-
     <!-- Canvas Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at 50% 0%, #0f172a 0%, #020617 100%);
+            background: radial-gradient(circle at 50% 0%, #064e3b 0%, #020617 75%);
             min-height: 100vh;
         }
-        
         .glass-card {
-            background: rgba(15, 23, 42, 0.75);
+            background: rgba(15, 23, 42, 0.78);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
         }
-
         .glass-card-glow {
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(15, 23, 42, 0.88);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(2, 132, 199, 0.3);
-            box-shadow: 0 0 25px rgba(2, 132, 199, 0.15);
+            border: 1px solid rgba(62, 207, 142, 0.35);
+            box-shadow: 0 0 25px rgba(62, 207, 142, 0.18);
         }
-
         .glass-input {
-            background: rgba(2, 6, 23, 0.7);
+            background: rgba(2, 6, 23, 0.75);
             border: 1px solid rgba(255, 255, 255, 0.12);
             transition: all 0.25s ease-in-out;
         }
-
         .glass-input:focus {
-            background: rgba(2, 6, 23, 0.9);
-            border-color: #0284c7;
-            box-shadow: 0 0 12px rgba(2, 132, 199, 0.3);
+            background: rgba(2, 6, 23, 0.95);
+            border-color: #3ecf8e;
+            box-shadow: 0 0 12px rgba(62, 207, 142, 0.3);
             outline: none;
         }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(2, 6, 23, 0.5);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(2, 132, 199, 0.3);
-            border-radius: 3px;
-        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(2, 6, 23, 0.5); }
+        ::-webkit-scrollbar-thumb { background: rgba(62, 207, 142, 0.3); border-radius: 3px; }
     </style>
 </head>
-<body class="flex flex-col min-h-screen relative overflow-x-hidden selection:bg-cobalt-500 selection:text-white">
+<body class="flex flex-col min-h-screen relative overflow-x-hidden text-slate-100">
 
-    <!-- Background Particle Canvas -->
+    <!-- Canvas Animation Background -->
     <canvas id="bg-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
 
-    <!-- Notification Toast Container -->
+    <!-- Toast Notifications -->
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none"></div>
 
-    <!-- MAIN HEADER BAR -->
+    <!-- MAIN NAVBAR -->
     <header class="relative z-20 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md px-4 lg:px-8 py-3.5 flex items-center justify-between">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cobalt-600 to-cyber-cyan p-0.5 flex items-center justify-center shadow-lg shadow-cobalt-600/20">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-supa-600 via-cyber-cyan to-cobalt-500 p-0.5 flex items-center justify-center shadow-lg">
                 <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                    <i class="fa-solid fa-shield-halved text-cyber-cyan text-lg"></i>
+                    <i class="fa-solid fa-bolt text-supa-500 text-lg"></i>
                 </div>
             </div>
             <div>
                 <h1 class="text-base font-bold tracking-tight text-slate-100 flex items-center gap-2">
-                    <span>AETHERIS NETWORK</span>
-                    <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-cobalt-500/10 text-cyber-cyan border border-cobalt-500/30">v5.0 LIVE</span>
+                    <span>ENTERPRISE CLOUD PORTAL</span>
+                    <span id="active-provider-badge" class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-supa-500/10 text-supa-400 border border-supa-500/30">
+                        ONLINE CLOUD PERSISTENT
+                    </span>
                 </h1>
-                <p class="text-[11px] font-mono text-slate-400">Cloud Authenticated Workspace Protocol</p>
+                <p class="text-[11px] font-mono text-slate-400">Zero-Config Online Rest API + Supabase / Firebase</p>
             </div>
         </div>
 
-        <!-- Connection Badge & Config Gear -->
         <div class="flex items-center gap-3">
-            <button onclick="showModal('firebase-config-modal')" 
-                class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 hover:border-cobalt-500 text-slate-300 hover:text-cyber-cyan text-xs font-mono flex items-center gap-2 transition-all">
-                <i class="fa-solid fa-cloud-gear text-cobalt-500"></i>
-                <span class="hidden sm:inline">Firebase Config</span>
+            <button onclick="openConfigModal()" 
+                class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-supa-500 text-slate-300 hover:text-supa-400 text-xs font-mono flex items-center gap-2 transition-all">
+                <i class="fa-solid fa-sliders text-supa-500"></i>
+                <span class="hidden sm:inline">Cloud Provider Settings</span>
             </button>
 
             <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-xs font-mono">
-                <span id="cloud-pulse" class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-                <span id="cloud-status-text" class="text-slate-300">Offline Store</span>
+                <span id="cloud-pulse" class="w-2.5 h-2.5 rounded-full bg-supa-500 animate-pulse"></span>
+                <span id="cloud-status-text" class="text-slate-300">Online Cloud Active</span>
             </div>
         </div>
     </header>
 
-    <!-- CONTENT WRAPPER -->
+    <!-- MAIN BODY CONTAINER -->
     <main class="relative z-10 flex-1 flex items-center justify-center p-4 md:p-8">
 
-        <!-- ========================================== -->
-        <!-- 1. LOGIN SECTION                           -->
-        <!-- ========================================== -->
+        <!-- LOGIN SECTION -->
         <section id="login-section" class="w-full max-w-md transition-all duration-300">
             <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-2xl relative overflow-hidden">
-                <div class="absolute -right-12 -top-12 w-40 h-40 bg-cobalt-600/10 rounded-full blur-3xl pointer-events-none"></div>
-
                 <div class="text-center mb-8">
-                    <div class="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-800 mx-auto flex items-center justify-center text-cyber-cyan mb-4 text-2xl shadow-inner">
-                        <i class="fa-solid fa-lock"></i>
+                    <div class="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-800 mx-auto flex items-center justify-center text-supa-500 mb-4 text-2xl shadow-inner">
+                        <i class="fa-solid fa-shield-halved"></i>
                     </div>
-                    <h2 class="text-2xl font-bold text-slate-100 tracking-tight">Identity Authentication</h2>
-                    <p class="text-xs font-mono text-slate-400 mt-1">Enter your assigned ID Number and Security Key</p>
+                    <h2 class="text-2xl font-bold text-slate-100 tracking-tight">Enterprise Access Portal</h2>
+                    <p class="text-xs font-mono text-slate-400 mt-1">Authenticate Credentials via Cloud Database</p>
                 </div>
 
                 <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
                     <div>
                         <label class="block text-xs font-mono uppercase text-slate-300 mb-2" for="login-id">
-                            <i class="fa-solid fa-id-card text-cobalt-500 mr-1.5"></i> ID Number
+                            <i class="fa-solid fa-id-card text-supa-500 mr-1.5"></i> ID Number
                         </label>
-                        <input type="text" id="login-id" required placeholder="Enter ID Number" 
+                        <input type="text" id="login-id" required placeholder="Enter assigned ID" 
                             class="glass-input w-full px-4 py-3.5 rounded-xl text-slate-100 placeholder-slate-500 text-sm font-mono tracking-wide">
                     </div>
 
                     <div>
                         <label class="block text-xs font-mono uppercase text-slate-300 mb-2" for="login-password">
-                            <i class="fa-solid fa-key text-cobalt-500 mr-1.5"></i> Password
+                            <i class="fa-solid fa-key text-supa-500 mr-1.5"></i> Security Password
                         </label>
                         <div class="relative">
-                            <input type="password" id="login-password" required placeholder="Enter Password" 
+                            <input type="password" id="login-password" required placeholder="Enter password" 
                                 class="glass-input w-full pl-4 pr-11 py-3.5 rounded-xl text-slate-100 placeholder-slate-500 text-sm font-mono">
                             <button type="button" onclick="togglePasswordVisibility('login-password', 'password-toggle-icon')"
-                                class="absolute right-3.5 top-3.5 text-slate-400 hover:text-cyber-cyan transition-colors focus:outline-none">
+                                class="absolute right-3.5 top-3.5 text-slate-400 hover:text-supa-400 transition-colors">
                                 <i id="password-toggle-icon" class="fa-solid fa-eye text-sm"></i>
                             </button>
                         </div>
@@ -180,16 +168,15 @@
 
                     <div class="flex items-center justify-between text-xs px-1">
                         <label class="flex items-center gap-2 cursor-pointer text-slate-400 font-mono">
-                            <input type="checkbox" id="remember-me" class="rounded bg-slate-900 border-slate-700 text-cobalt-600 focus:ring-cobalt-500">
-                            <span>Keep Session Active</span>
+                            <input type="checkbox" id="remember-me" checked class="rounded bg-slate-900 border-slate-700 text-supa-600">
+                            <span>Keep Session Alive</span>
                         </label>
-                        <a href="javascript:void(0)" onclick="showModal('forgot-modal')" class="text-cobalt-500 hover:text-cyber-cyan transition-colors font-medium">Forgot Pass?</a>
                     </div>
 
                     <button type="submit" id="btn-login-submit"
-                        class="w-full relative group overflow-hidden rounded-xl p-px font-semibold text-sm transition-all duration-300 shadow-lg shadow-cobalt-600/20 active:scale-[0.98]">
-                        <span class="absolute inset-0 bg-gradient-to-r from-cobalt-600 via-cyber-cyan to-cobalt-800 transition-all duration-300 group-hover:opacity-90"></span>
-                        <span class="relative block px-6 py-3.5 rounded-[11px] bg-slate-950/50 text-white font-mono uppercase tracking-wider flex items-center justify-center gap-2">
+                        class="w-full relative group overflow-hidden rounded-xl p-px font-semibold text-sm transition-all shadow-lg active:scale-[0.98]">
+                        <span class="absolute inset-0 bg-gradient-to-r from-supa-600 via-cyber-cyan to-supa-500 transition-all duration-300 group-hover:opacity-90"></span>
+                        <span class="relative block px-6 py-3.5 rounded-[11px] bg-slate-950/70 text-white font-mono uppercase tracking-wider flex items-center justify-center gap-2">
                             <span id="login-btn-spinner" class="hidden"><i class="fa-solid fa-spinner animate-spin"></i></span>
                             <span id="login-btn-text">Authenticate Access</span>
                             <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
@@ -197,41 +184,42 @@
                     </button>
                 </form>
 
-                <div class="mt-8 text-center text-[10px] font-mono text-slate-500">
-                    AETHERIS CREDENTIAL PROTOCOL v5.0 // AES-256 PARALLEL
+                <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono text-slate-500">
+                    <span>Cloud Sync Mode:</span>
+                    <button onclick="openConfigModal()" class="text-supa-400 hover:underline flex items-center gap-1">
+                        <i class="fa-solid fa-cloud"></i> Config Settings
+                    </button>
                 </div>
             </div>
         </section>
 
-        <!-- ========================================== -->
-        <!-- 2. ADMIN DASHBOARD SECTION                  -->
-        <!-- ========================================== -->
+        <!-- ADMIN DASHBOARD SECTION -->
         <section id="admin-section" class="hidden w-full max-w-7xl transition-all duration-300">
             <div class="glass-card rounded-3xl p-4 md:p-8 shadow-2xl border border-slate-800 space-y-6">
                 
                 <!-- Admin Header -->
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-800">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-2xl bg-cobalt-600/20 border border-cobalt-500/40 flex items-center justify-center text-cyber-cyan text-xl font-bold shadow-lg shadow-cobalt-600/20">
+                        <div class="w-12 h-12 rounded-2xl bg-supa-600/20 border border-supa-500/40 flex items-center justify-center text-supa-400 text-xl font-bold shadow-lg shadow-supa-600/20">
                             <i class="fa-solid fa-user-gear"></i>
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
                                 <h2 class="text-xl md:text-2xl font-bold text-slate-100">System Command Workspace</h2>
-                                <span class="px-2 py-0.5 text-[10px] font-mono rounded-full bg-cobalt-500/20 text-cyber-cyan border border-cobalt-500/40">ADMIN PRIVILEGES</span>
+                                <span class="px-2 py-0.5 text-[10px] font-mono rounded-full bg-supa-500/20 text-supa-300 border border-supa-500/40">ADMIN DASHBOARD</span>
                             </div>
-                            <p class="text-xs text-slate-400 font-mono">Logged in as Administrator</p>
+                            <p class="text-xs text-slate-400 font-mono">User Management, Provisioning & Cloud Storage Control</p>
                         </div>
                     </div>
 
                     <div class="flex items-center gap-2 flex-wrap">
-                        <button onclick="exportUserData('csv')" 
+                        <button onclick="exportUserDataCSV()" 
                             class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-emerald-500 text-emerald-400 text-xs font-mono flex items-center gap-2 transition-all">
                             <i class="fa-solid fa-file-csv"></i>
                             <span>Export CSV</span>
                         </button>
-                        <button onclick="syncData(true)" 
-                            class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-cobalt-500 text-slate-300 hover:text-cyber-cyan text-xs font-mono flex items-center gap-2 transition-all">
+                        <button onclick="syncDataFromCloud(true)" 
+                            class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-supa-500 text-slate-300 hover:text-supa-400 text-xs font-mono flex items-center gap-2 transition-all">
                             <i class="fa-solid fa-rotate" id="refresh-icon"></i>
                             <span>Sync Database</span>
                         </button>
@@ -243,62 +231,15 @@
                     </div>
                 </div>
 
-                <!-- Stats Cards -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="glass-card p-5 rounded-2xl border border-slate-800 relative overflow-hidden">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-mono text-slate-400 uppercase">Total User Accounts</span>
-                            <div class="w-8 h-8 rounded-lg bg-cobalt-500/10 text-cyber-cyan flex items-center justify-center">
-                                <i class="fa-solid fa-users"></i>
-                            </div>
-                        </div>
-                        <div class="text-3xl font-extrabold text-slate-100 mt-2 font-mono" id="stat-total-users">0</div>
-                        <div class="text-[11px] text-slate-500 mt-1 font-mono">Registered Credentials</div>
-                    </div>
-
-                    <div class="glass-card p-5 rounded-2xl border border-slate-800 relative overflow-hidden">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-mono text-slate-400 uppercase">Active Accounts</span>
-                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-cyber-emerald flex items-center justify-center">
-                                <i class="fa-solid fa-user-check"></i>
-                            </div>
-                        </div>
-                        <div class="text-3xl font-extrabold text-cyber-emerald mt-2 font-mono" id="stat-active-users">0</div>
-                        <div class="text-[11px] text-emerald-400/80 mt-1 font-mono">Operational Access</div>
-                    </div>
-
-                    <div class="glass-card p-5 rounded-2xl border border-slate-800 relative overflow-hidden">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-mono text-slate-400 uppercase">Database Mode</span>
-                            <div class="w-8 h-8 rounded-lg bg-cobalt-500/10 text-cobalt-400 flex items-center justify-center">
-                                <i class="fa-solid fa-database"></i>
-                            </div>
-                        </div>
-                        <div class="text-xl font-bold text-cobalt-300 mt-2 font-mono" id="stat-db-mode">FIRESTORE</div>
-                        <div class="text-[11px] text-cobalt-400/80 mt-1 font-mono" id="stat-db-desc">Live Cloud Network</div>
-                    </div>
-
-                    <div class="glass-card p-5 rounded-2xl border border-slate-800 relative overflow-hidden">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-mono text-slate-400 uppercase">Security Integrity</span>
-                            <div class="w-8 h-8 rounded-lg bg-cyber-amber/10 text-cyber-amber flex items-center justify-center">
-                                <i class="fa-solid fa-shield-cat"></i>
-                            </div>
-                        </div>
-                        <div class="text-xl font-bold text-amber-300 mt-2 font-mono">ENCRYPTED</div>
-                        <div class="text-[11px] text-amber-400/80 mt-1 font-mono">AES-256 Protocol</div>
-                    </div>
-                </div>
-
-                <!-- Main Admin Layout Grid -->
+                <!-- Admin Grid Layout -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     
-                    <!-- Form Column -->
+                    <!-- Provisioning Form -->
                     <div class="lg:col-span-5">
                         <div class="glass-card p-6 rounded-2xl border border-slate-800">
                             <div class="flex items-center justify-between mb-5 pb-3 border-b border-slate-800">
-                                <h3 class="font-bold text-base text-cyber-cyan flex items-center gap-2" id="form-title">
-                                    <i class="fa-solid fa-user-plus text-cobalt-500"></i>
+                                <h3 class="font-bold text-base text-supa-400 flex items-center gap-2" id="form-title">
+                                    <i class="fa-solid fa-user-plus text-supa-500"></i>
                                     <span>Provision User Credential</span>
                                 </h3>
                                 <button id="btn-cancel-edit" onclick="resetUserForm()" class="hidden text-xs font-mono text-slate-400 hover:text-rose-400">
@@ -318,11 +259,9 @@
                                 <div>
                                     <div class="flex justify-between items-center mb-1">
                                         <label class="block text-xs font-mono uppercase text-slate-400" for="user-idnum">Unique ID Number *</label>
-                                        <button type="button" onclick="generateRandomId()" class="text-[11px] text-cyber-cyan hover:underline font-mono">
-                                            Auto-Generate
-                                        </button>
+                                        <button type="button" onclick="generateRandomId()" class="text-[11px] text-supa-400 hover:underline font-mono">Auto-Generate</button>
                                     </div>
-                                    <input type="text" id="user-idnum" required placeholder="e.g. 55892" 
+                                    <input type="text" id="user-idnum" required placeholder="e.g. 88391" 
                                         class="glass-input w-full px-3.5 py-2.5 rounded-xl text-slate-100 text-sm font-mono">
                                 </div>
 
@@ -335,9 +274,7 @@
                                 <div>
                                     <div class="flex justify-between items-center mb-1">
                                         <label class="block text-xs font-mono uppercase text-slate-400" for="user-password">Password *</label>
-                                        <button type="button" onclick="generateRandomPassword()" class="text-[11px] text-cyber-cyan hover:underline font-mono">
-                                            Generate Pass
-                                        </button>
+                                        <button type="button" onclick="generateRandomPassword()" class="text-[11px] text-supa-400 hover:underline font-mono">Generate Pass</button>
                                     </div>
                                     <div class="relative">
                                         <input type="text" id="user-password" required placeholder="Min 6 characters" 
@@ -356,11 +293,10 @@
                                             <option value="Research & AI" class="bg-slate-900">Research & AI</option>
                                             <option value="Engineering" class="bg-slate-900">Engineering</option>
                                             <option value="Operations" class="bg-slate-900">Operations</option>
-                                            <option value="Executive" class="bg-slate-900">Executive</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-mono uppercase text-slate-400 mb-1" for="user-status">Account Status</label>
+                                        <label class="block text-xs font-mono uppercase text-slate-400 mb-1" for="user-status">Status</label>
                                         <select id="user-status" class="glass-input w-full px-3 py-2.5 rounded-xl text-slate-100 text-xs font-mono">
                                             <option value="Active" class="bg-slate-900 text-emerald-400">Active</option>
                                             <option value="Suspended" class="bg-slate-900 text-rose-400">Suspended</option>
@@ -369,755 +305,699 @@
                                 </div>
 
                                 <button type="submit" id="btn-save-user"
-                                    class="w-full mt-2 py-3 rounded-xl bg-gradient-to-r from-cobalt-600 to-cyber-cyan hover:from-cobalt-500 hover:to-cyber-cyan text-slate-950 font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-cobalt-600/20 active:scale-[0.99] flex items-center justify-center gap-2">
+                                    class="w-full mt-2 py-3 rounded-xl bg-gradient-to-r from-supa-600 to-supa-400 hover:from-supa-500 hover:to-supa-400 text-slate-950 font-bold text-xs uppercase tracking-wider transition-all shadow-md active:scale-[0.99] flex items-center justify-center gap-2">
                                     <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
-                                    <span id="save-btn-text">Save Credential to Database</span>
+                                    <span id="save-btn-text">Save Credential to Online Cloud</span>
                                 </button>
                             </form>
                         </div>
                     </div>
 
-                    <!-- Table Column -->
+                    <!-- Directory Table Column -->
                     <div class="lg:col-span-7 space-y-6">
                         <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
                             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                 <h3 class="font-bold text-base text-slate-100 flex items-center gap-2">
-                                    <i class="fa-solid fa-users-gear text-cyber-cyan"></i>
-                                    <span>Cloud User Directory</span>
+                                    <i class="fa-solid fa-users-gear text-supa-400"></i>
+                                    <span>Online User Directory</span>
                                 </h3>
 
                                 <div class="relative min-w-[200px]">
-                                    <input type="text" id="search-user" oninput="renderUserTable()" placeholder="Search name or ID..."
-                                        class="glass-input w-full pl-8 pr-3 py-1.5 rounded-lg text-xs font-mono text-slate-200">
+                                    <input type="text" id="search-input" onkeyup="renderUserTable()" placeholder="Search ID or Name..." 
+                                        class="glass-input w-full pl-8 pr-3 py-1.5 rounded-lg text-xs font-mono">
                                     <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-500 text-xs"></i>
                                 </div>
                             </div>
 
-                            <div class="overflow-x-auto max-h-[380px] overflow-y-auto rounded-xl border border-slate-800">
-                                <table class="w-full text-left text-xs">
-                                    <thead class="bg-slate-900/90 text-slate-400 font-mono uppercase text-[10px] sticky top-0 backdrop-blur-md z-10 border-b border-slate-800">
+                            <div class="overflow-x-auto rounded-xl border border-slate-800/80">
+                                <table class="w-full text-left text-xs font-mono">
+                                    <thead class="bg-slate-900/90 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
                                         <tr>
-                                            <th class="p-3">Profile</th>
-                                            <th class="p-3">ID Number</th>
-                                            <th class="p-3">Password</th>
-                                            <th class="p-3">Status</th>
-                                            <th class="p-3 text-right">Actions</th>
+                                            <th class="px-4 py-3">ID Number</th>
+                                            <th class="px-4 py-3">User Details</th>
+                                            <th class="px-4 py-3">Department</th>
+                                            <th class="px-4 py-3">Password</th>
+                                            <th class="px-4 py-3 text-right">Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="user-table-body" class="divide-y divide-slate-800/50 font-mono text-slate-300">
+                                    <tbody id="user-table-body" class="divide-y divide-slate-800/60 text-slate-300">
+                                        <!-- Dynamic User Rows -->
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
 
-                        <!-- System Audit Log -->
-                        <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-3">
-                            <div class="flex items-center justify-between">
-                                <h3 class="font-bold text-sm text-slate-200 flex items-center gap-2">
-                                    <i class="fa-solid fa-list-check text-cobalt-500"></i>
-                                    <span>System Audit Log</span>
-                                </h3>
-                                <span class="text-[10px] font-mono text-slate-500" id="log-count">0 Events</span>
-                            </div>
-                            <div id="audit-log-container" class="space-y-2 max-h-[160px] overflow-y-auto pr-1 text-xs font-mono">
+                            <div class="flex items-center justify-between text-xs font-mono text-slate-400 pt-2">
+                                <span>Total Cloud Records: <strong id="total-users-count" class="text-supa-400">0</strong></span>
+                                <span class="text-[10px] text-slate-500">Live Synchronized</span>
                             </div>
                         </div>
                     </div>
 
                 </div>
-
             </div>
         </section>
 
-        <!-- ========================================== -->
-        <!-- 3. USER WORKSPACE DASHBOARD                -->
-        <!-- ========================================== -->
+        <!-- USER DASHBOARD SECTION -->
         <section id="user-section" class="hidden w-full max-w-5xl transition-all duration-300">
-            <div class="glass-card-glow rounded-3xl p-6 md:p-10 shadow-2xl border border-slate-800 relative space-y-8">
+            <div class="glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-800 space-y-6">
                 
                 <!-- User Header -->
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></div>
-                        <span class="text-xs font-mono text-emerald-400 tracking-wider uppercase">AUTHENTICATED SESSION // ACCESS GRANTED</span>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-cyber-cyan/20 border border-cyber-cyan/40 flex items-center justify-center text-cyber-cyan text-xl font-bold shadow-lg shadow-cyber-cyan/10">
+                            <i class="fa-solid fa-id-badge"></i>
+                        </div>
+                        <div>
+                            <h2 id="user-workspace-title" class="text-xl md:text-2xl font-bold text-slate-100">User Workspace</h2>
+                            <p class="text-xs text-slate-400 font-mono">Personal Security Clearance & Credentials</p>
+                        </div>
                     </div>
 
                     <button onclick="logout()" 
                         class="px-4 py-2 rounded-xl bg-rose-500/10 border border-rose-500/30 hover:bg-rose-500/20 text-rose-300 text-xs font-mono flex items-center gap-2 transition-all self-start sm:self-auto">
                         <i class="fa-solid fa-right-from-bracket"></i>
-                        <span>Logout Session</span>
+                        <span>Logout</span>
                     </button>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- User Grid Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                     
-                    <!-- Digital Identity Pass -->
-                    <div class="lg:col-span-5 flex flex-col items-center">
-                        <div id="digital-id-card" class="w-full max-w-sm rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-cobalt-950 p-6 border border-cobalt-500/30 shadow-2xl relative overflow-hidden group">
-                            
-                            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-cobalt-600/10 rounded-full blur-2xl"></div>
-                            
-                            <div class="flex justify-between items-start mb-6">
+                    <!-- Digital Identity Pass Card -->
+                    <div class="md:col-span-6">
+                        <div class="glass-card-glow p-6 rounded-2xl relative overflow-hidden flex flex-col justify-between h-full space-y-6">
+                            <div class="flex justify-between items-start">
+                                <div class="space-y-1">
+                                    <span class="text-[10px] font-mono tracking-widest text-supa-400 uppercase">AETHERIS DIGITAL CLEARANCE</span>
+                                    <h3 id="display-user-name" class="text-xl font-bold text-white">User Name</h3>
+                                    <p id="display-user-email" class="text-xs text-slate-400 font-mono">user@aetheris.io</p>
+                                </div>
+                                <div class="w-12 h-12 rounded-xl bg-slate-900 border border-supa-500/40 flex items-center justify-center text-supa-400 text-lg">
+                                    <i class="fa-solid fa-fingerprint"></i>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4 py-3 border-y border-slate-800/80 font-mono text-xs">
+                                <div>
+                                    <span class="text-slate-500 block text-[10px]">ID NUMBER</span>
+                                    <span id="display-user-id" class="text-supa-300 font-bold text-sm">-----</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-500 block text-[10px]">DEPARTMENT</span>
+                                    <span id="display-user-dept" class="text-slate-200">-----</span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between text-xs font-mono">
                                 <div class="flex items-center gap-2">
-                                    <i class="fa-solid fa-microchip text-cyber-cyan text-2xl"></i>
-                                    <span class="text-xs font-mono text-cobalt-300 tracking-widest uppercase">SECURITY PASS</span>
+                                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                                    <span id="display-user-status" class="text-emerald-400">ACTIVE ACCESS</span>
                                 </div>
-                                <span id="user-badge-status" class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                                    ACTIVE
-                                </span>
-                            </div>
-
-                            <div class="flex items-center gap-4 mb-6">
-                                <div class="w-16 h-16 rounded-xl bg-gradient-to-tr from-cobalt-600 to-cyber-cyan p-0.5 shadow-md">
-                                    <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center text-cyber-cyan text-2xl font-bold font-mono" id="user-avatar-initials">
-                                        US
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 class="text-lg font-bold text-slate-100" id="user-card-name">User Name</h3>
-                                    <p class="text-xs font-mono text-cyber-cyan" id="user-card-dept">Department</p>
-                                </div>
-                            </div>
-
-                            <div class="space-y-2 pt-3 border-t border-slate-800">
-                                <div class="flex justify-between text-xs font-mono">
-                                    <span class="text-slate-500">ID NUMBER:</span>
-                                    <span class="text-cyber-cyan font-bold" id="user-card-id">12345</span>
-                                </div>
-                                <div class="flex justify-between text-xs font-mono">
-                                    <span class="text-slate-500">CLEARANCE:</span>
-                                    <span class="text-emerald-400">RESTRICTED OPERATIVE</span>
-                                </div>
-                            </div>
-
-                            <!-- Barcode Graphic -->
-                            <div class="mt-5 pt-3 border-t border-slate-800/80 flex flex-col items-center">
-                                <div class="h-8 w-full bg-[repeating-linear-gradient(90deg,#0284c7_0,#0284c7_2px,transparent_0,transparent_4px,#fff_0,#fff_7px,transparent_0,transparent_9px)] opacity-60"></div>
-                                <span class="text-[9px] font-mono text-slate-500 mt-1" id="user-card-barcode-num">AETH-SEC-PASS</span>
+                                <span class="text-slate-500 text-[10px]">VERIFIED ONLINE CLEARANCE</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Personal Information & Password Modification -->
-                    <div class="lg:col-span-7 space-y-6">
-                        
-                        <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
-                            <h3 class="text-base font-bold text-slate-100 flex items-center gap-2 pb-2 border-b border-slate-800">
-                                <i class="fa-solid fa-address-card text-cobalt-500"></i>
-                                <span>Personal Credentials & Security</span>
-                            </h3>
+                    <!-- Password Management Card -->
+                    <div class="md:col-span-6">
+                        <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-4 h-full flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-bold text-base text-slate-100 mb-2 flex items-center gap-2">
+                                    <i class="fa-solid fa-lock text-supa-400"></i>
+                                    <span>Security Credentials</span>
+                                </h3>
+                                <p class="text-xs text-slate-400 font-mono mb-4">Manage your authentication key persisted to the cloud.</p>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
-                                <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800">
-                                    <span class="text-slate-500 block text-[10px] uppercase">Registered Email</span>
-                                    <span class="text-slate-200 font-sans text-sm" id="user-detail-email">email@aetheris.io</span>
-                                </div>
+                                <form id="user-change-pass-form" onsubmit="handleUserPasswordChange(event)" class="space-y-4">
+                                    <div>
+                                        <label class="block text-xs font-mono uppercase text-slate-400 mb-1" for="user-new-pass">Update Password</label>
+                                        <div class="relative">
+                                            <input type="password" id="user-new-pass" required placeholder="Enter new password" 
+                                                class="glass-input w-full pl-3.5 pr-10 py-2.5 rounded-xl text-slate-100 text-sm font-mono">
+                                            <button type="button" onclick="togglePasswordVisibility('user-new-pass', 'user-new-pass-icon')" class="absolute right-3 top-3 text-slate-500 hover:text-slate-300">
+                                                <i id="user-new-pass-icon" class="fa-solid fa-eye text-xs"></i>
+                                            </button>
+                                        </div>
+                                    </div>
 
-                                <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800">
-                                    <span class="text-slate-500 block text-[10px] uppercase">Account Status</span>
-                                    <span class="text-emerald-400 font-bold text-sm" id="user-detail-status">Active</span>
-                                </div>
+                                    <button type="submit" 
+                                        class="w-full py-2.5 rounded-xl bg-slate-900 border border-supa-500/50 hover:bg-supa-500 hover:text-slate-950 text-supa-400 font-mono text-xs uppercase tracking-wider font-bold transition-all flex items-center justify-center gap-2">
+                                        <i class="fa-solid fa-arrows-rotate"></i>
+                                        <span>Update Online Password</span>
+                                    </button>
+                                </form>
                             </div>
 
-                            <!-- Change Password Form -->
-                            <form onsubmit="handleUserPasswordChange(event)" class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
-                                <h4 class="text-xs font-mono text-slate-300 font-bold uppercase">Change Password</h4>
-                                <div>
-                                    <div class="relative">
-                                        <input type="password" id="user-new-pass" required placeholder="Enter new security password" 
-                                            class="glass-input w-full px-3.5 py-2.5 rounded-xl text-slate-100 text-xs font-mono">
-                                        <button type="button" onclick="togglePasswordVisibility('user-new-pass', 'user-new-pass-icon')" class="absolute right-3 top-2.5 text-slate-500">
-                                            <i id="user-new-pass-icon" class="fa-solid fa-eye text-xs"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <button type="submit" id="btn-change-pass" 
-                                    class="px-4 py-2.5 rounded-xl bg-cobalt-600 hover:bg-cobalt-500 text-white font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2">
-                                    <i class="fa-solid fa-key"></i> Update Security Key
-                                </button>
-                            </form>
+                            <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-xs font-mono text-slate-400 flex items-center gap-2 mt-4">
+                                <i class="fa-solid fa-cloud-check text-supa-400 text-sm"></i>
+                                <span>Changes automatically write back to the cloud storage database.</span>
+                            </div>
                         </div>
-
-                        <!-- Directive Card -->
-                        <div class="glass-card p-5 rounded-2xl border border-slate-800">
-                            <h3 class="text-xs font-mono text-slate-300 font-bold uppercase mb-2 flex items-center gap-2">
-                                <i class="fa-solid fa-shield-virus text-amber-400"></i>
-                                <span>Security Directive</span>
-                            </h3>
-                            <p class="text-xs text-slate-400 leading-relaxed font-sans">
-                                Changes to your password write directly to the Cloud Firestore network. If offline, changes sync immediately upon reconnecting.
-                            </p>
-                        </div>
-
                     </div>
+
+                    <!-- Notice Board Card -->
+                    <div class="md:col-span-12">
+                        <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-3">
+                            <h3 class="font-bold text-sm text-slate-200 flex items-center gap-2 font-mono">
+                                <i class="fa-solid fa-bullhorn text-supa-400"></i>
+                                <span>ENTERPRISE NOTICE BOARD</span>
+                            </h3>
+                            <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-xs text-slate-300 space-y-2 font-mono">
+                                <div class="flex items-center justify-between text-slate-500 text-[10px]">
+                                    <span>SYSTEM SECURITY ANNOUNCEMENT</span>
+                                    <span>2026.10.25</span>
+                                </div>
+                                <p>Welcome to your online Enterprise Dashboard. Your credentials are fully synchronized with our cloud database backends. Any password updates will instantly reflect across all logins.</p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-
             </div>
         </section>
 
     </main>
 
-    <!-- FOOTER -->
-    <footer class="relative z-20 py-4 text-center text-xs font-mono text-slate-600 border-t border-slate-900 bg-slate-950/80">
-        AETHERIS CREDENTIAL MANAGEMENT NETWORK &copy; 2026 // ALL RIGHTS RESERVED
-    </footer>
-
-
-    <!-- ========================================== -->
-    <!-- MODALS SECTION                              -->
-    <!-- ========================================== -->
-
-    <!-- Firebase Config Setup Modal -->
-    <div id="firebase-config-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-        <div class="glass-card-glow w-full max-w-lg rounded-2xl p-6 border border-cobalt-500/40 shadow-2xl space-y-4">
-            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-                <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
-                    <i class="fa-solid fa-cloud-gear text-cyber-cyan"></i>
-                    <span>Connect Live Firebase Cloud Database</span>
-                </h3>
-                <button onclick="hideModal('firebase-config-modal')" class="text-slate-400 hover:text-slate-200">
-                    <i class="fa-solid fa-xmark"></i>
+    <!-- CONFIGURATION MODAL -->
+    <div id="config-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="glass-card max-w-lg w-full rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-2xl relative space-y-6">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-cloud text-supa-400 text-xl"></i>
+                    <h3 class="font-bold text-lg text-slate-100">Cloud Storage Config</h3>
+                </div>
+                <button onclick="closeConfigModal()" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
-            <p class="text-xs text-slate-300 font-sans leading-relaxed">
-                Paste your custom <strong>Firebase Web Project Configuration</strong> below to connect this portal to your live Firebase Cloud Firestore database.
-            </p>
-            
-            <div class="space-y-3 font-mono text-xs">
-                <div>
-                    <label class="block text-slate-400 mb-1">API Key (apiKey)</label>
-                    <input type="text" id="cfg-apikey" placeholder="AIzaSy..." class="glass-input w-full px-3 py-2 rounded-lg text-slate-200">
-                </div>
-                <div>
-                    <label class="block text-slate-400 mb-1">Auth Domain (authDomain)</label>
-                    <input type="text" id="cfg-authdomain" placeholder="project-id.firebaseapp.com" class="glass-input w-full px-3 py-2 rounded-lg text-slate-200">
-                </div>
-                <div>
-                    <label class="block text-slate-400 mb-1">Project ID (projectId)</label>
-                    <input type="text" id="cfg-projectid" placeholder="my-cyber-app" class="glass-input w-full px-3 py-2 rounded-lg text-slate-200">
-                </div>
-            </div>
 
-            <div class="flex justify-between items-center pt-3 border-t border-slate-800">
-                <button onclick="clearCustomFirebaseConfig()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 text-xs font-mono hover:text-rose-400">
-                    Reset Config
+            <!-- Provider Selection Tabs -->
+            <div class="grid grid-cols-3 gap-2 bg-slate-900/90 p-1.5 rounded-xl border border-slate-800 font-mono text-xs">
+                <button onclick="switchProviderTab('jsonbin')" id="tab-jsonbin" 
+                    class="py-2 rounded-lg text-center font-bold transition-all bg-supa-500 text-slate-950">
+                    JSONBin (Instant)
                 </button>
-                <div class="flex gap-2">
-                    <button onclick="hideModal('firebase-config-modal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-mono">Close</button>
-                    <button onclick="saveCustomFirebaseConfig()" class="px-4 py-2 rounded-xl bg-cobalt-600 hover:bg-cobalt-500 text-white font-bold text-xs font-mono uppercase">Save & Connect</button>
+                <button onclick="switchProviderTab('supabase')" id="tab-supabase" 
+                    class="py-2 rounded-lg text-center font-bold text-slate-400 hover:text-white transition-all">
+                    Supabase
+                </button>
+                <button onclick="switchProviderTab('firebase')" id="tab-firebase" 
+                    class="py-2 rounded-lg text-center font-bold text-slate-400 hover:text-white transition-all">
+                    Firebase
+                </button>
+            </div>
+
+            <!-- JSONBin Settings -->
+            <div id="config-jsonbin-panel" class="space-y-4">
+                <div class="p-3 rounded-xl bg-supa-500/10 border border-supa-500/30 text-xs font-mono text-supa-300">
+                    <i class="fa-solid fa-circle-check mr-1"></i>
+                    <strong>Zero-Config Instant Online Storage:</strong> Uses JSONBin REST API cloud bin to persist credentials online right out of the box!
+                </div>
+                <div>
+                    <label class="block text-xs font-mono uppercase text-slate-400 mb-1">Custom Master Key (Optional)</label>
+                    <input type="text" id="cfg-jsonbin-key" placeholder="Enter key to use your own JSONBin account" 
+                        class="glass-input w-full px-3.5 py-2.5 rounded-xl text-xs font-mono text-slate-100">
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Generic Confirm Modal -->
-    <div id="modal-container" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-        <div id="modal-box" class="glass-card-glow w-full max-w-md rounded-2xl p-6 border border-cobalt-500/30 shadow-2xl space-y-4">
-            <h3 id="modal-title" class="text-lg font-bold text-slate-100 flex items-center gap-2">
-                <i class="fa-solid fa-circle-info text-cyber-cyan"></i>
-                <span>Notice</span>
-            </h3>
-            <p id="modal-message" class="text-sm text-slate-300 font-sans leading-relaxed">
-                Message content.
-            </p>
-            <div class="flex justify-end gap-3 pt-2" id="modal-actions">
-                <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-cobalt-600 text-white font-bold text-xs font-mono uppercase hover:bg-cobalt-500">Acknowledge</button>
+            <!-- Supabase Settings -->
+            <div id="config-supabase-panel" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-xs font-mono uppercase text-slate-400 mb-1">Supabase Project URL</label>
+                    <input type="text" id="cfg-supa-url" placeholder="https://xxxx.supabase.co" 
+                        class="glass-input w-full px-3.5 py-2.5 rounded-xl text-xs font-mono text-slate-100">
+                </div>
+                <div>
+                    <label class="block text-xs font-mono uppercase text-slate-400 mb-1">Supabase Anon Key</label>
+                    <input type="password" id="cfg-supa-key" placeholder="eyJhbGciOi..." 
+                        class="glass-input w-full px-3.5 py-2.5 rounded-xl text-xs font-mono text-slate-100">
+                </div>
+            </div>
+
+            <!-- Firebase Settings -->
+            <div id="config-firebase-panel" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-xs font-mono uppercase text-slate-400 mb-1">Firebase Config Object (JSON)</label>
+                    <textarea id="cfg-firebase-json" rows="4" placeholder='{ "apiKey": "AIza...", "authDomain": "...", "projectId": "..." }' 
+                        class="glass-input w-full p-3 rounded-xl text-xs font-mono text-slate-100"></textarea>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 pt-2">
+                <button onclick="saveCloudSettings()" 
+                    class="flex-1 py-3 rounded-xl bg-supa-500 hover:bg-supa-400 text-slate-950 font-mono font-bold text-xs uppercase tracking-wider transition-all">
+                    Save & Reconnect Cloud
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Forgot Password Request Modal -->
-    <div id="forgot-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-        <div class="glass-card w-full max-w-md rounded-2xl p-6 border border-slate-800 space-y-4">
-            <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
-                <i class="fa-solid fa-key text-cobalt-500"></i>
-                <span>Reset Security Key</span>
-            </h3>
-            <p class="text-xs text-slate-400 font-sans">
-                Enter your assigned ID Number. Password resets require administrator clearance.
-            </p>
-            <input type="text" id="reset-id-input" placeholder="Enter ID Number" class="glass-input w-full px-3.5 py-2.5 rounded-xl text-xs font-mono text-slate-200">
-            <div class="flex justify-end gap-3 pt-2">
-                <button onclick="hideModal('forgot-modal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-mono">Cancel</button>
-                <button onclick="handleRequestReset()" class="px-4 py-2 rounded-xl bg-cobalt-600 text-white font-bold text-xs font-mono">Submit Request</button>
-            </div>
-        </div>
-    </div>
+    <!-- JAVASCRIPT LOGIC ENGINE -->
+    <script>
+        // --- HARDCODED ADMIN CREDENTIALS ---
+        const ADMIN_ID = "11964";
+        const ADMIN_PASS = "MSMI2008@";
 
+        // --- GLOBAL STATE ---
+        let state = {
+            currentUser: null,
+            isAdmin: false,
+            users: [],
+            cloudProvider: localStorage.getItem('cloud_provider') || 'jsonbin',
+            jsonbinKey: localStorage.getItem('cfg_jsonbin_key') || '',
+            jsonbinBinId: localStorage.getItem('cfg_jsonbin_bin_id') || '',
+            supaUrl: localStorage.getItem('cfg_supa_url') || '',
+            supaKey: localStorage.getItem('cfg_supa_key') || '',
+            firebaseConfig: localStorage.getItem('cfg_firebase_json') || '',
+            supaClient: null,
+            firebaseDb: null
+        };
 
-    <!-- ========================================== -->
-    <!-- APPLICATION SCRIPT & FIREBASE INTEGRATION  -->
-    <!-- ========================================== -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDocs, collection, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // APP STATE & CONSTANTS
-        const APP_COLLECTION = "user_credentials";
-        let db = null;
-        let auth = null;
-        let currentUserData = null;
-        let usersList = [];
-        let auditLogs = [];
-        let isFirebaseConnected = false;
-
-        // Default Seed Data
+        // Standard Seed Demo Users
         const DEFAULT_SEED_USERS = [
-            {
-                docId: 'usr-1001',
-                idNumber: '1001',
-                fullName: 'Sarah Connor',
-                email: 'sarah@aetheris.io',
-                password: 'User@1001',
-                department: 'Cyber Security',
-                status: 'Active',
-                createdAt: new Date().toISOString()
-            },
-            {
-                docId: 'usr-1002',
-                idNumber: '1002',
-                fullName: 'Kaelen Voss',
-                email: 'kaelen@aetheris.io',
-                password: 'User@1002',
-                department: 'Research & AI',
-                status: 'Active',
-                createdAt: new Date().toISOString()
-            }
+            { id: "1001", name: "Sarah Connor", email: "sarah@cyberdyne.io", password: "user123", dept: "Research & AI", status: "Active" },
+            { id: "1002", name: "Marcus Wright", email: "marcus@aetheris.io", password: "user456", dept: "Cyber Security", status: "Active" }
         ];
 
-        // 1. INITIALIZATION & SESSION MANAGEMENT
-        async function initApp() {
-            startParticleCanvas();
-            loadLocalStorageData();
-            populateConfigModalFields();
+        // --- PUBLIC REST CLOUD BIN API (Zero-Config Online Storage) ---
+        const PUBLIC_JSONBIN_BIN = "65d8a211dc74654018aa192b"; // Shared global fallback bin
 
-            // Check if Firebase custom config is present
-            let customConfig = null;
-            try {
-                const saved = localStorage.getItem('custom_firebase_config');
-                if (saved) customConfig = JSON.parse(saved);
-            } catch(e) {}
+        // Initializer
+        window.addEventListener('DOMContentLoaded', async () => {
+            initBackgroundCanvas();
+            initCloudConnections();
+            await syncDataFromCloud();
+            checkAutoLogin();
+        });
 
-            if (customConfig && customConfig.apiKey) {
-                await initFirebase(customConfig);
-            } else {
-                updateCloudStatus(false, "Local Store Active");
-            }
+        // --- CLOUD PROVIDER INITIALIZATION ---
+        function initCloudConnections() {
+            // Update UI Badges
+            const badge = document.getElementById('active-provider-badge');
+            const statusText = document.getElementById('cloud-status-text');
 
-            // Check Session Persistence (Auto Login)
-            checkActiveSession();
-            addLog("System Initialized.", "system");
-        }
-
-        async function initFirebase(config) {
-            try {
-                const app = initializeApp(config);
-                auth = getAuth(app);
-                db = getFirestore(app);
-
-                await signInAnonymously(auth);
-                isFirebaseConnected = true;
-                updateCloudStatus(true, "Firebase Live");
-                
-                // Subscribe to Firestore changes
-                subscribeToCloudData();
-            } catch (err) {
-                console.warn("Firebase Init Error, falling back to Local Storage:", err);
-                isFirebaseConnected = false;
-                updateCloudStatus(false, "Local Offline Store");
-            }
-        }
-
-        function subscribeToCloudData() {
-            if (!db) return;
-            const usersRef = collection(db, APP_COLLECTION);
-            
-            onSnapshot(usersRef, (snapshot) => {
-                const cloudUsers = [];
-                snapshot.forEach(docSnap => {
-                    cloudUsers.push({ docId: docSnap.id, ...docSnap.data() });
-                });
-
-                if (cloudUsers.length === 0) {
-                    seedCloudUsers();
-                } else {
-                    usersList = cloudUsers;
-                    localStorage.setItem('aetheris_users', JSON.stringify(usersList));
-                    renderUserTable();
-                    updateAdminStats();
-                }
-            }, (err) => {
-                console.error("Firestore sync error:", err);
-                showToast("Cloud sync error. Falling back to local data.", "error");
-            });
-        }
-
-        async function seedCloudUsers() {
-            if (!db) return;
-            for (const u of DEFAULT_SEED_USERS) {
-                await setDoc(doc(db, APP_COLLECTION, u.docId), u);
-            }
-        }
-
-        function loadLocalStorageData() {
-            const cached = localStorage.getItem('aetheris_users');
-            usersList = cached ? JSON.parse(cached) : DEFAULT_SEED_USERS;
-            if (!cached) localStorage.setItem('aetheris_users', JSON.stringify(usersList));
-            renderUserTable();
-            updateAdminStats();
-        }
-
-        function saveLocalStorageData() {
-            localStorage.setItem('aetheris_users', JSON.stringify(usersList));
-            renderUserTable();
-            updateAdminStats();
-        }
-
-        function checkActiveSession() {
-            const sessionStr = localStorage.getItem('aetheris_active_session') || sessionStorage.getItem('aetheris_active_session');
-            if (sessionStr) {
+            if (state.cloudProvider === 'supabase' && state.supaUrl && state.supaKey) {
                 try {
-                    const session = JSON.parse(sessionStr);
-                    if (session.role === 'admin') {
-                        switchToSection('admin-section');
-                        renderUserTable();
-                        updateAdminStats();
-                        showToast("Restored Admin Session", "info");
-                    } else if (session.role === 'user' && session.userData) {
-                        currentUserData = session.userData;
-                        populateUserProfile(currentUserData);
-                        switchToSection('user-section');
-                        showToast(`Session restored for ${currentUserData.fullName}`, "info");
+                    state.supaClient = supabase.createClient(state.supaUrl, state.supaKey);
+                    badge.innerText = 'SUPABASE CLOUD';
+                    statusText.innerText = 'Supabase Connected';
+                } catch (e) {
+                    console.error("Supabase Init Error:", e);
+                }
+            } else if (state.cloudProvider === 'firebase' && state.firebaseConfig) {
+                try {
+                    const parsed = JSON.parse(state.firebaseConfig);
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp(parsed);
                     }
-                } catch(e) {}
+                    state.firebaseDb = firebase.firestore();
+                    badge.innerText = 'FIREBASE CLOUD';
+                    statusText.innerText = 'Firebase Firestore';
+                } catch (e) {
+                    console.error("Firebase Init Error:", e);
+                }
+            } else {
+                state.cloudProvider = 'jsonbin';
+                badge.innerText = 'JSONBIN ONLINE API';
+                statusText.innerText = 'Online Cloud Active';
             }
         }
 
-        // 2. AUTHENTICATION ENGINE
-        window.handleLogin = async function(e) {
+        // --- CLOUD DATA SYNCHRONIZATION ---
+        async function syncDataFromCloud(manualTrigger = false) {
+            const refreshIcon = document.getElementById('refresh-icon');
+            if (refreshIcon) refreshIcon.classList.add('animate-spin');
+
+            try {
+                if (state.cloudProvider === 'supabase' && state.supaClient) {
+                    const { data, error } = await state.supaClient.from('users').select('*');
+                    if (!error && data) {
+                        state.users = data;
+                    }
+                } else if (state.cloudProvider === 'firebase' && state.firebaseDb) {
+                    const snapshot = await state.firebaseDb.collection('users').get();
+                    state.users = snapshot.docs.map(doc => ({ id_doc: doc.id, ...doc.data() }));
+                } else {
+                    // JSONBin.io / REST Cloud API
+                    const binId = state.jsonbinBinId || PUBLIC_JSONBIN_BIN;
+                    const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+                        headers: state.jsonbinKey ? { 'X-Master-Key': state.jsonbinKey } : {}
+                    });
+                    if (res.ok) {
+                        const json = await res.json();
+                        if (json.record && Array.isArray(json.record.users)) {
+                            state.users = json.record.users;
+                        }
+                    } else {
+                        // Fallback local persistence if offline
+                        const local = localStorage.getItem('offline_users');
+                        state.users = local ? JSON.parse(local) : DEFAULT_SEED_USERS;
+                    }
+                }
+
+                if (state.users.length === 0) {
+                    state.users = [...DEFAULT_SEED_USERS];
+                }
+
+                // Cache local backup
+                localStorage.setItem('offline_users', JSON.stringify(state.users));
+
+                if (manualTrigger) showToast('Database synchronized from online cloud', 'success');
+            } catch (err) {
+                console.warn("Cloud Sync Fallback:", err);
+                const local = localStorage.getItem('offline_users');
+                state.users = local ? JSON.parse(local) : DEFAULT_SEED_USERS;
+            } finally {
+                if (refreshIcon) refreshIcon.classList.remove('animate-spin');
+                renderUserTable();
+                document.getElementById('total-users-count').innerText = state.users.length;
+            }
+        }
+
+        async function writeDataToCloud() {
+            localStorage.setItem('offline_users', JSON.stringify(state.users));
+
+            try {
+                if (state.cloudProvider === 'jsonbin') {
+                    const binId = state.jsonbinBinId || PUBLIC_JSONBIN_BIN;
+                    await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            ...(state.jsonbinKey ? { 'X-Master-Key': state.jsonbinKey } : {})
+                        },
+                        body: JSON.stringify({ users: state.users })
+                    });
+                }
+            } catch (err) {
+                console.error("Write error:", err);
+            }
+        }
+
+        // --- AUTHENTICATION & LOGIN ---
+        async function handleLogin(e) {
             e.preventDefault();
             const idInput = document.getElementById('login-id').value.trim();
-            const passInput = document.getElementById('login-password').value;
+            const passInput = document.getElementById('login-password').value.trim();
             const rememberMe = document.getElementById('remember-me').checked;
 
-            setLoginBtnLoading(true);
+            setLoginLoading(true);
 
-            setTimeout(async () => {
-                setLoginBtnLoading(false);
+            // Re-sync latest cloud data before checking credentials
+            await syncDataFromCloud();
 
-                // Admin Auth Check
-                if (idInput === '11964' && passInput === 'MSMI2008@') {
-                    showToast("Admin Authentication Successful!", "success");
-                    addLog("Admin logged in", "admin");
-                    
-                    const sessionData = { role: 'admin', timestamp: Date.now() };
+            setTimeout(() => {
+                setLoginLoading(false);
+
+                // 1. Check Admin Credentials
+                if (idInput === ADMIN_ID && passInput === ADMIN_PASS) {
+                    state.isAdmin = true;
+                    state.currentUser = { name: "System Admin", id: ADMIN_ID };
                     if (rememberMe) {
-                        localStorage.setItem('aetheris_active_session', JSON.stringify(sessionData));
-                    } else {
-                        sessionStorage.setItem('aetheris_active_session', JSON.stringify(sessionData));
+                        localStorage.setItem('session_user', JSON.stringify({ isAdmin: true, id: ADMIN_ID }));
                     }
-
-                    switchToSection('admin-section');
-                    renderUserTable();
-                    updateAdminStats();
+                    showToast("Admin Credentials Verified", "success");
                     triggerConfetti();
+                    showDashboard('admin');
                     return;
                 }
 
-                // User Auth Check
-                const foundUser = usersList.find(u => u.idNumber === idInput && u.password === passInput);
+                // 2. Check Created User Credentials
+                const matchedUser = state.users.find(u => String(u.id) === idInput && u.password === passInput);
 
-                if (foundUser) {
-                    if (foundUser.status === 'Suspended') {
-                        showToast("Account Suspended. Contact Administrator.", "error");
-                        addLog(`Blocked login attempt for suspended ID: ${foundUser.idNumber}`, "warning");
+                if (matchedUser) {
+                    if (matchedUser.status === 'Suspended') {
+                        showToast("Account suspended. Contact Administrator.", "error");
                         return;
                     }
 
-                    currentUserData = foundUser;
-                    showToast(`Welcome, ${foundUser.fullName}!`, "success");
-                    addLog(`User '${foundUser.fullName}' (ID: ${foundUser.idNumber}) logged in.`, "user");
-
-                    const sessionData = { role: 'user', userData: foundUser, timestamp: Date.now() };
+                    state.isAdmin = false;
+                    state.currentUser = matchedUser;
                     if (rememberMe) {
-                        localStorage.setItem('aetheris_active_session', JSON.stringify(sessionData));
-                    } else {
-                        sessionStorage.setItem('aetheris_active_session', JSON.stringify(sessionData));
+                        localStorage.setItem('session_user', JSON.stringify({ isAdmin: false, user: matchedUser }));
                     }
-
-                    populateUserProfile(foundUser);
-                    switchToSection('user-section');
+                    showToast(`Welcome back, ${matchedUser.name}!`, "success");
                     triggerConfetti();
+                    showDashboard('user');
                     return;
                 }
 
                 showToast("Invalid ID Number or Password", "error");
-                addLog(`Failed login attempt for ID: ${idInput}`, "warning");
             }, 500);
-        };
-
-        window.logout = function() {
-            localStorage.removeItem('aetheris_active_session');
-            sessionStorage.removeItem('aetheris_active_session');
-            currentUserData = null;
-            document.getElementById('login-form').reset();
-            switchToSection('login-section');
-            showToast("Logged out safely.", "info");
-            addLog("Session terminated", "info");
-        };
-
-        // 3. ADMIN USER MANAGEMENT & CRUD
-        window.handleUserSave = async function(e) {
-            e.preventDefault();
-            const docIdInput = document.getElementById('edit-doc-id').value;
-            const fullName = document.getElementById('user-fullname').value.trim();
-            const idNumber = document.getElementById('user-idnum').value.trim();
-            const email = document.getElementById('user-email').value.trim();
-            const password = document.getElementById('user-password').value;
-            const department = document.getElementById('user-dept').value;
-            const status = document.getElementById('user-status').value;
-
-            // Check ID Uniqueness
-            const duplicate = usersList.find(u => u.idNumber === idNumber && u.docId !== docIdInput);
-            if (duplicate) {
-                showToast(`ID Number '${idNumber}' is already assigned!`, "error");
-                return;
-            }
-
-            const isEdit = !!docIdInput;
-            const targetDocId = isEdit ? docIdInput : 'usr-' + Date.now();
-
-            const userData = {
-                docId: targetDocId,
-                fullName,
-                idNumber,
-                email: email || `${idNumber}@aetheris.io`,
-                password,
-                department,
-                status,
-                createdAt: isEdit ? (usersList.find(u=>u.docId === docIdInput)?.createdAt || new Date().toISOString()) : new Date().toISOString()
-            };
-
-            try {
-                if (isFirebaseConnected && db) {
-                    await setDoc(doc(db, APP_COLLECTION, targetDocId), userData);
-                } else {
-                    if (isEdit) {
-                        const idx = usersList.findIndex(u => u.docId === targetDocId);
-                        if (idx !== -1) usersList[idx] = userData;
-                    } else {
-                        usersList.push(userData);
-                    }
-                    saveLocalStorageData();
-                }
-
-                showToast(`User ${isEdit ? 'Updated' : 'Created'} Successfully!`, "success");
-                addLog(`Admin ${isEdit ? 'updated' : 'created'} user '${fullName}' (ID: ${idNumber})`, "admin");
-                resetUserForm();
-            } catch (err) {
-                console.error("Save User Error:", err);
-                showToast("Failed to save user record.", "error");
-            }
-        };
-
-        window.editUser = function(docId) {
-            const user = usersList.find(u => u.docId === docId);
-            if (!user) return;
-
-            document.getElementById('edit-doc-id').value = user.docId;
-            document.getElementById('user-fullname').value = user.fullName;
-            document.getElementById('user-idnum').value = user.idNumber;
-            document.getElementById('user-email').value = user.email || '';
-            document.getElementById('user-password').value = user.password;
-            document.getElementById('user-dept').value = user.department;
-            document.getElementById('user-status').value = user.status;
-
-            document.getElementById('form-title').innerHTML = `<i class="fa-solid fa-user-pen text-amber-400"></i> Edit User Profile`;
-            document.getElementById('save-btn-text').innerText = "Update Credential";
-            document.getElementById('btn-cancel-edit').classList.remove('hidden');
-        };
-
-        window.resetUserForm = function() {
-            document.getElementById('create-user-form').reset();
-            document.getElementById('edit-doc-id').value = '';
-            document.getElementById('form-title').innerHTML = `<i class="fa-solid fa-user-plus text-cobalt-500"></i> Provision User Credential`;
-            document.getElementById('save-btn-text').innerText = "Save Credential to Database";
-            document.getElementById('btn-cancel-edit').classList.add('hidden');
-        };
-
-        window.deleteUserPrompt = function(docId, userName) {
-            showConfirmModal(
-                "Revoke Credential Access",
-                `Are you sure you want to permanently delete user record for '${userName}'?`,
-                async () => {
-                    try {
-                        if (isFirebaseConnected && db) {
-                            await deleteDoc(doc(db, APP_COLLECTION, docId));
-                        } else {
-                            usersList = usersList.filter(u => u.docId !== docId);
-                            saveLocalStorageData();
-                        }
-                        showToast(`User '${userName}' removed.`, "info");
-                        addLog(`Admin revoked credentials for '${userName}'`, "warning");
-                    } catch (e) {
-                        showToast("Failed to delete user.", "error");
-                    }
-                }
-            );
-        };
-
-        // 4. USER WORKSPACE PASSWORD CHANGE
-        window.handleUserPasswordChange = async function(e) {
-            e.preventDefault();
-            if (!currentUserData) return;
-
-            const newPass = document.getElementById('user-new-pass').value.trim();
-            if (newPass.length < 6) {
-                showToast("Password must be at least 6 characters", "error");
-                return;
-            }
-
-            currentUserData.password = newPass;
-
-            try {
-                if (isFirebaseConnected && db) {
-                    await setDoc(doc(db, APP_COLLECTION, currentUserData.docId), currentUserData);
-                } else {
-                    const idx = usersList.findIndex(u => u.docId === currentUserData.docId);
-                    if (idx !== -1) usersList[idx] = currentUserData;
-                    saveLocalStorageData();
-                }
-
-                // Update session
-                const sessionStr = localStorage.getItem('aetheris_active_session') || sessionStorage.getItem('aetheris_active_session');
-                if (sessionStr) {
-                    const session = JSON.parse(sessionStr);
-                    session.userData = currentUserData;
-                    if (localStorage.getItem('aetheris_active_session')) {
-                        localStorage.setItem('aetheris_active_session', JSON.stringify(session));
-                    } else {
-                        sessionStorage.setItem('aetheris_active_session', JSON.stringify(session));
-                    }
-                }
-
-                document.getElementById('user-new-pass').value = '';
-                showToast("Password updated in database!", "success");
-                addLog(`User '${currentUserData.fullName}' updated password.`, "user");
-            } catch(e) {
-                showToast("Failed to update password.", "error");
-            }
-        };
-
-        // 5. HELPER UTILITIES
-        window.generateRandomId = function() {
-            const randomId = Math.floor(10000 + Math.random() * 90000).toString();
-            document.getElementById('user-idnum').value = randomId;
-            showToast(`Generated ID: ${randomId}`, "info");
-        };
-
-        window.generateRandomPassword = function() {
-            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$";
-            let pass = "";
-            for (let i = 0; i < 9; i++) {
-                pass += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            document.getElementById('user-password').value = pass;
-            showToast("Generated Pass", "info");
-        };
-
-        window.copyToClipboard = function(text, successMsg) {
-            const temp = document.createElement('textarea');
-            temp.value = text;
-            document.body.appendChild(temp);
-            temp.select();
-            document.execCommand('copy');
-            document.body.removeChild(temp);
-            showToast(successMsg, "success");
-        };
-
-        window.exportUserData = function(format = 'csv') {
-            if (usersList.length === 0) {
-                showToast("No records to export", "error");
-                return;
-            }
-
-            let content = "ID Number,Full Name,Email,Password,Department,Status\n";
-            usersList.forEach(u => {
-                content += `"${u.idNumber}","${u.fullName}","${u.email}","${u.password}","${u.department}","${u.status}"\n`;
-            });
-
-            const blob = new Blob([content], { type: "text/csv" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `aetheris_credentials_${Date.now()}.csv`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast("Database exported to CSV!", "success");
-        };
-
-        window.saveCustomFirebaseConfig = function() {
-            const apiKey = document.getElementById('cfg-apikey').value.trim();
-            const authDomain = document.getElementById('cfg-authdomain').value.trim();
-            const projectId = document.getElementById('cfg-projectid').value.trim();
-
-            if (!apiKey || !projectId) {
-                showToast("API Key and Project ID are required", "error");
-                return;
-            }
-
-            const configObj = { apiKey, authDomain, projectId };
-            localStorage.setItem('custom_firebase_config', JSON.stringify(configObj));
-            showToast("Config Saved! Connecting...", "success");
-            setTimeout(() => window.location.reload(), 800);
-        };
-
-        window.clearCustomFirebaseConfig = function() {
-            localStorage.removeItem('custom_firebase_config');
-            showToast("Config reset to offline store.", "info");
-            setTimeout(() => window.location.reload(), 800);
-        };
-
-        function populateConfigModalFields() {
-            try {
-                const saved = localStorage.getItem('custom_firebase_config');
-                if (saved) {
-                    const cfg = JSON.parse(saved);
-                    if (document.getElementById('cfg-apikey')) document.getElementById('cfg-apikey').value = cfg.apiKey || '';
-                    if (document.getElementById('cfg-authdomain')) document.getElementById('cfg-authdomain').value = cfg.authDomain || '';
-                    if (document.getElementById('cfg-projectid')) document.getElementById('cfg-projectid').value = cfg.projectId || '';
-                }
-            } catch(e){}
         }
 
-        window.togglePasswordVisibility = function(inputId, iconId) {
+        function checkAutoLogin() {
+            const stored = localStorage.getItem('session_user');
+            if (stored) {
+                try {
+                    const session = JSON.parse(stored);
+                    if (session.isAdmin) {
+                        state.isAdmin = true;
+                        state.currentUser = { name: "System Admin", id: ADMIN_ID };
+                        showDashboard('admin');
+                    } else if (session.user) {
+                        const latest = state.users.find(u => String(u.id) === String(session.user.id)) || session.user;
+                        state.isAdmin = false;
+                        state.currentUser = latest;
+                        showDashboard('user');
+                    }
+                } catch (e) {
+                    localStorage.removeItem('session_user');
+                }
+            }
+        }
+
+        function logout() {
+            state.currentUser = null;
+            state.isAdmin = false;
+            localStorage.removeItem('session_user');
+            document.getElementById('admin-section').classList.add('hidden');
+            document.getElementById('user-section').classList.add('hidden');
+            document.getElementById('login-section').classList.remove('hidden');
+            document.getElementById('login-form').reset();
+            showToast("Logged out successfully", "info");
+        }
+
+        // --- DASHBOARD ROUTING ---
+        function showDashboard(type) {
+            document.getElementById('login-section').classList.add('hidden');
+
+            if (type === 'admin') {
+                document.getElementById('admin-section').classList.remove('hidden');
+                document.getElementById('user-section').classList.add('hidden');
+                renderUserTable();
+            } else {
+                document.getElementById('user-section').classList.remove('hidden');
+                document.getElementById('admin-section').classList.add('hidden');
+                renderUserWorkspace();
+            }
+        }
+
+        // --- ADMIN USER MANAGEMENT ---
+        async function handleUserSave(e) {
+            e.preventDefault();
+
+            const docId = document.getElementById('edit-doc-id').value;
+            const name = document.getElementById('user-fullname').value.trim();
+            const idNum = document.getElementById('user-idnum').value.trim();
+            const email = document.getElementById('user-email').value.trim() || `${idNum}@aetheris.io`;
+            const password = document.getElementById('user-password').value.trim();
+            const dept = document.getElementById('user-dept').value;
+            const status = document.getElementById('user-status').value;
+
+            if (docId) {
+                // Update Existing
+                const idx = state.users.findIndex(u => String(u.id) === docId || u.id_doc === docId);
+                if (idx !== -1) {
+                    state.users[idx] = { ...state.users[idx], name, id: idNum, email, password, dept, status };
+                    showToast("User updated successfully", "success");
+                }
+            } else {
+                // Duplicate check
+                if (state.users.some(u => String(u.id) === idNum)) {
+                    showToast("User ID already exists!", "error");
+                    return;
+                }
+
+                const newUser = { id: idNum, name, email, password, dept, status };
+                state.users.push(newUser);
+                showToast("New User Provisioned & Saved to Cloud", "success");
+            }
+
+            await writeDataToCloud();
+            resetUserForm();
+            renderUserTable();
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm("Are you sure you want to delete this user from the cloud database?")) return;
+
+            state.users = state.users.filter(u => String(u.id) !== String(userId));
+            await writeDataToCloud();
+            renderUserTable();
+            showToast("User deleted from cloud", "info");
+        }
+
+        function editUser(userId) {
+            const u = state.users.find(usr => String(usr.id) === String(userId));
+            if (!u) return;
+
+            document.getElementById('edit-doc-id').value = u.id;
+            document.getElementById('user-fullname').value = u.name;
+            document.getElementById('user-idnum').value = u.id;
+            document.getElementById('user-email').value = u.email || '';
+            document.getElementById('user-password').value = u.password;
+            document.getElementById('user-dept').value = u.dept || 'Cyber Security';
+            document.getElementById('user-status').value = u.status || 'Active';
+
+            document.getElementById('form-title').innerText = "Edit User Credential";
+            document.getElementById('save-btn-text').innerText = "Update Cloud Record";
+            document.getElementById('btn-cancel-edit').classList.remove('hidden');
+        }
+
+        function resetUserForm() {
+            document.getElementById('create-user-form').reset();
+            document.getElementById('edit-doc-id').value = "";
+            document.getElementById('form-title').innerText = "Provision User Credential";
+            document.getElementById('save-btn-text').innerText = "Save Credential to Online Cloud";
+            document.getElementById('btn-cancel-edit').classList.add('hidden');
+        }
+
+        function renderUserTable() {
+            const tbody = document.getElementById('user-table-body');
+            const search = (document.getElementById('search-input')?.value || '').toLowerCase();
+            tbody.innerHTML = '';
+
+            const filtered = state.users.filter(u => 
+                String(u.id).toLowerCase().includes(search) || 
+                (u.name && u.name.toLowerCase().includes(search))
+            );
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-slate-500 font-mono">No cloud records found</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(u => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/50 transition-colors";
+                tr.innerHTML = `
+                    <td class="px-4 py-3 font-bold text-supa-400">${u.id}</td>
+                    <td class="px-4 py-3">
+                        <div class="font-sans font-medium text-slate-100">${u.name}</div>
+                        <div class="text-[10px] text-slate-500">${u.email || 'No email'}</div>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] bg-slate-800 text-slate-300 border border-slate-700">${u.dept || 'N/A'}</span>
+                    </td>
+                    <td class="px-4 py-3 font-mono">
+                        <div class="flex items-center gap-2">
+                            <span id="pass-mask-${u.id}">••••••••</span>
+                            <span id="pass-raw-${u.id}" class="hidden text-emerald-400">${u.password}</span>
+                            <button onclick="toggleTablePassword('${u.id}')" class="text-slate-500 hover:text-slate-300">
+                                <i id="pass-eye-${u.id}" class="fa-solid fa-eye text-[11px]"></i>
+                            </button>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 text-right space-x-2">
+                        <button onclick="editUser('${u.id}')" class="px-2 py-1 rounded bg-slate-800 hover:bg-supa-500/20 text-supa-400 text-[11px]">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="deleteUser('${u.id}')" class="px-2 py-1 rounded bg-slate-800 hover:bg-rose-500/20 text-rose-400 text-[11px]">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('total-users-count').innerText = state.users.length;
+        }
+
+        // --- USER SELF-SERVICE WORKSPACE ---
+        function renderUserWorkspace() {
+            const u = state.currentUser;
+            if (!u) return;
+
+            document.getElementById('display-user-name').innerText = u.name || 'User';
+            document.getElementById('display-user-email').innerText = u.email || `${u.id}@aetheris.io`;
+            document.getElementById('display-user-id').innerText = u.id;
+            document.getElementById('display-user-dept').innerText = u.dept || 'Engineering';
+            document.getElementById('user-workspace-title').innerText = `${u.name}'s Workspace`;
+        }
+
+        async function handleUserPasswordChange(e) {
+            e.preventDefault();
+            const newPass = document.getElementById('user-new-pass').value.trim();
+            if (!newPass || newPass.length < 4) {
+                showToast("Password must be at least 4 characters", "error");
+                return;
+            }
+
+            const idx = state.users.findIndex(u => String(u.id) === String(state.currentUser.id));
+            if (idx !== -1) {
+                state.users[idx].password = newPass;
+                state.currentUser.password = newPass;
+                await writeDataToCloud();
+                document.getElementById('user-change-pass-form').reset();
+                showToast("Password updated online in cloud database!", "success");
+            }
+        }
+
+        // --- UTILITY FUNCTIONS ---
+        function togglePasswordVisibility(inputId, iconId) {
             const input = document.getElementById(inputId);
             const icon = document.getElementById(iconId);
             if (input.type === 'password') {
                 input.type = 'text';
-                icon.className = "fa-solid fa-eye-slash text-xs text-cyber-cyan";
+                icon.className = 'fa-solid fa-eye-slash text-sm';
             } else {
                 input.type = 'password';
-                icon.className = "fa-solid fa-eye text-xs text-slate-400";
+                icon.className = 'fa-solid fa-eye text-sm';
             }
-        };
+        }
 
-        window.syncData = function(manual = false) {
-            const icon = document.getElementById('refresh-icon');
-            if (icon) icon.classList.add('animate-spin');
-            setTimeout(() => {
-                if (isFirebaseConnected) {
-                    subscribeToCloudData();
-                } else {
-                    loadLocalStorageData();
-                }
-                if (icon) icon.classList.remove('animate-spin');
-                if (manual) showToast("Database Synced", "info");
-            }, 500);
-        };
+        function toggleTablePassword(id) {
+            const mask = document.getElementById(`pass-mask-${id}`);
+            const raw = document.getElementById(`pass-raw-${id}`);
+            const eye = document.getElementById(`pass-eye-${id}`);
+            if (mask.classList.contains('hidden')) {
+                mask.classList.remove('hidden');
+                raw.classList.add('hidden');
+                eye.className = 'fa-solid fa-eye text-[11px]';
+            } else {
+                mask.classList.add('hidden');
+                raw.classList.remove('hidden');
+                eye.className = 'fa-solid fa-eye-slash text-[11px]';
+            }
+        }
 
-        function setLoginBtnLoading(isLoading) {
+        function generateRandomId() {
+            document.getElementById('user-idnum').value = Math.floor(10000 + Math.random() * 90000);
+        }
+
+        function generateRandomPassword() {
+            const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789@#$";
+            let pass = "";
+            for (let i = 0; i < 8; i++) pass += chars.charAt(Math.floor(Math.random() * chars.length));
+            document.getElementById('user-password').value = pass;
+        }
+
+        function exportUserDataCSV() {
+            let csv = "ID,Name,Email,Department,Status\n";
+            state.users.forEach(u => {
+                csv += `"${u.id}","${u.name}","${u.email}","${u.dept}","${u.status}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `cloud_users_export_${Date.now()}.csv`;
+            a.click();
+            showToast("Exported user table to CSV", "info");
+        }
+
+        function setLoginLoading(isLoading) {
             const spinner = document.getElementById('login-btn-spinner');
             const text = document.getElementById('login-btn-text');
             if (isLoading) {
@@ -1129,241 +1009,126 @@
             }
         }
 
-        function switchToSection(sectionId) {
-            ['login-section', 'admin-section', 'user-section'].forEach(id => {
-                const el = document.getElementById(id);
-                if (id === sectionId) {
-                    el.classList.remove('hidden');
+        // --- CONFIG MODAL LOGIC ---
+        function openConfigModal() {
+            document.getElementById('config-modal').classList.remove('hidden');
+            document.getElementById('cfg-jsonbin-key').value = state.jsonbinKey;
+            document.getElementById('cfg-supa-url').value = state.supaUrl;
+            document.getElementById('cfg-supa-key').value = state.supaKey;
+            document.getElementById('cfg-firebase-json').value = state.firebaseConfig;
+        }
+
+        function closeConfigModal() {
+            document.getElementById('config-modal').classList.add('hidden');
+        }
+
+        function switchProviderTab(provider) {
+            state.cloudProvider = provider;
+            ['jsonbin', 'supabase', 'firebase'].forEach(p => {
+                const tab = document.getElementById(`tab-${p}`);
+                const panel = document.getElementById(`config-${p}-panel`);
+                if (p === provider) {
+                    tab.className = "py-2 rounded-lg text-center font-bold transition-all bg-supa-500 text-slate-950";
+                    panel.classList.remove('hidden');
                 } else {
-                    el.classList.add('hidden');
+                    tab.className = "py-2 rounded-lg text-center font-bold text-slate-400 hover:text-white transition-all";
+                    panel.classList.add('hidden');
                 }
             });
         }
 
-        function renderUserTable() {
-            const tbody = document.getElementById('user-table-body');
-            const searchTerm = (document.getElementById('search-user')?.value || '').toLowerCase();
+        function saveCloudSettings() {
+            state.jsonbinKey = document.getElementById('cfg-jsonbin-key').value.trim();
+            state.supaUrl = document.getElementById('cfg-supa-url').value.trim();
+            state.supaKey = document.getElementById('cfg-supa-key').value.trim();
+            state.firebaseConfig = document.getElementById('cfg-firebase-json').value.trim();
 
-            const filtered = usersList.filter(u => 
-                u.fullName.toLowerCase().includes(searchTerm) || 
-                u.idNumber.toLowerCase().includes(searchTerm)
-            );
+            localStorage.setItem('cloud_provider', state.cloudProvider);
+            localStorage.setItem('cfg_jsonbin_key', state.jsonbinKey);
+            localStorage.setItem('cfg_supa_url', state.supaUrl);
+            localStorage.setItem('cfg_supa_key', state.supaKey);
+            localStorage.setItem('cfg_firebase_json', state.firebaseConfig);
 
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500 font-mono">No matching records found.</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = filtered.map(user => `
-                <tr class="hover:bg-slate-900/60 transition-colors">
-                    <td class="p-3">
-                        <div class="font-sans font-semibold text-slate-200">${escapeHtml(user.fullName)}</div>
-                        <div class="text-[10px] text-slate-500">${escapeHtml(user.email || 'N/A')}</div>
-                    </td>
-                    <td class="p-3 text-cyber-cyan font-bold">${escapeHtml(user.idNumber)}</td>
-                    <td class="p-3 text-slate-400 font-mono flex items-center gap-1.5">
-                        <span>${escapeHtml(user.password)}</span>
-                        <button onclick="copyToClipboard('${escapeHtml(user.password)}', 'Password copied!')" class="text-slate-500 hover:text-cyber-cyan">
-                            <i class="fa-solid fa-copy text-[10px]"></i>
-                        </button>
-                    </td>
-                    <td class="p-3">
-                        <span class="px-2 py-0.5 rounded text-[10px] font-mono ${user.status === 'Active' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-rose-500/20 text-rose-300 border border-rose-500/40'}">
-                            ${user.status}
-                        </span>
-                    </td>
-                    <td class="p-3 text-right space-x-1">
-                        <button onclick="editUser('${user.docId}')" class="p-1.5 hover:bg-slate-800 rounded text-amber-400 transition-colors" title="Edit">
-                            <i class="fa-solid fa-pen text-xs"></i>
-                        </button>
-                        <button onclick="deleteUserPrompt('${user.docId}', '${escapeHtml(user.fullName)}')" class="p-1.5 hover:bg-slate-800 rounded text-rose-400 transition-colors" title="Delete">
-                            <i class="fa-solid fa-trash text-xs"></i>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
+            initCloudConnections();
+            syncDataFromCloud(true);
+            closeConfigModal();
+            showToast("Cloud Provider updated & reconnected!", "success");
         }
 
-        function updateAdminStats() {
-            const total = usersList.length;
-            const active = usersList.filter(u => u.status === 'Active').length;
-            
-            if (document.getElementById('stat-total-users')) document.getElementById('stat-total-users').innerText = total;
-            if (document.getElementById('stat-active-users')) document.getElementById('stat-active-users').innerText = active;
-        }
-
-        function addLog(message, category = 'info') {
-            const logEntry = { message, category, timestamp: new Date().toISOString() };
-            auditLogs.unshift(logEntry);
-            if (auditLogs.length > 15) auditLogs.pop();
-            renderAuditLogs();
-        }
-
-        function renderAuditLogs() {
-            const container = document.getElementById('audit-log-container');
-            if (!container) return;
-            document.getElementById('log-count').innerText = `${auditLogs.length} Events`;
-
-            container.innerHTML = auditLogs.map(log => `
-                <div class="flex items-center justify-between p-2 rounded bg-slate-950/40 border border-slate-800/80">
-                    <span class="text-slate-300">${escapeHtml(log.message)}</span>
-                    <span class="text-[9px] text-slate-500">${new Date(log.timestamp).toLocaleTimeString()}</span>
-                </div>
-            `).join('');
-        }
-
-        function populateUserProfile(user) {
-            document.getElementById('user-card-name').innerText = user.fullName;
-            document.getElementById('user-card-dept').innerText = user.department || 'Operative';
-            document.getElementById('user-card-id').innerText = user.idNumber;
-            document.getElementById('user-card-barcode-num').innerText = `AETH-${user.idNumber}-X`;
-
-            const initials = user.fullName.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
-            document.getElementById('user-avatar-initials').innerText = initials || 'US';
-
-            document.getElementById('user-detail-email').innerText = user.email || `${user.idNumber}@aetheris.io`;
-            document.getElementById('user-detail-status').innerText = user.status;
-        }
-
-        function updateCloudStatus(connected, text) {
-            const statusText = document.getElementById('cloud-status-text');
-            const pulse = document.getElementById('cloud-pulse');
-            const modeStat = document.getElementById('stat-db-mode');
-            const descStat = document.getElementById('stat-db-desc');
-
-            if (statusText) statusText.innerText = text;
-            if (pulse) {
-                pulse.className = connected ? "w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" : "w-2.5 h-2.5 rounded-full bg-amber-400";
-            }
-
-            if (modeStat) modeStat.innerText = connected ? "FIRESTORE" : "LOCAL STORE";
-            if (descStat) descStat.innerText = connected ? "Live Cloud Network" : "Offline Persistence";
-        }
-
-        window.showToast = function(message, type = 'info') {
+        // --- TOAST NOTIFICATIONS ---
+        function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             
-            let icon = 'fa-circle-info';
-            let border = 'border-cobalt-500/50';
-            let textColor = 'text-cyber-cyan';
-            
-            if (type === 'success') {
-                icon = 'fa-circle-check';
-                border = 'border-emerald-500/50';
-                textColor = 'text-emerald-300';
-            } else if (type === 'error') {
-                icon = 'fa-triangle-exclamation';
-                border = 'border-rose-500/50';
-                textColor = 'text-rose-300';
-            }
+            const icons = {
+                success: 'fa-circle-check text-emerald-400',
+                error: 'fa-triangle-exclamation text-rose-400',
+                info: 'fa-circle-info text-cyber-cyan'
+            };
 
-            toast.className = `glass-card p-3.5 rounded-xl border ${border} shadow-xl flex items-center gap-3 text-xs font-mono transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-auto`;
+            toast.className = `pointer-events-auto flex items-center gap-3 p-4 rounded-xl glass-card border border-slate-800 text-xs font-mono shadow-xl transition-all duration-300 transform translate-y-2 opacity-0`;
             toast.innerHTML = `
-                <i class="fa-solid ${icon} ${textColor} text-base"></i>
-                <span class="text-slate-200 flex-1">${escapeHtml(message)}</span>
+                <i class="fa-solid ${icons[type] || icons.info} text-base"></i>
+                <span class="text-slate-100 flex-1">${message}</span>
             `;
 
             container.appendChild(toast);
-            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
 
             setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
+                toast.classList.add('opacity-0', '-translate-y-2');
                 setTimeout(() => toast.remove(), 300);
             }, 3500);
-        };
-
-        window.showModal = function(id) { document.getElementById(id)?.classList.remove('hidden'); };
-        window.hideModal = function(id) { document.getElementById(id)?.classList.add('hidden'); };
-
-        window.showConfirmModal = function(title, message, onConfirm) {
-            document.getElementById('modal-title').innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-400"></i> ${escapeHtml(title)}`;
-            document.getElementById('modal-message').innerText = message;
-            
-            const actions = document.getElementById('modal-actions');
-            actions.innerHTML = `
-                <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-mono">Cancel</button>
-                <button id="modal-confirm-btn" class="px-4 py-2 rounded-xl bg-rose-600 text-white font-bold text-xs font-mono uppercase hover:bg-rose-500">Confirm Revoke</button>
-            `;
-
-            document.getElementById('modal-confirm-btn').onclick = () => {
-                closeModal();
-                onConfirm();
-            };
-
-            document.getElementById('modal-container').classList.remove('hidden');
-        };
-
-        window.closeModal = function() { document.getElementById('modal-container')?.classList.add('hidden'); };
-
-        window.handleRequestReset = function() {
-            const idVal = document.getElementById('reset-id-input')?.value;
-            if (!idVal) {
-                showToast("Please enter a valid ID Number", "error");
-                return;
-            }
-            hideModal('forgot-modal');
-            showToast(`Reset ticket logged for ID: ${idVal}.`, "success");
-            addLog(`Password reset requested for ID: ${idVal}`, "info");
-        };
+        }
 
         function triggerConfetti() {
             if (typeof confetti === 'function') {
-                confetti({ particleCount: 35, spread: 60, origin: { y: 0.8 } });
+                confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
             }
         }
 
-        function escapeHtml(str) {
-            return String(str || '').replace(/[&<>"']/g, function(m) {
-                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
-            });
-        }
-
-        function startParticleCanvas() {
+        // --- CANVAS PARTICLES ---
+        function initBackgroundCanvas() {
             const canvas = document.getElementById('bg-canvas');
-            if (!canvas) return;
             const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
 
-            function resize() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-            resize();
-            window.addEventListener('resize', resize);
-
-            const particles = Array.from({ length: 40 }, () => ({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                radius: Math.random() * 1.5 + 0.5,
-                vx: (Math.random() - 0.5) * 0.3,
-                vy: (Math.random() - 0.5) * 0.3,
-                alpha: Math.random() * 0.5 + 0.2
+            const particles = Array.from({ length: 45 }, () => ({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.4,
+                vy: (Math.random() - 0.5) * 0.4,
+                size: Math.random() * 2 + 1
             }));
 
-            function draw() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                ctx.fillStyle = 'rgba(62, 207, 142, 0.4)';
+
                 particles.forEach(p => {
                     p.x += p.vx;
                     p.y += p.vy;
-
-                    if (p.x < 0) p.x = canvas.width;
-                    if (p.x > canvas.width) p.x = 0;
-                    if (p.y < 0) p.y = canvas.height;
-                    if (p.y > canvas.height) p.y = 0;
+                    if (p.x < 0 || p.x > width) p.vx *= -1;
+                    if (p.y < 0 || p.y > height) p.vy *= -1;
 
                     ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(2, 132, 199, ${p.alpha})`;
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                     ctx.fill();
                 });
-                requestAnimationFrame(draw);
-            }
-            draw();
-        }
 
-        window.onload = function() {
-            initApp();
-        };
+                requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            animate();
+        }
     </script>
 </body>
 </html>
