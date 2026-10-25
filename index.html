@@ -1,1152 +1,804 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-50 text-slate-800">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSMI credentials</title>
+    <title>MSMI credentials - Enterprise Access Portal</title>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #dc2626;
+            --primary-hover: #b91c1c;
+            --primary-light: #fef2f2;
+            --secondary: #991b1b;
+            --accent: #ef4444;
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #fee2e2 50%, #f1f5f9 100%);
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --card-border: rgba(220, 38, 38, 0.15);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --text-danger: #dc2626;
+            --text-success: #16a34a;
+            --shadow-sm: 0 4px 6px -1px rgba(220, 38, 38, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(220, 38, 38, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+            --radius-lg: 18px;
+            --radius-md: 12px;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
 
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        msmi: {
-                            50: '#fff1f2',
-                            100: '#ffe4e6',
-                            200: '#fecdd3',
-                            300: '#fda4af',
-                            400: '#fb7185',
-                            500: '#f43f5e',
-                            600: '#e11d48',
-                            700: '#be123c',
-                            800: '#9f1239',
-                            900: '#881337',
-                            950: '#4c0519'
-                        },
-                        accent: {
-                            gold: '#f59e0b',
-                            emerald: '#10b981',
-                            cyan: '#06b6d4',
-                            indigo: '#6366f1',
-                            purple: '#8b5cf6'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace']
-                    }
-                }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Glow Background Effects */
+        .bg-glow-1 {
+            position: fixed;
+            top: -10%;
+            right: -10%;
+            width: 450px;
+            height: 450px;
+            background: rgba(220, 38, 38, 0.12);
+            filter: blur(120px);
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .bg-glow-2 {
+            position: fixed;
+            bottom: -10%;
+            left: -10%;
+            width: 450px;
+            height: 450px;
+            background: rgba(239, 68, 68, 0.12);
+            filter: blur(120px);
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        /* Container Layout */
+        .app-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Header Navigation Bar */
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 28px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(16px);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 24px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+        }
+
+        .brand-logo i {
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* Custom Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(220, 38, 38, 0.35);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-light);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Glass Cards */
+        .glass-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(16px);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Login Screen */
+        .login-wrapper {
+            max-width: 450px;
+            margin: 40px auto;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .login-header h2 {
+            font-size: 1.8rem;
+            color: var(--text-main);
+            font-weight: 800;
+        }
+
+        .login-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 6px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px 12px 42px;
+            border-radius: var(--radius-md);
+            border: 1.5px solid #e2e8f0;
+            background: #ffffff;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+        }
+
+        /* Alert Banners */
+        .alert {
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            font-size: 0.88rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-danger {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .alert-success {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        /* Dashboard Views */
+        .dashboard-view {
+            display: none;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 868px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
             }
         }
-    </script>
 
-    <!-- Supabase JS Client CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+        /* Table Styling */
+        .table-responsive {
+            overflow-x: auto;
+        }
 
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Canvas Confetti Library -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
 
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #fff5f5 0%, #fee2e2 50%, #fff1f2 100%);
-            min-height: 100vh;
+        .custom-table th, .custom-table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #f1f5f9;
         }
-        .white-glass {
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(225, 29, 72, 0.15);
-            box-shadow: 0 10px 35px -5px rgba(225, 29, 72, 0.12);
+
+        .custom-table th {
+            background: #f8fafc;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
-        .white-glass-glow {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(225, 29, 72, 0.35);
-            box-shadow: 0 0 30px rgba(225, 29, 72, 0.2);
+
+        .custom-table td {
+            font-size: 0.9rem;
         }
-        .white-input {
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(225, 29, 72, 0.25);
-            transition: all 0.25s ease-in-out;
-            color: #1e293b;
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-block;
         }
-        .white-input:focus {
-            background: #ffffff;
-            border-color: #e11d48;
-            box-shadow: 0 0 12px rgba(225, 29, 72, 0.25);
-            outline: none;
+
+        .badge-active {
+            background: #dcfce7;
+            color: #15803d;
         }
-        .vibrant-gradient {
-            background: linear-gradient(135deg, #e11d48 0%, #be123c 50%, #9f1239 100%);
+
+        .badge-admin {
+            background: #fee2e2;
+            color: #991b1b;
         }
-        .vibrant-gradient-hover:hover {
-            background: linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #be123c 100%);
+
+        /* Personal Message Banner Box */
+        .message-box {
+            background: linear-gradient(135deg, #fff5f5, #fef2f2);
+            border-left: 5px solid var(--primary);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
         }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(254, 226, 226, 0.5); }
-        ::-webkit-scrollbar-thumb { background: rgba(225, 29, 72, 0.4); border-radius: 3px; }
+
+        .message-box h4 {
+            color: var(--primary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .message-box p {
+            color: var(--text-main);
+            font-size: 1.05rem;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        /* ID Card Display */
+        .id-card {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: white;
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.3);
+        }
+
+        .id-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.3), rgba(239, 68, 68, 0.1));
+            clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+        }
+
+        .id-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        .id-card-body p {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+
+        .id-card-body h3 {
+            font-size: 1.3rem;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 500px;
+            padding: 28px;
+            box-shadow: var(--shadow-lg);
+        }
     </style>
 </head>
-<body class="flex flex-col min-h-screen relative overflow-x-hidden text-slate-800">
+<body>
 
-    <!-- Background Dynamic Canvas Animation -->
-    <canvas id="bg-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-30"></canvas>
+    <div class="bg-glow-1"></div>
+    <div class="bg-glow-2"></div>
 
-    <!-- Toast Notifications Container -->
-    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none"></div>
+    <div class="app-container">
+        
+        <!-- Header Bar -->
+        <header class="header-bar">
+            <div class="brand-logo">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>MSMI credentials</span>
+            </div>
+            <div class="header-actions">
+                <span id="userStatusTag" class="badge badge-admin" style="display: none;">Admin Active</span>
+                <button id="logoutBtn" class="btn btn-outline btn-sm" onclick="logout()" style="display: none;">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+                </button>
+            </div>
+        </header>
 
-    <!-- MAIN NAVBAR -->
-    <header class="relative z-20 border-b border-msmi-200/80 bg-white/80 backdrop-blur-md px-4 lg:px-8 py-3.5 flex items-center justify-between shadow-sm">
-        <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-2xl vibrant-gradient p-0.5 flex items-center justify-center shadow-lg shadow-msmi-600/30">
-                <div class="w-full h-full bg-white rounded-[14px] flex items-center justify-center">
-                    <i class="fa-solid fa-shield-halved text-msmi-600 text-xl"></i>
+        <!-- Alert Notification -->
+        <div id="alertBox" class="alert">
+            <i id="alertIcon" class="fa-solid fa-circle-info"></i>
+            <span id="alertMessage">Notification message</span>
+        </div>
+
+        <!-- 1. LOGIN SCREEN VIEW -->
+        <div id="loginView" class="login-wrapper glass-card">
+            <div class="login-header">
+                <h2>Portal Access</h2>
+                <p>Enter your credentials to access MSMI systems</p>
+            </div>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>ID Number</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-id-card"></i>
+                        <input type="text" id="loginId" class="form-control" placeholder="Enter ID Number" required>
+                    </div>
                 </div>
-            </div>
-            <div>
-                <h1 class="text-lg font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
-                    <span class="bg-gradient-to-r from-msmi-700 via-msmi-600 to-msmi-500 bg-clip-text text-transparent">MSMI CREDENTIALS</span>
-                    <span id="active-provider-badge" class="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-msmi-100 text-msmi-700 border border-msmi-300">
-                        ONLINE PERSISTENT
-                    </span>
-                </h1>
-                <p class="text-[11px] font-mono text-slate-500">Enterprise Access & Digital Credential Management</p>
-            </div>
-        </div>
-
-        <div class="flex items-center gap-3">
-            <button onclick="openConfigModal()" 
-                class="px-3.5 py-2 rounded-xl bg-white border border-msmi-200 hover:border-msmi-500 text-slate-700 hover:text-msmi-600 text-xs font-mono font-semibold flex items-center gap-2 shadow-sm transition-all hover:shadow-md">
-                <i class="fa-solid fa-cloud text-msmi-600"></i>
-                <span class="hidden sm:inline">Cloud Settings</span>
-            </button>
-
-            <div class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-msmi-50 border border-msmi-200 text-xs font-mono font-bold">
-                <span id="cloud-pulse" class="w-2.5 h-2.5 rounded-full bg-msmi-600 animate-pulse"></span>
-                <span id="cloud-status-text" class="text-msmi-800">Cloud Active</span>
-            </div>
-        </div>
-    </header>
-
-    <!-- MAIN CONTAINER -->
-    <main class="relative z-10 flex-1 flex items-center justify-center p-4 md:p-8">
-
-        <!-- LOGIN SECTION -->
-        <section id="login-section" class="w-full max-w-md transition-all duration-300">
-            <div class="white-glass rounded-3xl p-6 sm:p-8 border border-msmi-200 shadow-2xl relative overflow-hidden">
-                
-                <div class="text-center mb-8">
-                    <div class="w-16 h-16 rounded-2xl vibrant-gradient text-white mx-auto flex items-center justify-center mb-4 text-2xl shadow-xl shadow-msmi-600/30">
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-wrapper">
                         <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="loginPassword" class="form-control" placeholder="Enter Password" required>
                     </div>
-                    <h2 class="text-2xl font-black text-slate-900 tracking-tight">Portal Authentication</h2>
-                    <p class="text-xs font-mono text-msmi-700 font-medium mt-1">MSMI Credentials Security Gateway</p>
                 </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
+                    <i class="fa-solid fa-right-to-bracket"></i> Authenticate & Login
+                </button>
+            </form>
+        </div>
 
-                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
+        <!-- 2. ADMIN DASHBOARD VIEW -->
+        <div id="adminView" class="dashboard-view">
+            <div class="glass-card mb-4" style="margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                     <div>
-                        <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-2" for="login-id">
-                            <i class="fa-solid fa-id-card text-msmi-600 mr-1.5"></i> ID Number
-                        </label>
-                        <input type="text" id="login-id" required placeholder="Enter assigned ID (e.g. 201 or 11964)" 
-                            class="white-input w-full px-4 py-3.5 rounded-xl text-sm font-mono tracking-wide shadow-inner">
+                        <h2 style="font-weight: 800; font-size: 1.5rem;">Admin Control Dashboard</h2>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Manage user credentials, messages, and security clearances</p>
                     </div>
-
-                    <div>
-                        <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-2" for="login-password">
-                            <i class="fa-solid fa-key text-msmi-600 mr-1.5"></i> Security Password
-                        </label>
-                        <div class="relative">
-                            <input type="password" id="login-password" required placeholder="Enter security password" 
-                                class="white-input w-full pl-4 pr-11 py-3.5 rounded-xl text-sm font-mono shadow-inner">
-                            <button type="button" onclick="togglePasswordVisibility('login-password', 'password-toggle-icon')"
-                                class="absolute right-3.5 top-3.5 text-slate-400 hover:text-msmi-600 transition-colors">
-                                <i id="password-toggle-icon" class="fa-solid fa-eye text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between text-xs px-1">
-                        <label class="flex items-center gap-2 cursor-pointer text-slate-600 font-mono font-medium">
-                            <input type="checkbox" id="remember-me" checked class="rounded border-msmi-300 text-msmi-600 focus:ring-msmi-500">
-                            <span>Keep Session Alive</span>
-                        </label>
-                    </div>
-
-                    <button type="submit" id="btn-login-submit"
-                        class="w-full vibrant-gradient vibrant-gradient-hover text-white font-bold text-sm py-4 rounded-xl shadow-lg shadow-msmi-600/30 hover:shadow-xl hover:shadow-msmi-600/40 transition-all font-mono uppercase tracking-wider flex items-center justify-center gap-2 active:scale-[0.98]">
-                        <span id="login-btn-spinner" class="hidden"><i class="fa-solid fa-spinner animate-spin"></i></span>
-                        <span id="login-btn-text">Authenticate Access</span>
-                        <i class="fa-solid fa-arrow-right text-xs"></i>
-                    </button>
-                </form>
-
-                <div class="mt-6 pt-4 border-t border-msmi-100 flex items-center justify-between text-[11px] font-mono text-slate-500">
-                    <span>Demo Users Available:</span>
-                    <span class="text-msmi-700 font-bold">IDs: 201-204 | Admin: 11964</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- ADMIN DASHBOARD SECTION -->
-        <section id="admin-section" class="hidden w-full max-w-7xl transition-all duration-300">
-            <div class="white-glass rounded-3xl p-5 md:p-8 shadow-2xl border border-msmi-200 space-y-6">
-                
-                <!-- Admin Header -->
-                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-msmi-200">
-                    <div class="flex items-center gap-4">
-                        <div class="w-13 h-13 rounded-2xl vibrant-gradient text-white flex items-center justify-center text-2xl font-bold shadow-lg shadow-msmi-600/30 p-3">
-                            <i class="fa-solid fa-user-gear"></i>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-2 flex-wrap">
-                                <h2 class="text-2xl font-black text-slate-900">MSMI Command Center</h2>
-                                <span class="px-2.5 py-0.5 text-[11px] font-mono font-extrabold rounded-full bg-msmi-600 text-white shadow-sm">ADMIN DASHBOARD</span>
-                            </div>
-                            <p class="text-xs text-slate-500 font-mono mt-0.5">Manage credentials, provision accounts, & configure database</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <button onclick="exportUserDataCSV()" 
-                            class="px-3.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 text-emerald-700 text-xs font-mono font-bold flex items-center gap-2 transition-all">
-                            <i class="fa-solid fa-file-csv text-emerald-600"></i>
-                            <span>Export CSV</span>
-                        </button>
-                        <button onclick="syncDataFromCloud(true)" 
-                            class="px-3.5 py-2 rounded-xl bg-msmi-50 border border-msmi-200 hover:bg-msmi-100 text-msmi-700 text-xs font-mono font-bold flex items-center gap-2 transition-all">
-                            <i class="fa-solid fa-rotate" id="refresh-icon"></i>
-                            <span>Sync Cloud Data</span>
-                        </button>
-                        <button onclick="logout()" 
-                            class="px-4 py-2 rounded-xl bg-rose-600 text-white hover:bg-rose-700 text-xs font-mono font-bold flex items-center gap-2 shadow-sm transition-all">
-                            <i class="fa-solid fa-right-from-bracket"></i>
-                            <span>Logout</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Admin Grid Layout -->
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    
-                    <!-- Provisioning Form -->
-                    <div class="lg:col-span-5">
-                        <div class="bg-white p-6 rounded-2xl border border-msmi-200 shadow-md">
-                            <div class="flex items-center justify-between mb-5 pb-3 border-b border-msmi-100">
-                                <h3 class="font-extrabold text-base text-msmi-700 flex items-center gap-2" id="form-title">
-                                    <i class="fa-solid fa-user-plus text-msmi-600"></i>
-                                    <span>Provision User Credential</span>
-                                </h3>
-                                <button id="btn-cancel-edit" onclick="resetUserForm()" class="hidden text-xs font-mono text-slate-400 hover:text-rose-600 font-bold">
-                                    <i class="fa-solid fa-xmark"></i> Cancel Edit
-                                </button>
-                            </div>
-
-                            <form id="create-user-form" onsubmit="handleUserSave(event)" class="space-y-4">
-                                <input type="hidden" id="edit-doc-id" value="">
-
-                                <div>
-                                    <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1" for="user-fullname">Full Name *</label>
-                                    <input type="text" id="user-fullname" required placeholder="e.g. Rahul Sharma" 
-                                        class="white-input w-full px-3.5 py-2.5 rounded-xl text-sm font-sans">
-                                </div>
-
-                                <div>
-                                    <div class="flex justify-between items-center mb-1">
-                                        <label class="block text-xs font-mono uppercase font-bold text-slate-700" for="user-idnum">Unique ID Number *</label>
-                                        <button type="button" onclick="generateRandomId()" class="text-[11px] text-msmi-600 hover:underline font-mono font-bold">Auto-Generate</button>
-                                    </div>
-                                    <input type="text" id="user-idnum" required placeholder="e.g. 205" 
-                                        class="white-input w-full px-3.5 py-2.5 rounded-xl text-sm font-mono">
-                                </div>
-
-                                <div>
-                                    <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1" for="user-email">Email Address</label>
-                                    <input type="email" id="user-email" placeholder="e.g. rahul@msmi.edu" 
-                                        class="white-input w-full px-3.5 py-2.5 rounded-xl text-sm font-sans">
-                                </div>
-
-                                <div>
-                                    <div class="flex justify-between items-center mb-1">
-                                        <label class="block text-xs font-mono uppercase font-bold text-slate-700" for="user-password">Password *</label>
-                                        <button type="button" onclick="generateRandomPassword()" class="text-[11px] text-msmi-600 hover:underline font-mono font-bold">Generate Pass</button>
-                                    </div>
-                                    <div class="relative">
-                                        <input type="text" id="user-password" required placeholder="Min 6 characters" 
-                                            class="white-input w-full pl-3.5 pr-10 py-2.5 rounded-xl text-sm font-mono">
-                                        <button type="button" onclick="togglePasswordVisibility('user-password', 'user-pass-icon')" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600">
-                                            <i id="user-pass-icon" class="fa-solid fa-eye text-xs"></i>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="grid grid-cols-2 gap-3">
-                                    <div>
-                                        <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1" for="user-dept">Department</label>
-                                        <select id="user-dept" class="white-input w-full px-3 py-2.5 rounded-xl text-xs font-mono font-semibold">
-                                            <option value="Computer Science">Computer Science</option>
-                                            <option value="Electronics Engineering">Electronics Engineering</option>
-                                            <option value="Information Technology">Information Technology</option>
-                                            <option value="Mechanical Engineering">Mechanical Engineering</option>
-                                            <option value="Cyber Security">Cyber Security</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1" for="user-status">Status</label>
-                                        <select id="user-status" class="white-input w-full px-3 py-2.5 rounded-xl text-xs font-mono font-bold">
-                                            <option value="Active" class="text-emerald-600">Active</option>
-                                            <option value="Suspended" class="text-rose-600">Suspended</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <button type="submit" id="btn-save-user"
-                                    class="w-full mt-2 py-3.5 rounded-xl vibrant-gradient vibrant-gradient-hover text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-msmi-600/20 active:scale-[0.99] flex items-center justify-center gap-2">
-                                    <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
-                                    <span id="save-btn-text">Save Credential to Database</span>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Directory Table Column -->
-                    <div class="lg:col-span-7 space-y-6">
-                        <div class="bg-white p-6 rounded-2xl border border-msmi-200 shadow-md space-y-4">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                                <h3 class="font-extrabold text-base text-slate-900 flex items-center gap-2">
-                                    <i class="fa-solid fa-users-gear text-msmi-600"></i>
-                                    <span>Active Credentials Directory</span>
-                                </h3>
-
-                                <div class="relative min-w-[200px]">
-                                    <input type="text" id="search-input" onkeyup="renderUserTable()" placeholder="Search ID or Name..." 
-                                        class="white-input w-full pl-8 pr-3 py-1.5 rounded-xl text-xs font-mono">
-                                    <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-slate-400 text-xs"></i>
-                                </div>
-                            </div>
-
-                            <div class="overflow-x-auto rounded-xl border border-msmi-100 shadow-inner">
-                                <table class="w-full text-left text-xs font-mono">
-                                    <thead class="bg-msmi-50 text-msmi-800 uppercase text-[10px] font-bold tracking-wider border-b border-msmi-200">
-                                        <tr>
-                                            <th class="px-4 py-3">ID</th>
-                                            <th class="px-4 py-3">User Details</th>
-                                            <th class="px-4 py-3">Department</th>
-                                            <th class="px-4 py-3">Password</th>
-                                            <th class="px-4 py-3 text-right">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="user-table-body" class="divide-y divide-msmi-100 text-slate-700 bg-white">
-                                        <!-- Dynamic User Rows -->
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div class="flex items-center justify-between text-xs font-mono text-slate-500 pt-2">
-                                <span>Total Cloud Records: <strong id="total-users-count" class="text-msmi-600 font-bold">0</strong></span>
-                                <span class="text-[10px] text-slate-400">Live Synchronized</span>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- USER DASHBOARD SECTION -->
-        <section id="user-section" class="hidden w-full max-w-5xl transition-all duration-300">
-            <div class="white-glass rounded-3xl p-6 md:p-8 shadow-2xl border border-msmi-200 space-y-6">
-                
-                <!-- User Header -->
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-msmi-200">
-                    <div class="flex items-center gap-4">
-                        <div class="w-13 h-13 rounded-2xl bg-gradient-to-tr from-msmi-600 via-accent-indigo to-accent-cyan p-0.5 flex items-center justify-center shadow-lg shadow-msmi-600/20">
-                            <div class="w-full h-full bg-white rounded-[14px] flex items-center justify-center text-msmi-600 text-xl font-bold">
-                                <i class="fa-solid fa-id-badge"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <h2 id="user-workspace-title" class="text-2xl font-black text-slate-900">User Workspace</h2>
-                            <p class="text-xs text-slate-500 font-mono">Personal Security Clearance & MSMI Identity Pass</p>
-                        </div>
-                    </div>
-
-                    <button onclick="logout()" 
-                        class="px-4 py-2 rounded-xl bg-rose-600 text-white hover:bg-rose-700 text-xs font-mono font-bold flex items-center gap-2 shadow-sm transition-all self-start sm:self-auto">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        <span>Logout</span>
+                    <button class="btn btn-primary" onclick="openAddUserModal()">
+                        <i class="fa-solid fa-user-plus"></i> Provision New User
                     </button>
                 </div>
+            </div>
 
-                <!-- User Grid Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-                    
-                    <!-- Digital Identity Pass Card -->
-                    <div class="md:col-span-6">
-                        <div class="white-glass-glow p-6 rounded-2xl relative overflow-hidden flex flex-col justify-between h-full space-y-6">
-                            <div class="flex justify-between items-start">
-                                <div class="space-y-1">
-                                    <span class="text-[10px] font-mono tracking-widest text-msmi-700 font-black uppercase">MSMI DIGITAL PASS</span>
-                                    <h3 id="display-user-name" class="text-xl font-extrabold text-slate-900">User Name</h3>
-                                    <p id="display-user-email" class="text-xs text-slate-500 font-mono">user@msmi.edu</p>
-                                </div>
-                                <div class="w-12 h-12 rounded-2xl vibrant-gradient text-white flex items-center justify-center text-lg shadow-md">
-                                    <i class="fa-solid fa-fingerprint"></i>
-                                </div>
-                            </div>
+            <div class="glass-card">
+                <h3 style="font-size: 1.1rem; margin-bottom: 16px;">System Managed Credentials</h3>
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>ID Number</th>
+                                <th>Password</th>
+                                <th>Department</th>
+                                <th>Personalized Message</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <!-- Populated dynamically by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-                            <div class="grid grid-cols-2 gap-4 py-3 border-y border-msmi-200 font-mono text-xs bg-msmi-50/50 rounded-xl p-3">
-                                <div>
-                                    <span class="text-slate-500 block text-[10px] font-bold">ID NUMBER</span>
-                                    <span id="display-user-id" class="text-msmi-700 font-extrabold text-base">-----</span>
-                                </div>
-                                <div>
-                                    <span class="text-slate-500 block text-[10px] font-bold">DEPARTMENT</span>
-                                    <span id="display-user-dept" class="text-slate-800 font-semibold">-----</span>
-                                </div>
-                            </div>
+        <!-- 3. USER DASHBOARD VIEW -->
+        <div id="userView" class="dashboard-view">
+            <!-- Personal Message Welcome Banner -->
+            <div class="message-box">
+                <h4><i class="fa-solid fa-envelope-open-text"></i> System Notice / Broadcast Message</h4>
+                <p id="userPersonalMessage">Loading message...</p>
+            </div>
 
-                            <div class="flex items-center justify-between text-xs font-mono">
-                                <div class="flex items-center gap-2">
-                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-                                    <span id="display-user-status" class="text-emerald-600 font-bold">ACTIVE ACCESS</span>
-                                </div>
-                                <span class="text-slate-400 text-[10px] font-bold">MSMI VERIFIED</span>
-                            </div>
-                        </div>
+            <div class="dashboard-grid">
+                <!-- ID Pass Card -->
+                <div class="id-card">
+                    <div class="id-card-header">
+                        <span style="font-size: 0.8rem; font-weight: 700; color: #ef4444;"><i class="fa-solid fa-shield"></i> MSMI PASSPORT</span>
+                        <span class="badge badge-active">ACTIVE</span>
                     </div>
-
-                    <!-- Password Management Card -->
-                    <div class="md:col-span-6">
-                        <div class="bg-white p-6 rounded-2xl border border-msmi-200 shadow-md space-y-4 h-full flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-extrabold text-base text-slate-900 mb-1 flex items-center gap-2">
-                                    <i class="fa-solid fa-key text-msmi-600"></i>
-                                    <span>Security Credentials</span>
-                                </h3>
-                                <p class="text-xs text-slate-500 font-mono mb-4">Manage your authentication password.</p>
-
-                                <form id="user-change-pass-form" onsubmit="handleUserPasswordChange(event)" class="space-y-4">
-                                    <div>
-                                        <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1" for="user-new-pass">Update Password</label>
-                                        <div class="relative">
-                                            <input type="password" id="user-new-pass" required placeholder="Enter new password" 
-                                                class="white-input w-full pl-3.5 pr-10 py-2.5 rounded-xl text-slate-900 text-sm font-mono">
-                                            <button type="button" onclick="togglePasswordVisibility('user-new-pass', 'user-new-pass-icon')" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600">
-                                                <i id="user-new-pass-icon" class="fa-solid fa-eye text-xs"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <button type="submit" 
-                                        class="w-full py-3 rounded-xl vibrant-gradient vibrant-gradient-hover text-white font-mono text-xs uppercase tracking-wider font-bold transition-all shadow-md shadow-msmi-600/20 flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-arrows-rotate"></i>
-                                        <span>Update Security Password</span>
-                                    </button>
-                                </form>
-                            </div>
-
-                            <div class="p-3 rounded-xl bg-msmi-50 border border-msmi-200 text-xs font-mono text-slate-600 flex items-center gap-2 mt-4">
-                                <i class="fa-solid fa-circle-check text-msmi-600 text-sm"></i>
-                                <span>Changes automatically sync across all logins.</span>
-                            </div>
-                        </div>
+                    <div class="id-card-body">
+                        <p>Full Name</p>
+                        <h3 id="cardUserName">User Name</h3>
+                        <p>ID Number</p>
+                        <p id="cardUserId" style="font-family: var(--font-mono); color: white; font-weight: 600; font-size: 1rem; margin-bottom: 12px;">0000</p>
+                        <p>Department</p>
+                        <p id="cardUserDept" style="color: white; font-weight: 600; font-size: 0.95rem;">Department Name</p>
                     </div>
+                </div>
 
-                    <!-- Notice Board Card -->
-                    <div class="md:col-span-12">
-                        <div class="bg-white p-6 rounded-2xl border border-msmi-200 shadow-md space-y-3">
-                            <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2 font-mono">
-                                <i class="fa-solid fa-bullhorn text-msmi-600"></i>
-                                <span>MSMI NOTICE BOARD</span>
-                            </h3>
-                            <div class="p-4 rounded-xl bg-msmi-50/80 border border-msmi-100 text-xs text-slate-700 space-y-2 font-mono">
-                                <div class="flex items-center justify-between text-slate-500 text-[10px] font-bold">
-                                    <span>MSMI SECURITY ANNOUNCEMENT</span>
-                                    <span>2026.10.25</span>
-                                </div>
-                                <p>Welcome to your <strong>MSMI Credentials Portal</strong>. Your account is fully active and verified. Any password updates will be saved securely across your local and cloud database configurations.</p>
-                            </div>
-                        </div>
+                <!-- Profile Details -->
+                <div class="glass-card">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 20px;">Account Details</h3>
+                    <div class="form-group">
+                        <label>Registered Name</label>
+                        <input type="text" id="displayUserName" class="form-control" readonly>
                     </div>
-
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- CLOUD CONFIGURATION MODAL -->
-    <div id="config-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 hidden">
-        <div class="white-glass max-w-lg w-full rounded-3xl p-6 sm:p-8 border border-msmi-200 shadow-2xl relative space-y-6">
-            <div class="flex items-center justify-between pb-4 border-b border-msmi-200">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl vibrant-gradient text-white flex items-center justify-center text-lg">
-                        <i class="fa-solid fa-cloud"></i>
+                    <div class="form-group">
+                        <label>Assigned ID Number</label>
+                        <input type="text" id="displayUserId" class="form-control" readonly>
                     </div>
-                    <h3 class="font-extrabold text-lg text-slate-900">Cloud Database Config</h3>
+                    <div class="form-group">
+                        <label>Department</label>
+                        <input type="text" id="displayUserDept" class="form-control" readonly>
+                    </div>
                 </div>
-                <button onclick="closeConfigModal()" class="text-slate-400 hover:text-slate-700">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
             </div>
+        </div>
 
-            <!-- Provider Selection Tabs -->
-            <div class="grid grid-cols-3 gap-2 bg-msmi-100/70 p-1.5 rounded-xl font-mono text-xs font-bold">
-                <button onclick="switchProviderTab('jsonbin')" id="tab-jsonbin" 
-                    class="py-2 rounded-lg text-center transition-all bg-msmi-600 text-white shadow-sm">
-                    JSONBin (Instant)
-                </button>
-                <button onclick="switchProviderTab('supabase')" id="tab-supabase" 
-                    class="py-2 rounded-lg text-center text-slate-600 hover:text-slate-900 transition-all">
-                    Supabase
-                </button>
-                <button onclick="switchProviderTab('firebase')" id="tab-firebase" 
-                    class="py-2 rounded-lg text-center text-slate-600 hover:text-slate-900 transition-all">
-                    Firebase
-                </button>
-            </div>
+    </div>
 
-            <!-- JSONBin Settings -->
-            <div id="config-jsonbin-panel" class="space-y-4">
-                <div class="p-3.5 rounded-xl bg-msmi-50 border border-msmi-200 text-xs font-mono text-msmi-800 font-medium">
-                    <i class="fa-solid fa-circle-check text-msmi-600 mr-1"></i>
-                    <strong>Zero-Config Cloud Storage:</strong> Uses JSONBin API cloud bin to persist credentials online right out of the box!
+    <!-- ADD / EDIT USER MODAL -->
+    <div id="userModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modalTitle" style="margin-bottom: 18px;">Provision New User</h3>
+            <form onsubmit="saveUser(event)">
+                <input type="hidden" id="editUserKey">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="modalName" class="form-control" placeholder="e.g. John Doe" required>
                 </div>
-                <div>
-                    <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1">Custom Master Key (Optional)</label>
-                    <input type="text" id="cfg-jsonbin-key" placeholder="Enter key to use your own JSONBin account" 
-                        class="white-input w-full px-3.5 py-2.5 rounded-xl text-xs font-mono">
+                <div class="form-group">
+                    <label>ID Number</label>
+                    <input type="text" id="modalIdNum" class="form-control" placeholder="e.g. 205" required>
                 </div>
-            </div>
-
-            <!-- Supabase Settings -->
-            <div id="config-supabase-panel" class="space-y-4 hidden">
-                <div>
-                    <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1">Supabase Project URL</label>
-                    <input type="text" id="cfg-supa-url" placeholder="https://xxxx.supabase.co" 
-                        class="white-input w-full px-3.5 py-2.5 rounded-xl text-xs font-mono">
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="text" id="modalPassword" class="form-control" placeholder="Set user password" required>
                 </div>
-                <div>
-                    <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1">Supabase Anon Key</label>
-                    <input type="password" id="cfg-supa-key" placeholder="eyJhbGciOi..." 
-                        class="white-input w-full px-3.5 py-2.5 rounded-xl text-xs font-mono">
+                <div class="form-group">
+                    <label>Department</label>
+                    <input type="text" id="modalDept" class="form-control" placeholder="e.g. Computer Science" required>
                 </div>
-            </div>
-
-            <!-- Firebase Settings -->
-            <div id="config-firebase-panel" class="space-y-4 hidden">
-                <div>
-                    <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1">Firebase Config Object (JSON)</label>
-                    <textarea id="cfg-firebase-json" rows="4" placeholder='{ "apiKey": "AIza...", "authDomain": "...", "projectId": "..." }' 
-                        class="white-input w-full p-3 rounded-xl text-xs font-mono"></textarea>
+                <div class="form-group">
+                    <label>Personalized Message</label>
+                    <textarea id="modalMessage" class="form-control" rows="3" placeholder="Custom message displayed when user logs in..." required style="padding-left: 14px;"></textarea>
                 </div>
-            </div>
-
-            <div class="flex items-center gap-3 pt-2">
-                <button onclick="saveCloudSettings()" 
-                    class="flex-1 py-3.5 rounded-xl vibrant-gradient vibrant-gradient-hover text-white font-mono font-bold text-xs uppercase tracking-wider transition-all shadow-md">
-                    Save & Reconnect Cloud
-                </button>
-            </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Credential</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- JAVASCRIPT ENGINE -->
     <script>
         // ==========================================
-        // 1. HARDCODED ADMIN CREDENTIALS
+        // HARDCODED USER CREDENTIALS ARRAY / DICTIONARY
         // ==========================================
+        let users = [
+            { id: "usr_101", name: "Kaviya", id_number: "201", password: "userpass101", department: "Computer Science", status: "Active", message: "Welcome Kaviya! Please review the upcoming project deadlines in your CS portal." },
+            { id: "usr_102", name: "Aravind", id_number: "202", password: "userpass102", department: "Electronics Engineering", status: "Active", message: "Hello Aravind! Your lab session schedule for ECE has been updated for this week." },
+            { id: "usr_103", name: "Deepak", id_number: "203", password: "userpass103", department: "Information Technology", status: "Active", message: "Welcome back Deepak! Security clearance level 2 granted for IT servers." },
+            { id: "usr_104", name: "Priya", id_number: "204", password: "userpass104", department: "Mechanical Engineering", status: "Active", message: "Greetings Priya! Don't forget to submit your CAD design project documentation." }
+        ];
+
+        // ADMIN HARDCODED CREDENTIALS
         const ADMIN_ID = "11964";
         const ADMIN_PASS = "MSMI2008@";
 
-        // ==========================================
-        // 2. HARDCODED USER ARRAY (Dictionary)
-        // ==========================================
-        const HARDCODED_USERS = [
-            { id: "22387", name: "SHEK MOHAMMED IRFAN M", email: "shekmohammedirfan412_bec29@mepcoeng.ac.in", password: "MSMISMART2008@.", dept: "Electronics and Communication Engineering", status: "Active" },
-            { id: "22264", name: "MINORENS G R", email: "gnanajosemerlin_bec29@mepcoeng.ac.in", password: "10/03/2007", dept: "Electronics and Communication Engineering", status: "Suspended" }
-        ];
+        let currentUser = null;
 
-        // Global Application State
-        let state = {
-            currentUser: null,
-            isAdmin: false,
-            users: [],
-            cloudProvider: localStorage.getItem('msmi_cloud_provider') || 'jsonbin',
-            jsonbinKey: localStorage.getItem('msmi_cfg_jsonbin_key') || '',
-            jsonbinBinId: localStorage.getItem('msmi_cfg_jsonbin_bin_id') || '',
-            supaUrl: localStorage.getItem('msmi_cfg_supa_url') || '',
-            supaKey: localStorage.getItem('msmi_cfg_supa_key') || '',
-            firebaseConfig: localStorage.getItem('msmi_cfg_firebase_json') || '',
-            supaClient: null,
-            firebaseDb: null
-        };
-
-        const PUBLIC_JSONBIN_BIN = "65d8a211dc74654018aa192b";
-
-        // Application Initialization
-        window.addEventListener('DOMContentLoaded', async () => {
-            initBackgroundCanvas();
-            initCloudConnections();
-            await syncDataFromCloud();
-            checkAutoLogin();
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSavedUsers();
+            renderUserTable();
         });
 
-        // Cloud Connections Init
-        function initCloudConnections() {
-            const badge = document.getElementById('active-provider-badge');
-            const statusText = document.getElementById('cloud-status-text');
-
-            if (state.cloudProvider === 'supabase' && state.supaUrl && state.supaKey) {
-                try {
-                    state.supaClient = supabase.createClient(state.supaUrl, state.supaKey);
-                    badge.innerText = 'SUPABASE CLOUD';
-                    statusText.innerText = 'Supabase Active';
-                } catch (e) {
-                    console.error("Supabase Init Error:", e);
-                }
-            } else if (state.cloudProvider === 'firebase' && state.firebaseConfig) {
-                try {
-                    const parsed = JSON.parse(state.firebaseConfig);
-                    if (!firebase.apps.length) {
-                        firebase.initializeApp(parsed);
-                    }
-                    state.firebaseDb = firebase.firestore();
-                    badge.innerText = 'FIREBASE CLOUD';
-                    statusText.innerText = 'Firebase Active';
-                } catch (e) {
-                    console.error("Firebase Init Error:", e);
-                }
-            } else {
-                state.cloudProvider = 'jsonbin';
-                badge.innerText = 'JSONBIN ONLINE API';
-                statusText.innerText = 'Cloud Active';
+        function loadSavedUsers() {
+            const stored = localStorage.getItem('msmi_users');
+            if (stored) {
+                users = JSON.parse(stored);
             }
         }
 
-        // Synchronize Cloud & Local Data
-        async function syncDataFromCloud(manualTrigger = false) {
-            const refreshIcon = document.getElementById('refresh-icon');
-            if (refreshIcon) refreshIcon.classList.add('animate-spin');
-
-            try {
-                let fetchedUsers = null;
-
-                if (state.cloudProvider === 'supabase' && state.supaClient) {
-                    const { data, error } = await state.supaClient.from('users').select('*');
-                    if (!error && data && data.length > 0) fetchedUsers = data;
-                } else if (state.cloudProvider === 'firebase' && state.firebaseDb) {
-                    const snapshot = await state.firebaseDb.collection('users').get();
-                    if (!snapshot.empty) {
-                        fetchedUsers = snapshot.docs.map(doc => ({ id_doc: doc.id, ...doc.data() }));
-                    }
-                } else {
-                    const binId = state.jsonbinBinId || PUBLIC_JSONBIN_BIN;
-                    const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
-                        headers: state.jsonbinKey ? { 'X-Master-Key': state.jsonbinKey } : {}
-                    });
-                    if (res.ok) {
-                        const json = await res.json();
-                        if (json.record && Array.isArray(json.record.users) && json.record.users.length > 0) {
-                            fetchedUsers = json.record.users;
-                        }
-                    }
-                }
-
-                if (fetchedUsers) {
-                    // Merge cloud users with hardcoded default users (ensuring hardcoded users always exist)
-                    const mergedMap = new Map();
-                    HARDCODED_USERS.forEach(u => mergedMap.set(String(u.id), u));
-                    fetchedUsers.forEach(u => mergedMap.set(String(u.id), u));
-                    state.users = Array.from(mergedMap.values());
-                } else {
-                    const local = localStorage.getItem('msmi_offline_users');
-                    if (local) {
-                        const parsed = JSON.parse(local);
-                        const mergedMap = new Map();
-                        HARDCODED_USERS.forEach(u => mergedMap.set(String(u.id), u));
-                        parsed.forEach(u => mergedMap.set(String(u.id), u));
-                        state.users = Array.from(mergedMap.values());
-                    } else {
-                        state.users = [...HARDCODED_USERS];
-                    }
-                }
-
-                localStorage.setItem('msmi_offline_users', JSON.stringify(state.users));
-                if (manualTrigger) showToast("Database synchronized successfully", "success");
-            } catch (err) {
-                console.warn("Cloud Sync Fallback:", err);
-                const local = localStorage.getItem('msmi_offline_users');
-                state.users = local ? JSON.parse(local) : [...HARDCODED_USERS];
-            } finally {
-                if (refreshIcon) refreshIcon.classList.remove('animate-spin');
-                renderUserTable();
-            }
+        function saveUsersToStorage() {
+            localStorage.setItem('msmi_users', JSON.stringify(users));
         }
 
-        async function writeDataToCloud() {
-            localStorage.setItem('msmi_offline_users', JSON.stringify(state.users));
+        // Display Notifications
+        function showAlert(msg, type = 'danger') {
+            const alertBox = document.getElementById('alertBox');
+            const alertMsg = document.getElementById('alertMessage');
+            const alertIcon = document.getElementById('alertIcon');
 
-            try {
-                if (state.cloudProvider === 'jsonbin') {
-                    const binId = state.jsonbinBinId || PUBLIC_JSONBIN_BIN;
-                    await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            ...(state.jsonbinKey ? { 'X-Master-Key': state.jsonbinKey } : {})
-                        },
-                        body: JSON.stringify({ users: state.users })
-                    });
-                }
-            } catch (err) {
-                console.error("Write error:", err);
-            }
-        }
-
-        // Login Handler
-        async function handleLogin(e) {
-            e.preventDefault();
-            const idInput = document.getElementById('login-id').value.trim();
-            const passInput = document.getElementById('login-password').value.trim();
-            const rememberMe = document.getElementById('remember-me').checked;
-
-            setLoginLoading(true);
-            await syncDataFromCloud();
+            alertMsg.textContent = msg;
+            alertBox.className = `alert alert-${type}`;
+            alertIcon.className = type === 'danger' ? 'fa-solid fa-circle-exclamation' : 'fa-solid fa-circle-check';
+            alertBox.style.display = 'flex';
 
             setTimeout(() => {
-                setLoginLoading(false);
-
-                // 1. Admin Login Check
-                if (idInput === ADMIN_ID && passInput === ADMIN_PASS) {
-                    state.isAdmin = true;
-                    state.currentUser = { name: "System Admin", id: ADMIN_ID };
-                    if (rememberMe) {
-                        localStorage.setItem('msmi_session_user', JSON.stringify({ isAdmin: true, id: ADMIN_ID }));
-                    }
-                    showToast("Admin Credentials Verified", "success");
-                    triggerConfetti();
-                    showDashboard('admin');
-                    return;
-                }
-
-                // 2. User Login Check
-                const matchedUser = state.users.find(u => String(u.id) === idInput && u.password === passInput);
-
-                if (matchedUser) {
-                    if (matchedUser.status === 'Suspended') {
-                        showToast("Account suspended. Contact Administrator.", "error");
-                        return;
-                    }
-
-                    state.isAdmin = false;
-                    state.currentUser = matchedUser;
-                    if (rememberMe) {
-                        localStorage.setItem('msmi_session_user', JSON.stringify({ isAdmin: false, user: matchedUser }));
-                    }
-                    showToast(`Welcome back, ${matchedUser.name}!`, "success");
-                    triggerConfetti();
-                    showDashboard('user');
-                    return;
-                }
-
-                showToast("Invalid ID Number or Password", "error");
-            }, 400);
+                alertBox.style.display = 'none';
+            }, 4000);
         }
 
-        function checkAutoLogin() {
-            const stored = localStorage.getItem('msmi_session_user');
-            if (stored) {
-                try {
-                    const session = JSON.parse(stored);
-                    if (session.isAdmin) {
-                        state.isAdmin = true;
-                        state.currentUser = { name: "System Admin", id: ADMIN_ID };
-                        showDashboard('admin');
-                    } else if (session.user) {
-                        const latest = state.users.find(u => String(u.id) === String(session.user.id)) || session.user;
-                        state.isAdmin = false;
-                        state.currentUser = latest;
-                        showDashboard('user');
-                    }
-                } catch (e) {
-                    localStorage.removeItem('msmi_session_user');
-                }
-            }
-        }
-
-        function logout() {
-            state.currentUser = null;
-            state.isAdmin = false;
-            localStorage.removeItem('msmi_session_user');
-            document.getElementById('admin-section').classList.add('hidden');
-            document.getElementById('user-section').classList.add('hidden');
-            document.getElementById('login-section').classList.remove('hidden');
-            document.getElementById('login-form').reset();
-            showToast("Logged out successfully", "info");
-        }
-
-        function showDashboard(type) {
-            document.getElementById('login-section').classList.add('hidden');
-
-            if (type === 'admin') {
-                document.getElementById('admin-section').classList.remove('hidden');
-                document.getElementById('user-section').classList.add('hidden');
-                renderUserTable();
-            } else {
-                document.getElementById('user-section').classList.remove('hidden');
-                document.getElementById('admin-section').classList.add('hidden');
-                renderUserWorkspace();
-            }
-        }
-
-        // Admin Management Actions
-        async function handleUserSave(e) {
+        // Authentication Logic
+        function handleLogin(e) {
             e.preventDefault();
+            const idInput = document.getElementById('loginId').value.trim();
+            const passInput = document.getElementById('loginPassword').value.trim();
 
-            const docId = document.getElementById('edit-doc-id').value;
-            const name = document.getElementById('user-fullname').value.trim();
-            const idNum = document.getElementById('user-idnum').value.trim();
-            const email = document.getElementById('user-email').value.trim() || `${idNum}@msmi.edu`;
-            const password = document.getElementById('user-password').value.trim();
-            const dept = document.getElementById('user-dept').value;
-            const status = document.getElementById('user-status').value;
-
-            if (docId) {
-                const idx = state.users.findIndex(u => String(u.id) === docId);
-                if (idx !== -1) {
-                    state.users[idx] = { ...state.users[idx], name, id: idNum, email, password, dept, status };
-                    showToast("User updated successfully", "success");
-                }
-            } else {
-                if (state.users.some(u => String(u.id) === idNum)) {
-                    showToast("User ID already exists!", "error");
-                    return;
-                }
-
-                const newUser = { id: idNum, name, email, password, dept, status };
-                state.users.push(newUser);
-                showToast("New User Provisioned & Saved", "success");
-            }
-
-            await writeDataToCloud();
-            resetUserForm();
-            renderUserTable();
-        }
-
-        async function deleteUser(userId) {
-            if (!confirm("Are you sure you want to delete this user credential?")) return;
-
-            state.users = state.users.filter(u => String(u.id) !== String(userId));
-            await writeDataToCloud();
-            renderUserTable();
-            showToast("User deleted successfully", "info");
-        }
-
-        function editUser(userId) {
-            const u = state.users.find(usr => String(usr.id) === String(userId));
-            if (!u) return;
-
-            document.getElementById('edit-doc-id').value = u.id;
-            document.getElementById('user-fullname').value = u.name;
-            document.getElementById('user-idnum').value = u.id;
-            document.getElementById('user-email').value = u.email || '';
-            document.getElementById('user-password').value = u.password;
-            document.getElementById('user-dept').value = u.dept || 'Computer Science';
-            document.getElementById('user-status').value = u.status || 'Active';
-
-            document.getElementById('form-title').innerText = "Edit User Credential";
-            document.getElementById('save-btn-text').innerText = "Update User Record";
-            document.getElementById('btn-cancel-edit').classList.remove('hidden');
-        }
-
-        function resetUserForm() {
-            document.getElementById('create-user-form').reset();
-            document.getElementById('edit-doc-id').value = "";
-            document.getElementById('form-title').innerText = "Provision User Credential";
-            document.getElementById('save-btn-text').innerText = "Save Credential to Database";
-            document.getElementById('btn-cancel-edit').classList.add('hidden');
-        }
-
-        function renderUserTable() {
-            const tbody = document.getElementById('user-table-body');
-            const search = (document.getElementById('search-input')?.value || '').toLowerCase();
-            tbody.innerHTML = '';
-
-            const filtered = state.users.filter(u => 
-                String(u.id).toLowerCase().includes(search) || 
-                (u.name && u.name.toLowerCase().includes(search))
-            );
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-slate-400 font-mono">No records found</td></tr>`;
+            // 1. Check Admin Credentials
+            if (idInput === ADMIN_ID && passInput === ADMIN_PASS) {
+                currentUser = { role: 'admin', name: 'System Administrator' };
+                showAdminView();
+                showAlert("Administrator access granted.", "success");
                 return;
             }
 
-            filtered.forEach(u => {
+            // 2. Check User Credentials Array
+            const foundUser = users.find(u => u.id_number === idInput && u.password === passInput);
+            if (foundUser) {
+                currentUser = { role: 'user', ...foundUser };
+                showUserView(foundUser);
+                showAlert(`Welcome back, ${foundUser.name}!`, "success");
+                return;
+            }
+
+            showAlert("Invalid ID Number or Password. Please try again.", "danger");
+        }
+
+        // Navigation Switchers
+        function showAdminView() {
+            document.getElementById('loginView').style.display = 'none';
+            document.getElementById('userView').style.display = 'none';
+            document.getElementById('adminView').style.display = 'block';
+            document.getElementById('logoutBtn').style.display = 'inline-flex';
+            document.getElementById('userStatusTag').style.display = 'inline-block';
+            renderUserTable();
+        }
+
+        function showUserView(user) {
+            document.getElementById('loginView').style.display = 'none';
+            document.getElementById('adminView').style.display = 'none';
+            document.getElementById('userView').style.display = 'block';
+            document.getElementById('logoutBtn').style.display = 'inline-flex';
+            document.getElementById('userStatusTag').style.display = 'none';
+
+            // Populate User Dashboard
+            document.getElementById('userPersonalMessage').textContent = user.message || "No new announcements.";
+            document.getElementById('cardUserName').textContent = user.name;
+            document.getElementById('cardUserId').textContent = user.id_number;
+            document.getElementById('cardUserDept').textContent = user.department;
+
+            document.getElementById('displayUserName').value = user.name;
+            document.getElementById('displayUserId').value = user.id_number;
+            document.getElementById('displayUserDept').value = user.department;
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('loginId').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('adminView').style.display = 'none';
+            document.getElementById('userView').style.display = 'none';
+            document.getElementById('loginView').style.display = 'block';
+            document.getElementById('logoutBtn').style.display = 'none';
+            document.getElementById('userStatusTag').style.display = 'none';
+            showAlert("Logged out successfully.", "success");
+        }
+
+        // Render Admin Table
+        function renderUserTable() {
+            const tbody = document.getElementById('userTableBody');
+            tbody.innerHTML = '';
+
+            users.forEach((user, index) => {
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-msmi-50/60 transition-colors";
                 tr.innerHTML = `
-                    <td class="px-4 py-3 font-bold text-msmi-700 font-mono">${u.id}</td>
-                    <td class="px-4 py-3">
-                        <div class="font-sans font-bold text-slate-900">${u.name}</div>
-                        <div class="text-[10px] text-slate-400 font-mono">${u.email || 'No email'}</div>
-                    </td>
-                    <td class="px-4 py-3">
-                        <span class="px-2.5 py-1 rounded-full text-[10px] bg-msmi-100 text-msmi-800 font-bold border border-msmi-200">${u.dept || 'N/A'}</span>
-                    </td>
-                    <td class="px-4 py-3 font-mono">
-                        <div class="flex items-center gap-2">
-                            <span id="pass-mask-${u.id}" class="text-slate-400">••••••••</span>
-                            <span id="pass-raw-${u.id}" class="hidden text-emerald-600 font-bold">${u.password}</span>
-                            <button onclick="toggleTablePassword('${u.id}')" class="text-slate-400 hover:text-msmi-600">
-                                <i id="pass-eye-${u.id}" class="fa-solid fa-eye text-[11px]"></i>
-                            </button>
-                        </div>
-                    </td>
-                    <td class="px-4 py-3 text-right space-x-2">
-                        <button onclick="editUser('${u.id}')" class="px-2.5 py-1 rounded-lg bg-msmi-100 hover:bg-msmi-200 text-msmi-700 text-[11px] font-bold">
-                            <i class="fa-solid fa-pen"></i>
-                        </button>
-                        <button onclick="deleteUser('${u.id}')" class="px-2.5 py-1 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-700 text-[11px] font-bold">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
+                    <td style="font-weight: 600;">${user.name}</td>
+                    <td style="font-family: var(--font-mono);">${user.id_number}</td>
+                    <td style="font-family: var(--font-mono);">${user.password}</td>
+                    <td>${user.department}</td>
+                    <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${user.message}</td>
+                    <td>
+                        <button class="btn btn-outline btn-sm" onclick="editUser(${index})"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteUser(${index})"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
-
-            document.getElementById('total-users-count').innerText = state.users.length;
         }
 
-        // User Workspace Engine
-        function renderUserWorkspace() {
-            const u = state.currentUser;
-            if (!u) return;
-
-            document.getElementById('display-user-name').innerText = u.name || 'User';
-            document.getElementById('display-user-email').innerText = u.email || `${u.id}@msmi.edu`;
-            document.getElementById('display-user-id').innerText = u.id;
-            document.getElementById('display-user-dept').innerText = u.dept || 'Engineering';
-            document.getElementById('user-workspace-title').innerText = `${u.name}'s Workspace`;
+        // Modal Controls
+        function openAddUserModal() {
+            document.getElementById('modalTitle').textContent = "Provision New User";
+            document.getElementById('editUserKey').value = "";
+            document.getElementById('modalName').value = "";
+            document.getElementById('modalIdNum').value = "";
+            document.getElementById('modalPassword').value = "";
+            document.getElementById('modalDept').value = "";
+            document.getElementById('modalMessage').value = "";
+            document.getElementById('userModal').style.display = 'flex';
         }
 
-        async function handleUserPasswordChange(e) {
+        function closeModal() {
+            document.getElementById('userModal').style.display = 'none';
+        }
+
+        function saveUser(e) {
             e.preventDefault();
-            const newPass = document.getElementById('user-new-pass').value.trim();
-            if (!newPass || newPass.length < 4) {
-                showToast("Password must be at least 4 characters", "error");
-                return;
-            }
-
-            const idx = state.users.findIndex(u => String(u.id) === String(state.currentUser.id));
-            if (idx !== -1) {
-                state.users[idx].password = newPass;
-                state.currentUser.password = newPass;
-                await writeDataToCloud();
-                document.getElementById('user-change-pass-form').reset();
-                showToast("Password updated successfully!", "success");
-            }
-        }
-
-        // Utilities
-        function togglePasswordVisibility(inputId, iconId) {
-            const input = document.getElementById(inputId);
-            const icon = document.getElementById(iconId);
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.className = 'fa-solid fa-eye-slash text-sm';
-            } else {
-                input.type = 'password';
-                icon.className = 'fa-solid fa-eye text-sm';
-            }
-        }
-
-        function toggleTablePassword(id) {
-            const mask = document.getElementById(`pass-mask-${id}`);
-            const raw = document.getElementById(`pass-raw-${id}`);
-            const eye = document.getElementById(`pass-eye-${id}`);
-            if (mask.classList.contains('hidden')) {
-                mask.classList.remove('hidden');
-                raw.classList.add('hidden');
-                eye.className = 'fa-solid fa-eye text-[11px]';
-            } else {
-                mask.classList.add('hidden');
-                raw.classList.remove('hidden');
-                eye.className = 'fa-solid fa-eye-slash text-[11px]';
-            }
-        }
-
-        function generateRandomId() {
-            document.getElementById('user-idnum').value = Math.floor(205 + Math.random() * 800);
-        }
-
-        function generateRandomPassword() {
-            const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            let pass = "pass";
-            for (let i = 0; i < 4; i++) pass += chars.charAt(Math.floor(Math.random() * chars.length));
-            document.getElementById('user-password').value = pass;
-        }
-
-        function exportUserDataCSV() {
-            let csv = "ID,Name,Email,Department,Status\n";
-            state.users.forEach(u => {
-                csv += `"${u.id}","${u.name}","${u.email}","${u.dept}","${u.status}"\n`;
-            });
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `msmi_credentials_export_${Date.now()}.csv`;
-            a.click();
-            showToast("Exported credentials table to CSV", "info");
-        }
-
-        function setLoginLoading(isLoading) {
-            const spinner = document.getElementById('login-btn-spinner');
-            const text = document.getElementById('login-btn-text');
-            if (isLoading) {
-                spinner.classList.remove('hidden');
-                text.innerText = "Authenticating...";
-            } else {
-                spinner.classList.add('hidden');
-                text.innerText = "Authenticate Access";
-            }
-        }
-
-        // Configuration Modal Logic
-        function openConfigModal() {
-            document.getElementById('config-modal').classList.remove('hidden');
-            document.getElementById('cfg-jsonbin-key').value = state.jsonbinKey;
-            document.getElementById('cfg-supa-url').value = state.supaUrl;
-            document.getElementById('cfg-supa-key').value = state.supaKey;
-            document.getElementById('cfg-firebase-json').value = state.firebaseConfig;
-        }
-
-        function closeConfigModal() {
-            document.getElementById('config-modal').classList.add('hidden');
-        }
-
-        function switchProviderTab(provider) {
-            state.cloudProvider = provider;
-            ['jsonbin', 'supabase', 'firebase'].forEach(p => {
-                const tab = document.getElementById(`tab-${p}`);
-                const panel = document.getElementById(`config-${p}-panel`);
-                if (p === provider) {
-                    tab.className = "py-2 rounded-lg text-center transition-all bg-msmi-600 text-white shadow-sm";
-                    panel.classList.remove('hidden');
-                } else {
-                    tab.className = "py-2 rounded-lg text-center text-slate-600 hover:text-slate-900 transition-all";
-                    panel.classList.add('hidden');
-                }
-            });
-        }
-
-        function saveCloudSettings() {
-            state.jsonbinKey = document.getElementById('cfg-jsonbin-key').value.trim();
-            state.supaUrl = document.getElementById('cfg-supa-url').value.trim();
-            state.supaKey = document.getElementById('cfg-supa-key').value.trim();
-            state.firebaseConfig = document.getElementById('cfg-firebase-json').value.trim();
-
-            localStorage.setItem('msmi_cloud_provider', state.cloudProvider);
-            localStorage.setItem('msmi_cfg_jsonbin_key', state.jsonbinKey);
-            localStorage.setItem('msmi_cfg_supa_url', state.supaUrl);
-            localStorage.setItem('msmi_cfg_supa_key', state.supaKey);
-            localStorage.setItem('msmi_cfg_firebase_json', state.firebaseConfig);
-
-            initCloudConnections();
-            syncDataFromCloud(true);
-            closeConfigModal();
-            showToast("Cloud Provider updated & reconnected!", "success");
-        }
-
-        // Toast Notification System
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            
-            const icons = {
-                success: 'fa-circle-check text-emerald-500',
-                error: 'fa-triangle-exclamation text-rose-500',
-                info: 'fa-circle-info text-accent-cyan'
+            const editIndex = document.getElementById('editUserKey').value;
+            const newUser = {
+                id: editIndex !== "" ? users[editIndex].id : "usr_" + Date.now(),
+                name: document.getElementById('modalName').value.trim(),
+                id_number: document.getElementById('modalIdNum').value.trim(),
+                password: document.getElementById('modalPassword').value.trim(),
+                department: document.getElementById('modalDept').value.trim(),
+                status: "Active",
+                message: document.getElementById('modalMessage').value.trim()
             };
 
-            toast.className = `pointer-events-auto flex items-center gap-3 p-4 rounded-xl white-glass border border-msmi-200 text-xs font-mono font-bold text-slate-800 shadow-2xl transition-all duration-300 transform translate-y-2 opacity-0`;
-            toast.innerHTML = `
-                <i class="fa-solid ${icons[type] || icons.info} text-base"></i>
-                <span class="flex-1">${message}</span>
-            `;
-
-            container.appendChild(toast);
-            requestAnimationFrame(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            });
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0', '-translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
-        }
-
-        function triggerConfetti() {
-            if (typeof confetti === 'function') {
-                confetti({ particleCount: 60, spread: 70, origin: { y: 0.8 }, colors: ['#e11d48', '#f43f5e', '#be123c', '#ffffff'] });
-            }
-        }
-
-        // Background Particles Canvas
-        function initBackgroundCanvas() {
-            const canvas = document.getElementById('bg-canvas');
-            const ctx = canvas.getContext('2d');
-            let width = canvas.width = window.innerWidth;
-            let height = canvas.height = window.innerHeight;
-
-            const particles = Array.from({ length: 40 }, () => ({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
-                size: Math.random() * 2.5 + 1
-            }));
-
-            function animate() {
-                ctx.clearRect(0, 0, width, height);
-                ctx.fillStyle = 'rgba(225, 29, 72, 0.35)';
-
-                particles.forEach(p => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    if (p.x < 0 || p.x > width) p.vx *= -1;
-                    if (p.y < 0 || p.y > height) p.vy *= -1;
-
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-
-                requestAnimationFrame(animate);
+            if (editIndex !== "") {
+                users[editIndex] = newUser;
+                showAlert("User credentials updated.", "success");
+            } else {
+                users.push(newUser);
+                showAlert("New user provisioned successfully.", "success");
             }
 
-            window.addEventListener('resize', () => {
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
-            });
+            saveUsersToStorage();
+            renderUserTable();
+            closeModal();
+        }
 
-            animate();
+        function editUser(index) {
+            const user = users[index];
+            document.getElementById('modalTitle').textContent = "Edit User Credential";
+            document.getElementById('editUserKey').value = index;
+            document.getElementById('modalName').value = user.name;
+            document.getElementById('modalIdNum').value = user.id_number;
+            document.getElementById('modalPassword').value = user.password;
+            document.getElementById('modalDept').value = user.department;
+            document.getElementById('modalMessage').value = user.message;
+            document.getElementById('userModal').style.display = 'flex';
+        }
+
+        function deleteUser(index) {
+            if (confirm(`Are you sure you want to delete ${users[index].name}?`)) {
+                users.splice(index, 1);
+                saveUsersToStorage();
+                renderUserTable();
+                showAlert("User removed from portal.", "success");
+            }
         }
     </script>
 </body>
