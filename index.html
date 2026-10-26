@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MSMI AI - Powerful AI Workspace</title>
+  <title>MSMI AI - Advanced AI Workspace</title>
   
   <!-- Modern Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -56,7 +56,6 @@
       flex-direction: column;
     }
 
-    /* Header */
     header {
       background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(10px);
@@ -116,7 +115,6 @@
       gap: 6px;
     }
 
-    /* Main Workspace Layout */
     .container {
       max-width: 1100px;
       width: 100%;
@@ -209,7 +207,6 @@
       display: block;
     }
 
-    /* Input Controls */
     .input-panel {
       background: white;
       border-radius: 24px;
@@ -310,7 +307,6 @@
       transform: scale(1.05);
     }
 
-    /* Formatting & Code Blocks */
     pre {
       margin: 1rem 0;
       border-radius: 8px;
@@ -345,7 +341,6 @@
       background: rgba(255, 255, 255, 0.3);
     }
 
-    /* Loading Pulse */
     .typing-indicator {
       display: flex;
       gap: 5px;
@@ -371,29 +366,26 @@
 </head>
 <body>
 
-  <!-- Header Header -->
   <header>
     <div class="brand">
       <div class="brand-icon"><i class="fa-solid fa-atom"></i></div>
       <div class="brand-title">MSMI AI</div>
     </div>
     <div class="model-badge">
-      <i class="fa-solid fa-bolt"></i> Gemini Engine Dynamic
+      <i class="fa-solid fa-bolt"></i> Gemini 3.8 Flash Engine
     </div>
   </header>
 
-  <!-- Main Container -->
   <div class="container">
     <div class="chat-box" id="chatBox">
       <div class="message assistant">
         <div class="avatar"><i class="fa-solid fa-robot"></i></div>
         <div class="content">
-          Hello! I am <strong>MSMI AI</strong>. I can assist you with Mathematics, Coding, Science, Social Sciences, Image Analysis, and General Knowledge. How can I help you today?
+          Hello! I am <strong>MSMI AI</strong>. I am fully optimized to help you with Mathematics, Coding, Science, Social Sciences, and Image Analysis using Gemini 3.8 Flash. How can I help you today?
         </div>
       </div>
     </div>
 
-    <!-- Input Form Area -->
     <div class="input-panel">
       <div class="preview-container" id="previewContainer" style="display: none;">
         <div class="preview-thumb">
@@ -418,9 +410,8 @@
        ==================================================================== */
     const API_KEY = "AQ.Ab8RN6LT7Nxr9zQY2K9IPP1UqapfsxhMENCNz_jFt_QQgB3oGg";
 
-    // Primary & Fallback Models to prevent high demand downtime errors
-    const PRIMARY_MODEL = "gemini-3.8-flash";
-    const FALLBACK_MODELS = ["gemini-2.5-flash", "gemini-1.5-flash"];
+    // Validated active endpoints configuration with reliable fallbacks
+    const MODELS_TO_TRY = ["gemini-3.8-flash", "gemini-3.5-flash", "gemini-2.5-flash"];
 
     let attachedImageBase64 = null;
 
@@ -470,37 +461,32 @@
         appendMessage('assistant', reply);
       } catch (err) {
         removeMessage(loadingId);
-        appendMessage('assistant', `⚠️ **Error:** ${err.message}. Please verify your API key and network connection.`);
+        appendMessage('assistant', `⚠️ **Connection Error:** ${err.message}. Please double-check that your API Key is correctly inserted on line 231.`);
       }
     }
 
-    // Attempt Gemini 3.8 Flash, and fallback to 2.5/1.5 if 3.8 is overloaded
     async function fetchGeminiResponseWithFallback(promptText, imageBase64) {
-      const modelsToTry = [PRIMARY_MODEL, ...FALLBACK_MODELS];
       let lastError = null;
 
-      for (const model of modelsToTry) {
+      for (const model of MODELS_TO_TRY) {
         try {
           const response = await fetchGeminiAPI(model, promptText, imageBase64);
           return response;
         } catch (err) {
-          console.warn(`Model ${model} failed or overloaded. Retrying with next fallback...`, err);
+          console.warn(`Model endpoint ${model} returned error, trying next fallback...`, err.message);
           lastError = err;
         }
       }
-      throw lastError || new Error("All model endpoints are currently experiencing high demand.");
+      throw lastError || new Error("Could not reach any valid model endpoint.");
     }
 
     async function fetchGeminiAPI(modelName, promptText, imageBase64) {
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${API_KEY}`;
       
-      const contents = [];
       const parts = [];
-
       if (promptText) {
         parts.push({ text: promptText });
       }
-
       if (imageBase64) {
         parts.push({
           inline_data: {
@@ -510,12 +496,10 @@
         });
       }
 
-      contents.push({ parts: parts });
-
       const requestBody = {
-        contents: contents,
+        contents: [{ parts: parts }],
         systemInstruction: {
-          parts: [{ text: "You are MSMI AI, an expert assistant skilled in Mathematics, Coding, Science, Social Sciences, and Image Analysis. Always format math equations clearly using standard LaTeX notation ($...$ for inline, $$...$$ for block formulas)." }]
+          parts: [{ text: "You are MSMI AI, an expert virtual assistant skilled in General Knowledge, Mathematics, Science, Social Science, Coding, and Image Vision. Provide accurate, clear details and format mathematical equations utilizing LaTeX notation ($...$ inline, $$...$$ block equations)." }]
         }
       };
 
@@ -528,7 +512,11 @@
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error?.message || `HTTP ${res.status} error from ${modelName}`);
+        throw new Error(data.error?.message || `HTTP error! status: ${res.status}`);
+      }
+
+      if (!data.candidates || data.candidates.length === 0 || !data.candidates[0].content) {
+        throw new Error("Received empty response candidate structure from API.");
       }
 
       return data.candidates[0].content.parts[0].text;
