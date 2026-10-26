@@ -206,7 +206,7 @@
             <div class="flex items-center justify-between text-xs text-gray-500">
                 <span class="flex items-center space-x-1">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>Engine: <strong class="text-gray-700">Gemini 3.8 / Latest</strong></span>
+                    <span>Engine: <strong class="text-gray-700">Gemini 3.8 Flash</strong></span>
                 </span>
                 <i class="fa-solid fa-shield-halved text-brand-500" title="API Key Protected Internally"></i>
             </div>
@@ -225,7 +225,7 @@
                 <div>
                     <h2 class="font-bold text-gray-800 text-lg flex items-center space-x-2">
                         <span>MSMI AI Assistant</span>
-                        <span class="bg-red-100 text-brand-600 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase border border-red-200">Ultra Speed</span>
+                        <span class="bg-red-100 text-brand-600 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase border border-red-200">Gemini 3.8 Ultra Speed</span>
                     </h2>
                     <p class="text-xs text-gray-500">Multimodal • Latex Math Enabled • Code Optimized</p>
                 </div>
@@ -356,8 +356,8 @@
          */
         const API_KEY = "AQ.Ab8RN6LT7Nxr9zQY2K9IPP1UqapfsxhMENCNz_jFt_QQgB3oGg";
         
-        // Gemini API Endpoint Definition (Configured to use Gemini 2.5 Flash / Standard Multimodal Endpoint)
-        const GEMINI_MODEL = "gemini-3.8";
+        // Gemini API Endpoint Definition (Explicitly updated to Gemini 3.8 Flash Endpoint)
+        const GEMINI_MODEL = "gemini-3.8-flash";
         const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${API_KEY}`;
 
         // Global State Management
