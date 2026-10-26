@@ -1,830 +1,629 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSMI AI - Advanced Multimodal Intelligence</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#FFF5F5',
-                            100: '#FED7D7',
-                            500: '#E53935',
-                            600: '#D32F2F',
-                            700: '#C62828',
-                            glow: 'rgba(229, 57, 53, 0.3)'
-                        }
-                    },
-                    animation: {
-                        'pulse-glow': 'pulseGlow 2s infinite',
-                        'float': 'float 4s ease-in-out infinite'
-                    },
-                    keyframes: {
-                        pulseGlow: {
-                            '0%, 100%': { boxShadow: '0 0 15px rgba(229, 57, 53, 0.4)' },
-                            '50%': { boxShadow: '0 0 25px rgba(229, 57, 53, 0.8)' }
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-6px)' }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MSMI AI - Powerful AI Workspace</title>
+  
+  <!-- Modern Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
 
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <!-- KaTeX for High-Speed Mathematical Expressions -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  <!-- KaTeX for Mathematics -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 
-    <!-- Marked.js for Markdown Parsing -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- Marked.js for Markdown -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-    <!-- Highlight.js for Syntax Highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <!-- Highlight.js for Code Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #FAFAFA;
-            color: #1E1E1E;
-        }
+  <style>
+    :root {
+      --primary-red: #E53935;
+      --primary-hover: #D32F2F;
+      --accent-red: #FF1744;
+      --bg-white: #FFFFFF;
+      --bg-light: #F8F9FA;
+      --panel-bg: rgba(255, 255, 255, 0.95);
+      --text-dark: #1A1A1A;
+      --text-muted: #666666;
+      --border-color: #E0E0E0;
+      --shadow-sm: 0 4px 12px rgba(229, 57, 53, 0.08);
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
+      --radius: 16px;
+    }
 
-        /* Glassmorphism Styles */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(229, 57, 53, 0.12);
-        }
-        
-        .glass-header {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(229, 57, 53, 0.15);
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+    }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #F1F1F1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #E53935;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #C62828;
-        }
+    body {
+      background: linear-gradient(135deg, #FFFFFF 0%, #FFEBEE 100%);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-        /* Message Formatting Override */
-        .prose pre {
-            background: #1e1e1e !important;
-            padding: 1rem;
-            border-radius: 0.75rem;
-            position: relative;
-            margin-top: 0.75rem;
-            margin-bottom: 0.75rem;
-        }
-        .prose code {
-            font-family: 'Fira Code', monospace;
-            font-size: 0.9em;
-        }
-        .prose p {
-            margin-bottom: 0.75rem;
-            line-height: 1.6;
-        }
-        .prose ul, .prose ol {
-            margin-left: 1.5rem;
-            margin-bottom: 0.75rem;
-        }
-        .prose ul { list-style-type: disc; }
-        .prose ol { list-style-type: decimal; }
+    /* Header */
+    header {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #FFCDD2;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-        .red-gradient-text {
-            background: linear-gradient(135deg, #E53935 0%, #FF5252 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
 
-        .red-btn-gradient {
-            background: linear-gradient(135deg, #E53935 0%, #D32F2F 100%);
-            box-shadow: 0 4px 14px rgba(229, 57, 53, 0.35);
-            transition: all 0.2s ease;
-        }
-        .red-btn-gradient:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(229, 57, 53, 0.45);
-        }
-    </style>
+    .brand-icon {
+      background: linear-gradient(135deg, var(--primary-red), var(--accent-red));
+      color: white;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      box-shadow: 0 4px 10px rgba(229, 57, 53, 0.3);
+      animation: pulse 2s infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 4px 10px rgba(229, 57, 53, 0.3); }
+      100% { transform: scale(1.05); box-shadow: 0 6px 16px rgba(229, 57, 53, 0.5); }
+    }
+
+    .brand-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #D32F2F, #FF1744);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .model-badge {
+      background: #FFEBEE;
+      color: var(--primary-red);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid #FFCDD2;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Main Workspace Layout */
+    .container {
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem 1rem;
+    }
+
+    .chat-box {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .message {
+      display: flex;
+      gap: 1rem;
+      max-width: 85%;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+
+    .message.assistant {
+      align-self: flex-start;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .message.user .avatar {
+      background: var(--text-dark);
+      color: white;
+    }
+
+    .message.assistant .avatar {
+      background: var(--primary-red);
+      color: white;
+      box-shadow: 0 2px 8px rgba(229, 57, 53, 0.3);
+    }
+
+    .content {
+      background: white;
+      padding: 1.1rem 1.4rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .message.user .content {
+      background: var(--primary-red);
+      color: white;
+      border: none;
+      border-top-right-radius: 2px;
+    }
+
+    .message.assistant .content {
+      border-top-left-radius: 2px;
+    }
+
+    .attached-img {
+      max-width: 200px;
+      max-height: 200px;
+      border-radius: 8px;
+      margin-top: 8px;
+      display: block;
+    }
+
+    /* Input Controls */
+    .input-panel {
+      background: white;
+      border-radius: 24px;
+      padding: 0.75rem 1rem;
+      box-shadow: var(--shadow-lg);
+      border: 2px solid #FFCDD2;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .preview-container {
+      display: flex;
+      gap: 10px;
+      padding: 4px;
+    }
+
+    .preview-thumb {
+      position: relative;
+      display: inline-block;
+    }
+
+    .preview-thumb img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid var(--primary-red);
+    }
+
+    .remove-img {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: var(--primary-red);
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    textarea {
+      flex: 1;
+      border: none;
+      outline: none;
+      resize: none;
+      max-height: 150px;
+      font-size: 1rem;
+      padding: 0.5rem;
+      background: transparent;
+    }
+
+    .action-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.25rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn:hover {
+      color: var(--primary-red);
+      background: #FFEBEE;
+    }
+
+    .send-btn {
+      background: var(--primary-red);
+      color: white;
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(229, 57, 53, 0.3);
+    }
+
+    .send-btn:hover {
+      background: var(--primary-hover);
+      transform: scale(1.05);
+    }
+
+    /* Formatting & Code Blocks */
+    pre {
+      margin: 1rem 0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+
+    .code-header {
+      background: #212121;
+      color: #FFF;
+      padding: 0.4rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+
+    .copy-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.75rem;
+    }
+
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Loading Pulse */
+    .typing-indicator {
+      display: flex;
+      gap: 5px;
+      padding: 8px 12px;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--primary-red);
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out both;
+    }
+
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
+    }
+  </style>
 </head>
-<body class="h-screen flex overflow-hidden">
+<body>
 
-    <!-- Mobile Sidebar Backdrop -->
-    <div id="sidebar-backdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-black/40 z-20 hidden md:hidden transition-opacity"></div>
+  <!-- Header Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon"><i class="fa-solid fa-atom"></i></div>
+      <div class="brand-title">MSMI AI</div>
+    </div>
+    <div class="model-badge">
+      <i class="fa-solid fa-bolt"></i> Gemini Engine Dynamic
+    </div>
+  </header>
 
-    <!-- Sidebar -->
-    <aside id="sidebar" class="fixed md:static inset-y-0 left-0 z-30 w-72 glass-panel flex flex-col transition-transform duration-300 transform -translate-x-full md:translate-x-0 border-r shadow-lg md:shadow-none">
-        <!-- App Logo & Branding -->
-        <div class="p-5 flex items-center justify-between border-b border-red-100">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl red-btn-gradient flex items-center justify-center text-white shadow-md">
-                    <i class="fa-solid font-bold text-lg">M</i>
-                </div>
-                <div>
-                    <h1 class="font-extrabold text-xl tracking-tight text-gray-900">MSMI <span class="red-gradient-text">AI</span></h1>
-                    <p class="text-[10px] text-red-500 font-semibold tracking-widest uppercase">Next-Gen Intelligence</p>
-                </div>
-            </div>
-            <button onclick="toggleMobileSidebar()" class="md:hidden text-gray-500 hover:text-red-600 focus:outline-none">
-                <i class="fa-solid fa-xmark text-xl"></i>
-            </button>
+  <!-- Main Container -->
+  <div class="container">
+    <div class="chat-box" id="chatBox">
+      <div class="message assistant">
+        <div class="avatar"><i class="fa-solid fa-robot"></i></div>
+        <div class="content">
+          Hello! I am <strong>MSMI AI</strong>. I can assist you with Mathematics, Coding, Science, Social Sciences, Image Analysis, and General Knowledge. How can I help you today?
         </div>
-
-        <!-- New Chat Button -->
-        <div class="p-4">
-            <button onclick="startNewChat()" class="w-full py-3 px-4 rounded-xl border border-red-200 text-brand-600 font-semibold flex items-center justify-center space-x-2 hover:bg-red-50 transition-all duration-200 shadow-sm active:scale-95">
-                <i class="fa-solid fa-plus text-sm"></i>
-                <span>New Conversation</span>
-            </button>
-        </div>
-
-        <!-- Domain Chips / Categories -->
-        <div class="px-4 py-2">
-            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Capabilities</p>
-            <div class="space-y-1">
-                <button onclick="insertPrompt('Solve this mathematical equation step-by-step: ')" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-gray-700 hover:bg-red-50 hover:text-brand-600 flex items-center space-x-2 transition-colors">
-                    <i class="fa-solid fa-calculator text-brand-500"></i>
-                    <span>Mathematics & Calculus</span>
-                </button>
-                <button onclick="insertPrompt('Write a clean, optimized function to ')" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-gray-700 hover:bg-red-50 hover:text-brand-600 flex items-center space-x-2 transition-colors">
-                    <i class="fa-solid fa-code text-brand-500"></i>
-                    <span>Coding & Debugging</span>
-                </button>
-                <button onclick="insertPrompt('Explain the scientific principles behind ')" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-gray-700 hover:bg-red-50 hover:text-brand-600 flex items-center space-x-2 transition-colors">
-                    <i class="fa-solid fa-flask text-brand-500"></i>
-                    <span>Scientific Analysis</span>
-                </button>
-                <button onclick="insertPrompt('Provide a deep sociological and historical perspective on ')" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-gray-700 hover:bg-red-50 hover:text-brand-600 flex items-center space-x-2 transition-colors">
-                    <i class="fa-solid fa-globe text-brand-500"></i>
-                    <span>Social Sciences</span>
-                </button>
-                <button onclick="triggerImageUpload()" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-gray-700 hover:bg-red-50 hover:text-brand-600 flex items-center space-x-2 transition-colors">
-                    <i class="fa-solid fa-image text-brand-500"></i>
-                    <span>Vision & Image Analysis</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Chat History List -->
-        <div class="flex-1 overflow-y-auto px-4 py-2">
-            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Chat History</p>
-            <div id="chat-history-list" class="space-y-1">
-                <!-- Dynamically Populated -->
-            </div>
-        </div>
-
-        <!-- System Information Footer -->
-        <div class="p-4 border-t border-red-100 bg-red-50/50">
-            <div class="flex items-center justify-between text-xs text-gray-500">
-                <span class="flex items-center space-x-1">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>Engine: <strong class="text-gray-700">Gemini 3.8 Flash</strong></span>
-                </span>
-                <i class="fa-solid fa-shield-halved text-brand-500" title="API Key Protected Internally"></i>
-            </div>
-        </div>
-    </aside>
-
-    <!-- Main Chat Container -->
-    <main class="flex-1 flex flex-col h-full relative overflow-hidden bg-white">
-        
-        <!-- Header -->
-        <header class="glass-header h-16 px-6 flex items-center justify-between z-10">
-            <div class="flex items-center space-x-4">
-                <button onclick="toggleMobileSidebar()" class="md:hidden text-gray-600 hover:text-brand-600 focus:outline-none">
-                    <i class="fa-solid fa-bars text-xl"></i>
-                </button>
-                <div>
-                    <h2 class="font-bold text-gray-800 text-lg flex items-center space-x-2">
-                        <span>MSMI AI Assistant</span>
-                        <span class="bg-red-100 text-brand-600 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase border border-red-200">Gemini 3.8 Ultra Speed</span>
-                    </h2>
-                    <p class="text-xs text-gray-500">Multimodal • Latex Math Enabled • Code Optimized</p>
-                </div>
-            </div>
-
-            <!-- Header Quick Actions -->
-            <div class="flex items-center space-x-3">
-                <button onclick="clearCurrentChat()" class="text-gray-400 hover:text-brand-600 transition-colors px-3 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-1 border border-gray-200 hover:border-red-200">
-                    <i class="fa-solid fa-trash-can"></i>
-                    <span class="hidden sm:inline">Clear Workspace</span>
-                </button>
-            </div>
-        </header>
-
-        <!-- Message Stream Container -->
-        <div id="messages-container" class="flex-1 overflow-y-auto p-4 md:p-8 space-y-6">
-            
-            <!-- Welcome View (Default state) -->
-            <div id="welcome-card" class="max-w-3xl mx-auto my-8 text-center space-y-6 py-6 px-4">
-                <div class="w-20 h-20 mx-auto rounded-3xl red-btn-gradient flex items-center justify-center text-white text-3xl shadow-xl animate-float">
-                    <i class="fa-solid fa-brain"></i>
-                </div>
-                <div>
-                    <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">How can <span class="red-gradient-text">MSMI AI</span> help you today?</h2>
-                    <p class="text-gray-500 mt-2 max-w-lg mx-auto text-sm">Empowered with ultra-fast multi-modal intelligence, real-time LaTeX expression rendering, high-accuracy coding engines, and scientific reasoning.</p>
-                </div>
-
-                <!-- Suggestion Chips Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl mx-auto text-left">
-                    <div onclick="selectChip('Solve: \\int_{0}^{\\pi} \\sin^2(x) dx with step-by-step calculus derivation')" class="p-4 rounded-xl border border-gray-100 hover:border-red-200 bg-white hover:bg-red-50/50 shadow-sm transition-all duration-200 cursor-pointer group">
-                        <div class="flex items-center space-x-2 text-brand-600 font-semibold text-sm mb-1">
-                            <i class="fa-solid fa-square-root-variable"></i>
-                            <span>Math & Calculus</span>
-                        </div>
-                        <p class="text-xs text-gray-500 group-hover:text-gray-700">Solve integrals, linear algebra matrices, and complex differential equations.</p>
-                    </div>
-
-                    <div onclick="selectChip('Write a responsive HTML/CSS/JS script for a real-time data visualizer')" class="p-4 rounded-xl border border-gray-100 hover:border-red-200 bg-white hover:bg-red-50/50 shadow-sm transition-all duration-200 cursor-pointer group">
-                        <div class="flex items-center space-x-2 text-brand-600 font-semibold text-sm mb-1">
-                            <i class="fa-solid fa-code"></i>
-                            <span>Software Development</span>
-                        </div>
-                        <p class="text-xs text-gray-500 group-hover:text-gray-700">Generate clean, commented code with syntax highlighting and instant copy.</p>
-                    </div>
-
-                    <div onclick="selectChip('Explain Quantum Superposition and Quantum Entanglement in simple terms')" class="p-4 rounded-xl border border-gray-100 hover:border-red-200 bg-white hover:bg-red-50/50 shadow-sm transition-all duration-200 cursor-pointer group">
-                        <div class="flex items-center space-x-2 text-brand-600 font-semibold text-sm mb-1">
-                            <i class="fa-solid fa-atom"></i>
-                            <span>Physics & Chemistry</span>
-                        </div>
-                        <p class="text-xs text-gray-500 group-hover:text-gray-700">Deconstruct complex scientific formulas, chemical reactions, and theories.</p>
-                    </div>
-
-                    <div onclick="triggerImageUpload()" class="p-4 rounded-xl border border-gray-100 hover:border-red-200 bg-white hover:bg-red-50/50 shadow-sm transition-all duration-200 cursor-pointer group">
-                        <div class="flex items-center space-x-2 text-brand-600 font-semibold text-sm mb-1">
-                            <i class="fa-solid fa-eye"></i>
-                            <span>Vision & OCR Analysis</span>
-                        </div>
-                        <p class="text-xs text-gray-500 group-hover:text-gray-700">Upload diagrams, handwritten notes, charts, or images for immediate analysis.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Messages appended dynamically here -->
-        </div>
-
-        <!-- Input Panel -->
-        <div class="p-4 md:p-6 bg-white border-t border-gray-100">
-            <div class="max-w-4xl mx-auto">
-                
-                <!-- Image Attachment Preview Box -->
-                <div id="image-preview-container" class="hidden mb-3 relative inline-block">
-                    <img id="image-preview" src="" alt="Attachment" class="h-20 w-auto rounded-lg border-2 border-brand-500 shadow-md object-cover">
-                    <button onclick="removeAttachedImage()" class="absolute -top-2 -right-2 bg-brand-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-md hover:bg-brand-700 focus:outline-none">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-
-                <!-- Input Form -->
-                <form id="chat-form" onsubmit="handleFormSubmit(event)" class="relative flex items-center">
-                    
-                    <!-- File Input Hidden -->
-                    <input type="file" id="image-input" accept="image/*" class="hidden" onchange="handleImageSelect(event)">
-                    
-                    <div class="relative w-full flex items-center">
-                        <!-- Attachment Button -->
-                        <button type="button" onclick="triggerImageUpload()" title="Attach Image for Vision Analysis" class="absolute left-3 text-gray-400 hover:text-brand-600 transition-colors p-2 rounded-lg hover:bg-red-50 focus:outline-none">
-                            <i class="fa-solid fa-paperclip text-lg"></i>
-                        </button>
-
-                        <!-- Main Text Input Area -->
-                        <textarea id="user-input" rows="1" placeholder="Ask MSMI AI anything (Math, Code, Science, Social Studies, Vision)..." onkeydown="handleKeyDown(event)" class="w-full pl-12 pr-24 py-3.5 bg-gray-50 hover:bg-white focus:bg-white border border-gray-200 focus:border-brand-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-red-100 transition-all text-sm text-gray-800 resize-none max-h-36"></textarea>
-
-                        <!-- Action Buttons Right -->
-                        <div class="absolute right-2 flex items-center space-x-1">
-                            <button type="button" onclick="clearInput()" title="Clear text" class="text-gray-400 hover:text-gray-600 p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none">
-                                <i class="fa-solid fa-eraser text-sm"></i>
-                            </button>
-                            <button type="submit" id="send-btn" class="w-10 h-10 red-btn-gradient text-white rounded-xl flex items-center justify-center focus:outline-none active:scale-95 transition-transform">
-                                <i class="fa-solid fa-paper-plane text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </form>
-
-                <div class="flex items-center justify-between text-[11px] text-gray-400 mt-2 px-2">
-                    <span>Press <kbd class="px-1 py-0.5 bg-gray-100 border rounded text-gray-600">Enter</kbd> to send, <kbd class="px-1 py-0.5 bg-gray-100 border rounded text-gray-600">Shift+Enter</kbd> for line break</span>
-                    <span class="text-brand-500 font-medium">MSMI AI High-Performance Engine</span>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Notification Toast Modal -->
-    <div id="toast" class="fixed bottom-20 right-6 bg-gray-900 text-white px-4 py-3 rounded-xl shadow-xl transform translate-y-32 opacity-0 transition-all duration-300 z-50 flex items-center space-x-3 text-sm">
-        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i>
-        <span id="toast-msg">Notification message</span>
+      </div>
     </div>
 
-    <!-- JavaScript Application Logic -->
-    <script>
-        /* 
-         * =========================================================================================
-         * GOOGLE GEMINI API CONFIGURATION
-         * Paste your Google Gemini API Key inside the double quotes below.
-         * Note: The key is kept strictly internal to this code block and is never exposed in the UI.
-         * =========================================================================================
-         */
-        const API_KEY = "AQ.Ab8RN6LT7Nxr9zQY2K9IPP1UqapfsxhMENCNz_jFt_QQgB3oGg";
-        
-        // Gemini API Endpoint Definition (Explicitly updated to Gemini 3.8 Flash Endpoint)
-        const GEMINI_MODEL = "gemini-3.8-flash";
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${API_KEY}`;
+    <!-- Input Form Area -->
+    <div class="input-panel">
+      <div class="preview-container" id="previewContainer" style="display: none;">
+        <div class="preview-thumb">
+          <img id="imagePreview" src="" alt="Attachment" />
+          <div class="remove-img" onclick="clearImage()"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+      </div>
+      <div class="input-row">
+        <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)" />
+        <button class="action-btn" onclick="document.getElementById('imageInput').click()" title="Attach Image">
+          <i class="fa-solid fa-paperclip"></i>
+        </button>
+        <textarea id="userInput" rows="1" placeholder="Type a message or ask a math problem..." onkeydown="handleKeyDown(event)"></textarea>
+        <button class="send-btn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
 
-        // Global State Management
-        let chatHistory = [];
-        let activeConversations = [];
-        let currentChatId = Date.now();
-        let currentBase64Image = null;
-        let isGenerating = false;
+  <script>
+    /* ====================================================================
+       PASTE YOUR GOOGLE API KEY DIRECTLY IN THE LINE BELOW:
+       ==================================================================== */
+    const API_KEY = "AQ.Ab8RN6LT7Nxr9zQY2K9IPP1UqapfsxhMENCNz_jFt_QQgB3oGg";
 
-        // Configure Markdown Renderer
-        marked.setOptions({
-            highlight: function(code, lang) {
-                const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-                return hljs.highlight(code, { language }).value;
-            },
-            langPrefix: 'hljs language-'
+    // Primary & Fallback Models to prevent high demand downtime errors
+    const PRIMARY_MODEL = "gemini-3.8-flash";
+    const FALLBACK_MODELS = ["gemini-2.5-flash", "gemini-1.5-flash"];
+
+    let attachedImageBase64 = null;
+
+    function handleKeyDown(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    }
+
+    function handleImageUpload(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          attachedImageBase64 = evt.target.result.split(',')[1];
+          document.getElementById('imagePreview').src = evt.target.result;
+          document.getElementById('previewContainer').style.display = 'flex';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function clearImage() {
+      attachedImageBase64 = null;
+      document.getElementById('imageInput').value = '';
+      document.getElementById('previewContainer').style.display = 'none';
+    }
+
+    async function sendMessage() {
+      const inputEl = document.getElementById('userInput');
+      const text = inputEl.value.trim();
+
+      if (!text && !attachedImageBase64) return;
+
+      appendMessage('user', text, attachedImageBase64);
+      inputEl.value = '';
+      
+      const currentImage = attachedImageBase64;
+      clearImage();
+
+      const loadingId = appendLoadingIndicator();
+
+      try {
+        const reply = await fetchGeminiResponseWithFallback(text, currentImage);
+        removeMessage(loadingId);
+        appendMessage('assistant', reply);
+      } catch (err) {
+        removeMessage(loadingId);
+        appendMessage('assistant', `⚠️ **Error:** ${err.message}. Please verify your API key and network connection.`);
+      }
+    }
+
+    // Attempt Gemini 3.8 Flash, and fallback to 2.5/1.5 if 3.8 is overloaded
+    async function fetchGeminiResponseWithFallback(promptText, imageBase64) {
+      const modelsToTry = [PRIMARY_MODEL, ...FALLBACK_MODELS];
+      let lastError = null;
+
+      for (const model of modelsToTry) {
+        try {
+          const response = await fetchGeminiAPI(model, promptText, imageBase64);
+          return response;
+        } catch (err) {
+          console.warn(`Model ${model} failed or overloaded. Retrying with next fallback...`, err);
+          lastError = err;
+        }
+      }
+      throw lastError || new Error("All model endpoints are currently experiencing high demand.");
+    }
+
+    async function fetchGeminiAPI(modelName, promptText, imageBase64) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${API_KEY}`;
+      
+      const contents = [];
+      const parts = [];
+
+      if (promptText) {
+        parts.push({ text: promptText });
+      }
+
+      if (imageBase64) {
+        parts.push({
+          inline_data: {
+            mime_type: "image/jpeg",
+            data: imageBase64
+          }
         });
+      }
 
-        // Initialize App on DOM Loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            loadHistoryFromStorage();
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: '$$', right: '$$', display: true},
-                    {left: '$', right: '$', display: false},
-                    {left: '\\(', right: '\\)', display: false},
-                    {left: '\\[', right: '\\]', display: true}
-                ],
-                throwOnError : false
-            });
-        });
+      contents.push({ parts: parts });
 
-        // Handle Form Submission
-        async function handleFormSubmit(e) {
-            e.preventDefault();
-            const inputEl = document.getElementById('user-input');
-            const promptText = inputEl.value.trim();
-
-            if ((!promptText && !currentBase64Image) || isGenerating) return;
-
-            // Hide Welcome Card on first message
-            const welcomeCard = document.getElementById('welcome-card');
-            if (welcomeCard) welcomeCard.style.display = 'none';
-
-            // User Message Payload Construction
-            const userMsg = {
-                role: 'user',
-                text: promptText,
-                image: currentBase64Image,
-                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            };
-
-            // Render User Message in UI
-            appendUserMessageUI(userMsg);
-
-            // Clear Input Area
-            inputEl.value = '';
-            inputEl.style.height = 'auto';
-            const attachedImg = currentBase64Image;
-            removeAttachedImage();
-
-            // Render Loading Indicator for AI
-            const botMsgId = 'bot-msg-' + Date.now();
-            appendBotLoadingUI(botMsgId);
-
-            isGenerating = true;
-
-            try {
-                // Prepare API Request Payload
-                const contents = buildGeminiContentsPayload(promptText, attachedImg);
-
-                // Fetch Response from Gemini API
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: contents,
-                        systemInstruction: {
-                            parts: [{
-                                text: "You are MSMI AI, an elite, highly intelligent multimodal AI assistant. You excel at Mathematics (always format complex math using LaTeX $...$ or $$...$$), Coding (provide clean code blocks with language identifiers), Science, Social Studies, and Image Analysis. Be direct, clear, fast, and structured in your explanations."
-                            }]
-                        }
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error?.message || `HTTP Error ${response.status}`);
-                }
-
-                const data = await response.json();
-                const botReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I couldn't generate a response.";
-
-                // Update Bot UI with Parsed Text
-                updateBotMessageUI(botMsgId, botReply);
-
-                // Update History State
-                chatHistory.push({ role: 'user', parts: [{ text: promptText }] });
-                chatHistory.push({ role: 'model', parts: [{ text: botReply }] });
-                saveCurrentChatSession(promptText || "Image Analysis Session");
-
-            } catch (err) {
-                console.error("Gemini API Error:", err);
-                let errDisplay = err.message;
-                if (API_KEY === "YOUR_GEMINI_API_KEY_HERE") {
-                    errDisplay = "API Key not configured. Please open index.html in an editor and set 'const API_KEY = \"YOUR_KEY\"' on line 231.";
-                }
-                updateBotMessageUI(botMsgId, `**Error:** ${errDisplay}`);
-            } finally {
-                isGenerating = false;
-            }
+      const requestBody = {
+        contents: contents,
+        systemInstruction: {
+          parts: [{ text: "You are MSMI AI, an expert assistant skilled in Mathematics, Coding, Science, Social Sciences, and Image Analysis. Always format math equations clearly using standard LaTeX notation ($...$ for inline, $$...$$ for block formulas)." }]
         }
+      };
 
-        // Build Payload according to Google Gemini API Requirements
-        function buildGeminiContentsPayload(text, imageBase64) {
-            let parts = [];
-            
-            if (text) {
-                parts.push({ text: text });
-            }
-            
-            if (imageBase64) {
-                const base64Data = imageBase64.split(',')[1];
-                const mimeType = imageBase64.split(';')[0].split(':')[1];
-                parts.push({
-                    inlineData: {
-                        mimeType: mimeType,
-                        data: base64Data
-                    }
-                });
-            }
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody)
+      });
 
-            // Return full chat history format for continuous conversation context
-            const payloadHistory = chatHistory.map(item => ({
-                role: item.role,
-                parts: item.parts
-            }));
+      const data = await res.json();
 
-            payloadHistory.push({
-                role: 'user',
-                parts: parts
-            });
+      if (!res.ok) {
+        throw new Error(data.error?.message || `HTTP ${res.status} error from ${modelName}`);
+      }
 
-            return payloadHistory;
+      return data.candidates[0].content.parts[0].text;
+    }
+
+    function appendMessage(role, text, imageSrc = null) {
+      const chatBox = document.getElementById('chatBox');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `message ${role}`;
+
+      const avatarDiv = document.createElement('div');
+      avatarDiv.className = 'avatar';
+      avatarDiv.innerHTML = role === 'user' ? '<i class="fa-solid fa-user"></i>' : '<i class="fa-solid fa-robot"></i>';
+
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'content';
+
+      if (role === 'assistant') {
+        contentDiv.innerHTML = formatMarkdown(text);
+        setTimeout(() => {
+          renderMathInElement(contentDiv, {
+            delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+            ],
+            throwOnError: false
+          });
+        }, 0);
+      } else {
+        contentDiv.textContent = text;
+        if (imageSrc) {
+          const img = document.createElement('img');
+          img.src = `data:image/jpeg;base64,${imageSrc}`;
+          img.className = 'attached-img';
+          contentDiv.appendChild(img);
         }
+      }
 
-        // UI Rendering Functions
-        function appendUserMessageUI(msg) {
-            const container = document.getElementById('messages-container');
-            const msgDiv = document.createElement('div');
-            msgDiv.className = 'flex justify-end space-x-3 max-w-4xl mx-auto';
-            
-            let imgHTML = msg.image ? `<img src="${msg.image}" class="max-w-xs max-h-48 rounded-lg mb-2 border border-red-200 object-cover">` : '';
+      msgDiv.appendChild(avatarDiv);
+      msgDiv.appendChild(contentDiv);
+      chatBox.appendChild(msgDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
-            msgDiv.innerHTML = `
-                <div class="flex flex-col items-end max-w-[85%]">
-                    <div class="flex items-center space-x-2 mb-1">
-                        <span class="text-[10px] text-gray-400">${msg.timestamp}</span>
-                        <span class="text-xs font-semibold text-gray-700">You</span>
-                    </div>
-                    <div class="bg-gradient-to-r from-red-600 to-brand-500 text-white p-4 rounded-2xl rounded-tr-none shadow-md">
-                        ${imgHTML}
-                        <p class="text-sm whitespace-pre-wrap leading-relaxed">${escapeHtml(msg.text)}</p>
-                    </div>
-                </div>
-                <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold text-xs flex-shrink-0">
-                    <i class="fa-solid fa-user"></i>
-                </div>
-            `;
-            container.appendChild(msgDiv);
-            scrollToBottom();
-        }
+    function appendLoadingIndicator() {
+      const chatBox = document.getElementById('chatBox');
+      const id = 'loading-' + Date.now();
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'message assistant';
+      msgDiv.id = id;
 
-        function appendBotLoadingUI(id) {
-            const container = document.getElementById('messages-container');
-            const msgDiv = document.createElement('div');
-            msgDiv.id = id;
-            msgDiv.className = 'flex space-x-3 max-w-4xl mx-auto';
-            
-            msgDiv.innerHTML = `
-                <div class="w-8 h-8 rounded-full red-btn-gradient flex items-center justify-center text-white font-bold text-xs flex-shrink-0 shadow-sm">
-                    <i class="fa-solid fa-robot"></i>
-                </div>
-                <div class="flex flex-col max-w-[85%]">
-                    <div class="flex items-center space-x-2 mb-1">
-                        <span class="text-xs font-bold text-brand-600">MSMI AI</span>
-                        <span class="text-[10px] text-gray-400">Processing...</span>
-                    </div>
-                    <div class="glass-panel p-4 rounded-2xl rounded-tl-none text-gray-800 shadow-sm border border-red-100">
-                        <div class="flex items-center space-x-2 text-brand-500">
-                            <div class="w-2 h-2 rounded-full bg-brand-500 animate-bounce"></div>
-                            <div class="w-2 h-2 rounded-full bg-brand-500 animate-bounce" style="animation-delay: 0.2s"></div>
-                            <div class="w-2 h-2 rounded-full bg-brand-500 animate-bounce" style="animation-delay: 0.4s"></div>
-                            <span class="text-xs text-gray-400 font-medium ml-2">Analyzing response & formatting formulas...</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-            container.appendChild(msgDiv);
-            scrollToBottom();
-        }
+      msgDiv.innerHTML = `
+        <div class="avatar"><i class="fa-solid fa-robot"></i></div>
+        <div class="content">
+          <div class="typing-indicator">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
+      `;
+      chatBox.appendChild(msgDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+      return id;
+    }
 
-        function updateBotMessageUI(id, rawText) {
-            const msgEl = document.getElementById(id);
-            if (!msgEl) return;
+    function removeMessage(id) {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    }
 
-            const contentContainer = msgEl.querySelector('.glass-panel');
-            
-            // Render Markdown
-            let parsedMarkdown = marked.parse(rawText);
+    function formatMarkdown(text) {
+      const renderer = new marked.Renderer();
+      renderer.code = function(code, language) {
+        const validLang = hljs.getLanguage(language) ? language : 'plaintext';
+        const highlighted = hljs.highlight(code, { language: validLang }).value;
+        return `<div class="code-container">
+                  <div class="code-header">
+                    <span>${validLang}</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                  </div>
+                  <pre><code class="hljs ${validLang}">${highlighted}</code></pre>
+                </div>`;
+      };
+      return marked.parse(text, { renderer: renderer });
+    }
 
-            contentContainer.innerHTML = `<div class="prose text-sm max-w-none text-gray-800">${parsedMarkdown}</div>`;
-
-            // Add Copy Button to Code Blocks
-            const codeBlocks = contentContainer.querySelectorAll('pre');
-            codeBlocks.forEach((block) => {
-                const copyBtn = document.createElement('button');
-                copyBtn.className = 'absolute top-2 right-2 px-2.5 py-1 bg-gray-700 hover:bg-gray-600 text-white rounded text-xs font-sans transition-colors flex items-center space-x-1';
-                copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i><span>Copy</span>';
-                copyBtn.onclick = () => {
-                    const code = block.querySelector('code')?.innerText || block.innerText;
-                    navigator.clipboard.writeText(code);
-                    copyBtn.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i><span>Copied!</span>';
-                    setTimeout(() => {
-                        copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i><span>Copy</span>';
-                    }, 2000);
-                };
-                block.style.position = 'relative';
-                block.appendChild(copyBtn);
-            });
-
-            // Render Mathematical Formulas using KaTeX
-            renderMathInElement(contentContainer, {
-                delimiters: [
-                    {left: '$$', right: '$$', display: true},
-                    {left: '$', right: '$', display: false},
-                    {left: '\\(', right: '\\)', display: false},
-                    {left: '\\[', right: '\\]', display: true}
-                ],
-                throwOnError : false
-            });
-
-            scrollToBottom();
-        }
-
-        // Image Handling
-        function triggerImageUpload() {
-            document.getElementById('image-input').click();
-        }
-
-        function handleImageSelect(e) {
-            const file = e.target.files[0];
-            if (file) {
-                if (file.size > 5 * 1024 * 1024) {
-                    showToast('Image size should be less than 5MB', 'error');
-                    return;
-                }
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    currentBase64Image = evt.target.result;
-                    document.getElementById('image-preview').src = currentBase64Image;
-                    document.getElementById('image-preview-container').classList.remove('hidden');
-                    showToast('Image attached successfully', 'success');
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function removeAttachedImage() {
-            currentBase64Image = null;
-            document.getElementById('image-input').value = '';
-            document.getElementById('image-preview').src = '';
-            document.getElementById('image-preview-container').classList.add('hidden');
-        }
-
-        // Input Utilities
-        function handleKeyDown(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleFormSubmit(e);
-            }
-            // Auto-resize textarea height
-            e.target.style.height = 'auto';
-            e.target.style.height = (e.target.scrollHeight) + 'px';
-        }
-
-        function clearInput() {
-            const input = document.getElementById('user-input');
-            input.value = '';
-            input.style.height = 'auto';
-            removeAttachedImage();
-        }
-
-        function selectChip(promptText) {
-            const input = document.getElementById('user-input');
-            input.value = promptText;
-            input.focus();
-            input.style.height = (input.scrollHeight) + 'px';
-        }
-
-        function insertPrompt(text) {
-            const input = document.getElementById('user-input');
-            input.value = text;
-            input.focus();
-        }
-
-        function scrollToBottom() {
-            const container = document.getElementById('messages-container');
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function startNewChat() {
-            chatHistory = [];
-            currentChatId = Date.now();
-            document.getElementById('messages-container').innerHTML = `
-                <div id="welcome-card" class="max-w-3xl mx-auto my-8 text-center space-y-6 py-6 px-4">
-                    <div class="w-20 h-20 mx-auto rounded-3xl red-btn-gradient flex items-center justify-center text-white text-3xl shadow-xl animate-float">
-                        <i class="fa-solid fa-brain"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">How can <span class="red-gradient-text">MSMI AI</span> help you today?</h2>
-                        <p class="text-gray-500 mt-2 max-w-lg mx-auto text-sm">Empowered with ultra-fast multi-modal intelligence, real-time LaTeX expression rendering, high-accuracy coding engines, and scientific reasoning.</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl mx-auto text-left">
-                        <div onclick="selectChip('Solve: \\int_{0}^{\\pi} \\sin^2(x) dx with step-by-step calculus derivation')" class="p-4 rounded-xl border border-gray-100 hover:border-red-200 bg-white hover:bg-red-50/50 shadow-sm transition-all duration-200 cursor-pointer group">
-                            <div class="flex items-center space-x-2 text-brand-600 font-semibold text-sm mb-1">
-                                <i class="fa-solid fa-square-root-variable"></i>
-                                <span>Math & Calculus</span>
-                            </div>
-                            <p class="text-xs text-gray-500 group-hover:text-gray-700">Solve integrals, linear algebra matrices, and complex differential equations.</p>
-                        </div>
-                        <div onclick="selectChip('Write a responsive HTML/CSS/JS script for a real-time data visualizer')" class="p-4 rounded-xl border border-gray-100 hover:border-red-200 bg-white hover:bg-red-50/50 shadow-sm transition-all duration-200 cursor-pointer group">
-                            <div class="flex items-center space-x-2 text-brand-600 font-semibold text-sm mb-1">
-                                <i class="fa-solid fa-code"></i>
-                                <span>Software Development</span>
-                            </div>
-                            <p class="text-xs text-gray-500 group-hover:text-gray-700">Generate clean, commented code with syntax highlighting and instant copy.</p>
-                        </div>
-                        <div onclick="selectChip('Explain Quantum Superposition and Quantum Entanglement in simple terms')" class="p-4 rounded-xl border border-gray-100 hover:border-red-200 bg-white hover:bg-red-50/50 shadow-sm transition-all duration-200 cursor-pointer group">
-                            <div class="flex items-center space-x-2 text-brand-600 font-semibold text-sm mb-1">
-                                <i class="fa-solid fa-atom"></i>
-                                <span>Physics & Chemistry</span>
-                            </div>
-                            <p class="text-xs text-gray-500 group-hover:text-gray-700">Deconstruct complex scientific formulas, chemical reactions, and theories.</p>
-                        </div>
-                        <div onclick="triggerImageUpload()" class="p-4 rounded-xl border border-gray-100 hover:border-red-200 bg-white hover:bg-red-50/50 shadow-sm transition-all duration-200 cursor-pointer group">
-                            <div class="flex items-center space-x-2 text-brand-600 font-semibold text-sm mb-1">
-                                <i class="fa-solid fa-eye"></i>
-                                <span>Vision & OCR Analysis</span>
-                            </div>
-                            <p class="text-xs text-gray-500 group-hover:text-gray-700">Upload diagrams, handwritten notes, charts, or images for immediate analysis.</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-            showToast('Started new session', 'info');
-        }
-
-        function clearCurrentChat() {
-            startNewChat();
-        }
-
-        // Local Storage Session Management
-        function saveCurrentChatSession(title) {
-            let sessions = JSON.parse(localStorage.getItem('msmi_chats') || '[]');
-            const existingIdx = sessions.findIndex(s => s.id === currentChatId);
-            
-            const sessionData = {
-                id: currentChatId,
-                title: title.length > 30 ? title.substring(0, 30) + '...' : title,
-                history: chatHistory,
-                date: new Date().toLocaleDateString()
-            };
-
-            if (existingIdx > -1) {
-                sessions[existingIdx] = sessionData;
-            } else {
-                sessions.unshift(sessionData);
-            }
-
-            localStorage.setItem('msmi_chats', JSON.stringify(sessions.slice(0, 20))); // Keep last 20
-            renderHistoryList();
-        }
-
-        function loadHistoryFromStorage() {
-            renderHistoryList();
-        }
-
-        function renderHistoryList() {
-            const listEl = document.getElementById('chat-history-list');
-            const sessions = JSON.parse(localStorage.getItem('msmi_chats') || '[]');
-
-            if (sessions.length === 0) {
-                listEl.innerHTML = `<p class="text-xs text-gray-400 italic px-2">No past conversations</p>`;
-                return;
-            }
-
-            listEl.innerHTML = sessions.map(s => `
-                <button onclick="loadChatSession(${s.id})" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-gray-700 hover:bg-red-50 hover:text-brand-600 flex items-center justify-between transition-colors truncate">
-                    <span class="truncate"><i class="fa-regular fa-message mr-2 text-gray-400"></i>${escapeHtml(s.title)}</span>
-                </button>
-            `).join('');
-        }
-
-        function loadChatSession(id) {
-            const sessions = JSON.parse(localStorage.getItem('msmi_chats') || '[]');
-            const session = sessions.find(s => s.id === id);
-            if (!session) return;
-
-            currentChatId = session.id;
-            chatHistory = session.history;
-
-            const container = document.getElementById('messages-container');
-            container.innerHTML = '';
-
-            session.history.forEach((msg, idx) => {
-                if (msg.role === 'user') {
-                    appendUserMessageUI({
-                        role: 'user',
-                        text: msg.parts[0].text || '',
-                        timestamp: ''
-                    });
-                } else {
-                    const botId = 'bot-hist-' + idx;
-                    appendBotLoadingUI(botId);
-                    updateBotMessageUI(botId, msg.parts[0].text || '');
-                }
-            });
-
-            if (window.innerWidth < 768) toggleMobileSidebar();
-        }
-
-        // UI Responsive Navigation
-        function toggleMobileSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const backdrop = document.getElementById('sidebar-backdrop');
-            sidebar.classList.toggle('-translate-x-full');
-            backdrop.classList.toggle('hidden');
-        }
-
-        // Helper Functions
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.innerText = text;
-            return div.innerHTML;
-        }
-
-        function showToast(message, type = 'info') {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toast-msg');
-            const toastIcon = document.getElementById('toast-icon');
-
-            toastMsg.innerText = message;
-            if (type === 'error') {
-                toastIcon.className = 'fa-solid fa-circle-exclamation text-brand-500';
-            } else if (type === 'success') {
-                toastIcon.className = 'fa-solid fa-circle-check text-emerald-400';
-            } else {
-                toastIcon.className = 'fa-solid fa-circle-info text-blue-400';
-            }
-
-            toast.classList.remove('translate-y-32', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-32', 'opacity-0');
-            }, 3000);
-        }
-    </script>
+    function copyCode(btn) {
+      const code = btn.parentElement.nextElementSibling.innerText;
+      navigator.clipboard.writeText(code);
+      btn.innerText = 'Copied!';
+      setTimeout(() => btn.innerText = 'Copy', 2000);
+    }
+  </script>
 </body>
 </html>
