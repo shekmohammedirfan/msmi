@@ -86,7 +86,7 @@
         .prose th, .prose td { border: 1px solid #1e293b; padding: 0.5rem 0.75rem; text-align: left; }
         .prose th { background-color: #0d1322; color: #00F0FF; }
 
-        /* KaTeX custom sizing in math blocks */
+        /* KaTeX custom display formatting */
         .katex-display {
             overflow-x: auto;
             overflow-y: hidden;
@@ -96,6 +96,11 @@
             border-radius: 0.5rem;
             border-left: 3px solid #00F0FF;
             padding-left: 0.75rem;
+        }
+
+        .katex {
+            font-size: 1.05em;
+            line-height: 1.2;
         }
 
         #bgCanvas {
@@ -205,8 +210,8 @@
                 <div class="pt-2 px-1">
                     <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">AI Engine Core</label>
                     <select id="modelSelector" class="w-full bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1.5 text-xs text-msmi-cyan focus:outline-none focus:border-msmi-cyan">
-                        <option value="gemini-3-flash-preview">Gemini 3 Flash (Fast Reasoning)</option>
-                        <option value="gemini-3.1-flash-image">Gemini 3.1 Flash Image Studio</option>
+                        <option value="gemini-2.5-flash">Gemini 2.5 Flash (Fast Reasoning & Math)</option>
+                        <option value="gemini-2.5-pro">Gemini 2.5 Pro (Deep Analysis & Coding)</option>
                     </select>
                 </div>
 
@@ -473,8 +478,13 @@
     <script>
         // App State
         let currentMode = 'chat';
-        let apiKey = localStorage.getItem('msmi_api_key') || '';
-        let systemInstruction = localStorage.getItem('msmi_system_prompt') || "You are MSMI AI, an advanced AI system capable of solving complex math equations using LaTeX ($...$ and $$...$$), identifying objects in images, generating code, and providing clear explanations.";
+        
+        // =========================================================================
+        // INSERT YOUR GEMINI API KEY BELOW ON THIS LINE:
+        // =========================================================================
+        let apiKey = 'YOUR_GEMINI_API_KEY_HERE' || localStorage.getItem('msmi_api_key') || '';
+        
+        let systemInstruction = localStorage.getItem('msmi_system_prompt') || "You are MSMI AI, an advanced AI assistant capable of solving complex math equations using LaTeX ($...$ and $$...$$), analyzing code, identifying objects, and generating high-quality structured responses.";
         let currentAttachedFile = null;
         let isGenerating = false;
         let cameraStream = null;
@@ -558,7 +568,7 @@
 
             if (mode === 'image') {
                 presetPanel.classList.remove('hidden');
-                activeStatus.innerText = "Mode: Image Studio (gemini-3.1-flash-image)";
+                activeStatus.innerText = "Mode: Image Studio";
             } else {
                 presetPanel.classList.add('hidden');
                 activeStatus.innerText = `Mode: ${mode.toUpperCase()} Core`;
@@ -708,7 +718,7 @@
             if (isGenerating) return;
 
             const inputEl = document.getElementById('userInput');
-            const prompt = inputEl.value.trim();
+            const prompt = inputEl ? inputEl.value.trim() : '';
 
             if (!prompt && !currentAttachedFile) return;
 
@@ -717,8 +727,10 @@
 
             appendMessage('user', prompt, currentAttachedFile);
 
-            inputEl.value = '';
-            inputEl.style.height = 'auto';
+            if (inputEl) {
+                inputEl.value = '';
+                inputEl.style.height = 'auto';
+            }
             const fileToSend = currentAttachedFile;
             removeAttachedFile();
 
@@ -781,7 +793,8 @@
             showLoading(contentEl, "Solving LaTeX Equations & Derivations...");
 
             try {
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+                const selectedModel = document.getElementById('modelSelector').value;
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`;
 
                 const mathInstruction = "You are a specialized Math & Physics Solver. Solve equations step-by-step. ALWAYS output mathematical expressions using LaTeX syntax. Use inline math $...$ and block math $$...$$. Provide explicit numerical and algebraic steps.";
 
@@ -818,7 +831,8 @@
             showLoading(contentEl, "Analyzing Image Features & Objects...");
 
             try {
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+                const selectedModel = document.getElementById('modelSelector').value;
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`;
 
                 const visionInstruction = "You are MSMI Vision Core. Identify all prominent objects, text, diagrams, structures, or handwritten math in the image. List key objects detected, provide context, and explain everything clearly.";
 
@@ -860,7 +874,8 @@
             showLoading(contentEl, "Grounding with Live Google Search...");
 
             try {
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+                const selectedModel = document.getElementById('modelSelector').value;
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`;
 
                 const payload = {
                     contents: [{ parts: [{ text: prompt }] }],
@@ -907,7 +922,7 @@
                 const aspect = document.getElementById('imageAspect').value;
                 const fullPrompt = `${prompt}, style: ${style}`;
 
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${apiKey}`;
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:generateContent?key=${apiKey}`;
 
                 const payload = {
                     contents: [{ parts: [{ text: fullPrompt }] }],
@@ -955,7 +970,7 @@
 
         function enhancePrompt() {
             const input = document.getElementById('userInput');
-            if (input.value) {
+            if (input && input.value) {
                 input.value = `Masterpiece quality, hyper-detailed, cinematic lighting, 8k resolution: ${input.value}`;
                 showToast("Prompt enhanced with visual details!", "sparkles");
             }
@@ -1038,19 +1053,22 @@
             // Render markdown first
             container.innerHTML = marked.parse(rawText);
 
-            // Render KaTeX Math Equations
-            try {
-                renderMathInElement(container, {
-                    delimiters: [
-                        {left: '$$', right: '$$', display: true},
-                        {left: '$', right: '$', display: false},
-                        {left: '\\(', right: '\\)', display: false},
-                        {left: '\\[', right: '\\]', display: true}
-                    ],
-                    throwOnError: false
-                });
-            } catch (e) {
-                console.error("KaTeX rendering error:", e);
+            // Render KaTeX Math Equations safely
+            if (typeof renderMathInElement === 'function') {
+                try {
+                    renderMathInElement(container, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false},
+                            {left: '\\(', right: '\\)', display: false},
+                            {left: '\\[', right: '\\]', display: true}
+                        ],
+                        throwOnError: false,
+                        errorColor: '#ef4444'
+                    });
+                } catch (e) {
+                    console.error("KaTeX rendering error:", e);
+                }
             }
 
             // Syntax highlighting and code block live sandbox
@@ -1084,7 +1102,8 @@
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 speechRecognition = new SpeechRecognition();
                 speechRecognition.onresult = (e) => {
-                    document.getElementById('userInput').value = e.results[0][0].transcript;
+                    const input = document.getElementById('userInput');
+                    if (input) input.value = e.results[0][0].transcript;
                     toggleVoiceAI(false);
                 };
             }
@@ -1097,11 +1116,11 @@
 
             if (isListening) {
                 speechRecognition.start();
-                wave.classList.remove('hidden');
+                if (wave) wave.classList.remove('hidden');
                 showToast("Voice Assistant Listening...", "mic");
             } else {
                 speechRecognition.stop();
-                wave.classList.add('hidden');
+                if (wave) wave.classList.add('hidden');
             }
         }
 
@@ -1129,6 +1148,7 @@
 
         function loadHistoryUI() {
             const list = document.getElementById('historyList');
+            if (!list) return;
             list.innerHTML = '';
             chatSessions.forEach(s => {
                 const item = document.createElement('div');
@@ -1146,7 +1166,8 @@
         }
 
         function createNewChat() {
-            document.getElementById('messagesContainer').innerHTML = '';
+            const container = document.getElementById('messagesContainer');
+            if (container) container.innerHTML = '';
             showToast("New chat session created", "plus-circle");
         }
 
@@ -1179,17 +1200,15 @@
             }
         }
 
-        function useQuickPrompt(text) {
-            const input = document.getElementById('userInput');
-            input.value = text;
-            input.focus();
-            input.dispatchEvent(new Event('input'));
-        }
-
         function showToast(msg, icon = 'info') {
             const toast = document.getElementById('toast');
-            document.getElementById('toastMsg').innerText = msg;
-            document.getElementById('toastIcon').setAttribute('data-lucide', icon);
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+
+            if (!toast || !toastMsg || !toastIcon) return;
+
+            toastMsg.innerText = msg;
+            toastIcon.setAttribute('data-lucide', icon);
             lucide.createIcons();
 
             toast.classList.remove('translate-y-10', 'opacity-0');
