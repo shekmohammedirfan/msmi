@@ -1,711 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSMI AI - Advanced Intelligence Studio</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Inter & Fira Code -->
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Marked.js for Markdown parsing -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- Highlight.js for Code Highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <!-- KaTeX for High-Speed Math Rendering -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#fff1f2',
-                            100: '#ffe4e6',
-                            500: '#ef4444',
-                            600: '#dc2626',
-                            700: '#b91c1c',
-                            800: '#991b1b',
-                            900: '#7f1d1d',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['Fira Code', 'monospace'],
-                    },
-                    boxShadow: {
-                        'glow-red': '0 0 20px rgba(220, 38, 38, 0.25)',
-                        'glow-red-lg': '0 0 35px rgba(220, 38, 38, 0.4)',
-                    }
-                }
-            }
-        }
-    </script>
-
-    <style>
-        /* Custom animations & fine-grained styling */
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(220, 38, 38, 0.2); }
-            50% { box-shadow: 0 0 30px rgba(220, 38, 38, 0.5); }
-        }
-
-        .animate-glow {
-            animation: pulseGlow 3s infinite ease-in-out;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f8fafc;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #fca5a5;
-            border-radius: 9999px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #dc2626;
-        }
-
-        /* Markdown rendered content fine-tuning */
-        .markdown-body p { margin-bottom: 0.85rem; line-height: 1.65; }
-        .markdown-body h1, .markdown-body h2, .markdown-body h3 { 
-            font-weight: 700; 
-            margin-top: 1.2rem; 
-            margin-bottom: 0.6rem; 
-            color: #991b1b; 
-        }
-        .markdown-body h1 { font-size: 1.5rem; border-bottom: 2px solid #fee2e2; padding-bottom: 0.3rem; }
-        .markdown-body h2 { font-size: 1.25rem; }
-        .markdown-body h3 { font-size: 1.1rem; }
-        .markdown-body ul, .markdown-body ol { margin-left: 1.5rem; margin-bottom: 0.85rem; list-style-type: disc; }
-        .markdown-body ol { list-style-type: decimal; }
-        .markdown-body table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; border: 1px solid #fee2e2; }
-        .markdown-body th, .markdown-body td { border: 1px solid #fecdd3; padding: 0.5rem 0.8rem; text-align: left; }
-        .markdown-body th { background-color: #fff1f2; font-weight: 600; color: #991b1b; }
-        .markdown-body blockquote { border-left: 4px solid #dc2626; padding-left: 1rem; color: #4b5563; font-style: italic; background: #fff1f2; margin: 0.8rem 0; padding-top: 0.4rem; padding-bottom: 0.4rem; border-radius: 0 0.375rem 0.375rem 0; }
-
-        /* KaTeX rendering adjustments */
-        .katex-display { margin: 0.8em 0; overflow-x: auto; overflow-y: hidden; padding: 0.4rem 0; }
-        
-        /* Cursor animation for streaming */
-        .streaming-cursor::after {
-            content: '❚';
-            display: inline-block;
-            margin-left: 2px;
-            color: #dc2626;
-            animation: blink 0.8s infinite;
-        }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MSMI AI</title>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--red:#e52335;--red2:#ff5260;--ink:#202124;--muted:#777b84;--line:#ececef;--bg:#fff;--soft:#fff4f4;--shadow:0 12px 40px #2b10100d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;height:100vh;overflow:hidden}
+button,textarea{font:inherit}button{cursor:pointer}
+.app{display:grid;grid-template-columns:260px 1fr;height:100vh}
+.sidebar{border-right:1px solid var(--line);padding:20px 14px;display:flex;flex-direction:column;gap:18px;background:#fff;z-index:4}
+.brand{display:flex;align-items:center;gap:11px;padding:4px 8px 12px}.logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--red),#ff7981);display:grid;place-items:center;color:white;font-size:20px;font-weight:800;box-shadow:0 7px 18px #e5233530;animation:float 4s ease-in-out infinite}
+.brand-name{font-size:18px;font-weight:800;letter-spacing:-.7px}.brand-sub{font-size:10px;color:var(--muted);letter-spacing:1.5px;margin-top:3px}
+.newchat{border:0;background:var(--soft);color:var(--red);border-radius:13px;padding:13px;text-align:left;font-weight:700;transition:.2s}.newchat:hover{background:#ffe5e7;transform:translateY(-1px)}
+.side-label{font-size:10px;font-weight:800;color:#a0a0a6;letter-spacing:1.4px;padding:3px 10px}.history{overflow:auto;display:flex;flex-direction:column;gap:5px}.history-item{padding:10px;border-radius:10px;border:0;background:transparent;text-align:left;color:#62636b;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.history-item:hover{background:#f8f8fa}
+.side-bottom{margin-top:auto}.model-card{padding:13px;border:1px solid var(--line);border-radius:14px;background:#fff}.model-label{font-size:10px;color:var(--muted);margin-bottom:7px}.model-name{font-size:12px;font-weight:700}.status{display:inline-block;width:7px;height:7px;border-radius:50%;background:#20b875;margin-right:6px;box-shadow:0 0 0 3px #20b8751a}
+.main{display:flex;flex-direction:column;min-width:0;position:relative;background:radial-gradient(ellipse at 50% 0%,#fff7f7 0,transparent 45%),#fff}
+.topbar{height:70px;border-bottom:1px solid #f2f2f4;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:#ffffffd9;backdrop-filter:blur(14px)}
+.top-left{display:flex;align-items:center;gap:12px}.mobile-brand{display:none;font-weight:800}.mode-pill{font-size:11px;border:1px solid #f0d8da;color:#a52a35;background:#fff8f8;border-radius:99px;padding:7px 11px}.top-actions{display:flex;gap:8px}.icon-btn{width:36px;height:36px;border:1px solid var(--line);border-radius:11px;background:white;color:#65666c;display:grid;place-items:center;transition:.2s}.icon-btn:hover{border-color:#f3a7ad;color:var(--red)}
+.content{flex:1;overflow:auto;scroll-behavior:smooth}.welcome{max-width:900px;margin:0 auto;padding:70px 28px 24px;text-align:center;animation:fadeUp .55s ease both}.eyebrow{display:inline-flex;align-items:center;gap:7px;border:1px solid #f5dfe1;background:#fffafa;color:#ba3540;padding:7px 12px;border-radius:99px;font-size:11px;font-weight:700}.spark{color:var(--red)}h1{font-size:clamp(34px,5vw,58px);line-height:1.08;letter-spacing:-2.5px;margin:23px 0 15px;font-weight:800}h1 span{background:linear-gradient(100deg,#e52335,#ff7b83);-webkit-background-clip:text;background-clip:text;color:transparent}.subtitle{max-width:570px;margin:0 auto;color:#7b7d85;font-size:14px;line-height:1.8}
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin:35px auto 0;max-width:780px;text-align:left}.quick{border:1px solid var(--line);border-radius:16px;background:#fff;padding:16px 14px;min-height:112px;box-shadow:0 4px 18px #22200003;transition:.22s}.quick:hover{transform:translateY(-4px);border-color:#f0b5ba;box-shadow:0 12px 25px #e5233510}.quick-icon{width:30px;height:30px;border-radius:10px;background:var(--soft);display:grid;place-items:center;color:var(--red);margin-bottom:12px}.quick b{font-size:12px;display:block;margin-bottom:6px}.quick small{font-size:10px;color:#85868d;line-height:1.5}
+.chat{max-width:900px;margin:0 auto;padding:28px 28px 40px;display:flex;flex-direction:column;gap:24px}.message{display:flex;gap:12px;animation:fadeUp .25s ease both}.avatar{width:32px;height:32px;flex:0 0 32px;border-radius:11px;display:grid;place-items:center;font-weight:800;font-size:12px}.avatar.ai{background:linear-gradient(135deg,var(--red),#ff7981);color:#fff}.avatar.user{background:#f0f0f3;color:#555}.bubble{min-width:0;max-width:100%;flex:1;font-size:14px;line-height:1.78;overflow-wrap:anywhere}.message.user .bubble{background:#fff4f4;border:1px solid #ffe3e5;border-radius:16px;padding:12px 16px;flex:initial;max-width:85%}.message.user{justify-content:flex-end}.message.user .avatar{order:2}.bubble p{margin:0 0 12px}.bubble p:last-child{margin-bottom:0}.bubble h1,.bubble h2,.bubble h3{letter-spacing:-.5px;margin:22px 0 10px;font-size:1.25em}.bubble h1{font-size:1.5em}.bubble ul,.bubble ol{padding-left:24px}.bubble li{margin:5px 0}.bubble pre{background:#191a20;color:#f8f8fa;border-radius:13px;padding:16px;overflow:auto;font-size:12px;line-height:1.6}.bubble code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#f3f3f6;border-radius:5px;padding:2px 5px;font-size:.9em}.bubble pre code{background:transparent;padding:0;color:inherit}.bubble blockquote{border-left:3px solid var(--red);margin:12px 0;padding:4px 14px;color:#666}.bubble table{border-collapse:collapse;width:100%;font-size:12px;display:block;overflow:auto}.bubble th,.bubble td{border:1px solid #e7e7eb;padding:9px;text-align:left}.bubble th{background:#fff4f4}.bubble img{max-width:100%;border-radius:12px}.bubble .katex-display{overflow-x:auto;overflow-y:hidden;padding:8px 0}.answer-actions{display:flex;gap:7px;margin-top:10px}.mini-btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 9px;color:#85858c;font-size:10px}.mini-btn:hover{color:var(--red);border-color:#f2b7bb}
+.typing{display:flex;gap:5px;padding:9px 0}.typing i{width:6px;height:6px;border-radius:50%;background:var(--red);animation:bounce 1s infinite}.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+.composer-wrap{padding:12px 24px 18px;background:linear-gradient(0deg,#fff 70%,#ffffff00)}.composer{max-width:850px;margin:0 auto;border:1px solid #e6e6eb;border-radius:20px;padding:12px 13px 10px;background:#fff;box-shadow:0 8px 35px #24242a0b;transition:.2s}.composer:focus-within{border-color:#f1a1a8;box-shadow:0 8px 35px #e5233510}.composer textarea{border:0;outline:0;resize:none;width:100%;min-height:28px;max-height:170px;font-size:14px;line-height:1.6;color:var(--ink);padding:4px 5px;background:transparent}.composer textarea::placeholder{color:#a4a5ab}.composer-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px}.tools{display:flex;align-items:center;gap:7px}.tool-btn{display:flex;align-items:center;gap:6px;border:1px solid transparent;background:#fafafa;border-radius:10px;padding:8px 10px;color:#6d6e76;font-size:11px}.tool-btn:hover{background:#fff0f1;color:var(--red)}.send{width:38px;height:38px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--red),#f34b59);color:#fff;display:grid;place-items:center;box-shadow:0 5px 13px #e5233530;transition:.2s}.send:hover{transform:translateY(-2px);box-shadow:0 8px 18px #e5233540}.send:disabled{opacity:.45;cursor:not-allowed;transform:none}.disclaimer{text-align:center;color:#a1a1a7;font-size:10px;margin:10px 0 0}.file-preview{display:flex;gap:8px;flex-wrap:wrap;padding:4px 5px 10px}.preview{position:relative;width:60px;height:60px;border:1px solid var(--line);border-radius:10px;overflow:hidden}.preview img{width:100%;height:100%;object-fit:cover}.remove-file{position:absolute;right:2px;top:2px;border:0;border-radius:50%;width:18px;height:18px;background:#111b;color:#fff;font-size:12px}
+.toast{position:fixed;top:82px;left:50%;transform:translate(-50%,-15px);opacity:0;pointer-events:none;background:#24242a;color:#fff;border-radius:12px;padding:11px 15px;font-size:12px;z-index:20;transition:.25s;max-width:90vw}.toast.show{opacity:1;transform:translate(-50%,0)}.error{color:#b91c2c;background:#fff2f3;border:1px solid #ffd8dc;padding:12px 14px;border-radius:12px;font-size:12px}.hidden{display:none!important}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}@keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-5px);opacity:1}}
+@media(max-width:760px){.app{grid-template-columns:1fr}.sidebar{display:none}.mobile-brand{display:block}.topbar{padding:0 16px;height:60px}.welcome{padding:48px 18px 22px}h1{letter-spacing:-1.7px}.quick-grid{grid-template-columns:repeat(2,1fr);gap:9px;margin-top:26px}.quick{min-height:100px;padding:13px}.chat{padding:22px 16px 30px}.composer-wrap{padding:8px 12px 12px}.message{gap:8px}.avatar{width:29px;height:29px;flex-basis:29px}.bubble{font-size:13px}.tool-btn{padding:8px}.tool-btn span{display:none}}
+</style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans h-screen flex flex-col overflow-hidden">
-
-    <!-- Top Navigation Header -->
-    <header class="bg-white border-b border-red-100 shadow-sm px-4 lg:px-8 py-3 flex items-center justify-between z-20">
-        <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 to-brand-500 flex items-center justify-center text-white font-black text-xl shadow-glow-red tracking-wider">
-                M
-            </div>
-            <div>
-                <div class="flex items-center space-x-2">
-                    <h1 class="font-extrabold text-xl tracking-tight text-slate-900">MSMI <span class="text-brand-600">AI</span></h1>
-                    <span class="px-2 py-0.5 text-xs font-semibold bg-red-100 text-brand-700 rounded-full border border-red-200">v3.8 Ultra</span>
-                </div>
-                <p class="text-xs text-slate-500 hidden sm:block">Advanced Mathematical & Analytical Intelligence Studio</p>
-            </div>
-        </div>
-
-        <!-- Action Controls -->
-        <div class="flex items-center space-x-2 sm:space-x-3">
-            <!-- Clear Chat Button -->
-            <button id="clearChatBtn" title="Clear Conversation" class="p-2 text-slate-500 hover:text-brand-600 hover:bg-red-50 rounded-lg transition-colors duration-200">
-                <i class="fa-solid fa-trash-can text-lg"></i>
-            </button>
-
-            <!-- System Prompt / Reasoning Presets -->
-            <select id="modePreset" class="text-xs sm:text-sm bg-slate-100 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all">
-                <option value="math">🧮 Math & Science Expert</option>
-                <option value="code">💻 Software Architect</option>
-                <option value="general">🧠 General Reasoning</option>
-                <option value="concise">⚡ Ultra Fast & Concise</option>
-            </select>
-
-            <!-- Settings Button -->
-            <button id="settingsBtn" class="flex items-center space-x-1.5 px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white rounded-lg font-medium text-xs sm:text-sm shadow-md hover:shadow-glow-red transition-all duration-200">
-                <i class="fa-solid fa-key"></i>
-                <span class="hidden sm:inline">API Settings</span>
-            </button>
-        </div>
-    </header>
-
-    <!-- Main Workspace Area -->
-    <div class="flex-1 flex overflow-hidden relative">
-
-        <!-- Sidebar (History & Quick Prompts) -->
-        <aside id="sidebar" class="w-72 bg-white border-r border-slate-200 flex flex-col transition-all duration-300 transform -translate-x-full md:translate-x-0 absolute md:relative z-10 h-full">
-            <div class="p-4 border-b border-slate-100 flex justify-between items-center">
-                <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Quick Templates</span>
-                <button id="newChatBtn" class="text-xs font-semibold text-brand-600 hover:text-brand-800 flex items-center gap-1">
-                    <i class="fa-solid fa-plus"></i> New Prompt
-                </button>
-            </div>
-            
-            <div class="flex-1 overflow-y-auto p-3 space-y-2">
-                <div class="text-xs font-semibold text-slate-500 px-2 py-1">Mathematics & Logic</div>
-                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
-                    <i class="fa-solid fa-square-root-variable text-brand-500"></i>
-                    Solve & Step Matrix Eigenvalues
-                </button>
-                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
-                    <i class="fa-solid fa-calculator text-brand-500"></i>
-                    Evaluate Integral $\int x^2 \sin(x) dx$
-                </button>
-                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
-                    <i class="fa-solid fa-atom text-brand-500"></i>
-                    Schrödinger Equation Proof
-                </button>
-
-                <div class="text-xs font-semibold text-slate-500 px-2 py-1 mt-4">Code & Engineering</div>
-                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
-                    <i class="fa-code text-brand-500"></i>
-                    Fast Python FFT Algorithm
-                </button>
-                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
-                    <i class="fa-solid fa-microchip text-brand-500"></i>
-                    Optimize C++ Memory Allocation
-                </button>
-            </div>
-
-            <div class="p-3 border-t border-slate-100 bg-slate-50">
-                <div class="flex items-center justify-between text-xs text-slate-500">
-                    <span class="flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Engine Ready
-                    </span>
-                    <span id="keyStatusBadge" class="text-emerald-600 font-medium">Key Active</span>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Sidebar Toggle Overlay (Mobile) -->
-        <button id="mobileSidebarToggle" class="md:hidden absolute bottom-20 right-4 z-30 w-12 h-12 bg-brand-600 text-white rounded-full shadow-lg flex items-center justify-center focus:outline-none">
-            <i class="fa-solid fa-bars text-lg"></i>
-        </button>
-
-        <!-- Main Chat Canvas -->
-        <main class="flex-1 flex flex-col bg-white h-full overflow-hidden">
-            <!-- Messages Container -->
-            <div id="chatMessages" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
-
-                <!-- Welcome Card -->
-                <div id="welcomeBanner" class="max-w-2xl mx-auto my-8 p-6 rounded-2xl bg-gradient-to-b from-red-50 to-white border border-red-100 text-center shadow-sm">
-                    <div class="w-16 h-16 bg-brand-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-black shadow-glow-red animate-glow">
-                        MSMI
-                    </div>
-                    <h2 class="text-2xl font-extrabold text-slate-900 mb-2">Welcome to MSMI AI</h2>
-                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
-                        An ultra-responsive AI agent tailored for complex mathematical calculations, algorithm design, LaTeX rendering, and deep logical analysis. Powered by Gemini 2.5/3.8 Flash capabilities.
-                    </p>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
-                        <div class="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
-                            <i class="fa-solid fa-square-root-variable text-brand-600 mb-1 text-base"></i>
-                            <h3 class="text-xs font-bold text-slate-800">LaTeX Rendering</h3>
-                            <p class="text-xs text-slate-500">Instant formulas with KaTeX engine.</p>
-                        </div>
-                        <div class="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
-                            <i class="fa-solid fa-bolt text-brand-600 mb-1 text-base"></i>
-                            <h3 class="text-xs font-bold text-slate-800">High-Speed Stream</h3>
-                            <p class="text-xs text-slate-500">Real-time typing low latency output.</p>
-                        </div>
-                        <div class="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
-                            <i class="fa-solid fa-shield-halved text-brand-600 mb-1 text-base"></i>
-                            <h3 class="text-xs font-bold text-slate-800">Secure API Key</h3>
-                            <p class="text-xs text-slate-500">Key is kept private in local storage.</p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Input Controls Area -->
-            <div class="border-t border-slate-100 p-3 sm:p-4 bg-white">
-                <div class="max-w-4xl mx-auto relative">
-
-                    <!-- Prompt Textarea Wrapper -->
-                    <div class="relative flex items-end bg-slate-50 border border-slate-200 rounded-2xl shadow-sm focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-red-100 transition-all">
-                        
-                        <textarea id="userInput" rows="1" placeholder="Ask MSMI AI anything (e.g. solve $e^{i\\pi} + 1 = 0$, code a sorting algorithm)..." 
-                            class="w-full pl-4 pr-24 py-3.5 bg-transparent resize-none text-slate-800 text-sm focus:outline-none max-h-48 overflow-y-auto font-sans"></textarea>
-                        
-                        <div class="absolute right-2 bottom-2 flex items-center space-x-1.5 pb-0.5">
-                            <!-- Voice Input Button -->
-                            <button id="voiceBtn" title="Voice Input" class="p-2 text-slate-400 hover:text-brand-600 hover:bg-white rounded-xl transition-all">
-                                <i class="fa-solid fa-microphone text-base"></i>
-                            </button>
-
-                            <!-- Send Button -->
-                            <button id="sendBtn" class="p-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-medium shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
-                                <i class="fa-solid fa-paper-plane text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-between items-center px-2 mt-2 text-[11px] text-slate-400">
-                        <span>Press <kbd class="px-1 py-0.5 bg-slate-100 rounded border text-slate-600 font-mono">Shift + Enter</kbd> for new line</span>
-                        <span id="charCount">0 characters</span>
-                    </div>
-                </div>
-            </div>
-        </main>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="logo">M</div><div><div class="brand-name">MSMI AI</div><div class="brand-sub">THINK BEYOND</div></div></div>
+  <button class="newchat" id="newChat">＋ &nbsp; New conversation</button>
+  <div class="side-label">RECENT CHATS</div><div class="history" id="history"></div>
+  <div class="side-bottom"><div class="model-card"><div class="model-label">POWERED BY GOOGLE AI</div><div class="model-name"><span class="status"></span><span id="modelLabel">Gemini 4 Argon</span></div></div></div>
+</aside>
+<main class="main">
+<header class="topbar"><div class="top-left"><div class="mobile-brand">MSMI AI</div><div class="mode-pill">✦ AI Assistant</div></div><div class="top-actions"><button class="icon-btn" id="clearBtn" title="Clear conversation" aria-label="Clear conversation">↺</button></div></header>
+<section class="content" id="content">
+  <div class="welcome" id="welcome">
+    <div class="eyebrow"><span class="spark">✦</span> YOUR EVERYDAY INTELLIGENCE</div>
+    <h1>Ideas into answers.<br><span>Answers into action.</span></h1>
+    <p class="subtitle">Meet MSMI AI — your assistant for mathematics, science, coding, learning, writing, and understanding images. Ask anything and explore it step by step.</p>
+    <div class="quick-grid">
+      <button class="quick" data-prompt="Solve this mathematics problem step by step. Explain the formula, substitution, calculations, and final answer clearly: "><div class="quick-icon">∑</div><b>Maths & equations</b><small>Clear steps, formulas and LaTeX</small></button>
+      <button class="quick" data-prompt="Explain this science topic clearly, from basics to advanced, with examples and key concepts: "><div class="quick-icon">⚛</div><b>Science explorer</b><small>Physics, chemistry and biology</small></button>
+      <button class="quick" data-prompt="Help me write, debug, and explain this code. Give a complete working solution and explain it for a beginner: "><div class="quick-icon">⌘</div><b>Code assistant</b><small>Build, debug and understand code</small></button>
+      <button class="quick" data-prompt="Analyse the attached image carefully. Describe what is visible, interpret it, and answer any question shown with clear reasoning: "><div class="quick-icon">▧</div><b>Image understanding</b><small>Upload a picture to analyse it</small></button>
     </div>
+  </div>
+  <div class="chat" id="chat"></div>
+</section>
+<div class="composer-wrap">
+  <div class="composer">
+    <div id="filePreview" class="file-preview hidden"></div>
+    <textarea id="prompt" rows="1" placeholder="Ask MSMI AI anything… (Shift + Enter for a new line)"></textarea>
+    <div class="composer-bottom"><div class="tools">
+      <button class="tool-btn" id="attachBtn" title="Attach an image">＋ <span>Image</span></button>
+      <button class="tool-btn" id="mathBtn" title="Insert a maths expression">∑ <span>Maths</span></button>
+      <input id="imageInput" type="file" accept="image/*" multiple hidden>
+    </div><button class="send" id="sendBtn" aria-label="Send message" title="Send">➤</button></div>
+  </div>
+  <div class="disclaimer">MSMI AI can make mistakes. Verify important answers. API usage may incur charges.</div>
+</div>
+</main></div>
+<div class="toast" id="toast"></div>
+<script>
+/* ===================== MSMI AI CONFIGURATION =====================
+   Add your Google AI Studio API key between the quotation marks below.
+   Example: const API_KEY = "your_key_here";
+   SECURITY: a key embedded in HTML can be seen by anyone who gets this file.
+   For private/public deployment, use a backend proxy and restrict the key.
+================================================================== */
+const API_KEY = "AQ.Ab8RN6LT7Nxr9zQY2K9IPP1UqapfsxhMENCNz_jFt_QQgB3oGg";
+const MODEL = "gemini-4-argon"; // Latest model ID listed in Google's model docs when this file was created.
+const SYSTEM_PROMPT = `You are MSMI AI, a capable, friendly, accurate AI tutor and assistant. Help with general knowledge, mathematics, physics, electronics, science, social science, coding, writing, and image analysis. Explain calculations step by step and show equations using readable LaTeX delimiters: inline \\(...\\), display \\[...\\]. Define symbols, show substitutions, keep units, check arithmetic, and clearly state the final answer. For coding, provide complete runnable code, explain assumptions, and help debug errors. For uploaded images, describe visible details and solve what is shown. Be honest about uncertainty and do not claim tools or live web access you do not have. Use headings and tables when useful; adapt to the user's level.`;
+const $ = id => document.getElementById(id);
+let messages = [], attachments = [], busy = false, currentTitle = "New conversation", historyItems = [];
+const historyStoreKey = "msmi_ai_history_v1";
 
-    <!-- API Settings Modal -->
-    <div id="settingsModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-red-100 transform scale-95 transition-transform duration-200">
-            <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
-                <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 rounded-lg bg-red-100 text-brand-700 flex items-center justify-center font-bold">
-                        <i class="fa-solid fa-gear"></i>
-                    </div>
-                    <h3 class="font-bold text-lg text-slate-900">API Configuration</h3>
-                </div>
-                <button id="closeSettingsBtn" class="text-slate-400 hover:text-slate-600 p-1">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
+function toast(msg){const el=$("toast");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),2800)}
+function scrollBottom(){const c=$("content");c.scrollTop=c.scrollHeight}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function renderMarkdown(text){
+  let html = window.marked ? marked.parse(text,{breaks:true,gfm:true}) : escapeHtml(text).replace(/\n/g,"<br>");
+  html = window.DOMPurify ? DOMPurify.sanitize(html) : html;
+  return html.replace(/\\\[([\s\S]+?)\\\]/g,(_,m)=>`<div class="math-block">${escapeHtml(m)}</div>`).replace(/\\\(([\s\S]+?)\\\)/g,(_,m)=>`<span class="math-inline">${escapeHtml(m)}</span>`);
+}
+function typeset(root){
+  if(!window.katex)return;
+  root.querySelectorAll(".math-block,.math-inline").forEach(el=>{
+    const display=el.classList.contains("math-block");
+    try{katex.render(el.textContent,el,{displayMode:display,throwOnError:false,strict:"ignore"});}catch(e){}
+  });
+  // Render common $...$ and $$...$$ maths while leaving code blocks alone.
+  root.querySelectorAll("p,li,td,th").forEach(el=>{
+    if(el.closest("pre")||el.querySelector(".katex"))return;
+    const raw=el.innerHTML;
+    const replaced=raw.replace(/\$\$([\s\S]+?)\$\$|\$([^$\n]+)\$/g,(all,display,inline)=>{
+      const val=display||inline;try{return katex.renderToString(val,{displayMode:!!display,throwOnError:false,strict:"ignore"});}catch(e){return all;}
+    });
+    if(replaced!==raw)el.innerHTML=replaced;
+  });
+}
+function addMessage(role,text,opts={}){
+  const row=document.createElement("div");row.className="message "+(role==="user"?"user":"assistant");
+  const avatar=document.createElement("div");avatar.className="avatar "+(role==="user"?"user":"ai");avatar.textContent=role==="user"?"Y":"M";
+  const bubble=document.createElement("div");bubble.className="bubble";
+  if(opts.loading){bubble.innerHTML='<div class="typing"><i></i><i></i><i></i></div>';}
+  else {bubble.innerHTML=renderMarkdown(text);typeset(bubble);}
+  row.append(avatar,bubble);$("chat").appendChild(row);scrollBottom();return {row,bubble};
+}
+function showWelcome(show){$("welcome").classList.toggle("hidden",!show)}
+function renderHistory(){
+  const el=$("history");el.innerHTML="";
+  historyItems.slice(0,15).forEach((it,i)=>{const b=document.createElement("button");b.className="history-item";b.textContent="◦  "+it.title;b.title=it.title;b.onclick=()=>{messages=it.messages;currentTitle=it.title;$("chat").innerHTML="";showWelcome(false);messages.forEach(m=>addMessage(m.role,m.text));toast("Conversation loaded");};el.appendChild(b);});
+}
+function saveHistory(){
+  if(!messages.length)return;
+  historyItems.unshift({title:currentTitle,messages:messages.slice(-30)});historyItems=historyItems.slice(0,15);
+  try{localStorage.setItem(historyStoreKey,JSON.stringify(historyItems));}catch(e){}
+  renderHistory();
+}
+try{historyItems=JSON.parse(localStorage.getItem(historyStoreKey)||"[]");}catch(e){historyItems=[]}renderHistory();
 
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Google Gemini API Key</label>
-                    <div class="relative">
-                        <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-red-100 font-mono">
-                        <button id="toggleKeyVis" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600 text-xs">
-                            <i class="fa-solid fa-eye"></i>
-                        </button>
-                    </div>
-                    <p class="text-xs text-slate-500 mt-1">Your API Key is kept in local browser memory and never displayed publicly.</p>
-                </div>
+function newChat(){
+  if(messages.length)saveHistory();
+  messages=[];attachments=[];currentTitle="New conversation";$("chat").innerHTML="";showWelcome(true);renderPreviews();$("prompt").value="";autoResize();$("prompt").focus();
+}
+$("newChat").onclick=newChat;$("clearBtn").onclick=newChat;
+document.querySelectorAll(".quick").forEach(b=>b.addEventListener("click",()=>{$("prompt").value=b.dataset.prompt;autoResize();$("prompt").focus();}));
+$("attachBtn").onclick=()=>$("imageInput").click();
+$("imageInput").addEventListener("change",async e=>{
+  const files=[...e.target.files];
+  for(const file of files){
+    if(!file.type.startsWith("image/"))continue;
+    if(file.size>12*1024*1024){toast("Please choose images smaller than 12 MB each.");continue;}
+    try{const data=await fileToBase64(file);attachments.push({name:file.name,mimeType:file.type,data});}catch(err){toast("Could not read that image.");}
+  }
+  renderPreviews();e.target.value="";
+});
+function fileToBase64(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result).split(",")[1]);r.onerror=reject;r.readAsDataURL(file);})}
+function renderPreviews(){
+  const box=$("filePreview");box.innerHTML="";box.classList.toggle("hidden",!attachments.length);
+  attachments.forEach((a,i)=>{const wrap=document.createElement("div");wrap.className="preview";const img=document.createElement("img");img.src=`data:${a.mimeType};base64,${a.data}`;img.alt=a.name;const rm=document.createElement("button");rm.className="remove-file";rm.textContent="×";rm.onclick=()=>{attachments.splice(i,1);renderPreviews()};wrap.append(img,rm);box.appendChild(wrap);});
+}
+$("mathBtn").onclick=()=>{const t=$("prompt");const start=t.selectionStart,end=t.selectionEnd;const val=t.value;t.value=val.slice(0,start)+"\\( x = \\)"+val.slice(end);t.focus();t.selectionStart=t.selectionEnd=start+2;autoResize();};
+function autoResize(){const t=$("prompt");t.style.height="auto";t.style.height=Math.min(t.scrollHeight,170)+"px";}
+$("prompt").addEventListener("input",autoResize);
+$("prompt").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}});
+$("sendBtn").onclick=sendMessage;
 
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Model Selection</label>
-                    <select id="modelSelect" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-brand-500 font-medium">
-                        <option value="gemini-2.5-flash">gemini-2.5-flash (Ultra Fast & Precise)</option>
-                        <option value="gemini-3-flash-preview">gemini-3-flash-preview (Latest Engine)</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Temperature / Creativity</label>
-                    <div class="flex items-center space-x-3">
-                        <input type="range" id="tempInput" min="0" max="1" step="0.1" value="0.2" class="w-full accent-brand-600">
-                        <span id="tempVal" class="text-xs font-mono font-bold text-brand-700 min-w-[2rem]">0.2</span>
-                    </div>
-                    <p class="text-xs text-slate-400">Lower values (0.1 - 0.3) provide standard deterministic mathematical precision.</p>
-                </div>
-            </div>
-
-            <div class="mt-6 flex justify-end space-x-2 border-t border-slate-100 pt-4">
-                <button id="saveSettingsBtn" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl text-sm shadow-md transition-all">
-                    Save Configuration
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- JavaScript Application Core Logic -->
-    <script>
-        /************************************************************************
-         * MSMI AI HARDCODED API KEY PLACEHOLDER
-         * Insert your Google Gemini API key here if desired for immediate use:
-         ************************************************************************/
-        const DEFAULT_API_KEY = "AQ.Ab8RN6LmdRzSJGNXnBP21VSPF5y-Wlw9vD3I0uuPhnnZjXlYIg"; 
-
-        // State Management
-        let appState = {
-            apiKey: localStorage.getItem('MSMI_GEMINI_KEY') || (DEFAULT_API_KEY !== "YOUR_GEMINI_API_KEY_HERE" ? DEFAULT_API_KEY : ''),
-            model: localStorage.getItem('MSMI_MODEL') || 'gemini-2.5-flash',
-            temperature: parseFloat(localStorage.getItem('MSMI_TEMP')) || 0.2,
-            mode: 'math',
-            history: [],
-            isGenerating: false
-        };
-
-        // Initialize Marked.js Options
-        marked.setOptions({
-            highlight: function(code, lang) {
-                const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-                return hljs.highlight(code, { language }).value;
-            },
-            breaks: true
-        });
-
-        // System Prompt Presets
-        const SYSTEM_PROMPTS = {
-            math: `You are MSMI AI, a premier mathematical and analytical computing engine. 
-- Always express mathematical concepts using LaTeX syntax ($...$ for inline and $$...$$ for block equations).
-- Show step-by-step rigorous proofs, calculations, and explanations.
-- Be precise, clean, structured, and logical.`,
-            code: `You are MSMI AI, an expert software architect and algorithm engineer.
-- Provide production-grade, highly efficient code.
-- Always wrap code blocks with appropriate markdown language specifiers.
-- Explain time/space complexity using Big-O notation.`,
-            general: `You are MSMI AI, an advanced AI reasoning system with deep problem-solving skills. Be concise, articulate, and accurate.`,
-            concise: `You are MSMI AI. Provide ultra-concise, rapid direct answers with zero filler text.`
-        };
-
-        // DOM Elements
-        const chatMessages = document.getElementById('chatMessages');
-        const userInput = document.getElementById('userInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const voiceBtn = document.getElementById('voiceBtn');
-        const settingsBtn = document.getElementById('settingsBtn');
-        const settingsModal = document.getElementById('settingsModal');
-        const closeSettingsBtn = document.getElementById('closeSettingsBtn');
-        const saveSettingsBtn = document.getElementById('saveSettingsBtn');
-        const apiKeyInput = document.getElementById('apiKeyInput');
-        const toggleKeyVis = document.getElementById('toggleKeyVis');
-        const modelSelect = document.getElementById('modelSelect');
-        const tempInput = document.getElementById('tempInput');
-        const tempVal = document.getElementById('tempVal');
-        const modePreset = document.getElementById('modePreset');
-        const clearChatBtn = document.getElementById('clearChatBtn');
-        const welcomeBanner = document.getElementById('welcomeBanner');
-        const keyStatusBadge = document.getElementById('keyStatusBadge');
-        const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
-        const sidebar = document.getElementById('sidebar');
-
-        // Initialize Application
-        window.addEventListener('DOMContentLoaded', () => {
-            updateKeyStatusUI();
-            setupEventListeners();
-            autoResizeTextarea();
-        });
-
-        function updateKeyStatusUI() {
-            if (appState.apiKey && appState.apiKey.trim() !== '') {
-                keyStatusBadge.textContent = 'Key Active';
-                keyStatusBadge.className = 'text-emerald-600 font-medium';
-            } else {
-                keyStatusBadge.textContent = 'Key Missing';
-                keyStatusBadge.className = 'text-brand-600 font-medium';
-            }
-        }
-
-        function setupEventListeners() {
-            // Send Click & Enter Key
-            sendBtn.addEventListener('click', handleSendMessage);
-            userInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSendMessage();
-                }
-            });
-
-            // Character Counter & Auto Resize Textarea
-            userInput.addEventListener('input', () => {
-                document.getElementById('charCount').textContent = `${userInput.value.length} characters`;
-                autoResizeTextarea();
-            });
-
-            // Settings Modal Open/Close
-            settingsBtn.addEventListener('click', () => {
-                apiKeyInput.value = appState.apiKey;
-                modelSelect.value = appState.model;
-                tempInput.value = appState.temperature;
-                tempVal.textContent = appState.temperature;
-                settingsModal.classList.remove('hidden');
-                setTimeout(() => {
-                    settingsModal.classList.remove('opacity-0');
-                    settingsModal.firstElementChild.classList.remove('scale-95');
-                }, 10);
-            });
-
-            closeSettingsBtn.addEventListener('click', closeSettings);
-
-            // Toggle Password Visibility for API key input
-            toggleKeyVis.addEventListener('click', () => {
-                const type = apiKeyInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                apiKeyInput.setAttribute('type', type);
-                toggleKeyVis.innerHTML = type === 'password' ? '<i class="fa-solid fa-eye"></i>' : '<i class="fa-solid fa-eye-slash"></i>';
-            });
-
-            // Save Settings
-            saveSettingsBtn.addEventListener('click', () => {
-                appState.apiKey = apiKeyInput.value.trim();
-                appState.model = modelSelect.value;
-                appState.temperature = parseFloat(tempInput.value);
-
-                localStorage.setItem('MSMI_GEMINI_KEY', appState.apiKey);
-                localStorage.setItem('MSMI_MODEL', appState.model);
-                localStorage.setItem('MSMI_TEMP', appState.temperature);
-
-                updateKeyStatusUI();
-                closeSettings();
-            });
-
-            tempInput.addEventListener('input', () => {
-                tempVal.textContent = tempInput.value;
-            });
-
-            // Mode Selector Change
-            modePreset.addEventListener('change', (e) => {
-                appState.mode = e.target.value;
-            });
-
-            // Clear Chat History
-            clearChatBtn.addEventListener('click', () => {
-                appState.history = [];
-                chatMessages.innerHTML = '';
-                if (welcomeBanner) chatMessages.appendChild(welcomeBanner);
-            });
-
-            // Preset Prompt Cards
-            document.querySelectorAll('.preset-prompt').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const text = btn.innerText.trim();
-                    userInput.value = text;
-                    autoResizeTextarea();
-                    handleSendMessage();
-                });
-            });
-
-            // Voice Input setup (Web Speech API)
-            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                const recognition = new SpeechRecognition();
-                recognition.continuous = false;
-                recognition.interimResults = false;
-
-                recognition.onresult = (e) => {
-                    const transcript = e.results[0][0].transcript;
-                    userInput.value += (userInput.value ? ' ' : '') + transcript;
-                    autoResizeTextarea();
-                    voiceBtn.classList.remove('text-brand-600', 'animate-pulse');
-                };
-
-                recognition.onerror = () => {
-                    voiceBtn.classList.remove('text-brand-600', 'animate-pulse');
-                };
-
-                recognition.onend = () => {
-                    voiceBtn.classList.remove('text-brand-600', 'animate-pulse');
-                };
-
-                voiceBtn.addEventListener('click', () => {
-                    voiceBtn.classList.add('text-brand-600', 'animate-pulse');
-                    recognition.start();
-                });
-            } else {
-                voiceBtn.style.display = 'none';
-            }
-
-            // Mobile Sidebar Toggle
-            mobileSidebarToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('-translate-x-full');
-            });
-        }
-
-        function closeSettings() {
-            settingsModal.classList.add('opacity-0');
-            settingsModal.firstElementChild.classList.add('scale-95');
-            setTimeout(() => {
-                settingsModal.classList.add('hidden');
-            }, 200);
-        }
-
-        function autoResizeTextarea() {
-            userInput.style.height = 'auto';
-            userInput.style.height = Math.min(userInput.scrollHeight, 192) + 'px';
-        }
-
-        // Main Messaging Logic
-        async function handleSendMessage() {
-            const text = userInput.value.trim();
-            if (!text || appState.isGenerating) return;
-
-            if (!appState.apiKey) {
-                alert("Please click on 'API Settings' to enter your Google Gemini API Key.");
-                settingsBtn.click();
-                return;
-            }
-
-            // Hide Banner
-            if (welcomeBanner && welcomeBanner.parentNode) {
-                welcomeBanner.remove();
-            }
-
-            // Render User Message
-            appendMessage('user', text);
-            userInput.value = '';
-            autoResizeTextarea();
-
-            // Prepare Assistant Placeholder
-            const botMessageEl = appendMessage('assistant', '');
-            const contentDiv = botMessageEl.querySelector('.markdown-body');
-            contentDiv.classList.add('streaming-cursor');
-
-            appState.isGenerating = true;
-            sendBtn.disabled = true;
-
-            try {
-                // Build Payload with System Instructions and Chat History
-                const payloadContents = [
-                    ...appState.history.map(msg => ({
-                        role: msg.role === 'user' ? 'user' : 'model',
-                        parts: [{ text: msg.content }]
-                    })),
-                    { role: 'user', parts: [{ text: text }] }
-                ];
-
-                const systemInstructionText = SYSTEM_PROMPTS[appState.mode] || SYSTEM_PROMPTS.math;
-                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${appState.model}:streamGenerateContent?alt=sse&key=${appState.apiKey}`;
-
-                const response = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: payloadContents,
-                        systemInstruction: { parts: [{ text: systemInstructionText }] },
-                        generationConfig: {
-                            temperature: appState.temperature,
-                        }
-                    })
-                });
-
-                if (!response.ok) {
-                    const errData = await response.json().catch(() => ({}));
-                    throw new Error(errData.error?.message || `API Error: ${response.status}`);
-                }
-
-                // Process Server-Sent Events (SSE) Streaming
-                const reader = response.body.getReader();
-                const decoder = new TextDecoder();
-                let fullResponseText = '';
-                let buffer = '';
-
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-
-                    buffer += decoder.decode(value, { stream: true });
-                    const lines = buffer.split('\n');
-                    buffer = lines.pop(); // keep partial line in buffer
-
-                    for (const line of lines) {
-                        if (line.startsWith('data: ')) {
-                            const jsonStr = line.replace('data: ', '').trim();
-                            if (jsonStr === '[DONE]') continue;
-                            try {
-                                const parsed = JSON.parse(jsonStr);
-                                const chunkText = parsed.candidates?.[0]?.content?.parts?.[0]?.text || '';
-                                fullResponseText += chunkText;
-
-                                // Update UI dynamically
-                                contentDiv.innerHTML = marked.parse(fullResponseText);
-                                renderMathInElement(contentDiv, {
-                                    delimiters: [
-                                        {left: '$$', right: '$$', display: true},
-                                        {left: '$', right: '$', display: false},
-                                        {left: '\\(', right: '\\)', display: false},
-                                        {left: '\\[', right: '\\]', display: true}
-                                    ],
-                                    throwOnError: false
-                                });
-                                scrollToBottom();
-                            } catch (e) {
-                                // Ignore json parse errors for split chunks
-                            }
-                        }
-                    }
-                }
-
-                contentDiv.classList.remove('streaming-cursor');
-                
-                // Add to internal history
-                appState.history.push({ role: 'user', content: text });
-                appState.history.push({ role: 'assistant', content: fullResponseText });
-
-                // Attach Copy code events
-                attachCopyButtons(botMessageEl);
-
-            } catch (err) {
-                contentDiv.classList.remove('streaming-cursor');
-                contentDiv.innerHTML = `<div class="p-3 bg-red-50 border border-red-200 text-brand-700 rounded-lg font-medium text-xs">
-                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> Error: ${err.message}
-                </div>`;
-            } finally {
-                appState.isGenerating = false;
-                sendBtn.disabled = false;
-            }
-        }
-
-        // DOM Message Renderer
-        function appendMessage(role, content) {
-            const wrapper = document.createElement('div');
-            wrapper.className = `flex gap-3 max-w-4xl mx-auto ${role === 'user' ? 'justify-end' : 'justify-start'}`;
-
-            if (role === 'user') {
-                wrapper.innerHTML = `
-                    <div class="max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 bg-brand-600 text-white shadow-sm font-sans text-sm">
-                        ${escapeHtml(content).replace(/\n/g, '<br>')}
-                    </div>
-                    <div class="w-8 h-8 rounded-xl bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs flex-shrink-0">
-                        You
-                    </div>
-                `;
-            } else {
-                wrapper.innerHTML = `
-                    <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-700 to-brand-500 text-white flex items-center justify-center font-black text-xs shadow-glow-red flex-shrink-0 mt-1">
-                        M
-                    </div>
-                    <div class="max-w-[85%] sm:max-w-[85%] bg-slate-50 border border-red-50 rounded-2xl px-5 py-4 text-slate-800 shadow-sm relative group">
-                        <div class="markdown-body text-sm"></div>
-                    </div>
-                `;
-            }
-
-            chatMessages.appendChild(wrapper);
-            scrollToBottom();
-            return wrapper;
-        }
-
-        function scrollToBottom() {
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function escapeHtml(str) {
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        }
-
-        function attachCopyButtons(container) {
-            const preBlocks = container.querySelectorAll('pre');
-            preBlocks.forEach((pre) => {
-                if (pre.querySelector('.copy-btn')) return;
-                const button = document.createElement('button');
-                button.className = 'copy-btn absolute top-2 right-2 bg-slate-700 text-slate-200 text-xs px-2 py-1 rounded hover:bg-slate-600 transition-colors';
-                button.innerHTML = '<i class="fa-regular fa-copy"></i> Copy';
-                pre.style.position = 'relative';
-                
-                button.addEventListener('click', () => {
-                    const code = pre.querySelector('code')?.innerText || pre.innerText;
-                    navigator.clipboard.writeText(code).then(() => {
-                        button.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> Copied!';
-                        setTimeout(() => {
-                            button.innerHTML = '<i class="fa-regular fa-copy"></i> Copy';
-                        }, 2000);
-                    });
-                });
-                pre.appendChild(button);
-            });
-        }
-    </script>
+async function sendMessage(){
+  if(busy)return;
+  const text=$("prompt").value.trim();
+  if(!text&&!attachments.length)return;
+  if(!API_KEY||API_KEY==="PASTE_YOUR_GOOGLE_API_KEY_HERE"){toast("MSMI AI is not ready yet.");return;}
+  const imgs=attachments.slice();attachments=[];renderPreviews();$("prompt").value="";autoResize();
+  showWelcome(false);if(currentTitle==="New conversation")currentTitle=text.slice(0,48)||"Image analysis";
+  addMessage("user",text+(imgs.length?`\n\n📎 Attached ${imgs.length} image${imgs.length>1?"s":""}.`:""));
+  messages.push({role:"user",text,images:imgs});
+  const loading=addMessage("assistant","",{loading:true});busy=true;$("sendBtn").disabled=true;
+  try{
+    const contents=messages.map(m=>{
+      const parts=[];
+      if(m.text)parts.push({text:m.text});
+      (m.images||[]).forEach(im=>parts.push({inline_data:{mime_type:im.mimeType,data:im.data}}));
+      return {role:m.role==="assistant"?"model":"user",parts};
+    });
+    const body={systemInstruction:{parts:[{text:SYSTEM_PROMPT}]},contents,generationConfig:{temperature:0.65,topP:0.9,maxOutputTokens:8192,responseMimeType:"text/plain"}};
+    const url=`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(MODEL)}:generateContent?key=${encodeURIComponent(API_KEY)}`;
+    const response=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    const data=await response.json();
+    if(!response.ok){
+      let msg=data?.error?.message||`Request failed (${response.status}).`;
+      if(response.status===400&&/API key|key/i.test(msg))msg="The Google API request was rejected. Check the API key in the source line and ensure the key has Gemini API access.";
+      if(response.status===403)msg="Access was denied. Check API-key restrictions, billing/quotas, and whether this model is available to your key.";
+      if(response.status===404)msg="This model or endpoint was not found for your key. Check the current Google model ID and API documentation.";
+      throw new Error(msg);
+    }
+    const answer=(data.candidates||[]).flatMap(c=>c.content?.parts||[]).map(p=>p.text||"").join("\n").trim();
+    if(!answer)throw new Error(data.promptFeedback?.blockReason?`The request was blocked: ${data.promptFeedback.blockReason}.`:"The model returned no text. Try rephrasing your question.");
+    loading.bubble.innerHTML=renderMarkdown(answer);typeset(loading.bubble);
+    const actions=document.createElement("div");actions.className="answer-actions";
+    const copy=document.createElement("button");copy.className="mini-btn";copy.textContent="Copy answer";copy.onclick=async()=>{try{await navigator.clipboard.writeText(answer);toast("Answer copied");}catch(e){toast("Clipboard access unavailable");}};
+    const retry=document.createElement("button");retry.className="mini-btn";retry.textContent="Ask again";retry.onclick=()=>{$("prompt").value=text;autoResize();$("prompt").focus();};
+    actions.append(copy,retry);loading.bubble.appendChild(actions);
+    messages.push({role:"assistant",text:answer});saveHistory();scrollBottom();
+  }catch(err){
+    loading.bubble.innerHTML=`<div class="error"><b>Couldn't complete that request.</b><br>${escapeHtml(err.message||"Network error. Please try again.")}<br><br><span style="color:#777">Check your internet connection, API key permissions, model access, and usage limits. Your key is not displayed in this message.</span></div>`;
+  }finally{busy=false;$("sendBtn").disabled=false;$("prompt").focus();}
+}
+</script>
 </body>
 </html>
