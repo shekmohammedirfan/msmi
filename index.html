@@ -40,7 +40,7 @@ button,textarea{font:inherit}button{cursor:pointer}
   <div class="brand"><div class="logo">M</div><div><div class="brand-name">MSMI AI</div><div class="brand-sub">THINK BEYOND</div></div></div>
   <button class="newchat" id="newChat">＋ &nbsp; New conversation</button>
   <div class="side-label">RECENT CHATS</div><div class="history" id="history"></div>
-  <div class="side-bottom"><div class="model-card"><div class="model-label">POWERED BY GOOGLE AI</div><div class="model-name"><span class="status"></span><span id="modelLabel">Gemini 4 Argon</span></div></div></div>
+  <div class="side-bottom"><div class="model-card"><div class="model-label">POWERED BY GOOGLE AI</div><div class="model-name"><span class="status"></span><span id="modelLabel">Gemini 3.8 Flash</span></div></div></div>
 </aside>
 <main class="main">
 <header class="topbar"><div class="top-left"><div class="mobile-brand">MSMI AI</div><div class="mode-pill">✦ AI Assistant</div></div><div class="top-actions"><button class="icon-btn" id="clearBtn" title="Clear conversation" aria-label="Clear conversation">↺</button></div></header>
@@ -80,7 +80,7 @@ button,textarea{font:inherit}button{cursor:pointer}
    For private/public deployment, use a backend proxy and restrict the key.
 ================================================================== */
 const API_KEY = "AQ.Ab8RN6LT7Nxr9zQY2K9IPP1UqapfsxhMENCNz_jFt_QQgB3oGg";
-const MODEL = "gemini-4-argon"; // Latest model ID listed in Google's model docs when this file was created.
+const MODEL = "gemini-3.8-flash"; // Current fast multimodal model with a listed Free Tier; see Google pricing/rate-limit docs.
 const SYSTEM_PROMPT = `You are MSMI AI, a capable, friendly, accurate AI tutor and assistant. Help with general knowledge, mathematics, physics, electronics, science, social science, coding, writing, and image analysis. Explain calculations step by step and show equations using readable LaTeX delimiters: inline \\(...\\), display \\[...\\]. Define symbols, show substitutions, keep units, check arithmetic, and clearly state the final answer. For coding, provide complete runnable code, explain assumptions, and help debug errors. For uploaded images, describe visible details and solve what is shown. Be honest about uncertainty and do not claim tools or live web access you do not have. Use headings and tables when useful; adapt to the user's level.`;
 const $ = id => document.getElementById(id);
 let messages = [], attachments = [], busy = false, currentTitle = "New conversation", historyItems = [];
@@ -184,6 +184,11 @@ async function sendMessage(){
       if(response.status===400&&/API key|key/i.test(msg))msg="The Google API request was rejected. Check the API key in the source line and ensure the key has Gemini API access.";
       if(response.status===403)msg="Access was denied. Check API-key restrictions, billing/quotas, and whether this model is available to your key.";
       if(response.status===404)msg="This model or endpoint was not found for your key. Check the current Google model ID and API documentation.";
+      if(response.status===429 || /quota exceeded|free_tier_requests|RESOURCE_EXHAUSTED/i.test(msg)) {
+        msg = /limit: 0|free.?tier.*not available|free tier.*0/i.test(msg)
+          ? "This model/project has no available Free Tier quota. MSMI AI now uses Gemini 3.8 Flash, which is listed with Free Tier pricing. If this same error continues, open Google AI Studio → Usage/Rates and confirm the selected API key belongs to the intended project; enable billing if that project has no free quota. Waiting alone will not fix a quota limit of 0."
+          : "Google Gemini rate limit reached. Wait until the reset time shown by Google, reduce request frequency, or check your project's usage and limits at https://ai.dev/rate-limit.";
+      }
       throw new Error(msg);
     }
     const answer=(data.candidates||[]).flatMap(c=>c.content?.parts||[]).map(p=>p.text||"").join("\n").trim();
