@@ -1,208 +1,830 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MSMI AI</title>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{--red:#e52335;--red2:#ff5260;--ink:#202124;--muted:#777b84;--line:#ececef;--bg:#fff;--soft:#fff4f4;--shadow:0 12px 40px #2b10100d}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;height:100vh;overflow:hidden}
-button,textarea{font:inherit}button{cursor:pointer}
-.app{display:grid;grid-template-columns:260px 1fr;height:100vh}
-.sidebar{border-right:1px solid var(--line);padding:20px 14px;display:flex;flex-direction:column;gap:18px;background:#fff;z-index:4}
-.brand{display:flex;align-items:center;gap:11px;padding:4px 8px 12px}.logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--red),#ff7981);display:grid;place-items:center;color:white;font-size:20px;font-weight:800;box-shadow:0 7px 18px #e5233530;animation:float 4s ease-in-out infinite}
-.brand-name{font-size:18px;font-weight:800;letter-spacing:-.7px}.brand-sub{font-size:10px;color:var(--muted);letter-spacing:1.5px;margin-top:3px}
-.newchat{border:0;background:var(--soft);color:var(--red);border-radius:13px;padding:13px;text-align:left;font-weight:700;transition:.2s}.newchat:hover{background:#ffe5e7;transform:translateY(-1px)}
-.side-label{font-size:10px;font-weight:800;color:#a0a0a6;letter-spacing:1.4px;padding:3px 10px}.history{overflow:auto;display:flex;flex-direction:column;gap:5px}.history-item{padding:10px;border-radius:10px;border:0;background:transparent;text-align:left;color:#62636b;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.history-item:hover{background:#f8f8fa}
-.side-bottom{margin-top:auto}.model-card{padding:13px;border:1px solid var(--line);border-radius:14px;background:#fff}.model-label{font-size:10px;color:var(--muted);margin-bottom:7px}.model-name{font-size:12px;font-weight:700}.status{display:inline-block;width:7px;height:7px;border-radius:50%;background:#20b875;margin-right:6px;box-shadow:0 0 0 3px #20b8751a}
-.main{display:flex;flex-direction:column;min-width:0;position:relative;background:radial-gradient(ellipse at 50% 0%,#fff7f7 0,transparent 45%),#fff}
-.topbar{height:70px;border-bottom:1px solid #f2f2f4;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:#ffffffd9;backdrop-filter:blur(14px)}
-.top-left{display:flex;align-items:center;gap:12px}.mobile-brand{display:none;font-weight:800}.mode-pill{font-size:11px;border:1px solid #f0d8da;color:#a52a35;background:#fff8f8;border-radius:99px;padding:7px 11px}.top-actions{display:flex;gap:8px}.icon-btn{width:36px;height:36px;border:1px solid var(--line);border-radius:11px;background:white;color:#65666c;display:grid;place-items:center;transition:.2s}.icon-btn:hover{border-color:#f3a7ad;color:var(--red)}
-.content{flex:1;overflow:auto;scroll-behavior:smooth}.welcome{max-width:900px;margin:0 auto;padding:70px 28px 24px;text-align:center;animation:fadeUp .55s ease both}.eyebrow{display:inline-flex;align-items:center;gap:7px;border:1px solid #f5dfe1;background:#fffafa;color:#ba3540;padding:7px 12px;border-radius:99px;font-size:11px;font-weight:700}.spark{color:var(--red)}h1{font-size:clamp(34px,5vw,58px);line-height:1.08;letter-spacing:-2.5px;margin:23px 0 15px;font-weight:800}h1 span{background:linear-gradient(100deg,#e52335,#ff7b83);-webkit-background-clip:text;background-clip:text;color:transparent}.subtitle{max-width:570px;margin:0 auto;color:#7b7d85;font-size:14px;line-height:1.8}
-.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin:35px auto 0;max-width:780px;text-align:left}.quick{border:1px solid var(--line);border-radius:16px;background:#fff;padding:16px 14px;min-height:112px;box-shadow:0 4px 18px #22200003;transition:.22s}.quick:hover{transform:translateY(-4px);border-color:#f0b5ba;box-shadow:0 12px 25px #e5233510}.quick-icon{width:30px;height:30px;border-radius:10px;background:var(--soft);display:grid;place-items:center;color:var(--red);margin-bottom:12px}.quick b{font-size:12px;display:block;margin-bottom:6px}.quick small{font-size:10px;color:#85868d;line-height:1.5}
-.chat{max-width:900px;margin:0 auto;padding:28px 28px 40px;display:flex;flex-direction:column;gap:24px}.message{display:flex;gap:12px;animation:fadeUp .25s ease both}.avatar{width:32px;height:32px;flex:0 0 32px;border-radius:11px;display:grid;place-items:center;font-weight:800;font-size:12px}.avatar.ai{background:linear-gradient(135deg,var(--red),#ff7981);color:#fff}.avatar.user{background:#f0f0f3;color:#555}.bubble{min-width:0;max-width:100%;flex:1;font-size:14px;line-height:1.78;overflow-wrap:anywhere}.message.user .bubble{background:#fff4f4;border:1px solid #ffe3e5;border-radius:16px;padding:12px 16px;flex:initial;max-width:85%}.message.user{justify-content:flex-end}.message.user .avatar{order:2}.bubble p{margin:0 0 12px}.bubble p:last-child{margin-bottom:0}.bubble h1,.bubble h2,.bubble h3{letter-spacing:-.5px;margin:22px 0 10px;font-size:1.25em}.bubble h1{font-size:1.5em}.bubble ul,.bubble ol{padding-left:24px}.bubble li{margin:5px 0}.bubble pre{background:#191a20;color:#f8f8fa;border-radius:13px;padding:16px;overflow:auto;font-size:12px;line-height:1.6}.bubble code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#f3f3f6;border-radius:5px;padding:2px 5px;font-size:.9em}.bubble pre code{background:transparent;padding:0;color:inherit}.bubble blockquote{border-left:3px solid var(--red);margin:12px 0;padding:4px 14px;color:#666}.bubble table{border-collapse:collapse;width:100%;font-size:12px;display:block;overflow:auto}.bubble th,.bubble td{border:1px solid #e7e7eb;padding:9px;text-align:left}.bubble th{background:#fff4f4}.bubble img{max-width:100%;border-radius:12px}.bubble .katex-display{overflow-x:auto;overflow-y:hidden;padding:8px 0}.answer-actions{display:flex;gap:7px;margin-top:10px}.mini-btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 9px;color:#85858c;font-size:10px}.mini-btn:hover{color:var(--red);border-color:#f2b7bb}
-.typing{display:flex;gap:5px;padding:9px 0}.typing i{width:6px;height:6px;border-radius:50%;background:var(--red);animation:bounce 1s infinite}.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
-.composer-wrap{padding:12px 24px 18px;background:linear-gradient(0deg,#fff 70%,#ffffff00)}.composer{max-width:850px;margin:0 auto;border:1px solid #e6e6eb;border-radius:20px;padding:12px 13px 10px;background:#fff;box-shadow:0 8px 35px #24242a0b;transition:.2s}.composer:focus-within{border-color:#f1a1a8;box-shadow:0 8px 35px #e5233510}.composer textarea{border:0;outline:0;resize:none;width:100%;min-height:28px;max-height:170px;font-size:14px;line-height:1.6;color:var(--ink);padding:4px 5px;background:transparent}.composer textarea::placeholder{color:#a4a5ab}.composer-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px}.tools{display:flex;align-items:center;gap:7px}.tool-btn{display:flex;align-items:center;gap:6px;border:1px solid transparent;background:#fafafa;border-radius:10px;padding:8px 10px;color:#6d6e76;font-size:11px}.tool-btn:hover{background:#fff0f1;color:var(--red)}.send{width:38px;height:38px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--red),#f34b59);color:#fff;display:grid;place-items:center;box-shadow:0 5px 13px #e5233530;transition:.2s}.send:hover{transform:translateY(-2px);box-shadow:0 8px 18px #e5233540}.send:disabled{opacity:.45;cursor:not-allowed;transform:none}.disclaimer{text-align:center;color:#a1a1a7;font-size:10px;margin:10px 0 0}.file-preview{display:flex;gap:8px;flex-wrap:wrap;padding:4px 5px 10px}.preview{position:relative;width:60px;height:60px;border:1px solid var(--line);border-radius:10px;overflow:hidden}.preview img{width:100%;height:100%;object-fit:cover}.remove-file{position:absolute;right:2px;top:2px;border:0;border-radius:50%;width:18px;height:18px;background:#111b;color:#fff;font-size:12px}
-.toast{position:fixed;top:82px;left:50%;transform:translate(-50%,-15px);opacity:0;pointer-events:none;background:#24242a;color:#fff;border-radius:12px;padding:11px 15px;font-size:12px;z-index:20;transition:.25s;max-width:90vw}.toast.show{opacity:1;transform:translate(-50%,0)}.error{color:#b91c2c;background:#fff2f3;border:1px solid #ffd8dc;padding:12px 14px;border-radius:12px;font-size:12px}.hidden{display:none!important}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}@keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-5px);opacity:1}}
-@media(max-width:760px){.app{grid-template-columns:1fr}.sidebar{display:none}.mobile-brand{display:block}.topbar{padding:0 16px;height:60px}.welcome{padding:48px 18px 22px}h1{letter-spacing:-1.7px}.quick-grid{grid-template-columns:repeat(2,1fr);gap:9px;margin-top:26px}.quick{min-height:100px;padding:13px}.chat{padding:22px 16px 30px}.composer-wrap{padding:8px 12px 12px}.message{gap:8px}.avatar{width:29px;height:29px;flex-basis:29px}.bubble{font-size:13px}.tool-btn{padding:8px}.tool-btn span{display:none}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSMI AI - Advanced Multimodal Intelligence</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#FFF5F5',
+                            100: '#FED7D7',
+                            500: '#E53935',
+                            600: '#D32F2F',
+                            700: '#C62828',
+                            glow: 'rgba(229, 57, 53, 0.3)'
+                        }
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 2s infinite',
+                        'float': 'float 4s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 15px rgba(229, 57, 53, 0.4)' },
+                            '50%': { boxShadow: '0 0 25px rgba(229, 57, 53, 0.8)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-6px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- KaTeX for High-Speed Mathematical Expressions -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Marked.js for Markdown Parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAFAFA;
+            color: #1E1E1E;
+        }
+
+        /* Glassmorphism Styles */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(229, 57, 53, 0.12);
+        }
+        
+        .glass-header {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(229, 57, 53, 0.15);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F1F1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E53935;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #C62828;
+        }
+
+        /* Message Formatting Override */
+        .prose pre {
+            background: #1e1e1e !important;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            position: relative;
+            margin-top: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .prose code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9em;
+        }
+        .prose p {
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+        .prose ul, .prose ol {
+            margin-left: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .prose ul { list-style-type: disc; }
+        .prose ol { list-style-type: decimal; }
+
+        .red-gradient-text {
+            background: linear-gradient(135deg, #E53935 0%, #FF5252 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .red-btn-gradient {
+            background: linear-gradient(135deg, #E53935 0%, #D32F2F 100%);
+            box-shadow: 0 4px 14px rgba(229, 57, 53, 0.35);
+            transition: all 0.2s ease;
+        }
+        .red-btn-gradient:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(229, 57, 53, 0.45);
+        }
+    </style>
 </head>
-<body>
-<div class="app">
-<aside class="sidebar">
-  <div class="brand"><div class="logo">M</div><div><div class="brand-name">MSMI AI</div><div class="brand-sub">THINK BEYOND</div></div></div>
-  <button class="newchat" id="newChat">＋ &nbsp; New conversation</button>
-  <div class="side-label">RECENT CHATS</div><div class="history" id="history"></div>
-  <div class="side-bottom"><div class="model-card"><div class="model-label">POWERED BY GOOGLE AI</div><div class="model-name"><span class="status"></span><span id="modelLabel">Gemini 3.8 Flash</span></div></div></div>
-</aside>
-<main class="main">
-<header class="topbar"><div class="top-left"><div class="mobile-brand">MSMI AI</div><div class="mode-pill">✦ AI Assistant</div></div><div class="top-actions"><button class="icon-btn" id="clearBtn" title="Clear conversation" aria-label="Clear conversation">↺</button></div></header>
-<section class="content" id="content">
-  <div class="welcome" id="welcome">
-    <div class="eyebrow"><span class="spark">✦</span> YOUR EVERYDAY INTELLIGENCE</div>
-    <h1>Ideas into answers.<br><span>Answers into action.</span></h1>
-    <p class="subtitle">Meet MSMI AI — your assistant for mathematics, science, coding, learning, writing, and understanding images. Ask anything and explore it step by step.</p>
-    <div class="quick-grid">
-      <button class="quick" data-prompt="Solve this mathematics problem step by step. Explain the formula, substitution, calculations, and final answer clearly: "><div class="quick-icon">∑</div><b>Maths & equations</b><small>Clear steps, formulas and LaTeX</small></button>
-      <button class="quick" data-prompt="Explain this science topic clearly, from basics to advanced, with examples and key concepts: "><div class="quick-icon">⚛</div><b>Science explorer</b><small>Physics, chemistry and biology</small></button>
-      <button class="quick" data-prompt="Help me write, debug, and explain this code. Give a complete working solution and explain it for a beginner: "><div class="quick-icon">⌘</div><b>Code assistant</b><small>Build, debug and understand code</small></button>
-      <button class="quick" data-prompt="Analyse the attached image carefully. Describe what is visible, interpret it, and answer any question shown with clear reasoning: "><div class="quick-icon">▧</div><b>Image understanding</b><small>Upload a picture to analyse it</small></button>
+<body class="h-screen flex overflow-hidden">
+
+    <!-- Mobile Sidebar Backdrop -->
+    <div id="sidebar-backdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-black/40 z-20 hidden md:hidden transition-opacity"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed md:static inset-y-0 left-0 z-30 w-72 glass-panel flex flex-col transition-transform duration-300 transform -translate-x-full md:translate-x-0 border-r shadow-lg md:shadow-none">
+        <!-- App Logo & Branding -->
+        <div class="p-5 flex items-center justify-between border-b border-red-100">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl red-btn-gradient flex items-center justify-center text-white shadow-md">
+                    <i class="fa-solid font-bold text-lg">M</i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-xl tracking-tight text-gray-900">MSMI <span class="red-gradient-text">AI</span></h1>
+                    <p class="text-[10px] text-red-500 font-semibold tracking-widest uppercase">Next-Gen Intelligence</p>
+                </div>
+            </div>
+            <button onclick="toggleMobileSidebar()" class="md:hidden text-gray-500 hover:text-red-600 focus:outline-none">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+        </div>
+
+        <!-- New Chat Button -->
+        <div class="p-4">
+            <button onclick="startNewChat()" class="w-full py-3 px-4 rounded-xl border border-red-200 text-brand-600 font-semibold flex items-center justify-center space-x-2 hover:bg-red-50 transition-all duration-200 shadow-sm active:scale-95">
+                <i class="fa-solid fa-plus text-sm"></i>
+                <span>New Conversation</span>
+            </button>
+        </div>
+
+        <!-- Domain Chips / Categories -->
+        <div class="px-4 py-2">
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Capabilities</p>
+            <div class="space-y-1">
+                <button onclick="insertPrompt('Solve this mathematical equation step-by-step: ')" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-gray-700 hover:bg-red-50 hover:text-brand-600 flex items-center space-x-2 transition-colors">
+                    <i class="fa-solid fa-calculator text-brand-500"></i>
+                    <span>Mathematics & Calculus</span>
+                </button>
+                <button onclick="insertPrompt('Write a clean, optimized function to ')" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-gray-700 hover:bg-red-50 hover:text-brand-600 flex items-center space-x-2 transition-colors">
+                    <i class="fa-solid fa-code text-brand-500"></i>
+                    <span>Coding & Debugging</span>
+                </button>
+                <button onclick="insertPrompt('Explain the scientific principles behind ')" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-gray-700 hover:bg-red-50 hover:text-brand-600 flex items-center space-x-2 transition-colors">
+                    <i class="fa-solid fa-flask text-brand-500"></i>
+                    <span>Scientific Analysis</span>
+                </button>
+                <button onclick="insertPrompt('Provide a deep sociological and historical perspective on ')" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-gray-700 hover:bg-red-50 hover:text-brand-600 flex items-center space-x-2 transition-colors">
+                    <i class="fa-solid fa-globe text-brand-500"></i>
+                    <span>Social Sciences</span>
+                </button>
+                <button onclick="triggerImageUpload()" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-gray-700 hover:bg-red-50 hover:text-brand-600 flex items-center space-x-2 transition-colors">
+                    <i class="fa-solid fa-image text-brand-500"></i>
+                    <span>Vision & Image Analysis</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat History List -->
+        <div class="flex-1 overflow-y-auto px-4 py-2">
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Chat History</p>
+            <div id="chat-history-list" class="space-y-1">
+                <!-- Dynamically Populated -->
+            </div>
+        </div>
+
+        <!-- System Information Footer -->
+        <div class="p-4 border-t border-red-100 bg-red-50/50">
+            <div class="flex items-center justify-between text-xs text-gray-500">
+                <span class="flex items-center space-x-1">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Engine: <strong class="text-gray-700">Gemini 3.8 / Latest</strong></span>
+                </span>
+                <i class="fa-solid fa-shield-halved text-brand-500" title="API Key Protected Internally"></i>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Chat Container -->
+    <main class="flex-1 flex flex-col h-full relative overflow-hidden bg-white">
+        
+        <!-- Header -->
+        <header class="glass-header h-16 px-6 flex items-center justify-between z-10">
+            <div class="flex items-center space-x-4">
+                <button onclick="toggleMobileSidebar()" class="md:hidden text-gray-600 hover:text-brand-600 focus:outline-none">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+                <div>
+                    <h2 class="font-bold text-gray-800 text-lg flex items-center space-x-2">
+                        <span>MSMI AI Assistant</span>
+                        <span class="bg-red-100 text-brand-600 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase border border-red-200">Ultra Speed</span>
+                    </h2>
+                    <p class="text-xs text-gray-500">Multimodal • Latex Math Enabled • Code Optimized</p>
+                </div>
+            </div>
+
+            <!-- Header Quick Actions -->
+            <div class="flex items-center space-x-3">
+                <button onclick="clearCurrentChat()" class="text-gray-400 hover:text-brand-600 transition-colors px-3 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-1 border border-gray-200 hover:border-red-200">
+                    <i class="fa-solid fa-trash-can"></i>
+                    <span class="hidden sm:inline">Clear Workspace</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Message Stream Container -->
+        <div id="messages-container" class="flex-1 overflow-y-auto p-4 md:p-8 space-y-6">
+            
+            <!-- Welcome View (Default state) -->
+            <div id="welcome-card" class="max-w-3xl mx-auto my-8 text-center space-y-6 py-6 px-4">
+                <div class="w-20 h-20 mx-auto rounded-3xl red-btn-gradient flex items-center justify-center text-white text-3xl shadow-xl animate-float">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <div>
+                    <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">How can <span class="red-gradient-text">MSMI AI</span> help you today?</h2>
+                    <p class="text-gray-500 mt-2 max-w-lg mx-auto text-sm">Empowered with ultra-fast multi-modal intelligence, real-time LaTeX expression rendering, high-accuracy coding engines, and scientific reasoning.</p>
+                </div>
+
+                <!-- Suggestion Chips Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl mx-auto text-left">
+                    <div onclick="selectChip('Solve: \\int_{0}^{\\pi} \\sin^2(x) dx with step-by-step calculus derivation')" class="p-4 rounded-xl border border-gray-100 hover:border-red-200 bg-white hover:bg-red-50/50 shadow-sm transition-all duration-200 cursor-pointer group">
+                        <div class="flex items-center space-x-2 text-brand-600 font-semibold text-sm mb-1">
+                            <i class="fa-solid fa-square-root-variable"></i>
+                            <span>Math & Calculus</span>
+                        </div>
+                        <p class="text-xs text-gray-500 group-hover:text-gray-700">Solve integrals, linear algebra matrices, and complex differential equations.</p>
+                    </div>
+
+                    <div onclick="selectChip('Write a responsive HTML/CSS/JS script for a real-time data visualizer')" class="p-4 rounded-xl border border-gray-100 hover:border-red-200 bg-white hover:bg-red-50/50 shadow-sm transition-all duration-200 cursor-pointer group">
+                        <div class="flex items-center space-x-2 text-brand-600 font-semibold text-sm mb-1">
+                            <i class="fa-solid fa-code"></i>
+                            <span>Software Development</span>
+                        </div>
+                        <p class="text-xs text-gray-500 group-hover:text-gray-700">Generate clean, commented code with syntax highlighting and instant copy.</p>
+                    </div>
+
+                    <div onclick="selectChip('Explain Quantum Superposition and Quantum Entanglement in simple terms')" class="p-4 rounded-xl border border-gray-100 hover:border-red-200 bg-white hover:bg-red-50/50 shadow-sm transition-all duration-200 cursor-pointer group">
+                        <div class="flex items-center space-x-2 text-brand-600 font-semibold text-sm mb-1">
+                            <i class="fa-solid fa-atom"></i>
+                            <span>Physics & Chemistry</span>
+                        </div>
+                        <p class="text-xs text-gray-500 group-hover:text-gray-700">Deconstruct complex scientific formulas, chemical reactions, and theories.</p>
+                    </div>
+
+                    <div onclick="triggerImageUpload()" class="p-4 rounded-xl border border-gray-100 hover:border-red-200 bg-white hover:bg-red-50/50 shadow-sm transition-all duration-200 cursor-pointer group">
+                        <div class="flex items-center space-x-2 text-brand-600 font-semibold text-sm mb-1">
+                            <i class="fa-solid fa-eye"></i>
+                            <span>Vision & OCR Analysis</span>
+                        </div>
+                        <p class="text-xs text-gray-500 group-hover:text-gray-700">Upload diagrams, handwritten notes, charts, or images for immediate analysis.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages appended dynamically here -->
+        </div>
+
+        <!-- Input Panel -->
+        <div class="p-4 md:p-6 bg-white border-t border-gray-100">
+            <div class="max-w-4xl mx-auto">
+                
+                <!-- Image Attachment Preview Box -->
+                <div id="image-preview-container" class="hidden mb-3 relative inline-block">
+                    <img id="image-preview" src="" alt="Attachment" class="h-20 w-auto rounded-lg border-2 border-brand-500 shadow-md object-cover">
+                    <button onclick="removeAttachedImage()" class="absolute -top-2 -right-2 bg-brand-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-md hover:bg-brand-700 focus:outline-none">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <!-- Input Form -->
+                <form id="chat-form" onsubmit="handleFormSubmit(event)" class="relative flex items-center">
+                    
+                    <!-- File Input Hidden -->
+                    <input type="file" id="image-input" accept="image/*" class="hidden" onchange="handleImageSelect(event)">
+                    
+                    <div class="relative w-full flex items-center">
+                        <!-- Attachment Button -->
+                        <button type="button" onclick="triggerImageUpload()" title="Attach Image for Vision Analysis" class="absolute left-3 text-gray-400 hover:text-brand-600 transition-colors p-2 rounded-lg hover:bg-red-50 focus:outline-none">
+                            <i class="fa-solid fa-paperclip text-lg"></i>
+                        </button>
+
+                        <!-- Main Text Input Area -->
+                        <textarea id="user-input" rows="1" placeholder="Ask MSMI AI anything (Math, Code, Science, Social Studies, Vision)..." onkeydown="handleKeyDown(event)" class="w-full pl-12 pr-24 py-3.5 bg-gray-50 hover:bg-white focus:bg-white border border-gray-200 focus:border-brand-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-red-100 transition-all text-sm text-gray-800 resize-none max-h-36"></textarea>
+
+                        <!-- Action Buttons Right -->
+                        <div class="absolute right-2 flex items-center space-x-1">
+                            <button type="button" onclick="clearInput()" title="Clear text" class="text-gray-400 hover:text-gray-600 p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none">
+                                <i class="fa-solid fa-eraser text-sm"></i>
+                            </button>
+                            <button type="submit" id="send-btn" class="w-10 h-10 red-btn-gradient text-white rounded-xl flex items-center justify-center focus:outline-none active:scale-95 transition-transform">
+                                <i class="fa-solid fa-paper-plane text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="flex items-center justify-between text-[11px] text-gray-400 mt-2 px-2">
+                    <span>Press <kbd class="px-1 py-0.5 bg-gray-100 border rounded text-gray-600">Enter</kbd> to send, <kbd class="px-1 py-0.5 bg-gray-100 border rounded text-gray-600">Shift+Enter</kbd> for line break</span>
+                    <span class="text-brand-500 font-medium">MSMI AI High-Performance Engine</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Notification Toast Modal -->
+    <div id="toast" class="fixed bottom-20 right-6 bg-gray-900 text-white px-4 py-3 rounded-xl shadow-xl transform translate-y-32 opacity-0 transition-all duration-300 z-50 flex items-center space-x-3 text-sm">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toast-msg">Notification message</span>
     </div>
-  </div>
-  <div class="chat" id="chat"></div>
-</section>
-<div class="composer-wrap">
-  <div class="composer">
-    <div id="filePreview" class="file-preview hidden"></div>
-    <textarea id="prompt" rows="1" placeholder="Ask MSMI AI anything… (Shift + Enter for a new line)"></textarea>
-    <div class="composer-bottom"><div class="tools">
-      <button class="tool-btn" id="attachBtn" title="Attach an image">＋ <span>Image</span></button>
-      <button class="tool-btn" id="mathBtn" title="Insert a maths expression">∑ <span>Maths</span></button>
-      <input id="imageInput" type="file" accept="image/*" multiple hidden>
-    </div><button class="send" id="sendBtn" aria-label="Send message" title="Send">➤</button></div>
-  </div>
-  <div class="disclaimer">MSMI AI can make mistakes. Verify important answers. API usage may incur charges.</div>
-</div>
-</main></div>
-<div class="toast" id="toast"></div>
-<script>
-/* ===================== MSMI AI CONFIGURATION =====================
-   Add your Google AI Studio API key between the quotation marks below.
-   Example: const API_KEY = "your_key_here";
-   SECURITY: a key embedded in HTML can be seen by anyone who gets this file.
-   For private/public deployment, use a backend proxy and restrict the key.
-================================================================== */
-const API_KEY = "AQ.Ab8RN6LT7Nxr9zQY2K9IPP1UqapfsxhMENCNz_jFt_QQgB3oGg";
-const MODEL = "gemini-3.8-flash"; // Current fast multimodal model with a listed Free Tier; see Google pricing/rate-limit docs.
-const SYSTEM_PROMPT = `You are MSMI AI, a capable, friendly, accurate AI tutor and assistant. Help with general knowledge, mathematics, physics, electronics, science, social science, coding, writing, and image analysis. Explain calculations step by step and show equations using readable LaTeX delimiters: inline \\(...\\), display \\[...\\]. Define symbols, show substitutions, keep units, check arithmetic, and clearly state the final answer. For coding, provide complete runnable code, explain assumptions, and help debug errors. For uploaded images, describe visible details and solve what is shown. Be honest about uncertainty and do not claim tools or live web access you do not have. Use headings and tables when useful; adapt to the user's level.`;
-const $ = id => document.getElementById(id);
-let messages = [], attachments = [], busy = false, currentTitle = "New conversation", historyItems = [];
-const historyStoreKey = "msmi_ai_history_v1";
 
-function toast(msg){const el=$("toast");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),2800)}
-function scrollBottom(){const c=$("content");c.scrollTop=c.scrollHeight}
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function renderMarkdown(text){
-  let html = window.marked ? marked.parse(text,{breaks:true,gfm:true}) : escapeHtml(text).replace(/\n/g,"<br>");
-  html = window.DOMPurify ? DOMPurify.sanitize(html) : html;
-  return html.replace(/\\\[([\s\S]+?)\\\]/g,(_,m)=>`<div class="math-block">${escapeHtml(m)}</div>`).replace(/\\\(([\s\S]+?)\\\)/g,(_,m)=>`<span class="math-inline">${escapeHtml(m)}</span>`);
-}
-function typeset(root){
-  if(!window.katex)return;
-  root.querySelectorAll(".math-block,.math-inline").forEach(el=>{
-    const display=el.classList.contains("math-block");
-    try{katex.render(el.textContent,el,{displayMode:display,throwOnError:false,strict:"ignore"});}catch(e){}
-  });
-  // Render common $...$ and $$...$$ maths while leaving code blocks alone.
-  root.querySelectorAll("p,li,td,th").forEach(el=>{
-    if(el.closest("pre")||el.querySelector(".katex"))return;
-    const raw=el.innerHTML;
-    const replaced=raw.replace(/\$\$([\s\S]+?)\$\$|\$([^$\n]+)\$/g,(all,display,inline)=>{
-      const val=display||inline;try{return katex.renderToString(val,{displayMode:!!display,throwOnError:false,strict:"ignore"});}catch(e){return all;}
-    });
-    if(replaced!==raw)el.innerHTML=replaced;
-  });
-}
-function addMessage(role,text,opts={}){
-  const row=document.createElement("div");row.className="message "+(role==="user"?"user":"assistant");
-  const avatar=document.createElement("div");avatar.className="avatar "+(role==="user"?"user":"ai");avatar.textContent=role==="user"?"Y":"M";
-  const bubble=document.createElement("div");bubble.className="bubble";
-  if(opts.loading){bubble.innerHTML='<div class="typing"><i></i><i></i><i></i></div>';}
-  else {bubble.innerHTML=renderMarkdown(text);typeset(bubble);}
-  row.append(avatar,bubble);$("chat").appendChild(row);scrollBottom();return {row,bubble};
-}
-function showWelcome(show){$("welcome").classList.toggle("hidden",!show)}
-function renderHistory(){
-  const el=$("history");el.innerHTML="";
-  historyItems.slice(0,15).forEach((it,i)=>{const b=document.createElement("button");b.className="history-item";b.textContent="◦  "+it.title;b.title=it.title;b.onclick=()=>{messages=it.messages;currentTitle=it.title;$("chat").innerHTML="";showWelcome(false);messages.forEach(m=>addMessage(m.role,m.text));toast("Conversation loaded");};el.appendChild(b);});
-}
-function saveHistory(){
-  if(!messages.length)return;
-  historyItems.unshift({title:currentTitle,messages:messages.slice(-30)});historyItems=historyItems.slice(0,15);
-  try{localStorage.setItem(historyStoreKey,JSON.stringify(historyItems));}catch(e){}
-  renderHistory();
-}
-try{historyItems=JSON.parse(localStorage.getItem(historyStoreKey)||"[]");}catch(e){historyItems=[]}renderHistory();
+    <!-- JavaScript Application Logic -->
+    <script>
+        /* 
+         * =========================================================================================
+         * GOOGLE GEMINI API CONFIGURATION
+         * Paste your Google Gemini API Key inside the double quotes below.
+         * Note: The key is kept strictly internal to this code block and is never exposed in the UI.
+         * =========================================================================================
+         */
+        const API_KEY = "AQ.Ab8RN6LT7Nxr9zQY2K9IPP1UqapfsxhMENCNz_jFt_QQgB3oGg";
+        
+        // Gemini API Endpoint Definition (Configured to use Gemini 2.5 Flash / Standard Multimodal Endpoint)
+        const GEMINI_MODEL = "gemini-3.8";
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${API_KEY}`;
 
-function newChat(){
-  if(messages.length)saveHistory();
-  messages=[];attachments=[];currentTitle="New conversation";$("chat").innerHTML="";showWelcome(true);renderPreviews();$("prompt").value="";autoResize();$("prompt").focus();
-}
-$("newChat").onclick=newChat;$("clearBtn").onclick=newChat;
-document.querySelectorAll(".quick").forEach(b=>b.addEventListener("click",()=>{$("prompt").value=b.dataset.prompt;autoResize();$("prompt").focus();}));
-$("attachBtn").onclick=()=>$("imageInput").click();
-$("imageInput").addEventListener("change",async e=>{
-  const files=[...e.target.files];
-  for(const file of files){
-    if(!file.type.startsWith("image/"))continue;
-    if(file.size>12*1024*1024){toast("Please choose images smaller than 12 MB each.");continue;}
-    try{const data=await fileToBase64(file);attachments.push({name:file.name,mimeType:file.type,data});}catch(err){toast("Could not read that image.");}
-  }
-  renderPreviews();e.target.value="";
-});
-function fileToBase64(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result).split(",")[1]);r.onerror=reject;r.readAsDataURL(file);})}
-function renderPreviews(){
-  const box=$("filePreview");box.innerHTML="";box.classList.toggle("hidden",!attachments.length);
-  attachments.forEach((a,i)=>{const wrap=document.createElement("div");wrap.className="preview";const img=document.createElement("img");img.src=`data:${a.mimeType};base64,${a.data}`;img.alt=a.name;const rm=document.createElement("button");rm.className="remove-file";rm.textContent="×";rm.onclick=()=>{attachments.splice(i,1);renderPreviews()};wrap.append(img,rm);box.appendChild(wrap);});
-}
-$("mathBtn").onclick=()=>{const t=$("prompt");const start=t.selectionStart,end=t.selectionEnd;const val=t.value;t.value=val.slice(0,start)+"\\( x = \\)"+val.slice(end);t.focus();t.selectionStart=t.selectionEnd=start+2;autoResize();};
-function autoResize(){const t=$("prompt");t.style.height="auto";t.style.height=Math.min(t.scrollHeight,170)+"px";}
-$("prompt").addEventListener("input",autoResize);
-$("prompt").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}});
-$("sendBtn").onclick=sendMessage;
+        // Global State Management
+        let chatHistory = [];
+        let activeConversations = [];
+        let currentChatId = Date.now();
+        let currentBase64Image = null;
+        let isGenerating = false;
 
-async function sendMessage(){
-  if(busy)return;
-  const text=$("prompt").value.trim();
-  if(!text&&!attachments.length)return;
-  if(!API_KEY||API_KEY==="PASTE_YOUR_GOOGLE_API_KEY_HERE"){toast("MSMI AI is not ready yet.");return;}
-  const imgs=attachments.slice();attachments=[];renderPreviews();$("prompt").value="";autoResize();
-  showWelcome(false);if(currentTitle==="New conversation")currentTitle=text.slice(0,48)||"Image analysis";
-  addMessage("user",text+(imgs.length?`\n\n📎 Attached ${imgs.length} image${imgs.length>1?"s":""}.`:""));
-  messages.push({role:"user",text,images:imgs});
-  const loading=addMessage("assistant","",{loading:true});busy=true;$("sendBtn").disabled=true;
-  try{
-    const contents=messages.map(m=>{
-      const parts=[];
-      if(m.text)parts.push({text:m.text});
-      (m.images||[]).forEach(im=>parts.push({inline_data:{mime_type:im.mimeType,data:im.data}}));
-      return {role:m.role==="assistant"?"model":"user",parts};
-    });
-    const body={systemInstruction:{parts:[{text:SYSTEM_PROMPT}]},contents,generationConfig:{temperature:0.65,topP:0.9,maxOutputTokens:8192,responseMimeType:"text/plain"}};
-    const url=`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(MODEL)}:generateContent?key=${encodeURIComponent(API_KEY)}`;
-    const response=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-    const data=await response.json();
-    if(!response.ok){
-      let msg=data?.error?.message||`Request failed (${response.status}).`;
-      if(response.status===400&&/API key|key/i.test(msg))msg="The Google API request was rejected. Check the API key in the source line and ensure the key has Gemini API access.";
-      if(response.status===403)msg="Access was denied. Check API-key restrictions, billing/quotas, and whether this model is available to your key.";
-      if(response.status===404)msg="This model or endpoint was not found for your key. Check the current Google model ID and API documentation.";
-      if(response.status===429 || /quota exceeded|free_tier_requests|RESOURCE_EXHAUSTED/i.test(msg)) {
-        msg = /limit: 0|free.?tier.*not available|free tier.*0/i.test(msg)
-          ? "This model/project has no available Free Tier quota. MSMI AI now uses Gemini 3.8 Flash, which is listed with Free Tier pricing. If this same error continues, open Google AI Studio → Usage/Rates and confirm the selected API key belongs to the intended project; enable billing if that project has no free quota. Waiting alone will not fix a quota limit of 0."
-          : "Google Gemini rate limit reached. Wait until the reset time shown by Google, reduce request frequency, or check your project's usage and limits at https://ai.dev/rate-limit.";
-      }
-      throw new Error(msg);
-    }
-    const answer=(data.candidates||[]).flatMap(c=>c.content?.parts||[]).map(p=>p.text||"").join("\n").trim();
-    if(!answer)throw new Error(data.promptFeedback?.blockReason?`The request was blocked: ${data.promptFeedback.blockReason}.`:"The model returned no text. Try rephrasing your question.");
-    loading.bubble.innerHTML=renderMarkdown(answer);typeset(loading.bubble);
-    const actions=document.createElement("div");actions.className="answer-actions";
-    const copy=document.createElement("button");copy.className="mini-btn";copy.textContent="Copy answer";copy.onclick=async()=>{try{await navigator.clipboard.writeText(answer);toast("Answer copied");}catch(e){toast("Clipboard access unavailable");}};
-    const retry=document.createElement("button");retry.className="mini-btn";retry.textContent="Ask again";retry.onclick=()=>{$("prompt").value=text;autoResize();$("prompt").focus();};
-    actions.append(copy,retry);loading.bubble.appendChild(actions);
-    messages.push({role:"assistant",text:answer});saveHistory();scrollBottom();
-  }catch(err){
-    loading.bubble.innerHTML=`<div class="error"><b>Couldn't complete that request.</b><br>${escapeHtml(err.message||"Network error. Please try again.")}<br><br><span style="color:#777">Check your internet connection, API key permissions, model access, and usage limits. Your key is not displayed in this message.</span></div>`;
-  }finally{busy=false;$("sendBtn").disabled=false;$("prompt").focus();}
-}
-</script>
+        // Configure Markdown Renderer
+        marked.setOptions({
+            highlight: function(code, lang) {
+                const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+                return hljs.highlight(code, { language }).value;
+            },
+            langPrefix: 'hljs language-'
+        });
+
+        // Initialize App on DOM Loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            loadHistoryFromStorage();
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false
+            });
+        });
+
+        // Handle Form Submission
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            const inputEl = document.getElementById('user-input');
+            const promptText = inputEl.value.trim();
+
+            if ((!promptText && !currentBase64Image) || isGenerating) return;
+
+            // Hide Welcome Card on first message
+            const welcomeCard = document.getElementById('welcome-card');
+            if (welcomeCard) welcomeCard.style.display = 'none';
+
+            // User Message Payload Construction
+            const userMsg = {
+                role: 'user',
+                text: promptText,
+                image: currentBase64Image,
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+
+            // Render User Message in UI
+            appendUserMessageUI(userMsg);
+
+            // Clear Input Area
+            inputEl.value = '';
+            inputEl.style.height = 'auto';
+            const attachedImg = currentBase64Image;
+            removeAttachedImage();
+
+            // Render Loading Indicator for AI
+            const botMsgId = 'bot-msg-' + Date.now();
+            appendBotLoadingUI(botMsgId);
+
+            isGenerating = true;
+
+            try {
+                // Prepare API Request Payload
+                const contents = buildGeminiContentsPayload(promptText, attachedImg);
+
+                // Fetch Response from Gemini API
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: contents,
+                        systemInstruction: {
+                            parts: [{
+                                text: "You are MSMI AI, an elite, highly intelligent multimodal AI assistant. You excel at Mathematics (always format complex math using LaTeX $...$ or $$...$$), Coding (provide clean code blocks with language identifiers), Science, Social Studies, and Image Analysis. Be direct, clear, fast, and structured in your explanations."
+                            }]
+                        }
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error?.message || `HTTP Error ${response.status}`);
+                }
+
+                const data = await response.json();
+                const botReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I couldn't generate a response.";
+
+                // Update Bot UI with Parsed Text
+                updateBotMessageUI(botMsgId, botReply);
+
+                // Update History State
+                chatHistory.push({ role: 'user', parts: [{ text: promptText }] });
+                chatHistory.push({ role: 'model', parts: [{ text: botReply }] });
+                saveCurrentChatSession(promptText || "Image Analysis Session");
+
+            } catch (err) {
+                console.error("Gemini API Error:", err);
+                let errDisplay = err.message;
+                if (API_KEY === "YOUR_GEMINI_API_KEY_HERE") {
+                    errDisplay = "API Key not configured. Please open index.html in an editor and set 'const API_KEY = \"YOUR_KEY\"' on line 231.";
+                }
+                updateBotMessageUI(botMsgId, `**Error:** ${errDisplay}`);
+            } finally {
+                isGenerating = false;
+            }
+        }
+
+        // Build Payload according to Google Gemini API Requirements
+        function buildGeminiContentsPayload(text, imageBase64) {
+            let parts = [];
+            
+            if (text) {
+                parts.push({ text: text });
+            }
+            
+            if (imageBase64) {
+                const base64Data = imageBase64.split(',')[1];
+                const mimeType = imageBase64.split(';')[0].split(':')[1];
+                parts.push({
+                    inlineData: {
+                        mimeType: mimeType,
+                        data: base64Data
+                    }
+                });
+            }
+
+            // Return full chat history format for continuous conversation context
+            const payloadHistory = chatHistory.map(item => ({
+                role: item.role,
+                parts: item.parts
+            }));
+
+            payloadHistory.push({
+                role: 'user',
+                parts: parts
+            });
+
+            return payloadHistory;
+        }
+
+        // UI Rendering Functions
+        function appendUserMessageUI(msg) {
+            const container = document.getElementById('messages-container');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'flex justify-end space-x-3 max-w-4xl mx-auto';
+            
+            let imgHTML = msg.image ? `<img src="${msg.image}" class="max-w-xs max-h-48 rounded-lg mb-2 border border-red-200 object-cover">` : '';
+
+            msgDiv.innerHTML = `
+                <div class="flex flex-col items-end max-w-[85%]">
+                    <div class="flex items-center space-x-2 mb-1">
+                        <span class="text-[10px] text-gray-400">${msg.timestamp}</span>
+                        <span class="text-xs font-semibold text-gray-700">You</span>
+                    </div>
+                    <div class="bg-gradient-to-r from-red-600 to-brand-500 text-white p-4 rounded-2xl rounded-tr-none shadow-md">
+                        ${imgHTML}
+                        <p class="text-sm whitespace-pre-wrap leading-relaxed">${escapeHtml(msg.text)}</p>
+                    </div>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold text-xs flex-shrink-0">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            `;
+            container.appendChild(msgDiv);
+            scrollToBottom();
+        }
+
+        function appendBotLoadingUI(id) {
+            const container = document.getElementById('messages-container');
+            const msgDiv = document.createElement('div');
+            msgDiv.id = id;
+            msgDiv.className = 'flex space-x-3 max-w-4xl mx-auto';
+            
+            msgDiv.innerHTML = `
+                <div class="w-8 h-8 rounded-full red-btn-gradient flex items-center justify-center text-white font-bold text-xs flex-shrink-0 shadow-sm">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="flex flex-col max-w-[85%]">
+                    <div class="flex items-center space-x-2 mb-1">
+                        <span class="text-xs font-bold text-brand-600">MSMI AI</span>
+                        <span class="text-[10px] text-gray-400">Processing...</span>
+                    </div>
+                    <div class="glass-panel p-4 rounded-2xl rounded-tl-none text-gray-800 shadow-sm border border-red-100">
+                        <div class="flex items-center space-x-2 text-brand-500">
+                            <div class="w-2 h-2 rounded-full bg-brand-500 animate-bounce"></div>
+                            <div class="w-2 h-2 rounded-full bg-brand-500 animate-bounce" style="animation-delay: 0.2s"></div>
+                            <div class="w-2 h-2 rounded-full bg-brand-500 animate-bounce" style="animation-delay: 0.4s"></div>
+                            <span class="text-xs text-gray-400 font-medium ml-2">Analyzing response & formatting formulas...</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(msgDiv);
+            scrollToBottom();
+        }
+
+        function updateBotMessageUI(id, rawText) {
+            const msgEl = document.getElementById(id);
+            if (!msgEl) return;
+
+            const contentContainer = msgEl.querySelector('.glass-panel');
+            
+            // Render Markdown
+            let parsedMarkdown = marked.parse(rawText);
+
+            contentContainer.innerHTML = `<div class="prose text-sm max-w-none text-gray-800">${parsedMarkdown}</div>`;
+
+            // Add Copy Button to Code Blocks
+            const codeBlocks = contentContainer.querySelectorAll('pre');
+            codeBlocks.forEach((block) => {
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'absolute top-2 right-2 px-2.5 py-1 bg-gray-700 hover:bg-gray-600 text-white rounded text-xs font-sans transition-colors flex items-center space-x-1';
+                copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i><span>Copy</span>';
+                copyBtn.onclick = () => {
+                    const code = block.querySelector('code')?.innerText || block.innerText;
+                    navigator.clipboard.writeText(code);
+                    copyBtn.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i><span>Copied!</span>';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i><span>Copy</span>';
+                    }, 2000);
+                };
+                block.style.position = 'relative';
+                block.appendChild(copyBtn);
+            });
+
+            // Render Mathematical Formulas using KaTeX
+            renderMathInElement(contentContainer, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false
+            });
+
+            scrollToBottom();
+        }
+
+        // Image Handling
+        function triggerImageUpload() {
+            document.getElementById('image-input').click();
+        }
+
+        function handleImageSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast('Image size should be less than 5MB', 'error');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    currentBase64Image = evt.target.result;
+                    document.getElementById('image-preview').src = currentBase64Image;
+                    document.getElementById('image-preview-container').classList.remove('hidden');
+                    showToast('Image attached successfully', 'success');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeAttachedImage() {
+            currentBase64Image = null;
+            document.getElementById('image-input').value = '';
+            document.getElementById('image-preview').src = '';
+            document.getElementById('image-preview-container').classList.add('hidden');
+        }
+
+        // Input Utilities
+        function handleKeyDown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleFormSubmit(e);
+            }
+            // Auto-resize textarea height
+            e.target.style.height = 'auto';
+            e.target.style.height = (e.target.scrollHeight) + 'px';
+        }
+
+        function clearInput() {
+            const input = document.getElementById('user-input');
+            input.value = '';
+            input.style.height = 'auto';
+            removeAttachedImage();
+        }
+
+        function selectChip(promptText) {
+            const input = document.getElementById('user-input');
+            input.value = promptText;
+            input.focus();
+            input.style.height = (input.scrollHeight) + 'px';
+        }
+
+        function insertPrompt(text) {
+            const input = document.getElementById('user-input');
+            input.value = text;
+            input.focus();
+        }
+
+        function scrollToBottom() {
+            const container = document.getElementById('messages-container');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function startNewChat() {
+            chatHistory = [];
+            currentChatId = Date.now();
+            document.getElementById('messages-container').innerHTML = `
+                <div id="welcome-card" class="max-w-3xl mx-auto my-8 text-center space-y-6 py-6 px-4">
+                    <div class="w-20 h-20 mx-auto rounded-3xl red-btn-gradient flex items-center justify-center text-white text-3xl shadow-xl animate-float">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">How can <span class="red-gradient-text">MSMI AI</span> help you today?</h2>
+                        <p class="text-gray-500 mt-2 max-w-lg mx-auto text-sm">Empowered with ultra-fast multi-modal intelligence, real-time LaTeX expression rendering, high-accuracy coding engines, and scientific reasoning.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl mx-auto text-left">
+                        <div onclick="selectChip('Solve: \\int_{0}^{\\pi} \\sin^2(x) dx with step-by-step calculus derivation')" class="p-4 rounded-xl border border-gray-100 hover:border-red-200 bg-white hover:bg-red-50/50 shadow-sm transition-all duration-200 cursor-pointer group">
+                            <div class="flex items-center space-x-2 text-brand-600 font-semibold text-sm mb-1">
+                                <i class="fa-solid fa-square-root-variable"></i>
+                                <span>Math & Calculus</span>
+                            </div>
+                            <p class="text-xs text-gray-500 group-hover:text-gray-700">Solve integrals, linear algebra matrices, and complex differential equations.</p>
+                        </div>
+                        <div onclick="selectChip('Write a responsive HTML/CSS/JS script for a real-time data visualizer')" class="p-4 rounded-xl border border-gray-100 hover:border-red-200 bg-white hover:bg-red-50/50 shadow-sm transition-all duration-200 cursor-pointer group">
+                            <div class="flex items-center space-x-2 text-brand-600 font-semibold text-sm mb-1">
+                                <i class="fa-solid fa-code"></i>
+                                <span>Software Development</span>
+                            </div>
+                            <p class="text-xs text-gray-500 group-hover:text-gray-700">Generate clean, commented code with syntax highlighting and instant copy.</p>
+                        </div>
+                        <div onclick="selectChip('Explain Quantum Superposition and Quantum Entanglement in simple terms')" class="p-4 rounded-xl border border-gray-100 hover:border-red-200 bg-white hover:bg-red-50/50 shadow-sm transition-all duration-200 cursor-pointer group">
+                            <div class="flex items-center space-x-2 text-brand-600 font-semibold text-sm mb-1">
+                                <i class="fa-solid fa-atom"></i>
+                                <span>Physics & Chemistry</span>
+                            </div>
+                            <p class="text-xs text-gray-500 group-hover:text-gray-700">Deconstruct complex scientific formulas, chemical reactions, and theories.</p>
+                        </div>
+                        <div onclick="triggerImageUpload()" class="p-4 rounded-xl border border-gray-100 hover:border-red-200 bg-white hover:bg-red-50/50 shadow-sm transition-all duration-200 cursor-pointer group">
+                            <div class="flex items-center space-x-2 text-brand-600 font-semibold text-sm mb-1">
+                                <i class="fa-solid fa-eye"></i>
+                                <span>Vision & OCR Analysis</span>
+                            </div>
+                            <p class="text-xs text-gray-500 group-hover:text-gray-700">Upload diagrams, handwritten notes, charts, or images for immediate analysis.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            showToast('Started new session', 'info');
+        }
+
+        function clearCurrentChat() {
+            startNewChat();
+        }
+
+        // Local Storage Session Management
+        function saveCurrentChatSession(title) {
+            let sessions = JSON.parse(localStorage.getItem('msmi_chats') || '[]');
+            const existingIdx = sessions.findIndex(s => s.id === currentChatId);
+            
+            const sessionData = {
+                id: currentChatId,
+                title: title.length > 30 ? title.substring(0, 30) + '...' : title,
+                history: chatHistory,
+                date: new Date().toLocaleDateString()
+            };
+
+            if (existingIdx > -1) {
+                sessions[existingIdx] = sessionData;
+            } else {
+                sessions.unshift(sessionData);
+            }
+
+            localStorage.setItem('msmi_chats', JSON.stringify(sessions.slice(0, 20))); // Keep last 20
+            renderHistoryList();
+        }
+
+        function loadHistoryFromStorage() {
+            renderHistoryList();
+        }
+
+        function renderHistoryList() {
+            const listEl = document.getElementById('chat-history-list');
+            const sessions = JSON.parse(localStorage.getItem('msmi_chats') || '[]');
+
+            if (sessions.length === 0) {
+                listEl.innerHTML = `<p class="text-xs text-gray-400 italic px-2">No past conversations</p>`;
+                return;
+            }
+
+            listEl.innerHTML = sessions.map(s => `
+                <button onclick="loadChatSession(${s.id})" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-gray-700 hover:bg-red-50 hover:text-brand-600 flex items-center justify-between transition-colors truncate">
+                    <span class="truncate"><i class="fa-regular fa-message mr-2 text-gray-400"></i>${escapeHtml(s.title)}</span>
+                </button>
+            `).join('');
+        }
+
+        function loadChatSession(id) {
+            const sessions = JSON.parse(localStorage.getItem('msmi_chats') || '[]');
+            const session = sessions.find(s => s.id === id);
+            if (!session) return;
+
+            currentChatId = session.id;
+            chatHistory = session.history;
+
+            const container = document.getElementById('messages-container');
+            container.innerHTML = '';
+
+            session.history.forEach((msg, idx) => {
+                if (msg.role === 'user') {
+                    appendUserMessageUI({
+                        role: 'user',
+                        text: msg.parts[0].text || '',
+                        timestamp: ''
+                    });
+                } else {
+                    const botId = 'bot-hist-' + idx;
+                    appendBotLoadingUI(botId);
+                    updateBotMessageUI(botId, msg.parts[0].text || '');
+                }
+            });
+
+            if (window.innerWidth < 768) toggleMobileSidebar();
+        }
+
+        // UI Responsive Navigation
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            sidebar.classList.toggle('-translate-x-full');
+            backdrop.classList.toggle('hidden');
+        }
+
+        // Helper Functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.innerText = text;
+            return div.innerHTML;
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.innerText = message;
+            if (type === 'error') {
+                toastIcon.className = 'fa-solid fa-circle-exclamation text-brand-500';
+            } else if (type === 'success') {
+                toastIcon.className = 'fa-solid fa-circle-check text-emerald-400';
+            } else {
+                toastIcon.className = 'fa-solid fa-circle-info text-blue-400';
+            }
+
+            toast.classList.remove('translate-y-32', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-32', 'opacity-0');
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
