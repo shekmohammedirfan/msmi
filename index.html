@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-50 text-slate-800">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSMI credentials</title>
-
-    <!-- Tailwind CSS CDN -->
+    <title>MSMI AI - Pro Suite (Math, Vision & Image Studio)</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -14,1163 +14,1186 @@
                 extend: {
                     colors: {
                         msmi: {
-                            50: '#fff1f2',
-                            100: '#ffe4e6',
-                            200: '#fecdd3',
-                            300: '#fda4af',
-                            400: '#fb7185',
-                            500: '#f43f5e',
-                            600: '#e11d48',
-                            700: '#be123c',
-                            800: '#9f1239',
-                            900: '#881337',
-                            950: '#4c0519'
-                        },
-                        accent: {
-                            gold: '#f59e0b',
-                            emerald: '#10b981',
-                            cyan: '#06b6d4',
-                            indigo: '#6366f1',
-                            purple: '#8b5cf6'
+                            cyan: '#00F0FF',
+                            purple: '#7000FF',
+                            pink: '#FF007A',
+                            dark: '#060911',
+                            card: '#0D1322',
+                            border: '#1E293B',
+                            glow: 'rgba(0, 240, 255, 0.15)'
                         }
                     },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace']
+                    boxShadow: {
+                        'cyan-glow': '0 0 20px rgba(0, 240, 255, 0.35)',
+                        'purple-glow': '0 0 20px rgba(112, 0, 255, 0.35)',
                     }
                 }
             }
         }
     </script>
 
-    <!-- Supabase JS Client CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Canvas Confetti Library -->
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Marked.js -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tokyo-night-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <!-- KaTeX for LaTeX Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    
+    <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #fff5f5 0%, #fee2e2 50%, #fff1f2 100%);
-            min-height: 100vh;
-        }
-        .white-glass {
-            background: rgba(255, 255, 255, 0.88);
+        /* Scrollbar Styles */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00F0FF; }
+
+        .glass-panel {
+            background: rgba(13, 19, 34, 0.75);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(225, 29, 72, 0.15);
-            box-shadow: 0 10px 35px -5px rgba(225, 29, 72, 0.12);
+            border: 1px solid rgba(0, 240, 255, 0.12);
         }
-        .white-glass-glow {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(225, 29, 72, 0.35);
-            box-shadow: 0 0 30px rgba(225, 29, 72, 0.2);
+        
+        html:not(.dark) .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: rgba(0, 0, 0, 0.08);
         }
-        .white-input {
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(225, 29, 72, 0.25);
-            transition: all 0.25s ease-in-out;
-            color: #1e293b;
+
+        .prose pre {
+            background: #090d16 !important;
+            border: 1px solid #1e293b;
+            border-radius: 0.75rem;
+            position: relative;
+            padding: 1rem;
         }
-        .white-input:focus {
-            background: #ffffff;
-            border-color: #e11d48;
-            box-shadow: 0 0 12px rgba(225, 29, 72, 0.25);
-            outline: none;
+
+        .prose code { color: #00F0FF; font-family: monospace; }
+        .prose p { margin-bottom: 0.75rem; line-height: 1.6; }
+        .prose ul { list-style-type: disc; margin-left: 1.25rem; margin-bottom: 0.75rem; }
+        .prose ol { list-style-type: decimal; margin-left: 1.25rem; margin-bottom: 0.75rem; }
+        .prose a { color: #00F0FF; text-decoration: underline; }
+        .prose table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        .prose th, .prose td { border: 1px solid #1e293b; padding: 0.5rem 0.75rem; text-align: left; }
+        .prose th { background-color: #0d1322; color: #00F0FF; }
+
+        /* KaTeX custom sizing in math blocks */
+        .katex-display {
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 0.5rem 0;
+            margin: 0.75rem 0;
+            background: rgba(0, 240, 255, 0.03);
+            border-radius: 0.5rem;
+            border-left: 3px solid #00F0FF;
+            padding-left: 0.75rem;
         }
-        .vibrant-gradient {
-            background: linear-gradient(135deg, #e11d48 0%, #be123c 50%, #9f1239 100%);
+
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.35;
         }
-        .vibrant-gradient-hover:hover {
-            background: linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #be123c 100%);
-        }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(254, 226, 226, 0.5); }
-        ::-webkit-scrollbar-thumb { background: rgba(225, 29, 72, 0.4); border-radius: 3px; }
     </style>
 </head>
-<body class="flex flex-col min-h-screen relative overflow-x-hidden text-slate-800">
+<body class="bg-msmi-dark dark:bg-msmi-dark text-slate-100 dark:text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-msmi-cyan selection:text-black relative overflow-x-hidden transition-colors duration-300">
 
-    <!-- Background Dynamic Canvas Animation -->
-    <canvas id="bg-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-30"></canvas>
+    <!-- Canvas Wave Background -->
+    <canvas id="bgCanvas"></canvas>
 
-    <!-- Toast Notifications Container -->
-    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none"></div>
-
-    <!-- MAIN NAVBAR -->
-    <header class="relative z-20 border-b border-msmi-200/80 bg-white/80 backdrop-blur-md px-4 lg:px-8 py-3.5 flex items-center justify-between shadow-sm">
-        <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-2xl vibrant-gradient p-0.5 flex items-center justify-center shadow-lg shadow-msmi-600/30">
-                <div class="w-full h-full bg-white rounded-[14px] flex items-center justify-center">
-                    <i class="fa-solid fa-shield-halved text-msmi-600 text-xl"></i>
+    <!-- Header Navigation Bar -->
+    <header class="sticky top-0 z-40 border-b border-slate-800/80 glass-panel px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <button onclick="toggleSidebar()" class="p-2 text-slate-400 hover:text-msmi-cyan rounded-lg hover:bg-slate-800/50 transition">
+                <i data-lucide="menu" class="w-5 h-5"></i>
+            </button>
+            <div class="flex items-center space-x-2">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-msmi-cyan via-msmi-purple to-msmi-pink p-[1px] shadow-cyan-glow">
+                    <div class="w-full h-full bg-msmi-dark rounded-[11px] flex items-center justify-center">
+                        <i data-lucide="cpu" class="w-5 h-5 text-msmi-cyan animate-pulse"></i>
+                    </div>
                 </div>
-            </div>
-            <div>
-                <h1 class="text-lg font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
-                    <span class="bg-gradient-to-r from-msmi-700 via-msmi-600 to-msmi-500 bg-clip-text text-transparent">MSMI CREDENTIALS</span>
-                    <span id="active-provider-badge" class="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-msmi-100 text-msmi-700 border border-msmi-300">
-                        ONLINE PERSISTENT
-                    </span>
-                </h1>
-                <p class="text-[11px] font-mono text-slate-500">Enterprise Access & Digital Credential Management</p>
+                <div>
+                    <h1 class="font-extrabold text-lg tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-msmi-cyan via-white to-msmi-purple">MSMI AI PRO</h1>
+                    <p class="text-[10px] text-slate-400 tracking-widest uppercase">Gemini Powered • Math, Vision & Image Studio</p>
+                </div>
             </div>
         </div>
 
-        <div class="flex items-center gap-3">
-            <button onclick="openConfigModal()" 
-                class="px-3.5 py-2 rounded-xl bg-white border border-msmi-200 hover:border-msmi-500 text-slate-700 hover:text-msmi-600 text-xs font-mono font-semibold flex items-center gap-2 shadow-sm transition-all hover:shadow-md">
-                <i class="fa-solid fa-cloud text-msmi-600"></i>
-                <span class="hidden sm:inline">Cloud Settings</span>
+        <!-- Center System Status -->
+        <div class="hidden md:flex items-center space-x-6 text-xs text-slate-400">
+            <div class="flex items-center space-x-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                <span>Math & Vision Engine: <strong class="text-slate-200">ACTIVE</strong></span>
+            </div>
+            <div class="flex items-center space-x-1.5">
+                <i data-lucide="zap" class="w-3.5 h-3.5 text-msmi-cyan"></i>
+                <span>KaTeX Math: <strong class="text-msmi-cyan">ENABLED</strong></span>
+            </div>
+        </div>
+
+        <!-- Header Action Tools -->
+        <div class="flex items-center space-x-2 sm:space-x-3">
+            <button onclick="toggleTheme()" class="p-2 text-slate-400 hover:text-amber-400 rounded-lg hover:bg-slate-800/50 transition" title="Toggle Light/Dark Theme">
+                <i data-lucide="sun" id="themeIcon" class="w-5 h-5"></i>
             </button>
 
-            <div class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-msmi-50 border border-msmi-200 text-xs font-mono font-bold">
-                <span id="cloud-pulse" class="w-2.5 h-2.5 rounded-full bg-msmi-600 animate-pulse"></span>
-                <span id="cloud-status-text" class="text-msmi-800">Cloud Active</span>
-            </div>
+            <button onclick="openPersonaModal()" class="hidden sm:flex items-center space-x-1.5 bg-slate-800/80 hover:bg-slate-700 text-xs text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700/60 transition">
+                <i data-lucide="sliders" class="w-3.5 h-3.5 text-msmi-purple"></i>
+                <span>System Persona</span>
+            </button>
+
+            <button onclick="openSettingsModal()" class="flex items-center space-x-2 bg-slate-900 hover:border-msmi-cyan text-xs text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700/80 transition shadow-sm">
+                <i data-lucide="key" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span class="hidden sm:inline">API Key</span>
+                <span id="keyStatusDot" class="w-2 h-2 rounded-full bg-red-500"></span>
+            </button>
         </div>
     </header>
 
-    <!-- MAIN CONTAINER -->
-    <main class="relative z-10 flex-1 flex items-center justify-center p-4 md:p-8">
+    <!-- Main Workspace -->
+    <div class="flex-1 flex overflow-hidden relative z-10">
 
-        <!-- LOGIN SECTION -->
-        <section id="login-section" class="w-full max-w-md transition-all duration-300">
-            <div class="white-glass rounded-3xl p-6 sm:p-8 border border-msmi-200 shadow-2xl relative overflow-hidden">
-                
-                <div class="text-center mb-8">
-                    <div class="w-16 h-16 rounded-2xl vibrant-gradient text-white mx-auto flex items-center justify-center mb-4 text-2xl shadow-xl shadow-msmi-600/30">
-                        <i class="fa-solid fa-lock"></i>
-                    </div>
-                    <h2 class="text-2xl font-black text-slate-900 tracking-tight">Portal Authentication</h2>
-                    <p class="text-xs font-mono text-msmi-700 font-medium mt-1">MSMI Credentials Security Gateway</p>
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="w-64 border-r border-slate-800/80 glass-panel flex flex-col justify-between p-3 shrink-0 transition-all duration-300">
+            <div class="space-y-4">
+                <div class="flex items-center justify-between text-[11px] font-bold text-slate-400 uppercase tracking-wider px-2">
+                    <span>Capabilities</span>
+                    <button onclick="createNewChat()" class="p-1 hover:text-msmi-cyan transition" title="New Session">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                    </button>
                 </div>
 
-                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
-                    <div>
-                        <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-2" for="login-id">
-                            <i class="fa-solid fa-id-card text-msmi-600 mr-1.5"></i> ID Number
-                        </label>
-                        <input type="text" id="login-id" required placeholder="Enter assigned ID (e.g. 201 or 11964)" 
-                            class="white-input w-full px-4 py-3.5 rounded-xl text-sm font-mono tracking-wide shadow-inner">
+                <nav class="space-y-1">
+                    <button onclick="switchMode('chat')" id="nav-chat" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition bg-msmi-cyan/10 text-msmi-cyan border border-msmi-cyan/20">
+                        <i data-lucide="bot" class="w-4 h-4 shrink-0"></i>
+                        <span>Smart Chat & Reasoning</span>
+                    </button>
+                    <button onclick="switchMode('math')" id="nav-math" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition">
+                        <i data-lucide="binary" class="w-4 h-4 shrink-0"></i>
+                        <span>Math & LaTeX Solver</span>
+                    </button>
+                    <button onclick="switchMode('vision')" id="nav-vision" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition">
+                        <i data-lucide="scan-eye" class="w-4 h-4 shrink-0"></i>
+                        <span>Vision & Object Detector</span>
+                    </button>
+                    <button onclick="switchMode('image')" id="nav-image" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition">
+                        <i data-lucide="palette" class="w-4 h-4 shrink-0"></i>
+                        <span>Image Studio</span>
+                    </button>
+                    <button onclick="switchMode('search')" id="nav-search" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition">
+                        <i data-lucide="globe" class="w-4 h-4 shrink-0"></i>
+                        <span>Grounding Web Search</span>
+                    </button>
+                </nav>
+
+                <!-- Model Engine Selector -->
+                <div class="pt-2 px-1">
+                    <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">AI Engine Core</label>
+                    <select id="modelSelector" class="w-full bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1.5 text-xs text-msmi-cyan focus:outline-none focus:border-msmi-cyan">
+                        <option value="gemini-3-flash-preview">Gemini 3 Flash (Fast Reasoning)</option>
+                        <option value="gemini-3.1-flash-image">Gemini 3.1 Flash Image Studio</option>
+                    </select>
+                </div>
+
+                <!-- Session History List -->
+                <div class="pt-2">
+                    <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-2 mb-2 flex justify-between items-center">
+                        <span>Session History</span>
+                        <button onclick="clearHistory()" class="text-[10px] text-red-400 hover:underline">Clear</button>
+                    </div>
+                    <div id="historyList" class="space-y-1 max-h-40 overflow-y-auto pr-1">
+                        <!-- Dynamically filled -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-800/80 pt-3">
+                <div class="p-2 bg-slate-900/80 border border-slate-800 rounded-xl text-[11px] text-slate-400 flex items-center justify-between">
+                    <span class="truncate">Encryption: End-to-End</span>
+                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Display Container -->
+        <main class="flex-1 flex flex-col relative overflow-hidden bg-msmi-dark/90">
+
+            <!-- Chat Scroll Area -->
+            <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
+                
+                <!-- Gemini-Style Launch Banner -->
+                <div id="welcomeBanner" class="max-w-3xl mx-auto my-6 p-6 rounded-2xl glass-panel border border-msmi-cyan/20 space-y-6 text-center relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-msmi-cyan/10 rounded-full blur-3xl pointer-events-none"></div>
+                    
+                    <div class="inline-flex p-3 rounded-2xl bg-gradient-to-tr from-msmi-cyan/20 to-msmi-purple/20 text-msmi-cyan border border-msmi-cyan/30 shadow-cyan-glow">
+                        <i data-lucide="sparkles" class="w-8 h-8"></i>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-2" for="login-password">
-                            <i class="fa-solid fa-key text-msmi-600 mr-1.5"></i> Security Password
-                        </label>
-                        <div class="relative">
-                            <input type="password" id="login-password" required placeholder="Enter security password" 
-                                class="white-input w-full pl-4 pr-11 py-3.5 rounded-xl text-sm font-mono shadow-inner">
-                            <button type="button" onclick="togglePasswordVisibility('login-password', 'password-toggle-icon')"
-                                class="absolute right-3.5 top-3.5 text-slate-400 hover:text-msmi-600 transition-colors">
-                                <i id="password-toggle-icon" class="fa-solid fa-eye text-sm"></i>
-                            </button>
-                        </div>
+                        <h2 class="text-2xl font-black text-white tracking-wide">MSMI AI Advanced Pro</h2>
+                        <p class="text-slate-400 text-xs mt-1 max-w-md mx-auto">Solve complex LaTeX calculus, analyze photos with live camera, detect objects, and generate custom high-res images.</p>
                     </div>
 
-                    <div class="flex items-center justify-between text-xs px-1">
-                        <label class="flex items-center gap-2 cursor-pointer text-slate-600 font-mono font-medium">
-                            <input type="checkbox" id="remember-me" checked class="rounded border-msmi-300 text-msmi-600 focus:ring-msmi-500">
-                            <span>Keep Session Alive</span>
-                        </label>
+                    <div id="noKeyWarning" class="p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-300 text-xs flex items-center justify-between">
+                        <span class="flex items-center"><i data-lucide="alert-triangle" class="w-4 h-4 mr-2 shrink-0 text-red-400"></i> Google Gemini API Key required to run requests.</span>
+                        <button onclick="openSettingsModal()" class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg text-xs transition">Set Key</button>
                     </div>
 
-                    <button type="submit" id="btn-login-submit"
-                        class="w-full vibrant-gradient vibrant-gradient-hover text-white font-bold text-sm py-4 rounded-xl shadow-lg shadow-msmi-600/30 hover:shadow-xl hover:shadow-msmi-600/40 transition-all font-mono uppercase tracking-wider flex items-center justify-center gap-2 active:scale-[0.98]">
-                        <span id="login-btn-spinner" class="hidden"><i class="fa-solid fa-spinner animate-spin"></i></span>
-                        <span id="login-btn-text">Authenticate Access</span>
-                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    <!-- Instant Prompt Launchers -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 text-left pt-2">
+                        <button onclick="switchMode('math'); useQuickPrompt('Solve this integral step-by-step with LaTeX equations: \\int_0^\\pi x \\sin(x) dx')" class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-msmi-cyan/50 hover:bg-slate-800/60 transition text-xs group">
+                            <span class="font-bold text-msmi-cyan block mb-0.5 group-hover:translate-x-0.5 transition-transform"><i data-lucide="binary" class="w-3.5 h-3.5 inline mr-1"></i> Math & Integral</span>
+                            Solve definite integrals with full LaTeX equations.
+                        </button>
+                        <button onclick="switchMode('vision'); document.getElementById('cameraModal').classList.remove('hidden'); startCamera();" class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-msmi-cyan/50 hover:bg-slate-800/60 transition text-xs group">
+                            <span class="font-bold text-emerald-400 block mb-0.5 group-hover:translate-x-0.5 transition-transform"><i data-lucide="camera" class="w-3.5 h-3.5 inline mr-1"></i> Live Camera Scan</span>
+                            Take a photo to analyze math or identify objects.
+                        </button>
+                        <button onclick="switchMode('image'); useQuickPrompt('A hyperrealistic cyberpunk laboratory with holographic glowing math equations, 8k resolution')" class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-msmi-cyan/50 hover:bg-slate-800/60 transition text-xs group">
+                            <span class="font-bold text-msmi-pink block mb-0.5 group-hover:translate-x-0.5 transition-transform"><i data-lucide="image" class="w-3.5 h-3.5 inline mr-1"></i> Image Generation</span>
+                            Generate custom high-resolution cyberpunk art.
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Image Generation Settings Bar -->
+            <div id="imagePresetPanel" class="hidden px-4 py-2 border-t border-slate-800 glass-panel flex flex-wrap items-center gap-3 text-xs">
+                <span class="font-semibold text-msmi-cyan">Style:</span>
+                <select id="imageStyle" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-slate-200">
+                    <option value="Cyberpunk high-tech glowing aesthetic">Cyberpunk</option>
+                    <option value="Photorealistic 8K ultra-detailed portrait photo">Photorealistic</option>
+                    <option value="Detailed technical vector diagram illustration">Technical Diagram</option>
+                    <option value="Vibrant anime artwork style">Anime</option>
+                    <option value="3D render unreal engine 5 render">3D Artwork</option>
+                </select>
+                <span class="font-semibold text-msmi-cyan ml-2">Aspect Ratio:</span>
+                <select id="imageAspect" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-slate-200">
+                    <option value="16:9">16:9 Landscape</option>
+                    <option value="1:1">1:1 Square</option>
+                    <option value="4:3">4:3 Standard</option>
+                    <option value="9:16">9:16 Portrait</option>
+                </select>
+                <button onclick="enhancePrompt()" class="ml-auto px-2.5 py-1 bg-msmi-purple/20 text-msmi-purple border border-msmi-purple/40 rounded-lg font-semibold hover:bg-msmi-purple hover:text-white transition flex items-center">
+                    <i data-lucide="wand-2" class="w-3 h-3 mr-1"></i> Enhance Prompt
+                </button>
+            </div>
+
+            <!-- Voice Listening Wave Visualizer Bar -->
+            <div id="voiceWaveOverlay" class="hidden px-4 py-2 border-t border-slate-800 bg-slate-900/90 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-3 h-3 rounded-full bg-red-500 animate-ping"></div>
+                    <span class="text-xs font-semibold text-slate-200">MSMI Voice Recognition Active...</span>
+                </div>
+                <canvas id="voiceVisualizer" class="w-48 h-6"></canvas>
+            </div>
+
+            <!-- Upload File/Image Preview Strip -->
+            <div id="filePreviewPanel" class="hidden px-4 py-2 border-t border-slate-800 glass-panel flex items-center space-x-3">
+                <div class="relative">
+                    <img id="filePreviewImg" class="w-12 h-12 rounded-lg object-cover border border-slate-700 shadow-md" src="" alt="Preview">
+                    <button onclick="removeAttachedFile()" class="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full p-0.5 hover:bg-red-600 transition">
+                        <i data-lucide="x" class="w-3 h-3"></i>
+                    </button>
+                </div>
+                <div class="text-xs overflow-hidden">
+                    <p id="fileName" class="font-semibold text-slate-200 truncate">image.png</p>
+                    <p id="fileSize" class="text-slate-400">0 KB</p>
+                    <p class="text-[10px] text-msmi-cyan">Ready for Vision Analysis & Math Solver</p>
+                </div>
+            </div>
+
+            <!-- Main Floating Pill Input Bar -->
+            <div class="p-3 md:p-4 border-t border-slate-800/80 glass-panel">
+                <form id="chatForm" onsubmit="handleFormSubmit(event)" class="max-w-4xl mx-auto relative flex items-center bg-slate-900/90 rounded-2xl border border-slate-700/80 p-1.5 focus-within:border-msmi-cyan focus-within:shadow-cyan-glow transition-all">
+                    
+                    <input type="file" id="fileInput" accept="image/*,.pdf,.txt,.js,.py,.html" class="hidden" onchange="handleFileSelect(event)">
+                    
+                    <!-- File Attach Button -->
+                    <button type="button" onclick="document.getElementById('fileInput').click()" class="p-2 text-slate-400 hover:text-msmi-cyan rounded-xl transition" title="Attach Document or Image">
+                        <i data-lucide="paperclip" class="w-5 h-5"></i>
+                    </button>
+
+                    <!-- Live Camera Capture Button -->
+                    <button type="button" onclick="openCameraModal()" class="p-2 text-slate-400 hover:text-emerald-400 rounded-xl transition" title="Take Live Photo">
+                        <i data-lucide="camera" class="w-5 h-5"></i>
+                    </button>
+
+                    <textarea id="userInput" rows="1" placeholder="Ask math equation, analyze photo, describe image to generate..." class="flex-1 bg-transparent px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none resize-none max-h-32 overflow-y-auto" onkeydown="handleKeyDown(event)"></textarea>
+
+                    <!-- Voice Mic Button -->
+                    <button type="button" id="voiceMicBtn" onclick="toggleVoiceAI()" class="p-2 text-slate-400 hover:text-msmi-cyan rounded-xl transition" title="Voice Assistant">
+                        <i data-lucide="mic" class="w-5 h-5"></i>
+                    </button>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="sendBtn" class="ml-1 p-2.5 bg-gradient-to-r from-msmi-cyan to-msmi-purple hover:opacity-90 text-black font-bold rounded-xl transition shadow-cyan-glow flex items-center justify-center">
+                        <i data-lucide="send" class="w-4 h-4"></i>
                     </button>
                 </form>
-
-                <div class="mt-6 pt-4 border-t border-msmi-100 flex items-center justify-between text-[11px] font-mono text-slate-500">
-                    <span>Demo Users Available:</span>
-                    <span class="text-msmi-700 font-bold">IDs: 201-204 | Admin: 11964</span>
+                <div class="max-w-4xl mx-auto flex items-center justify-between mt-2 px-1 text-[11px] text-slate-500">
+                    <span>LaTeX math supported inline (<code class="text-msmi-cyan">$...$</code>) and block (<code class="text-msmi-cyan">$$...$$</code>)</span>
+                    <span id="activeModeStatus" class="text-msmi-cyan font-semibold">Mode: Smart Chat</span>
                 </div>
             </div>
-        </section>
 
-        <!-- ADMIN DASHBOARD SECTION -->
-        <section id="admin-section" class="hidden w-full max-w-7xl transition-all duration-300">
-            <div class="white-glass rounded-3xl p-5 md:p-8 shadow-2xl border border-msmi-200 space-y-6">
-                
-                <!-- Admin Header -->
-                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-msmi-200">
-                    <div class="flex items-center gap-4">
-                        <div class="w-13 h-13 rounded-2xl vibrant-gradient text-white flex items-center justify-center text-2xl font-bold shadow-lg shadow-msmi-600/30 p-3">
-                            <i class="fa-solid fa-user-gear"></i>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-2 flex-wrap">
-                                <h2 class="text-2xl font-black text-slate-900">MSMI Command Center</h2>
-                                <span class="px-2.5 py-0.5 text-[11px] font-mono font-extrabold rounded-full bg-msmi-600 text-white shadow-sm">ADMIN DASHBOARD</span>
-                            </div>
-                            <p class="text-xs text-slate-500 font-mono mt-0.5">Manage credentials, provision accounts, & configure database</p>
-                        </div>
-                    </div>
+        </main>
+    </div>
 
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <button onclick="exportUserDataCSV()" 
-                            class="px-3.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 text-emerald-700 text-xs font-mono font-bold flex items-center gap-2 transition-all">
-                            <i class="fa-solid fa-file-csv text-emerald-600"></i>
-                            <span>Export CSV</span>
-                        </button>
-                        <button onclick="syncDataFromCloud(true)" 
-                            class="px-3.5 py-2 rounded-xl bg-msmi-50 border border-msmi-200 hover:bg-msmi-100 text-msmi-700 text-xs font-mono font-bold flex items-center gap-2 transition-all">
-                            <i class="fa-solid fa-rotate" id="refresh-icon"></i>
-                            <span>Sync Cloud Data</span>
-                        </button>
-                        <button onclick="logout()" 
-                            class="px-4 py-2 rounded-xl bg-rose-600 text-white hover:bg-rose-700 text-xs font-mono font-bold flex items-center gap-2 shadow-sm transition-all">
-                            <i class="fa-solid fa-right-from-bracket"></i>
-                            <span>Logout</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Admin Grid Layout -->
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    
-                    <!-- Provisioning Form -->
-                    <div class="lg:col-span-5">
-                        <div class="bg-white p-6 rounded-2xl border border-msmi-200 shadow-md">
-                            <div class="flex items-center justify-between mb-5 pb-3 border-b border-msmi-100">
-                                <h3 class="font-extrabold text-base text-msmi-700 flex items-center gap-2" id="form-title">
-                                    <i class="fa-solid fa-user-plus text-msmi-600"></i>
-                                    <span>Provision User Credential</span>
-                                </h3>
-                                <button id="btn-cancel-edit" onclick="resetUserForm()" class="hidden text-xs font-mono text-slate-400 hover:text-rose-600 font-bold">
-                                    <i class="fa-solid fa-xmark"></i> Cancel Edit
-                                </button>
-                            </div>
-
-                            <form id="create-user-form" onsubmit="handleUserSave(event)" class="space-y-4">
-                                <input type="hidden" id="edit-doc-id" value="">
-
-                                <div>
-                                    <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1" for="user-fullname">Full Name *</label>
-                                    <input type="text" id="user-fullname" required placeholder="e.g. Rahul Sharma" 
-                                        class="white-input w-full px-3.5 py-2.5 rounded-xl text-sm font-sans">
-                                </div>
-
-                                <div>
-                                    <div class="flex justify-between items-center mb-1">
-                                        <label class="block text-xs font-mono uppercase font-bold text-slate-700" for="user-idnum">Unique ID Number *</label>
-                                        <button type="button" onclick="generateRandomId()" class="text-[11px] text-msmi-600 hover:underline font-mono font-bold">Auto-Generate</button>
-                                    </div>
-                                    <input type="text" id="user-idnum" required placeholder="e.g. 205" 
-                                        class="white-input w-full px-3.5 py-2.5 rounded-xl text-sm font-mono">
-                                </div>
-
-                                <div>
-                                    <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1" for="user-email">Email Address</label>
-                                    <input type="email" id="user-email" placeholder="e.g. rahul@msmi.edu" 
-                                        class="white-input w-full px-3.5 py-2.5 rounded-xl text-sm font-sans">
-                                </div>
-
-                                <div>
-                                    <div class="flex justify-between items-center mb-1">
-                                        <label class="block text-xs font-mono uppercase font-bold text-slate-700" for="user-password">Password *</label>
-                                        <button type="button" onclick="generateRandomPassword()" class="text-[11px] text-msmi-600 hover:underline font-mono font-bold">Generate Pass</button>
-                                    </div>
-                                    <div class="relative">
-                                        <input type="text" id="user-password" required placeholder="Min 6 characters" 
-                                            class="white-input w-full pl-3.5 pr-10 py-2.5 rounded-xl text-sm font-mono">
-                                        <button type="button" onclick="togglePasswordVisibility('user-password', 'user-pass-icon')" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600">
-                                            <i id="user-pass-icon" class="fa-solid fa-eye text-xs"></i>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="grid grid-cols-2 gap-3">
-                                    <div>
-                                        <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1" for="user-dept">Department</label>
-                                        <select id="user-dept" class="white-input w-full px-3 py-2.5 rounded-xl text-xs font-mono font-semibold">
-                                            <option value="Computer Science">Computer Science</option>
-                                            <option value="Electronics Engineering">Electronics Engineering</option>
-                                            <option value="Information Technology">Information Technology</option>
-                                            <option value="Mechanical Engineering">Mechanical Engineering</option>
-                                            <option value="Cyber Security">Cyber Security</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1" for="user-status">Status</label>
-                                        <select id="user-status" class="white-input w-full px-3 py-2.5 rounded-xl text-xs font-mono font-bold">
-                                            <option value="Active" class="text-emerald-600">Active</option>
-                                            <option value="Suspended" class="text-rose-600">Suspended</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1" for="user-message">Personalized Message *</label>
-                                    <textarea id="user-message" rows="2" required placeholder="Welcome message displayed on user login..." 
-                                        class="white-input w-full px-3.5 py-2 rounded-xl text-xs font-sans"></textarea>
-                                </div>
-
-                                <button type="submit" id="btn-save-user"
-                                    class="w-full mt-2 py-3.5 rounded-xl vibrant-gradient vibrant-gradient-hover text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-msmi-600/20 active:scale-[0.99] flex items-center justify-center gap-2">
-                                    <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
-                                    <span id="save-btn-text">Save Credential to Database</span>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Directory Table Column -->
-                    <div class="lg:col-span-7 space-y-6">
-                        <div class="bg-white p-6 rounded-2xl border border-msmi-200 shadow-md space-y-4">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                                <h3 class="font-extrabold text-base text-slate-900 flex items-center gap-2">
-                                    <i class="fa-solid fa-users-gear text-msmi-600"></i>
-                                    <span>Active Credentials Directory</span>
-                                </h3>
-
-                                <div class="relative min-w-[200px]">
-                                    <input type="text" id="search-input" onkeyup="renderUserTable()" placeholder="Search ID or Name..." 
-                                        class="white-input w-full pl-8 pr-3 py-1.5 rounded-xl text-xs font-mono">
-                                    <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-slate-400 text-xs"></i>
-                                </div>
-                            </div>
-
-                            <div class="overflow-x-auto rounded-xl border border-msmi-100 shadow-inner">
-                                <table class="w-full text-left text-xs font-mono">
-                                    <thead class="bg-msmi-50 text-msmi-800 uppercase text-[10px] font-bold tracking-wider border-b border-msmi-200">
-                                        <tr>
-                                            <th class="px-4 py-3">ID</th>
-                                            <th class="px-4 py-3">User Details</th>
-                                            <th class="px-4 py-3">Department</th>
-                                            <th class="px-4 py-3">Password</th>
-                                            <th class="px-4 py-3">Personal Message</th>
-                                            <th class="px-4 py-3 text-right">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="user-table-body" class="divide-y divide-msmi-100 text-slate-700 bg-white">
-                                        <!-- Dynamic User Rows -->
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div class="flex items-center justify-between text-xs font-mono text-slate-500 pt-2">
-                                <span>Total Cloud Records: <strong id="total-users-count" class="text-msmi-600 font-bold">0</strong></span>
-                                <span class="text-[10px] text-slate-400">Live Synchronized</span>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+    <!-- Camera Capture Modal -->
+    <div id="cameraModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-msmi-card border border-slate-700 rounded-2xl w-full max-w-lg p-5 shadow-2xl relative flex flex-col items-center">
+            <button onclick="closeCameraModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="flex items-center space-x-2 mb-3">
+                <i data-lucide="camera" class="w-5 h-5 text-emerald-400"></i>
+                <h3 class="font-bold text-sm text-white">Live Camera Photo Scanner</h3>
             </div>
-        </section>
+            
+            <video id="cameraVideo" autoplay playsinline class="w-full h-64 bg-black rounded-xl object-cover border border-slate-800"></video>
+            <canvas id="cameraCanvas" class="hidden"></canvas>
 
-        <!-- USER DASHBOARD SECTION -->
-        <section id="user-section" class="hidden w-full max-w-5xl transition-all duration-300">
-            <div class="white-glass rounded-3xl p-6 md:p-8 shadow-2xl border border-msmi-200 space-y-6">
-                
-                <!-- User Header -->
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-msmi-200">
-                    <div class="flex items-center gap-4">
-                        <div class="w-13 h-13 rounded-2xl bg-gradient-to-tr from-msmi-600 via-accent-indigo to-accent-cyan p-0.5 flex items-center justify-center shadow-lg shadow-msmi-600/20">
-                            <div class="w-full h-full bg-white rounded-[14px] flex items-center justify-center text-msmi-600 text-xl font-bold">
-                                <i class="fa-solid fa-id-badge"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <h2 id="user-workspace-title" class="text-2xl font-black text-slate-900">User Workspace</h2>
-                            <p class="text-xs text-slate-500 font-mono">Personal Security Clearance & MSMI Identity Pass</p>
-                        </div>
-                    </div>
-
-                    <button onclick="logout()" 
-                        class="px-4 py-2 rounded-xl bg-rose-600 text-white hover:bg-rose-700 text-xs font-mono font-bold flex items-center gap-2 shadow-sm transition-all self-start sm:self-auto">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        <span>Logout</span>
-                    </button>
-                </div>
-
-                <!-- Personal Welcome Broadcast Message Card -->
-                <div class="p-5 rounded-2xl bg-gradient-to-r from-msmi-500 to-msmi-700 text-white shadow-xl shadow-msmi-600/20 flex items-start gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-xl shrink-0">
-                        <i class="fa-solid fa-envelope-open-text"></i>
-                    </div>
-                    <div>
-                        <div class="text-[10px] font-mono font-extrabold uppercase tracking-widest text-msmi-100 mb-0.5">PERSONAL SYSTEM BROADCAST</div>
-                        <p id="display-user-message" class="text-sm font-semibold leading-relaxed">Loading message...</p>
-                    </div>
-                </div>
-
-                <!-- User Grid Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-                    
-                    <!-- Digital Identity Pass Card -->
-                    <div class="md:col-span-6">
-                        <div class="white-glass-glow p-6 rounded-2xl relative overflow-hidden flex flex-col justify-between h-full space-y-6">
-                            <div class="flex justify-between items-start">
-                                <div class="space-y-1">
-                                    <span class="text-[10px] font-mono tracking-widest text-msmi-700 font-black uppercase">MSMI DIGITAL PASS</span>
-                                    <h3 id="display-user-name" class="text-xl font-extrabold text-slate-900">User Name</h3>
-                                    <p id="display-user-email" class="text-xs text-slate-500 font-mono">user@msmi.edu</p>
-                                </div>
-                                <div class="w-12 h-12 rounded-2xl vibrant-gradient text-white flex items-center justify-center text-lg shadow-md">
-                                    <i class="fa-solid fa-fingerprint"></i>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-4 py-3 border-y border-msmi-200 font-mono text-xs bg-msmi-50/50 rounded-xl p-3">
-                                <div>
-                                    <span class="text-slate-500 block text-[10px] font-bold">ID NUMBER</span>
-                                    <span id="display-user-id" class="text-msmi-700 font-extrabold text-base">-----</span>
-                                </div>
-                                <div>
-                                    <span class="text-slate-500 block text-[10px] font-bold">DEPARTMENT</span>
-                                    <span id="display-user-dept" class="text-slate-800 font-semibold">-----</span>
-                                </div>
-                            </div>
-
-                            <div class="flex items-center justify-between text-xs font-mono">
-                                <div class="flex items-center gap-2">
-                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-                                    <span id="display-user-status" class="text-emerald-600 font-bold">ACTIVE ACCESS</span>
-                                </div>
-                                <span class="text-slate-400 text-[10px] font-bold">MSMI VERIFIED</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Password Management Card -->
-                    <div class="md:col-span-6">
-                        <div class="bg-white p-6 rounded-2xl border border-msmi-200 shadow-md space-y-4 h-full flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-extrabold text-base text-slate-900 mb-1 flex items-center gap-2">
-                                    <i class="fa-solid fa-key text-msmi-600"></i>
-                                    <span>Security Credentials</span>
-                                </h3>
-                                <p class="text-xs text-slate-500 font-mono mb-4">Manage your authentication password.</p>
-
-                                <form id="user-change-pass-form" onsubmit="handleUserPasswordChange(event)" class="space-y-4">
-                                    <div>
-                                        <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1" for="user-new-pass">Update Password</label>
-                                        <div class="relative">
-                                            <input type="password" id="user-new-pass" required placeholder="Enter new password" 
-                                                class="white-input w-full pl-3.5 pr-10 py-2.5 rounded-xl text-slate-900 text-sm font-mono">
-                                            <button type="button" onclick="togglePasswordVisibility('user-new-pass', 'user-new-pass-icon')" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600">
-                                                <i id="user-new-pass-icon" class="fa-solid fa-eye text-xs"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <button type="submit" 
-                                        class="w-full py-3 rounded-xl vibrant-gradient vibrant-gradient-hover text-white font-mono text-xs uppercase tracking-wider font-bold transition-all shadow-md shadow-msmi-600/20 flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-arrows-rotate"></i>
-                                        <span>Update Security Password</span>
-                                    </button>
-                                </form>
-                            </div>
-
-                            <div class="p-3 rounded-xl bg-msmi-50 border border-msmi-200 text-xs font-mono text-slate-600 flex items-center gap-2 mt-4">
-                                <i class="fa-solid fa-circle-check text-msmi-600 text-sm"></i>
-                                <span>Changes automatically sync across all logins.</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Notice Board Card -->
-                    <div class="md:col-span-12">
-                        <div class="bg-white p-6 rounded-2xl border border-msmi-200 shadow-md space-y-3">
-                            <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2 font-mono">
-                                <i class="fa-solid fa-bullhorn text-msmi-600"></i>
-                                <span>MSMI NOTICE BOARD</span>
-                            </h3>
-                            <div class="p-4 rounded-xl bg-msmi-50/80 border border-msmi-100 text-xs text-slate-700 space-y-2 font-mono">
-                                <div class="flex items-center justify-between text-slate-500 text-[10px] font-bold">
-                                    <span>MSMI SECURITY ANNOUNCEMENT</span>
-                                    <span>2026.10.25</span>
-                                </div>
-                                <p>Welcome to your <strong>MSMI Credentials Portal</strong>. Your account is fully active and verified. Any password updates will be saved securely across your local and cloud database configurations.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+            <div class="flex space-x-3 mt-4 w-full">
+                <button onclick="capturePhoto()" class="flex-1 bg-gradient-to-r from-emerald-400 to-msmi-cyan text-black font-bold py-2.5 rounded-xl transition text-sm flex items-center justify-center">
+                    <i data-lucide="aperture" class="w-4 h-4 mr-2"></i> Capture Snapshot
+                </button>
+                <button onclick="closeCameraModal()" class="px-4 bg-slate-800 text-slate-300 font-semibold py-2.5 rounded-xl transition text-sm">Cancel</button>
             </div>
-        </section>
+        </div>
+    </div>
 
-    </main>
-
-    <!-- CLOUD CONFIGURATION MODAL -->
-    <div id="config-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 hidden">
-        <div class="white-glass max-w-lg w-full rounded-3xl p-6 sm:p-8 border border-msmi-200 shadow-2xl relative space-y-6">
-            <div class="flex items-center justify-between pb-4 border-b border-msmi-200">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl vibrant-gradient text-white flex items-center justify-center text-lg">
-                        <i class="fa-solid fa-cloud"></i>
-                    </div>
-                    <h3 class="font-extrabold text-lg text-slate-900">Cloud Database Config</h3>
+    <!-- Code Live Sandbox Modal -->
+    <div id="previewModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-msmi-card border border-msmi-cyan/40 rounded-2xl w-full max-w-4xl h-[80vh] flex flex-col shadow-cyan-glow overflow-hidden">
+            <div class="px-4 py-3 border-b border-slate-800 flex items-center justify-between bg-slate-900/80">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="play" class="w-4 h-4 text-emerald-400"></i>
+                    <h3 class="font-bold text-sm text-white">Live Code Preview Sandbox</h3>
                 </div>
-                <button onclick="closeConfigModal()" class="text-slate-400 hover:text-slate-700">
-                    <i class="fa-solid fa-xmark text-lg"></i>
+                <button onclick="closePreviewModal()" class="text-slate-400 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
+            <iframe id="previewFrame" class="w-full flex-1 bg-white"></iframe>
+        </div>
+    </div>
 
-            <!-- Provider Selection Tabs -->
-            <div class="grid grid-cols-3 gap-2 bg-msmi-100/70 p-1.5 rounded-xl font-mono text-xs font-bold">
-                <button onclick="switchProviderTab('jsonbin')" id="tab-jsonbin" 
-                    class="py-2 rounded-lg text-center transition-all bg-msmi-600 text-white shadow-sm">
-                    JSONBin (Instant)
-                </button>
-                <button onclick="switchProviderTab('supabase')" id="tab-supabase" 
-                    class="py-2 rounded-lg text-center text-slate-600 hover:text-slate-900 transition-all">
-                    Supabase
-                </button>
-                <button onclick="switchProviderTab('firebase')" id="tab-firebase" 
-                    class="py-2 rounded-lg text-center text-slate-600 hover:text-slate-900 transition-all">
-                    Firebase
-                </button>
-            </div>
-
-            <!-- JSONBin Settings -->
-            <div id="config-jsonbin-panel" class="space-y-4">
-                <div class="p-3.5 rounded-xl bg-msmi-50 border border-msmi-200 text-xs font-mono text-msmi-800 font-medium">
-                    <i class="fa-solid fa-circle-check text-msmi-600 mr-1"></i>
-                    <strong>Zero-Config Cloud Storage:</strong> Uses JSONBin API cloud bin to persist credentials online right out of the box!
+    <!-- API Key Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-msmi-card border border-slate-700 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
+            <button onclick="closeSettingsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="p-2 bg-amber-500/10 text-amber-400 rounded-xl border border-amber-500/20">
+                    <i data-lucide="key" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1">Custom Master Key (Optional)</label>
-                    <input type="text" id="cfg-jsonbin-key" placeholder="Enter key to use your own JSONBin account" 
-                        class="white-input w-full px-3.5 py-2.5 rounded-xl text-xs font-mono">
+                    <h3 class="font-bold text-lg text-white">Google Gemini API Key</h3>
+                    <p class="text-xs text-slate-400">Stored locally in your browser session.</p>
                 </div>
             </div>
 
-            <!-- Supabase Settings -->
-            <div id="config-supabase-panel" class="space-y-4 hidden">
+            <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1">Supabase Project URL</label>
-                    <input type="text" id="cfg-supa-url" placeholder="https://xxxx.supabase.co" 
-                        class="white-input w-full px-3.5 py-2.5 rounded-xl text-xs font-mono">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Enter Gemini Key</label>
+                    <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-msmi-cyan transition">
+                </div>
+
+                <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 text-xs text-slate-400 space-y-2">
+                    <p class="font-semibold text-slate-200">How to obtain a free key?</p>
+                    <p>1. Go to Google AI Studio</p>
+                    <p>2. Generate an API Key for Gemini</p>
+                    <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener" class="inline-flex items-center text-msmi-cyan hover:underline font-semibold mt-1">
+                        Open Google AI Studio <i data-lucide="external-link" class="w-3 h-3 ml-1"></i>
+                    </a>
+                </div>
+
+                <div class="flex space-x-2 pt-2">
+                    <button onclick="saveApiKey()" class="flex-1 bg-gradient-to-r from-msmi-cyan to-msmi-purple text-black font-bold py-2.5 rounded-xl transition text-sm">Save Key</button>
+                    <button onclick="removeApiKey()" class="px-4 bg-slate-800 hover:bg-red-500/20 hover:text-red-400 text-slate-400 font-semibold py-2.5 rounded-xl transition text-sm">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Persona Customizer Modal -->
+    <div id="personaModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-msmi-card border border-slate-700 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
+            <button onclick="closePersonaModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="p-2 bg-msmi-purple/20 text-msmi-purple rounded-xl border border-msmi-purple/30">
+                    <i data-lucide="sliders" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1">Supabase Anon Key</label>
-                    <input type="password" id="cfg-supa-key" placeholder="eyJhbGciOi..." 
-                        class="white-input w-full px-3.5 py-2.5 rounded-xl text-xs font-mono">
+                    <h3 class="font-bold text-lg text-white">System Prompt Persona</h3>
+                    <p class="text-xs text-slate-400">Configure AI instructions and response formatting.</p>
                 </div>
             </div>
 
-            <!-- Firebase Settings -->
-            <div id="config-firebase-panel" class="space-y-4 hidden">
+            <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-mono uppercase font-bold text-slate-700 mb-1">Firebase Config Object (JSON)</label>
-                    <textarea id="cfg-firebase-json" rows="4" placeholder='{ "apiKey": "AIza...", "authDomain": "...", "projectId": "..." }' 
-                        class="white-input w-full p-3 rounded-xl text-xs font-mono"></textarea>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Custom Persona Instructions</label>
+                    <textarea id="systemInstructionInput" rows="4" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-msmi-cyan">You are MSMI AI, an advanced AI system capable of solving complex math equations using LaTeX ($...$ and $$...$$), identifying objects in images, generating code, and providing clear explanations.</textarea>
                 </div>
-            </div>
 
-            <div class="flex items-center gap-3 pt-2">
-                <button onclick="saveCloudSettings()" 
-                    class="flex-1 py-3.5 rounded-xl vibrant-gradient vibrant-gradient-hover text-white font-mono font-bold text-xs uppercase tracking-wider transition-all shadow-md">
-                    Save & Reconnect Cloud
+                <button onclick="savePersonaInstructions()" class="w-full bg-msmi-purple hover:bg-msmi-purple/80 text-white font-bold py-2.5 rounded-xl transition text-sm">
+                    Save Persona Config
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT ENGINE -->
+    <!-- Toast Notification Banner -->
+    <div id="toast" class="fixed bottom-20 right-6 bg-slate-900 border border-slate-700 text-white px-4 py-2.5 rounded-xl shadow-cyan-glow text-xs transform translate-y-10 opacity-0 transition-all duration-300 pointer-events-none z-50 flex items-center space-x-2">
+        <i id="toastIcon" data-lucide="info" class="w-4 h-4 text-msmi-cyan"></i>
+        <span id="toastMsg">Notification message</span>
+    </div>
+
+    <!-- Main Logic Script -->
     <script>
-        // ==========================================
-        // 1. HARDCODED ADMIN CREDENTIALS
-        // ==========================================
-        const ADMIN_ID = "11964";
-        const ADMIN_PASS = "MSMI2008@";
+        // App State
+        let currentMode = 'chat';
+        let apiKey = localStorage.getItem('msmi_api_key') || '';
+        let systemInstruction = localStorage.getItem('msmi_system_prompt') || "You are MSMI AI, an advanced AI system capable of solving complex math equations using LaTeX ($...$ and $$...$$), identifying objects in images, generating code, and providing clear explanations.";
+        let currentAttachedFile = null;
+        let isGenerating = false;
+        let cameraStream = null;
+        let speechRecognition = null;
+        let isListening = false;
+        let chatSessions = JSON.parse(localStorage.getItem('msmi_sessions') || '[]');
 
-        // ==========================================
-        // 2. HARDCODED USER ARRAY WITH MESSAGES
-        // ==========================================
-        const HARDCODED_USERS = [
-            { id: "22387", name: "SHEK MOHAMMED IRFAN M", email: "shekmohammedirfan412_bec29@mepcoeng.ac.in", password: "MSMISMART2008@.", dept: "ECE", status: "Active" ,message:"Hi M.Shek."},
-            { id: "22264", name: "MINORENS G R", email: "gnanajosemerlin_bec29@mepcoeng.ac.in", password: "10/03/2007", dept: "ECE", status: "Active" ,message:"Hi Minorense,You are the topper of the class." }
-        ];
-
-        // Global Application State
-        let state = {
-            currentUser: null,
-            isAdmin: false,
-            users: [],
-            cloudProvider: localStorage.getItem('msmi_cloud_provider') || 'jsonbin',
-            jsonbinKey: localStorage.getItem('msmi_cfg_jsonbin_key') || '',
-            jsonbinBinId: localStorage.getItem('msmi_cfg_jsonbin_bin_id') || '',
-            supaUrl: localStorage.getItem('msmi_cfg_supa_url') || '',
-            supaKey: localStorage.getItem('msmi_cfg_supa_key') || '',
-            firebaseConfig: localStorage.getItem('msmi_cfg_firebase_json') || '',
-            supaClient: null,
-            firebaseDb: null
-        };
-
-        const PUBLIC_JSONBIN_BIN = "65d8a211dc74654018aa192b";
-
-        // Application Initialization
-        window.addEventListener('DOMContentLoaded', async () => {
-            initBackgroundCanvas();
-            initCloudConnections();
-            await syncDataFromCloud();
-            checkAutoLogin();
-        });
-
-        // Cloud Connections Init
-        function initCloudConnections() {
-            const badge = document.getElementById('active-provider-badge');
-            const statusText = document.getElementById('cloud-status-text');
-
-            if (state.cloudProvider === 'supabase' && state.supaUrl && state.supaKey) {
-                try {
-                    state.supaClient = supabase.createClient(state.supaUrl, state.supaKey);
-                    badge.innerText = 'SUPABASE CLOUD';
-                    statusText.innerText = 'Supabase Active';
-                } catch (e) {
-                    console.error("Supabase Init Error:", e);
-                }
-            } else if (state.cloudProvider === 'firebase' && state.firebaseConfig) {
-                try {
-                    const parsed = JSON.parse(state.firebaseConfig);
-                    if (!firebase.apps.length) {
-                        firebase.initializeApp(parsed);
-                    }
-                    state.firebaseDb = firebase.firestore();
-                    badge.innerText = 'FIREBASE CLOUD';
-                    statusText.innerText = 'Firebase Active';
-                } catch (e) {
-                    console.error("Firebase Init Error:", e);
-                }
-            } else {
-                state.cloudProvider = 'jsonbin';
-                badge.innerText = 'JSONBIN ONLINE API';
-                statusText.innerText = 'Cloud Active';
-            }
-        }
-
-        // Synchronize Cloud & Local Data
-        async function syncDataFromCloud(manualTrigger = false) {
-            const refreshIcon = document.getElementById('refresh-icon');
-            if (refreshIcon) refreshIcon.classList.add('animate-spin');
-
-            try {
-                let fetchedUsers = null;
-
-                if (state.cloudProvider === 'supabase' && state.supaClient) {
-                    const { data, error } = await state.supaClient.from('users').select('*');
-                    if (!error && data && data.length > 0) fetchedUsers = data;
-                } else if (state.cloudProvider === 'firebase' && state.firebaseDb) {
-                    const snapshot = await state.firebaseDb.collection('users').get();
-                    if (!snapshot.empty) {
-                        fetchedUsers = snapshot.docs.map(doc => ({ id_doc: doc.id, ...doc.data() }));
-                    }
-                } else {
-                    const binId = state.jsonbinBinId || PUBLIC_JSONBIN_BIN;
-                    const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
-                        headers: state.jsonbinKey ? { 'X-Master-Key': state.jsonbinKey } : {}
-                    });
-                    if (res.ok) {
-                        const json = await res.json();
-                        if (json.record && Array.isArray(json.record.users) && json.record.users.length > 0) {
-                            fetchedUsers = json.record.users;
-                        }
-                    }
-                }
-
-                if (fetchedUsers) {
-                    // Merge cloud users with hardcoded default users
-                    const mergedMap = new Map();
-                    HARDCODED_USERS.forEach(u => mergedMap.set(String(u.id), u));
-                    fetchedUsers.forEach(u => mergedMap.set(String(u.id), u));
-                    state.users = Array.from(mergedMap.values());
-                } else {
-                    const local = localStorage.getItem('msmi_offline_users');
-                    if (local) {
-                        const parsed = JSON.parse(local);
-                        const mergedMap = new Map();
-                        HARDCODED_USERS.forEach(u => mergedMap.set(String(u.id), u));
-                        parsed.forEach(u => mergedMap.set(String(u.id), u));
-                        state.users = Array.from(mergedMap.values());
-                    } else {
-                        state.users = [...HARDCODED_USERS];
-                    }
-                }
-
-                localStorage.setItem('msmi_offline_users', JSON.stringify(state.users));
-                if (manualTrigger) showToast("Database synchronized successfully", "success");
-            } catch (err) {
-                console.warn("Cloud Sync Fallback:", err);
-                const local = localStorage.getItem('msmi_offline_users');
-                state.users = local ? JSON.parse(local) : [...HARDCODED_USERS];
-            } finally {
-                if (refreshIcon) refreshIcon.classList.remove('animate-spin');
-                renderUserTable();
-            }
-        }
-
-        async function writeDataToCloud() {
-            localStorage.setItem('msmi_offline_users', JSON.stringify(state.users));
-
-            try {
-                if (state.cloudProvider === 'jsonbin') {
-                    const binId = state.jsonbinBinId || PUBLIC_JSONBIN_BIN;
-                    await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            ...(state.jsonbinKey ? { 'X-Master-Key': state.jsonbinKey } : {})
-                        },
-                        body: JSON.stringify({ users: state.users })
-                    });
-                }
-            } catch (err) {
-                console.error("Write error:", err);
-            }
-        }
-
-        // Login Handler
-        async function handleLogin(e) {
-            e.preventDefault();
-            const idInput = document.getElementById('login-id').value.trim();
-            const passInput = document.getElementById('login-password').value.trim();
-            const rememberMe = document.getElementById('remember-me').checked;
-
-            setLoginLoading(true);
-            await syncDataFromCloud();
-
-            setTimeout(() => {
-                setLoginLoading(false);
-
-                // 1. Admin Login Check
-                if (idInput === ADMIN_ID && passInput === ADMIN_PASS) {
-                    state.isAdmin = true;
-                    state.currentUser = { name: "System Admin", id: ADMIN_ID };
-                    if (rememberMe) {
-                        localStorage.setItem('msmi_session_user', JSON.stringify({ isAdmin: true, id: ADMIN_ID }));
-                    }
-                    showToast("Admin Credentials Verified", "success");
-                    triggerConfetti();
-                    showDashboard('admin');
-                    return;
-                }
-
-                // 2. User Login Check
-                const matchedUser = state.users.find(u => String(u.id) === idInput && u.password === passInput);
-
-                if (matchedUser) {
-                    if (matchedUser.status === 'Suspended') {
-                        showToast("Account suspended. Contact Administrator.", "error");
-                        return;
-                    }
-
-                    state.isAdmin = false;
-                    state.currentUser = matchedUser;
-                    if (rememberMe) {
-                        localStorage.setItem('msmi_session_user', JSON.stringify({ isAdmin: false, user: matchedUser }));
-                    }
-                    showToast(`Welcome back, ${matchedUser.name}!`, "success");
-                    triggerConfetti();
-                    showDashboard('user');
-                    return;
-                }
-
-                showToast("Invalid ID Number or Password", "error");
-            }, 400);
-        }
-
-        function checkAutoLogin() {
-            const stored = localStorage.getItem('msmi_session_user');
-            if (stored) {
-                try {
-                    const session = JSON.parse(stored);
-                    if (session.isAdmin) {
-                        state.isAdmin = true;
-                        state.currentUser = { name: "System Admin", id: ADMIN_ID };
-                        showDashboard('admin');
-                    } else if (session.user) {
-                        const latest = state.users.find(u => String(u.id) === String(session.user.id)) || session.user;
-                        state.isAdmin = false;
-                        state.currentUser = latest;
-                        showDashboard('user');
-                    }
-                } catch (e) {
-                    localStorage.removeItem('msmi_session_user');
-                }
-            }
-        }
-
-        function logout() {
-            state.currentUser = null;
-            state.isAdmin = false;
-            localStorage.removeItem('msmi_session_user');
-            document.getElementById('admin-section').classList.add('hidden');
-            document.getElementById('user-section').classList.add('hidden');
-            document.getElementById('login-section').classList.remove('hidden');
-            document.getElementById('login-form').reset();
-            showToast("Logged out successfully", "info");
-        }
-
-        function showDashboard(type) {
-            document.getElementById('login-section').classList.add('hidden');
-
-            if (type === 'admin') {
-                document.getElementById('admin-section').classList.remove('hidden');
-                document.getElementById('user-section').classList.add('hidden');
-                renderUserTable();
-            } else {
-                document.getElementById('user-section').classList.remove('hidden');
-                document.getElementById('admin-section').classList.add('hidden');
-                renderUserWorkspace();
-            }
-        }
-
-        // Admin Management Actions
-        async function handleUserSave(e) {
-            e.preventDefault();
-
-            const docId = document.getElementById('edit-doc-id').value;
-            const name = document.getElementById('user-fullname').value.trim();
-            const idNum = document.getElementById('user-idnum').value.trim();
-            const email = document.getElementById('user-email').value.trim() || `${idNum}@msmi.edu`;
-            const password = document.getElementById('user-password').value.trim();
-            const dept = document.getElementById('user-dept').value;
-            const status = document.getElementById('user-status').value;
-            const message = document.getElementById('user-message').value.trim();
-
-            if (docId) {
-                const idx = state.users.findIndex(u => String(u.id) === docId);
-                if (idx !== -1) {
-                    state.users[idx] = { ...state.users[idx], name, id: idNum, email, password, dept, status, message };
-                    showToast("User updated successfully", "success");
-                }
-            } else {
-                if (state.users.some(u => String(u.id) === idNum)) {
-                    showToast("User ID already exists!", "error");
-                    return;
-                }
-
-                const newUser = { id: idNum, name, email, password, dept, status, message };
-                state.users.push(newUser);
-                showToast("New User Provisioned & Saved", "success");
-            }
-
-            await writeDataToCloud();
-            resetUserForm();
-            renderUserTable();
-        }
-
-        async function deleteUser(userId) {
-            if (!confirm("Are you sure you want to delete this user credential?")) return;
-
-            state.users = state.users.filter(u => String(u.id) !== String(userId));
-            await writeDataToCloud();
-            renderUserTable();
-            showToast("User deleted successfully", "info");
-        }
-
-        function editUser(userId) {
-            const u = state.users.find(usr => String(usr.id) === String(userId));
-            if (!u) return;
-
-            document.getElementById('edit-doc-id').value = u.id;
-            document.getElementById('user-fullname').value = u.name;
-            document.getElementById('user-idnum').value = u.id;
-            document.getElementById('user-email').value = u.email || '';
-            document.getElementById('user-password').value = u.password;
-            document.getElementById('user-dept').value = u.dept || 'Computer Science';
-            document.getElementById('user-status').value = u.status || 'Active';
-            document.getElementById('user-message').value = u.message || '';
-
-            document.getElementById('form-title').innerText = "Edit User Credential";
-            document.getElementById('save-btn-text').innerText = "Update User Record";
-            document.getElementById('btn-cancel-edit').classList.remove('hidden');
-        }
-
-        function resetUserForm() {
-            document.getElementById('create-user-form').reset();
-            document.getElementById('edit-doc-id').value = "";
-            document.getElementById('form-title').innerText = "Provision User Credential";
-            document.getElementById('save-btn-text').innerText = "Save Credential to Database";
-            document.getElementById('btn-cancel-edit').classList.add('hidden');
-        }
-
-        function renderUserTable() {
-            const tbody = document.getElementById('user-table-body');
-            const search = (document.getElementById('search-input')?.value || '').toLowerCase();
-            tbody.innerHTML = '';
-
-            const filtered = state.users.filter(u => 
-                String(u.id).toLowerCase().includes(search) || 
-                (u.name && u.name.toLowerCase().includes(search))
-            );
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="px-4 py-8 text-center text-slate-400 font-mono">No records found</td></tr>`;
-                return;
-            }
-
-            filtered.forEach(u => {
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-msmi-50/60 transition-colors";
-                tr.innerHTML = `
-                    <td class="px-4 py-3 font-bold text-msmi-700 font-mono">${u.id}</td>
-                    <td class="px-4 py-3">
-                        <div class="font-sans font-bold text-slate-900">${u.name}</div>
-                        <div class="text-[10px] text-slate-400 font-mono">${u.email || 'No email'}</div>
-                    </td>
-                    <td class="px-4 py-3">
-                        <span class="px-2.5 py-1 rounded-full text-[10px] bg-msmi-100 text-msmi-800 font-bold border border-msmi-200">${u.dept || 'N/A'}</span>
-                    </td>
-                    <td class="px-4 py-3 font-mono">
-                        <div class="flex items-center gap-2">
-                            <span id="pass-mask-${u.id}" class="text-slate-400">••••••••</span>
-                            <span id="pass-raw-${u.id}" class="hidden text-emerald-600 font-bold">${u.password}</span>
-                            <button onclick="toggleTablePassword('${u.id}')" class="text-slate-400 hover:text-msmi-600">
-                                <i id="pass-eye-${u.id}" class="fa-solid fa-eye text-[11px]"></i>
-                            </button>
-                        </div>
-                    </td>
-                    <td class="px-4 py-3 text-slate-600 font-sans max-w-[150px] truncate" title="${u.message || ''}">
-                        ${u.message || 'No message set.'}
-                    </td>
-                    <td class="px-4 py-3 text-right space-x-2">
-                        <button onclick="editUser('${u.id}')" class="px-2.5 py-1 rounded-lg bg-msmi-100 hover:bg-msmi-200 text-msmi-700 text-[11px] font-bold">
-                            <i class="fa-solid fa-pen"></i>
-                        </button>
-                        <button onclick="deleteUser('${u.id}')" class="px-2.5 py-1 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-700 text-[11px] font-bold">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            document.getElementById('total-users-count').innerText = state.users.length;
-        }
-
-        // User Workspace Engine
-        function renderUserWorkspace() {
-            const u = state.currentUser;
-            if (!u) return;
-
-            document.getElementById('display-user-name').innerText = u.name || 'User';
-            document.getElementById('display-user-email').innerText = u.email || `${u.id}@msmi.edu`;
-            document.getElementById('display-user-id').innerText = u.id;
-            document.getElementById('display-user-dept').innerText = u.dept || 'Engineering';
-            document.getElementById('user-workspace-title').innerText = `${u.name}'s Workspace`;
-            document.getElementById('display-user-message').innerText = u.message || 'Welcome to your MSMI credentials portal workspace!';
-        }
-
-        async function handleUserPasswordChange(e) {
-            e.preventDefault();
-            const newPass = document.getElementById('user-new-pass').value.trim();
-            if (!newPass || newPass.length < 4) {
-                showToast("Password must be at least 4 characters", "error");
-                return;
-            }
-
-            const idx = state.users.findIndex(u => String(u.id) === String(state.currentUser.id));
-            if (idx !== -1) {
-                state.users[idx].password = newPass;
-                state.currentUser.password = newPass;
-                await writeDataToCloud();
-                document.getElementById('user-change-pass-form').reset();
-                showToast("Password updated successfully!", "success");
-            }
-        }
-
-        // Utilities
-        function togglePasswordVisibility(inputId, iconId) {
-            const input = document.getElementById(inputId);
-            const icon = document.getElementById(iconId);
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.className = 'fa-solid fa-eye-slash text-sm';
-            } else {
-                input.type = 'password';
-                icon.className = 'fa-solid fa-eye text-sm';
-            }
-        }
-
-        function toggleTablePassword(id) {
-            const mask = document.getElementById(`pass-mask-${id}`);
-            const raw = document.getElementById(`pass-raw-${id}`);
-            const eye = document.getElementById(`pass-eye-${id}`);
-            if (mask.classList.contains('hidden')) {
-                mask.classList.remove('hidden');
-                raw.classList.add('hidden');
-                eye.className = 'fa-solid fa-eye text-[11px]';
-            } else {
-                mask.classList.add('hidden');
-                raw.classList.remove('hidden');
-                eye.className = 'fa-solid fa-eye-slash text-[11px]';
-            }
-        }
-
-        function generateRandomId() {
-            document.getElementById('user-idnum').value = Math.floor(205 + Math.random() * 800);
-        }
-
-        function generateRandomPassword() {
-            const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            let pass = "pass";
-            for (let i = 0; i < 4; i++) pass += chars.charAt(Math.floor(Math.random() * chars.length));
-            document.getElementById('user-password').value = pass;
-        }
-
-        function exportUserDataCSV() {
-            let csv = "ID,Name,Email,Department,Status,Message\n";
-            state.users.forEach(u => {
-                csv += `"${u.id}","${u.name}","${u.email}","${u.dept}","${u.status}","${u.message || ''}"\n`;
-            });
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `msmi_credentials_export_${Date.now()}.csv`;
-            a.click();
-            showToast("Exported credentials table to CSV", "info");
-        }
-
-        function setLoginLoading(isLoading) {
-            const spinner = document.getElementById('login-btn-spinner');
-            const text = document.getElementById('login-btn-text');
-            if (isLoading) {
-                spinner.classList.remove('hidden');
-                text.innerText = "Authenticating...";
-            } else {
-                spinner.classList.add('hidden');
-                text.innerText = "Authenticate Access";
-            }
-        }
-
-        // Configuration Modal Logic
-        function openConfigModal() {
-            document.getElementById('config-modal').classList.remove('hidden');
-            document.getElementById('cfg-jsonbin-key').value = state.jsonbinKey;
-            document.getElementById('cfg-supa-url').value = state.supaUrl;
-            document.getElementById('cfg-supa-key').value = state.supaKey;
-            document.getElementById('cfg-firebase-json').value = state.firebaseConfig;
-        }
-
-        function closeConfigModal() {
-            document.getElementById('config-modal').classList.add('hidden');
-        }
-
-        function switchProviderTab(provider) {
-            state.cloudProvider = provider;
-            ['jsonbin', 'supabase', 'firebase'].forEach(p => {
-                const tab = document.getElementById(`tab-${p}`);
-                const panel = document.getElementById(`config-${p}-panel`);
-                if (p === provider) {
-                    tab.className = "py-2 rounded-lg text-center transition-all bg-msmi-600 text-white shadow-sm";
-                    panel.classList.remove('hidden');
-                } else {
-                    tab.className = "py-2 rounded-lg text-center text-slate-600 hover:text-slate-900 transition-all";
-                    panel.classList.add('hidden');
-                }
-            });
-        }
-
-        function saveCloudSettings() {
-            state.jsonbinKey = document.getElementById('cfg-jsonbin-key').value.trim();
-            state.supaUrl = document.getElementById('cfg-supa-url').value.trim();
-            state.supaKey = document.getElementById('cfg-supa-key').value.trim();
-            state.firebaseConfig = document.getElementById('cfg-firebase-json').value.trim();
-
-            localStorage.setItem('msmi_cloud_provider', state.cloudProvider);
-            localStorage.setItem('msmi_cfg_jsonbin_key', state.jsonbinKey);
-            localStorage.setItem('msmi_cfg_supa_url', state.supaUrl);
-            localStorage.setItem('msmi_cfg_supa_key', state.supaKey);
-            localStorage.setItem('msmi_cfg_firebase_json', state.firebaseConfig);
-
-            initCloudConnections();
-            syncDataFromCloud(true);
-            closeConfigModal();
-            showToast("Cloud Provider updated & reconnected!", "success");
-        }
-
-        // Toast Notification System
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            
-            const icons = {
-                success: 'fa-circle-check text-emerald-500',
-                error: 'fa-triangle-exclamation text-rose-500',
-                info: 'fa-circle-info text-accent-cyan'
-            };
-
-            toast.className = `pointer-events-auto flex items-center gap-3 p-4 rounded-xl white-glass border border-msmi-200 text-xs font-mono font-bold text-slate-800 shadow-2xl transition-all duration-300 transform translate-y-2 opacity-0`;
-            toast.innerHTML = `
-                <i class="fa-solid ${icons[type] || icons.info} text-base"></i>
-                <span class="flex-1">${message}</span>
-            `;
-
-            container.appendChild(toast);
-            requestAnimationFrame(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            });
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0', '-translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
-        }
-
-        function triggerConfetti() {
-            if (typeof confetti === 'function') {
-                confetti({ particleCount: 60, spread: 70, origin: { y: 0.8 }, colors: ['#e11d48', '#f43f5e', '#be123c', '#ffffff'] });
-            }
-        }
-
-        // Background Particles Canvas
-        function initBackgroundCanvas() {
-            const canvas = document.getElementById('bg-canvas');
+        // Background Wave Canvas Animation
+        function initBgCanvas() {
+            const canvas = document.getElementById('bgCanvas');
             const ctx = canvas.getContext('2d');
-            let width = canvas.width = window.innerWidth;
-            let height = canvas.height = window.innerHeight;
+            let w, h, step = 0;
 
-            const particles = Array.from({ length: 40 }, () => ({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
-                size: Math.random() * 2.5 + 1
-            }));
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
 
             function animate() {
-                ctx.clearRect(0, 0, width, height);
-                ctx.fillStyle = 'rgba(225, 29, 72, 0.35)';
+                ctx.clearRect(0, 0, w, h);
+                ctx.lineWidth = 1.5;
 
-                particles.forEach(p => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    if (p.x < 0 || p.x > width) p.vx *= -1;
-                    if (p.y < 0 || p.y > height) p.vy *= -1;
-
+                for (let i = 0; i < 3; i++) {
                     ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-
+                    ctx.strokeStyle = i === 0 ? 'rgba(0, 240, 255, 0.15)' : (i === 1 ? 'rgba(112, 0, 255, 0.15)' : 'rgba(255, 0, 122, 0.1)');
+                    for (let x = 0; x < w; x += 20) {
+                        const y = Math.sin((x * 0.002) + (step * 0.02) + i) * 50 + (h * (0.3 + i * 0.2));
+                        if (x === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    ctx.stroke();
+                }
+                step++;
                 requestAnimationFrame(animate);
             }
+            animate();
+        }
 
-            window.addEventListener('resize', () => {
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            initBgCanvas();
+            updateApiKeyUI();
+            setupTextareaAutoResize();
+            initSpeechRecognition();
+            loadHistoryUI();
+        });
+
+        // Theme Toggle Functionality
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            document.getElementById('themeIcon').setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+            lucide.createIcons();
+            showToast(`Theme switched to ${isDark ? 'Dark' : 'Light'} Mode`, "sun");
+        }
+
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('w-64');
+            sidebar.classList.toggle('w-16');
+            sidebar.querySelectorAll('span, label, select, .truncate').forEach(el => el.classList.toggle('hidden'));
+        }
+
+        // Navigation Mode Switcher
+        function switchMode(mode) {
+            currentMode = mode;
+            const activeStatus = document.getElementById('activeModeStatus');
+            const presetPanel = document.getElementById('imagePresetPanel');
+
+            ['chat', 'math', 'vision', 'image', 'search'].forEach(m => {
+                const btn = document.getElementById(`nav-${m}`);
+                if (btn) btn.className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition";
             });
 
-            animate();
+            const activeBtn = document.getElementById(`nav-${mode}`);
+            if (activeBtn) activeBtn.className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition bg-msmi-cyan/10 text-msmi-cyan border border-msmi-cyan/20";
+
+            if (mode === 'image') {
+                presetPanel.classList.remove('hidden');
+                activeStatus.innerText = "Mode: Image Studio (gemini-3.1-flash-image)";
+            } else {
+                presetPanel.classList.add('hidden');
+                activeStatus.innerText = `Mode: ${mode.toUpperCase()} Core`;
+            }
+            lucide.createIcons();
+        }
+
+        // Modals
+        function openSettingsModal() {
+            document.getElementById('apiKeyInput').value = apiKey;
+            document.getElementById('settingsModal').classList.remove('hidden');
+        }
+        function closeSettingsModal() { document.getElementById('settingsModal').classList.add('hidden'); }
+        
+        function saveApiKey() {
+            apiKey = document.getElementById('apiKeyInput').value.trim();
+            localStorage.setItem('msmi_api_key', apiKey);
+            updateApiKeyUI();
+            closeSettingsModal();
+            showToast("Gemini API Key saved!", "check-circle");
+        }
+
+        function removeApiKey() {
+            apiKey = '';
+            localStorage.removeItem('msmi_api_key');
+            document.getElementById('apiKeyInput').value = '';
+            updateApiKeyUI();
+            closeSettingsModal();
+            showToast("API Key removed", "trash-2");
+        }
+
+        function updateApiKeyUI() {
+            const dot = document.getElementById('keyStatusDot');
+            const warn = document.getElementById('noKeyWarning');
+            if (apiKey) {
+                dot.className = "w-2 h-2 rounded-full bg-emerald-400 shadow-cyan-glow";
+                if (warn) warn.classList.add('hidden');
+            } else {
+                dot.className = "w-2 h-2 rounded-full bg-red-500";
+                if (warn) warn.classList.remove('hidden');
+            }
+        }
+
+        function openPersonaModal() {
+            document.getElementById('systemInstructionInput').value = systemInstruction;
+            document.getElementById('personaModal').classList.remove('hidden');
+        }
+        function closePersonaModal() { document.getElementById('personaModal').classList.add('hidden'); }
+        
+        function savePersonaInstructions() {
+            systemInstruction = document.getElementById('systemInstructionInput').value.trim();
+            localStorage.setItem('msmi_system_prompt', systemInstruction);
+            closePersonaModal();
+            showToast("Persona configuration saved", "sliders");
+        }
+
+        // Camera Scan Functionality
+        async function openCameraModal() {
+            document.getElementById('cameraModal').classList.remove('hidden');
+            await startCamera();
+        }
+
+        async function startCamera() {
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                document.getElementById('cameraVideo').srcObject = cameraStream;
+            } catch (err) {
+                showToast("Unable to access camera: " + err.message, "alert-triangle");
+            }
+        }
+
+        function capturePhoto() {
+            const video = document.getElementById('cameraVideo');
+            const canvas = document.getElementById('cameraCanvas');
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 480;
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            const dataUrl = canvas.toDataURL('image/jpeg');
+            const base64Data = dataUrl.split(',')[1];
+
+            currentAttachedFile = {
+                base64: base64Data,
+                mimeType: 'image/jpeg',
+                name: 'camera_capture.jpg',
+                size: (base64Data.length * 0.75 / 1024).toFixed(1) + ' KB',
+                rawUrl: dataUrl
+            };
+
+            document.getElementById('filePreviewImg').src = dataUrl;
+            document.getElementById('fileName').innerText = 'camera_capture.jpg';
+            document.getElementById('fileSize').innerText = currentAttachedFile.size;
+            document.getElementById('filePreviewPanel').classList.remove('hidden');
+
+            closeCameraModal();
+            if (currentMode !== 'vision' && currentMode !== 'math') switchMode('vision');
+            showToast("Photo captured! Ready for math or object analysis.", "camera");
+        }
+
+        function closeCameraModal() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            document.getElementById('cameraModal').classList.add('hidden');
+        }
+
+        // File Selection & Drag Drop
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const base64Data = evt.target.result.split(',')[1];
+                currentAttachedFile = {
+                    base64: base64Data,
+                    mimeType: file.type || 'text/plain',
+                    name: file.name,
+                    size: (file.size / 1024).toFixed(1) + ' KB',
+                    rawUrl: evt.target.result
+                };
+
+                document.getElementById('filePreviewImg').src = file.type.startsWith('image/') 
+                    ? evt.target.result 
+                    : 'https://placehold.co/100x100/0d1322/00F0FF?text=FILE';
+                document.getElementById('fileName').innerText = file.name;
+                document.getElementById('fileSize').innerText = currentAttachedFile.size;
+                document.getElementById('filePreviewPanel').classList.remove('hidden');
+
+                if (currentMode !== 'vision' && currentMode !== 'math') switchMode('vision');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeAttachedFile() {
+            currentAttachedFile = null;
+            document.getElementById('fileInput').value = '';
+            document.getElementById('filePreviewPanel').classList.add('hidden');
+        }
+
+        // Form Submit Handler
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            if (isGenerating) return;
+
+            const inputEl = document.getElementById('userInput');
+            const prompt = inputEl.value.trim();
+
+            if (!prompt && !currentAttachedFile) return;
+
+            const welcomeBanner = document.getElementById('welcomeBanner');
+            if (welcomeBanner) welcomeBanner.remove();
+
+            appendMessage('user', prompt, currentAttachedFile);
+
+            inputEl.value = '';
+            inputEl.style.height = 'auto';
+            const fileToSend = currentAttachedFile;
+            removeAttachedFile();
+
+            isGenerating = true;
+
+            if (currentMode === 'image') {
+                await processImageStudio(prompt);
+            } else if (currentMode === 'search') {
+                await processLiveSearchChat(prompt);
+            } else if (currentMode === 'math') {
+                await processMathSolver(prompt, fileToSend);
+            } else if (currentMode === 'vision') {
+                await processVisionAndObjectDetector(prompt, fileToSend);
+            } else {
+                await processStandardChat(prompt, fileToSend);
+            }
+
+            isGenerating = false;
+        }
+
+        // Standard Chat Engine
+        async function processStandardChat(prompt, file) {
+            const aiMsgEl = appendMessage('assistant', '');
+            const contentEl = aiMsgEl.querySelector('.message-content');
+            showLoading(contentEl, "MSMI Logic Core Processing...");
+
+            try {
+                const selectedModel = document.getElementById('modelSelector').value;
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`;
+
+                const parts = [];
+                if (prompt) parts.push({ text: prompt });
+                if (file) parts.push({ inlineData: { mimeType: file.mimeType, data: file.base64 } });
+
+                const payload = {
+                    contents: [{ parts: parts }],
+                    systemInstruction: { parts: [{ text: systemInstruction }] }
+                };
+
+                const res = await fetchWithRetry(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+                const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
+
+                renderFormattedOutput(contentEl, responseText);
+                saveSession(prompt, responseText);
+            } catch (err) {
+                contentEl.innerHTML = `<span class="text-red-400 font-bold">Execution Error: ${err.message}</span>`;
+            }
+        }
+
+        // Specialized Math & LaTeX Engine
+        async function processMathSolver(prompt, file) {
+            const aiMsgEl = appendMessage('assistant', '');
+            const contentEl = aiMsgEl.querySelector('.message-content');
+            showLoading(contentEl, "Solving LaTeX Equations & Derivations...");
+
+            try {
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+                const mathInstruction = "You are a specialized Math & Physics Solver. Solve equations step-by-step. ALWAYS output mathematical expressions using LaTeX syntax. Use inline math $...$ and block math $$...$$. Provide explicit numerical and algebraic steps.";
+
+                const parts = [];
+                if (prompt) parts.push({ text: prompt });
+                else parts.push({ text: "Please solve the mathematical problem shown in this image step-by-step with LaTeX equations." });
+                if (file) parts.push({ inlineData: { mimeType: file.mimeType, data: file.base64 } });
+
+                const payload = {
+                    contents: [{ parts: parts }],
+                    systemInstruction: { parts: [{ text: mathInstruction }] }
+                };
+
+                const res = await fetchWithRetry(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+                const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "No solution derived.";
+
+                renderFormattedOutput(contentEl, text);
+                saveSession("Math: " + (prompt || "Image equation"), text);
+            } catch (err) {
+                contentEl.innerHTML = `<span class="text-red-400 font-bold">Math Engine Error: ${err.message}</span>`;
+            }
+        }
+
+        // Vision & Object Detection Engine
+        async function processVisionAndObjectDetector(prompt, file) {
+            const aiMsgEl = appendMessage('assistant', '');
+            const contentEl = aiMsgEl.querySelector('.message-content');
+            showLoading(contentEl, "Analyzing Image Features & Objects...");
+
+            try {
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+                const visionInstruction = "You are MSMI Vision Core. Identify all prominent objects, text, diagrams, structures, or handwritten math in the image. List key objects detected, provide context, and explain everything clearly.";
+
+                const parts = [];
+                if (prompt) parts.push({ text: prompt });
+                else parts.push({ text: "Perform comprehensive object identification, scene breakdown, and text analysis on this image." });
+                
+                if (file) {
+                    parts.push({ inlineData: { mimeType: file.mimeType, data: file.base64 } });
+                } else {
+                    throw new Error("Please attach an image or capture a photo to perform Vision analysis.");
+                }
+
+                const payload = {
+                    contents: [{ parts: parts }],
+                    systemInstruction: { parts: [{ text: visionInstruction }] }
+                };
+
+                const res = await fetchWithRetry(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+                const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "No vision analysis generated.";
+
+                renderFormattedOutput(contentEl, text);
+                saveSession("Vision Scan", text);
+            } catch (err) {
+                contentEl.innerHTML = `<span class="text-red-400 font-bold">Vision Error: ${err.message}</span>`;
+            }
+        }
+
+        // Grounded Search Engine
+        async function processLiveSearchChat(prompt) {
+            const aiMsgEl = appendMessage('assistant', '');
+            const contentEl = aiMsgEl.querySelector('.message-content');
+            showLoading(contentEl, "Grounding with Live Google Search...");
+
+            try {
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    tools: [{ "google_search": {} }]
+                };
+
+                const res = await fetchWithRetry(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+                const candidate = data.candidates?.[0];
+                const text = candidate?.content?.parts?.[0]?.text || "No grounded result.";
+
+                let citations = '';
+                const attrs = candidate?.groundingMetadata?.groundingAttributions;
+                if (attrs && attrs.length > 0) {
+                    citations = '<div class="mt-4 pt-3 border-t border-slate-800 text-xs text-slate-400"><p class="font-bold text-msmi-cyan mb-1">Search Sources:</p><div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">';
+                    attrs.forEach(a => {
+                        if (a.web?.uri && a.web?.title) {
+                            citations += `<a href="${a.web.uri}" target="_blank" class="p-2 bg-slate-900 border border-slate-800 hover:border-msmi-cyan rounded-lg text-xs text-slate-300 truncate block"><i data-lucide="globe" class="w-3 h-3 inline mr-1 text-msmi-cyan"></i> ${a.web.title}</a>`;
+                        }
+                    });
+                    citations += '</div></div>';
+                }
+
+                renderFormattedOutput(contentEl, text + citations);
+                saveSession(prompt, text);
+            } catch (err) {
+                contentEl.innerHTML = `<span class="text-red-400 font-bold">Search Error: ${err.message}</span>`;
+            }
+        }
+
+        // Image Generation Studio Engine
+        async function processImageStudio(prompt) {
+            const aiMsgEl = appendMessage('assistant', '');
+            const contentEl = aiMsgEl.querySelector('.message-content');
+            showLoading(contentEl, "Generating High-Res Cyber Artwork...");
+
+            try {
+                const style = document.getElementById('imageStyle').value;
+                const aspect = document.getElementById('imageAspect').value;
+                const fullPrompt = `${prompt}, style: ${style}`;
+
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${apiKey}`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: fullPrompt }] }],
+                    generationConfig: {
+                        responseModalities: ['IMAGE', 'TEXT'],
+                        imageConfig: { aspectRatio: aspect }
+                    }
+                };
+
+                const res = await fetchWithRetry(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+                const parts = data.candidates?.[0]?.content?.parts || [];
+                const imgPart = parts.find(p => p.inlineData);
+
+                if (imgPart) {
+                    const imgUrl = `data:${imgPart.inlineData.mimeType};base64,${imgPart.inlineData.data}`;
+                    contentEl.innerHTML = `
+                        <div class="space-y-3">
+                            <p class="text-xs text-slate-300">Generated artwork for: <span class="italic text-msmi-cyan">"${prompt}"</span></p>
+                            <div class="relative group max-w-lg rounded-2xl overflow-hidden border border-msmi-cyan/40 shadow-cyan-glow bg-slate-900">
+                                <img src="${imgUrl}" alt="${prompt}" class="w-full h-auto object-cover">
+                                <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center space-x-3">
+                                    <a href="${imgUrl}" download="msmi-artwork.png" class="p-2.5 bg-slate-900 hover:bg-black text-white rounded-xl text-xs font-bold border border-msmi-cyan/50 flex items-center">
+                                        <i data-lucide="download" class="w-4 h-4 mr-1 text-msmi-cyan"></i> Save Image
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
+                    lucide.createIcons();
+                } else {
+                    const fallback = parts.find(p => p.text)?.text || "Unable to render image.";
+                    renderFormattedOutput(contentEl, fallback);
+                }
+            } catch (err) {
+                contentEl.innerHTML = `<span class="text-red-400 font-bold">Image Studio Error: ${err.message}</span>`;
+            }
+        }
+
+        function enhancePrompt() {
+            const input = document.getElementById('userInput');
+            if (input.value) {
+                input.value = `Masterpiece quality, hyper-detailed, cinematic lighting, 8k resolution: ${input.value}`;
+                showToast("Prompt enhanced with visual details!", "sparkles");
+            }
+        }
+
+        // Retry Fetch Mechanism
+        async function fetchWithRetry(url, options, retries = 3, delay = 1000) {
+            try {
+                const res = await fetch(url, options);
+                if (!res.ok) {
+                    const errText = await res.text();
+                    throw new Error(`API Status ${res.status}: ${errText}`);
+                }
+                return res;
+            } catch (err) {
+                if (retries > 0) {
+                    await new Promise(r => setTimeout(r, delay));
+                    return fetchWithRetry(url, options, retries - 1, delay * 2);
+                }
+                throw err;
+            }
+        }
+
+        // Append Message UI
+        function appendMessage(role, text, file = null) {
+            const container = document.getElementById('messagesContainer');
+            const msgDiv = document.createElement('div');
+            const isUser = role === 'user';
+
+            msgDiv.className = `flex ${isUser ? 'justify-end' : 'justify-start'}`;
+
+            let fileHtml = '';
+            if (file) {
+                fileHtml = `
+                    <div class="mb-2 rounded-xl overflow-hidden border border-slate-700/80 max-w-xs">
+                        ${file.mimeType.startsWith('image/') 
+                            ? `<img src="${file.rawUrl}" class="w-full h-32 object-cover">` 
+                            : `<div class="p-3 bg-slate-900 text-xs flex items-center space-x-2"><i data-lucide="file-text" class="w-4 h-4 text-msmi-cyan"></i><span class="truncate">${file.name}</span></div>`}
+                    </div>
+                `;
+            }
+
+            msgDiv.innerHTML = `
+                <div class="flex space-x-3 max-w-3xl ${isUser ? 'flex-row-reverse space-x-reverse' : 'flex-row'}">
+                    <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${isUser ? 'bg-gradient-to-tr from-msmi-cyan to-msmi-purple text-black font-bold' : 'bg-slate-900 text-msmi-cyan border border-slate-700'}">
+                        <i data-lucide="${isUser ? 'user' : 'cpu'}" class="w-4 h-4"></i>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="p-4 rounded-2xl text-xs md:text-sm ${isUser ? 'bg-slate-800 text-white rounded-tr-none border border-slate-700' : 'bg-slate-900/90 border border-slate-800 text-slate-100 rounded-tl-none shadow-sm'}">
+                            ${fileHtml}
+                            <div class="message-content prose prose-invert max-w-none text-xs md:text-sm">${text}</div>
+                        </div>
+                        ${!isUser ? `
+                            <div class="flex items-center space-x-3 text-[10px] text-slate-500 pl-1">
+                                <button onclick="copyMessage(this)" class="hover:text-msmi-cyan flex items-center"><i data-lucide="copy" class="w-3 h-3 mr-1"></i> Copy</button>
+                                <button onclick="readAloud(this)" class="hover:text-msmi-cyan flex items-center"><i data-lucide="volume-2" class="w-3 h-3 mr-1"></i> Speak</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+            lucide.createIcons();
+            return msgDiv;
+        }
+
+        function showLoading(container, msg) {
+            container.innerHTML = `
+                <div class="flex items-center space-x-2 text-msmi-cyan py-1">
+                    <div class="w-2 h-2 rounded-full bg-msmi-cyan animate-ping"></div>
+                    <span class="text-xs font-semibold tracking-wide">${msg}</span>
+                </div>
+            `;
+        }
+
+        // Universal Formatted Output (Markdown, Syntax Highlight, and KaTeX Math)
+        function renderFormattedOutput(container, rawText) {
+            // Render markdown first
+            container.innerHTML = marked.parse(rawText);
+
+            // Render KaTeX Math Equations
+            try {
+                renderMathInElement(container, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            } catch (e) {
+                console.error("KaTeX rendering error:", e);
+            }
+
+            // Syntax highlighting and code block live sandbox
+            container.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+
+                const lang = block.className || '';
+                if (lang.includes('html') || lang.includes('javascript')) {
+                    const runBtn = document.createElement('button');
+                    runBtn.className = "absolute top-2 right-2 px-2 py-1 bg-msmi-cyan/20 text-msmi-cyan border border-msmi-cyan/40 rounded text-[10px] font-bold hover:bg-msmi-cyan hover:text-black transition";
+                    runBtn.innerText = "Run Live Sandbox";
+                    runBtn.onclick = () => openPreviewModal(block.innerText);
+                    block.parentElement.appendChild(runBtn);
+                }
+            });
+            lucide.createIcons();
+        }
+
+        // Live Code Sandbox
+        function openPreviewModal(code) {
+            const modal = document.getElementById('previewModal');
+            const iframe = document.getElementById('previewFrame');
+            iframe.srcdoc = code;
+            modal.classList.remove('hidden');
+        }
+        function closePreviewModal() { document.getElementById('previewModal').classList.add('hidden'); }
+
+        // Speech Recognition
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                speechRecognition = new SpeechRecognition();
+                speechRecognition.onresult = (e) => {
+                    document.getElementById('userInput').value = e.results[0][0].transcript;
+                    toggleVoiceAI(false);
+                };
+            }
+        }
+
+        function toggleVoiceAI(force) {
+            if (!speechRecognition) return;
+            isListening = force !== undefined ? force : !isListening;
+            const wave = document.getElementById('voiceWaveOverlay');
+
+            if (isListening) {
+                speechRecognition.start();
+                wave.classList.remove('hidden');
+                showToast("Voice Assistant Listening...", "mic");
+            } else {
+                speechRecognition.stop();
+                wave.classList.add('hidden');
+            }
+        }
+
+        function readAloud(btn) {
+            const text = btn.closest('.space-y-1').querySelector('.message-content').innerText;
+            window.speechSynthesis.cancel();
+            const utt = new SpeechSynthesisUtterance(text);
+            window.speechSynthesis.speak(utt);
+            showToast("Reading aloud...", "volume-2");
+        }
+
+        function copyMessage(btn) {
+            const text = btn.closest('.space-y-1').querySelector('.message-content').innerText;
+            navigator.clipboard.writeText(text);
+            showToast("Copied to clipboard!", "check");
+        }
+
+        // Session History Management
+        function saveSession(prompt, response) {
+            chatSessions.unshift({ id: Date.now(), prompt: prompt.substring(0, 30) + '...' });
+            if (chatSessions.length > 10) chatSessions.pop();
+            localStorage.setItem('msmi_sessions', JSON.stringify(chatSessions));
+            loadHistoryUI();
+        }
+
+        function loadHistoryUI() {
+            const list = document.getElementById('historyList');
+            list.innerHTML = '';
+            chatSessions.forEach(s => {
+                const item = document.createElement('div');
+                item.className = "p-1.5 rounded-lg text-xs text-slate-400 hover:text-msmi-cyan hover:bg-slate-900/80 cursor-pointer truncate transition";
+                item.innerText = s.prompt;
+                list.appendChild(item);
+            });
+        }
+
+        function clearHistory() {
+            chatSessions = [];
+            localStorage.removeItem('msmi_sessions');
+            loadHistoryUI();
+            showToast("History cleared", "trash-2");
+        }
+
+        function createNewChat() {
+            document.getElementById('messagesContainer').innerHTML = '';
+            showToast("New chat session created", "plus-circle");
+        }
+
+        // Textarea Formatting
+        function setupTextareaAutoResize() {
+            const tx = document.getElementById('userInput');
+            if (!tx) return;
+            tx.addEventListener('input', () => {
+                tx.style.height = 'auto';
+                tx.style.height = Math.min(tx.scrollHeight, 128) + 'px';
+            });
+        }
+
+        function handleKeyDown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const form = document.getElementById('chatForm');
+                if (form) {
+                    form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                }
+            }
+        }
+
+        function useQuickPrompt(text) {
+            const input = document.getElementById('userInput');
+            if (input) {
+                input.value = text;
+                input.focus();
+                input.dispatchEvent(new Event('input'));
+            }
+        }
+
+        function useQuickPrompt(text) {
+            const input = document.getElementById('userInput');
+            input.value = text;
+            input.focus();
+            input.dispatchEvent(new Event('input'));
+        }
+
+        function showToast(msg, icon = 'info') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            document.getElementById('toastIcon').setAttribute('data-lucide', icon);
+            lucide.createIcons();
+
+            toast.classList.remove('translate-y-10', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-10', 'opacity-0'), 3000);
         }
     </script>
 </body>
