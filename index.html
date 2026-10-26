@@ -1,1218 +1,710 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSMI AI - Pro Suite (Math, Vision & Image Studio)</title>
-    
+    <title>MSMI AI - Advanced Intelligence Studio</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Fira Code -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Highlight.js for Code Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <!-- KaTeX for High-Speed Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        msmi: {
-                            cyan: '#00F0FF',
-                            purple: '#7000FF',
-                            pink: '#FF007A',
-                            dark: '#060911',
-                            card: '#0D1322',
-                            border: '#1E293B',
-                            glow: 'rgba(0, 240, 255, 0.15)'
+                        brand: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                            800: '#991b1b',
+                            900: '#7f1d1d',
                         }
                     },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
                     boxShadow: {
-                        'cyan-glow': '0 0 20px rgba(0, 240, 255, 0.35)',
-                        'purple-glow': '0 0 20px rgba(112, 0, 255, 0.35)',
+                        'glow-red': '0 0 20px rgba(220, 38, 38, 0.25)',
+                        'glow-red-lg': '0 0 35px rgba(220, 38, 38, 0.4)',
                     }
                 }
             }
         }
     </script>
 
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <!-- Marked.js -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    
-    <!-- Highlight.js -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tokyo-night-dark.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    
-    <!-- KaTeX for LaTeX Math Rendering -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-    
-    <!-- Canvas Confetti -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
     <style>
-        /* Scrollbar Styles */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #00F0FF; }
-
-        .glass-panel {
-            background: rgba(13, 19, 34, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(0, 240, 255, 0.12);
+        /* Custom animations & fine-grained styling */
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(220, 38, 38, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(220, 38, 38, 0.5); }
         }
+
+        .animate-glow {
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fca5a5;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #dc2626;
+        }
+
+        /* Markdown rendered content fine-tuning */
+        .markdown-body p { margin-bottom: 0.85rem; line-height: 1.65; }
+        .markdown-body h1, .markdown-body h2, .markdown-body h3 { 
+            font-weight: 700; 
+            margin-top: 1.2rem; 
+            margin-bottom: 0.6rem; 
+            color: #991b1b; 
+        }
+        .markdown-body h1 { font-size: 1.5rem; border-bottom: 2px solid #fee2e2; padding-bottom: 0.3rem; }
+        .markdown-body h2 { font-size: 1.25rem; }
+        .markdown-body h3 { font-size: 1.1rem; }
+        .markdown-body ul, .markdown-body ol { margin-left: 1.5rem; margin-bottom: 0.85rem; list-style-type: disc; }
+        .markdown-body ol { list-style-type: decimal; }
+        .markdown-body table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; border: 1px solid #fee2e2; }
+        .markdown-body th, .markdown-body td { border: 1px solid #fecdd3; padding: 0.5rem 0.8rem; text-align: left; }
+        .markdown-body th { background-color: #fff1f2; font-weight: 600; color: #991b1b; }
+        .markdown-body blockquote { border-left: 4px solid #dc2626; padding-left: 1rem; color: #4b5563; font-style: italic; background: #fff1f2; margin: 0.8rem 0; padding-top: 0.4rem; padding-bottom: 0.4rem; border-radius: 0 0.375rem 0.375rem 0; }
+
+        /* KaTeX rendering adjustments */
+        .katex-display { margin: 0.8em 0; overflow-x: auto; overflow-y: hidden; padding: 0.4rem 0; }
         
-        html:not(.dark) .glass-panel {
-            background: rgba(255, 255, 255, 0.85);
-            border-color: rgba(0, 0, 0, 0.08);
+        /* Cursor animation for streaming */
+        .streaming-cursor::after {
+            content: '❚';
+            display: inline-block;
+            margin-left: 2px;
+            color: #dc2626;
+            animation: blink 0.8s infinite;
         }
-
-        .prose pre {
-            background: #090d16 !important;
-            border: 1px solid #1e293b;
-            border-radius: 0.75rem;
-            position: relative;
-            padding: 1rem;
-        }
-
-        .prose code { color: #00F0FF; font-family: monospace; }
-        .prose p { margin-bottom: 0.75rem; line-height: 1.6; }
-        .prose ul { list-style-type: disc; margin-left: 1.25rem; margin-bottom: 0.75rem; }
-        .prose ol { list-style-type: decimal; margin-left: 1.25rem; margin-bottom: 0.75rem; }
-        .prose a { color: #00F0FF; text-decoration: underline; }
-        .prose table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-        .prose th, .prose td { border: 1px solid #1e293b; padding: 0.5rem 0.75rem; text-align: left; }
-        .prose th { background-color: #0d1322; color: #00F0FF; }
-
-        /* KaTeX custom display formatting */
-        .katex-display {
-            overflow-x: auto;
-            overflow-y: hidden;
-            padding: 0.5rem 0;
-            margin: 0.75rem 0;
-            background: rgba(0, 240, 255, 0.03);
-            border-radius: 0.5rem;
-            border-left: 3px solid #00F0FF;
-            padding-left: 0.75rem;
-        }
-
-        .katex {
-            font-size: 1.05em;
-            line-height: 1.2;
-        }
-
-        #bgCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.35;
-        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     </style>
 </head>
-<body class="bg-msmi-dark dark:bg-msmi-dark text-slate-100 dark:text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-msmi-cyan selection:text-black relative overflow-x-hidden transition-colors duration-300">
+<body class="bg-slate-50 text-slate-800 font-sans h-screen flex flex-col overflow-hidden">
 
-    <!-- Canvas Wave Background -->
-    <canvas id="bgCanvas"></canvas>
-
-    <!-- Header Navigation Bar -->
-    <header class="sticky top-0 z-40 border-b border-slate-800/80 glass-panel px-4 py-3 flex items-center justify-between">
+    <!-- Top Navigation Header -->
+    <header class="bg-white border-b border-red-100 shadow-sm px-4 lg:px-8 py-3 flex items-center justify-between z-20">
         <div class="flex items-center space-x-3">
-            <button onclick="toggleSidebar()" class="p-2 text-slate-400 hover:text-msmi-cyan rounded-lg hover:bg-slate-800/50 transition">
-                <i data-lucide="menu" class="w-5 h-5"></i>
-            </button>
-            <div class="flex items-center space-x-2">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-msmi-cyan via-msmi-purple to-msmi-pink p-[1px] shadow-cyan-glow">
-                    <div class="w-full h-full bg-msmi-dark rounded-[11px] flex items-center justify-center">
-                        <i data-lucide="cpu" class="w-5 h-5 text-msmi-cyan animate-pulse"></i>
-                    </div>
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 to-brand-500 flex items-center justify-center text-white font-black text-xl shadow-glow-red tracking-wider">
+                M
+            </div>
+            <div>
+                <div class="flex items-center space-x-2">
+                    <h1 class="font-extrabold text-xl tracking-tight text-slate-900">MSMI <span class="text-brand-600">AI</span></h1>
+                    <span class="px-2 py-0.5 text-xs font-semibold bg-red-100 text-brand-700 rounded-full border border-red-200">v3.8 Ultra</span>
                 </div>
-                <div>
-                    <h1 class="font-extrabold text-lg tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-msmi-cyan via-white to-msmi-purple">MSMI AI PRO</h1>
-                    <p class="text-[10px] text-slate-400 tracking-widest uppercase">Gemini Powered • Math, Vision & Image Studio</p>
-                </div>
+                <p class="text-xs text-slate-500 hidden sm:block">Advanced Mathematical & Analytical Intelligence Studio</p>
             </div>
         </div>
 
-        <!-- Center System Status -->
-        <div class="hidden md:flex items-center space-x-6 text-xs text-slate-400">
-            <div class="flex items-center space-x-2">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                <span>Math & Vision Engine: <strong class="text-slate-200">ACTIVE</strong></span>
-            </div>
-            <div class="flex items-center space-x-1.5">
-                <i data-lucide="zap" class="w-3.5 h-3.5 text-msmi-cyan"></i>
-                <span>KaTeX Math: <strong class="text-msmi-cyan">ENABLED</strong></span>
-            </div>
-        </div>
-
-        <!-- Header Action Tools -->
+        <!-- Action Controls -->
         <div class="flex items-center space-x-2 sm:space-x-3">
-            <button onclick="toggleTheme()" class="p-2 text-slate-400 hover:text-amber-400 rounded-lg hover:bg-slate-800/50 transition" title="Toggle Light/Dark Theme">
-                <i data-lucide="sun" id="themeIcon" class="w-5 h-5"></i>
+            <!-- Clear Chat Button -->
+            <button id="clearChatBtn" title="Clear Conversation" class="p-2 text-slate-500 hover:text-brand-600 hover:bg-red-50 rounded-lg transition-colors duration-200">
+                <i class="fa-solid fa-trash-can text-lg"></i>
             </button>
 
-            <button onclick="openPersonaModal()" class="hidden sm:flex items-center space-x-1.5 bg-slate-800/80 hover:bg-slate-700 text-xs text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700/60 transition">
-                <i data-lucide="sliders" class="w-3.5 h-3.5 text-msmi-purple"></i>
-                <span>System Persona</span>
-            </button>
+            <!-- System Prompt / Reasoning Presets -->
+            <select id="modePreset" class="text-xs sm:text-sm bg-slate-100 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all">
+                <option value="math">🧮 Math & Science Expert</option>
+                <option value="code">💻 Software Architect</option>
+                <option value="general">🧠 General Reasoning</option>
+                <option value="concise">⚡ Ultra Fast & Concise</option>
+            </select>
 
-            <button onclick="openSettingsModal()" class="flex items-center space-x-2 bg-slate-900 hover:border-msmi-cyan text-xs text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700/80 transition shadow-sm">
-                <i data-lucide="key" class="w-3.5 h-3.5 text-amber-400"></i>
-                <span class="hidden sm:inline">API Key</span>
-                <span id="keyStatusDot" class="w-2 h-2 rounded-full bg-red-500"></span>
+            <!-- Settings Button -->
+            <button id="settingsBtn" class="flex items-center space-x-1.5 px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white rounded-lg font-medium text-xs sm:text-sm shadow-md hover:shadow-glow-red transition-all duration-200">
+                <i class="fa-solid fa-key"></i>
+                <span class="hidden sm:inline">API Settings</span>
             </button>
         </div>
     </header>
 
-    <!-- Main Workspace -->
-    <div class="flex-1 flex overflow-hidden relative z-10">
+    <!-- Main Workspace Area -->
+    <div class="flex-1 flex overflow-hidden relative">
 
-        <!-- Sidebar Navigation -->
-        <aside id="sidebar" class="w-64 border-r border-slate-800/80 glass-panel flex flex-col justify-between p-3 shrink-0 transition-all duration-300">
-            <div class="space-y-4">
-                <div class="flex items-center justify-between text-[11px] font-bold text-slate-400 uppercase tracking-wider px-2">
-                    <span>Capabilities</span>
-                    <button onclick="createNewChat()" class="p-1 hover:text-msmi-cyan transition" title="New Session">
-                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                    </button>
-                </div>
+        <!-- Sidebar (History & Quick Prompts) -->
+        <aside id="sidebar" class="w-72 bg-white border-r border-slate-200 flex flex-col transition-all duration-300 transform -translate-x-full md:translate-x-0 absolute md:relative z-10 h-full">
+            <div class="p-4 border-b border-slate-100 flex justify-between items-center">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Quick Templates</span>
+                <button id="newChatBtn" class="text-xs font-semibold text-brand-600 hover:text-brand-800 flex items-center gap-1">
+                    <i class="fa-solid fa-plus"></i> New Prompt
+                </button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-3 space-y-2">
+                <div class="text-xs font-semibold text-slate-500 px-2 py-1">Mathematics & Logic</div>
+                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-square-root-variable text-brand-500"></i>
+                    Solve & Step Matrix Eigenvalues
+                </button>
+                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-calculator text-brand-500"></i>
+                    Evaluate Integral $\int x^2 \sin(x) dx$
+                </button>
+                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-atom text-brand-500"></i>
+                    Schrödinger Equation Proof
+                </button>
 
-                <nav class="space-y-1">
-                    <button onclick="switchMode('chat')" id="nav-chat" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition bg-msmi-cyan/10 text-msmi-cyan border border-msmi-cyan/20">
-                        <i data-lucide="bot" class="w-4 h-4 shrink-0"></i>
-                        <span>Smart Chat & Reasoning</span>
-                    </button>
-                    <button onclick="switchMode('math')" id="nav-math" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition">
-                        <i data-lucide="binary" class="w-4 h-4 shrink-0"></i>
-                        <span>Math & LaTeX Solver</span>
-                    </button>
-                    <button onclick="switchMode('vision')" id="nav-vision" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition">
-                        <i data-lucide="scan-eye" class="w-4 h-4 shrink-0"></i>
-                        <span>Vision & Object Detector</span>
-                    </button>
-                    <button onclick="switchMode('image')" id="nav-image" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition">
-                        <i data-lucide="palette" class="w-4 h-4 shrink-0"></i>
-                        <span>Image Studio</span>
-                    </button>
-                    <button onclick="switchMode('search')" id="nav-search" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition">
-                        <i data-lucide="globe" class="w-4 h-4 shrink-0"></i>
-                        <span>Grounding Web Search</span>
-                    </button>
-                </nav>
-
-                <!-- Model Engine Selector -->
-                <div class="pt-2 px-1">
-                    <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">AI Engine Core</label>
-                    <select id="modelSelector" class="w-full bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1.5 text-xs text-msmi-cyan focus:outline-none focus:border-msmi-cyan">
-                        <option value="gemini-2.5-flash">Gemini 2.5 Flash (Fast Reasoning & Math)</option>
-                        <option value="gemini-2.5-pro">Gemini 2.5 Pro (Deep Analysis & Coding)</option>
-                    </select>
-                </div>
-
-                <!-- Session History List -->
-                <div class="pt-2">
-                    <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-2 mb-2 flex justify-between items-center">
-                        <span>Session History</span>
-                        <button onclick="clearHistory()" class="text-[10px] text-red-400 hover:underline">Clear</button>
-                    </div>
-                    <div id="historyList" class="space-y-1 max-h-40 overflow-y-auto pr-1">
-                        <!-- Dynamically filled -->
-                    </div>
-                </div>
+                <div class="text-xs font-semibold text-slate-500 px-2 py-1 mt-4">Code & Engineering</div>
+                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
+                    <i class="fa-code text-brand-500"></i>
+                    Fast Python FFT Algorithm
+                </button>
+                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-microchip text-brand-500"></i>
+                    Optimize C++ Memory Allocation
+                </button>
             </div>
 
-            <div class="border-t border-slate-800/80 pt-3">
-                <div class="p-2 bg-slate-900/80 border border-slate-800 rounded-xl text-[11px] text-slate-400 flex items-center justify-between">
-                    <span class="truncate">Encryption: End-to-End</span>
-                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+            <div class="p-3 border-t border-slate-100 bg-slate-50">
+                <div class="flex items-center justify-between text-xs text-slate-500">
+                    <span class="flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Engine Ready
+                    </span>
+                    <span id="keyStatusBadge" class="text-emerald-600 font-medium">Key Active</span>
                 </div>
             </div>
         </aside>
 
-        <!-- Main Chat Display Container -->
-        <main class="flex-1 flex flex-col relative overflow-hidden bg-msmi-dark/90">
+        <!-- Sidebar Toggle Overlay (Mobile) -->
+        <button id="mobileSidebarToggle" class="md:hidden absolute bottom-20 right-4 z-30 w-12 h-12 bg-brand-600 text-white rounded-full shadow-lg flex items-center justify-center focus:outline-none">
+            <i class="fa-solid fa-bars text-lg"></i>
+        </button>
 
-            <!-- Chat Scroll Area -->
-            <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
-                
-                <!-- Gemini-Style Launch Banner -->
-                <div id="welcomeBanner" class="max-w-3xl mx-auto my-6 p-6 rounded-2xl glass-panel border border-msmi-cyan/20 space-y-6 text-center relative overflow-hidden">
-                    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-msmi-cyan/10 rounded-full blur-3xl pointer-events-none"></div>
-                    
-                    <div class="inline-flex p-3 rounded-2xl bg-gradient-to-tr from-msmi-cyan/20 to-msmi-purple/20 text-msmi-cyan border border-msmi-cyan/30 shadow-cyan-glow">
-                        <i data-lucide="sparkles" class="w-8 h-8"></i>
+        <!-- Main Chat Canvas -->
+        <main class="flex-1 flex flex-col bg-white h-full overflow-hidden">
+            <!-- Messages Container -->
+            <div id="chatMessages" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
+
+                <!-- Welcome Card -->
+                <div id="welcomeBanner" class="max-w-2xl mx-auto my-8 p-6 rounded-2xl bg-gradient-to-b from-red-50 to-white border border-red-100 text-center shadow-sm">
+                    <div class="w-16 h-16 bg-brand-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-black shadow-glow-red animate-glow">
+                        MSMI
                     </div>
-
-                    <div>
-                        <h2 class="text-2xl font-black text-white tracking-wide">MSMI AI Advanced Pro</h2>
-                        <p class="text-slate-400 text-xs mt-1 max-w-md mx-auto">Solve complex LaTeX calculus, analyze photos with live camera, detect objects, and generate custom high-res images.</p>
-                    </div>
-
-                    <div id="noKeyWarning" class="p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-300 text-xs flex items-center justify-between">
-                        <span class="flex items-center"><i data-lucide="alert-triangle" class="w-4 h-4 mr-2 shrink-0 text-red-400"></i> Google Gemini API Key required to run requests.</span>
-                        <button onclick="openSettingsModal()" class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg text-xs transition">Set Key</button>
-                    </div>
-
-                    <!-- Instant Prompt Launchers -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 text-left pt-2">
-                        <button onclick="switchMode('math'); useQuickPrompt('Solve this integral step-by-step with LaTeX equations: \\int_0^\\pi x \\sin(x) dx')" class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-msmi-cyan/50 hover:bg-slate-800/60 transition text-xs group">
-                            <span class="font-bold text-msmi-cyan block mb-0.5 group-hover:translate-x-0.5 transition-transform"><i data-lucide="binary" class="w-3.5 h-3.5 inline mr-1"></i> Math & Integral</span>
-                            Solve definite integrals with full LaTeX equations.
-                        </button>
-                        <button onclick="switchMode('vision'); document.getElementById('cameraModal').classList.remove('hidden'); startCamera();" class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-msmi-cyan/50 hover:bg-slate-800/60 transition text-xs group">
-                            <span class="font-bold text-emerald-400 block mb-0.5 group-hover:translate-x-0.5 transition-transform"><i data-lucide="camera" class="w-3.5 h-3.5 inline mr-1"></i> Live Camera Scan</span>
-                            Take a photo to analyze math or identify objects.
-                        </button>
-                        <button onclick="switchMode('image'); useQuickPrompt('A hyperrealistic cyberpunk laboratory with holographic glowing math equations, 8k resolution')" class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-msmi-cyan/50 hover:bg-slate-800/60 transition text-xs group">
-                            <span class="font-bold text-msmi-pink block mb-0.5 group-hover:translate-x-0.5 transition-transform"><i data-lucide="image" class="w-3.5 h-3.5 inline mr-1"></i> Image Generation</span>
-                            Generate custom high-resolution cyberpunk art.
-                        </button>
+                    <h2 class="text-2xl font-extrabold text-slate-900 mb-2">Welcome to MSMI AI</h2>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        An ultra-responsive AI agent tailored for complex mathematical calculations, algorithm design, LaTeX rendering, and deep logical analysis. Powered by Gemini 2.5/3.8 Flash capabilities.
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
+                        <div class="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
+                            <i class="fa-solid fa-square-root-variable text-brand-600 mb-1 text-base"></i>
+                            <h3 class="text-xs font-bold text-slate-800">LaTeX Rendering</h3>
+                            <p class="text-xs text-slate-500">Instant formulas with KaTeX engine.</p>
+                        </div>
+                        <div class="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
+                            <i class="fa-solid fa-bolt text-brand-600 mb-1 text-base"></i>
+                            <h3 class="text-xs font-bold text-slate-800">High-Speed Stream</h3>
+                            <p class="text-xs text-slate-500">Real-time typing low latency output.</p>
+                        </div>
+                        <div class="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
+                            <i class="fa-solid fa-shield-halved text-brand-600 mb-1 text-base"></i>
+                            <h3 class="text-xs font-bold text-slate-800">Secure API Key</h3>
+                            <p class="text-xs text-slate-500">Key is kept private in local storage.</p>
+                        </div>
                     </div>
                 </div>
 
             </div>
 
-            <!-- Image Generation Settings Bar -->
-            <div id="imagePresetPanel" class="hidden px-4 py-2 border-t border-slate-800 glass-panel flex flex-wrap items-center gap-3 text-xs">
-                <span class="font-semibold text-msmi-cyan">Style:</span>
-                <select id="imageStyle" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-slate-200">
-                    <option value="Cyberpunk high-tech glowing aesthetic">Cyberpunk</option>
-                    <option value="Photorealistic 8K ultra-detailed portrait photo">Photorealistic</option>
-                    <option value="Detailed technical vector diagram illustration">Technical Diagram</option>
-                    <option value="Vibrant anime artwork style">Anime</option>
-                    <option value="3D render unreal engine 5 render">3D Artwork</option>
-                </select>
-                <span class="font-semibold text-msmi-cyan ml-2">Aspect Ratio:</span>
-                <select id="imageAspect" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-slate-200">
-                    <option value="16:9">16:9 Landscape</option>
-                    <option value="1:1">1:1 Square</option>
-                    <option value="4:3">4:3 Standard</option>
-                    <option value="9:16">9:16 Portrait</option>
-                </select>
-                <button onclick="enhancePrompt()" class="ml-auto px-2.5 py-1 bg-msmi-purple/20 text-msmi-purple border border-msmi-purple/40 rounded-lg font-semibold hover:bg-msmi-purple hover:text-white transition flex items-center">
-                    <i data-lucide="wand-2" class="w-3 h-3 mr-1"></i> Enhance Prompt
-                </button>
-            </div>
+            <!-- Input Controls Area -->
+            <div class="border-t border-slate-100 p-3 sm:p-4 bg-white">
+                <div class="max-w-4xl mx-auto relative">
 
-            <!-- Voice Listening Wave Visualizer Bar -->
-            <div id="voiceWaveOverlay" class="hidden px-4 py-2 border-t border-slate-800 bg-slate-900/90 flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <div class="w-3 h-3 rounded-full bg-red-500 animate-ping"></div>
-                    <span class="text-xs font-semibold text-slate-200">MSMI Voice Recognition Active...</span>
-                </div>
-                <canvas id="voiceVisualizer" class="w-48 h-6"></canvas>
-            </div>
+                    <!-- Prompt Textarea Wrapper -->
+                    <div class="relative flex items-end bg-slate-50 border border-slate-200 rounded-2xl shadow-sm focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-red-100 transition-all">
+                        
+                        <textarea id="userInput" rows="1" placeholder="Ask MSMI AI anything (e.g. solve $e^{i\\pi} + 1 = 0$, code a sorting algorithm)..." 
+                            class="w-full pl-4 pr-24 py-3.5 bg-transparent resize-none text-slate-800 text-sm focus:outline-none max-h-48 overflow-y-auto font-sans"></textarea>
+                        
+                        <div class="absolute right-2 bottom-2 flex items-center space-x-1.5 pb-0.5">
+                            <!-- Voice Input Button -->
+                            <button id="voiceBtn" title="Voice Input" class="p-2 text-slate-400 hover:text-brand-600 hover:bg-white rounded-xl transition-all">
+                                <i class="fa-solid fa-microphone text-base"></i>
+                            </button>
 
-            <!-- Upload File/Image Preview Strip -->
-            <div id="filePreviewPanel" class="hidden px-4 py-2 border-t border-slate-800 glass-panel flex items-center space-x-3">
-                <div class="relative">
-                    <img id="filePreviewImg" class="w-12 h-12 rounded-lg object-cover border border-slate-700 shadow-md" src="" alt="Preview">
-                    <button onclick="removeAttachedFile()" class="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full p-0.5 hover:bg-red-600 transition">
-                        <i data-lucide="x" class="w-3 h-3"></i>
-                    </button>
-                </div>
-                <div class="text-xs overflow-hidden">
-                    <p id="fileName" class="font-semibold text-slate-200 truncate">image.png</p>
-                    <p id="fileSize" class="text-slate-400">0 KB</p>
-                    <p class="text-[10px] text-msmi-cyan">Ready for Vision Analysis & Math Solver</p>
+                            <!-- Send Button -->
+                            <button id="sendBtn" class="p-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-medium shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fa-solid fa-paper-plane text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center px-2 mt-2 text-[11px] text-slate-400">
+                        <span>Press <kbd class="px-1 py-0.5 bg-slate-100 rounded border text-slate-600 font-mono">Shift + Enter</kbd> for new line</span>
+                        <span id="charCount">0 characters</span>
+                    </div>
                 </div>
             </div>
-
-            <!-- Main Floating Pill Input Bar -->
-            <div class="p-3 md:p-4 border-t border-slate-800/80 glass-panel">
-                <form id="chatForm" onsubmit="handleFormSubmit(event)" class="max-w-4xl mx-auto relative flex items-center bg-slate-900/90 rounded-2xl border border-slate-700/80 p-1.5 focus-within:border-msmi-cyan focus-within:shadow-cyan-glow transition-all">
-                    
-                    <input type="file" id="fileInput" accept="image/*,.pdf,.txt,.js,.py,.html" class="hidden" onchange="handleFileSelect(event)">
-                    
-                    <!-- File Attach Button -->
-                    <button type="button" onclick="document.getElementById('fileInput').click()" class="p-2 text-slate-400 hover:text-msmi-cyan rounded-xl transition" title="Attach Document or Image">
-                        <i data-lucide="paperclip" class="w-5 h-5"></i>
-                    </button>
-
-                    <!-- Live Camera Capture Button -->
-                    <button type="button" onclick="openCameraModal()" class="p-2 text-slate-400 hover:text-emerald-400 rounded-xl transition" title="Take Live Photo">
-                        <i data-lucide="camera" class="w-5 h-5"></i>
-                    </button>
-
-                    <textarea id="userInput" rows="1" placeholder="Ask math equation, analyze photo, describe image to generate..." class="flex-1 bg-transparent px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none resize-none max-h-32 overflow-y-auto" onkeydown="handleKeyDown(event)"></textarea>
-
-                    <!-- Voice Mic Button -->
-                    <button type="button" id="voiceMicBtn" onclick="toggleVoiceAI()" class="p-2 text-slate-400 hover:text-msmi-cyan rounded-xl transition" title="Voice Assistant">
-                        <i data-lucide="mic" class="w-5 h-5"></i>
-                    </button>
-
-                    <!-- Submit Button -->
-                    <button type="submit" id="sendBtn" class="ml-1 p-2.5 bg-gradient-to-r from-msmi-cyan to-msmi-purple hover:opacity-90 text-black font-bold rounded-xl transition shadow-cyan-glow flex items-center justify-center">
-                        <i data-lucide="send" class="w-4 h-4"></i>
-                    </button>
-                </form>
-                <div class="max-w-4xl mx-auto flex items-center justify-between mt-2 px-1 text-[11px] text-slate-500">
-                    <span>LaTeX math supported inline (<code class="text-msmi-cyan">$...$</code>) and block (<code class="text-msmi-cyan">$$...$$</code>)</span>
-                    <span id="activeModeStatus" class="text-msmi-cyan font-semibold">Mode: Smart Chat</span>
-                </div>
-            </div>
-
         </main>
     </div>
 
-    <!-- Camera Capture Modal -->
-    <div id="cameraModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-msmi-card border border-slate-700 rounded-2xl w-full max-w-lg p-5 shadow-2xl relative flex flex-col items-center">
-            <button onclick="closeCameraModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-            <div class="flex items-center space-x-2 mb-3">
-                <i data-lucide="camera" class="w-5 h-5 text-emerald-400"></i>
-                <h3 class="font-bold text-sm text-white">Live Camera Photo Scanner</h3>
-            </div>
-            
-            <video id="cameraVideo" autoplay playsinline class="w-full h-64 bg-black rounded-xl object-cover border border-slate-800"></video>
-            <canvas id="cameraCanvas" class="hidden"></canvas>
-
-            <div class="flex space-x-3 mt-4 w-full">
-                <button onclick="capturePhoto()" class="flex-1 bg-gradient-to-r from-emerald-400 to-msmi-cyan text-black font-bold py-2.5 rounded-xl transition text-sm flex items-center justify-center">
-                    <i data-lucide="aperture" class="w-4 h-4 mr-2"></i> Capture Snapshot
-                </button>
-                <button onclick="closeCameraModal()" class="px-4 bg-slate-800 text-slate-300 font-semibold py-2.5 rounded-xl transition text-sm">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Code Live Sandbox Modal -->
-    <div id="previewModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-msmi-card border border-msmi-cyan/40 rounded-2xl w-full max-w-4xl h-[80vh] flex flex-col shadow-cyan-glow overflow-hidden">
-            <div class="px-4 py-3 border-b border-slate-800 flex items-center justify-between bg-slate-900/80">
+    <!-- API Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-red-100 transform scale-95 transition-transform duration-200">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
                 <div class="flex items-center space-x-2">
-                    <i data-lucide="play" class="w-4 h-4 text-emerald-400"></i>
-                    <h3 class="font-bold text-sm text-white">Live Code Preview Sandbox</h3>
+                    <div class="w-8 h-8 rounded-lg bg-red-100 text-brand-700 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-gear"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900">API Configuration</h3>
                 </div>
-                <button onclick="closePreviewModal()" class="text-slate-400 hover:text-white">
-                    <i data-lucide="x" class="w-5 h-5"></i>
+                <button id="closeSettingsBtn" class="text-slate-400 hover:text-slate-600 p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
-            <iframe id="previewFrame" class="w-full flex-1 bg-white"></iframe>
-        </div>
-    </div>
-
-    <!-- API Key Settings Modal -->
-    <div id="settingsModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-msmi-card border border-slate-700 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
-            <button onclick="closeSettingsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-            <div class="flex items-center space-x-3 mb-4">
-                <div class="p-2 bg-amber-500/10 text-amber-400 rounded-xl border border-amber-500/20">
-                    <i data-lucide="key" class="w-6 h-6"></i>
-                </div>
-                <div>
-                    <h3 class="font-bold text-lg text-white">Google Gemini API Key</h3>
-                    <p class="text-xs text-slate-400">Stored locally in your browser session.</p>
-                </div>
-            </div>
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Enter Gemini Key</label>
-                    <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-msmi-cyan transition">
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Google Gemini API Key</label>
+                    <div class="relative">
+                        <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-red-100 font-mono">
+                        <button id="toggleKeyVis" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600 text-xs">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">Your API Key is kept in local browser memory and never displayed publicly.</p>
                 </div>
 
-                <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 text-xs text-slate-400 space-y-2">
-                    <p class="font-semibold text-slate-200">How to obtain a free key?</p>
-                    <p>1. Go to Google AI Studio</p>
-                    <p>2. Generate an API Key for Gemini</p>
-                    <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener" class="inline-flex items-center text-msmi-cyan hover:underline font-semibold mt-1">
-                        Open Google AI Studio <i data-lucide="external-link" class="w-3 h-3 ml-1"></i>
-                    </a>
-                </div>
-
-                <div class="flex space-x-2 pt-2">
-                    <button onclick="saveApiKey()" class="flex-1 bg-gradient-to-r from-msmi-cyan to-msmi-purple text-black font-bold py-2.5 rounded-xl transition text-sm">Save Key</button>
-                    <button onclick="removeApiKey()" class="px-4 bg-slate-800 hover:bg-red-500/20 hover:text-red-400 text-slate-400 font-semibold py-2.5 rounded-xl transition text-sm">Clear</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- System Persona Customizer Modal -->
-    <div id="personaModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-msmi-card border border-slate-700 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
-            <button onclick="closePersonaModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-            <div class="flex items-center space-x-3 mb-4">
-                <div class="p-2 bg-msmi-purple/20 text-msmi-purple rounded-xl border border-msmi-purple/30">
-                    <i data-lucide="sliders" class="w-6 h-6"></i>
-                </div>
                 <div>
-                    <h3 class="font-bold text-lg text-white">System Prompt Persona</h3>
-                    <p class="text-xs text-slate-400">Configure AI instructions and response formatting.</p>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Model Selection</label>
+                    <select id="modelSelect" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-brand-500 font-medium">
+                        <option value="gemini-2.5-flash">gemini-2.5-flash (Ultra Fast & Precise)</option>
+                        <option value="gemini-3-flash-preview">gemini-3-flash-preview (Latest Engine)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Temperature / Creativity</label>
+                    <div class="flex items-center space-x-3">
+                        <input type="range" id="tempInput" min="0" max="1" step="0.1" value="0.2" class="w-full accent-brand-600">
+                        <span id="tempVal" class="text-xs font-mono font-bold text-brand-700 min-w-[2rem]">0.2</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Lower values (0.1 - 0.3) provide standard deterministic mathematical precision.</p>
                 </div>
             </div>
 
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Custom Persona Instructions</label>
-                    <textarea id="systemInstructionInput" rows="4" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-msmi-cyan">You are MSMI AI, an advanced AI system capable of solving complex math equations using LaTeX ($...$ and $$...$$), identifying objects in images, generating code, and providing clear explanations.</textarea>
-                </div>
-
-                <button onclick="savePersonaInstructions()" class="w-full bg-msmi-purple hover:bg-msmi-purple/80 text-white font-bold py-2.5 rounded-xl transition text-sm">
-                    Save Persona Config
+            <div class="mt-6 flex justify-end space-x-2 border-t border-slate-100 pt-4">
+                <button id="saveSettingsBtn" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl text-sm shadow-md transition-all">
+                    Save Configuration
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification Banner -->
-    <div id="toast" class="fixed bottom-20 right-6 bg-slate-900 border border-slate-700 text-white px-4 py-2.5 rounded-xl shadow-cyan-glow text-xs transform translate-y-10 opacity-0 transition-all duration-300 pointer-events-none z-50 flex items-center space-x-2">
-        <i id="toastIcon" data-lucide="info" class="w-4 h-4 text-msmi-cyan"></i>
-        <span id="toastMsg">Notification message</span>
-    </div>
-
-    <!-- Main Logic Script -->
+    <!-- JavaScript Application Core Logic -->
     <script>
-        // App State
-        let currentMode = 'chat';
-        
-        // =========================================================================
-        // INSERT YOUR GEMINI API KEY BELOW ON THIS LINE:
-        // =========================================================================
-        let apiKey = 'AQ.Ab8RN6JIScZaE2HUe3unn6wDzSHr_e8JidrN-KrMGaQAuF9KxQ' || localStorage.getItem('msmi_api_key') || '';
-        
-        let systemInstruction = localStorage.getItem('msmi_system_prompt') || "You are MSMI AI, an advanced AI assistant capable of solving complex math equations using LaTeX ($...$ and $$...$$), analyzing code, identifying objects, and generating high-quality structured responses.";
-        let currentAttachedFile = null;
-        let isGenerating = false;
-        let cameraStream = null;
-        let speechRecognition = null;
-        let isListening = false;
-        let chatSessions = JSON.parse(localStorage.getItem('msmi_sessions') || '[]');
+        /************************************************************************
+         * MSMI AI HARDCODED API KEY PLACEHOLDER
+         * Insert your Google Gemini API key here if desired for immediate use:
+         ************************************************************************/
+        const DEFAULT_API_KEY = "AQ.Ab8RN6LmdRzSJGNXnBP21VSPF5y-Wlw9vD3I0uuPhnnZjXlYIg"; 
 
-        // Background Wave Canvas Animation
-        function initBgCanvas() {
-            const canvas = document.getElementById('bgCanvas');
-            const ctx = canvas.getContext('2d');
-            let w, h, step = 0;
+        // State Management
+        let appState = {
+            apiKey: localStorage.getItem('MSMI_GEMINI_KEY') || (DEFAULT_API_KEY !== "YOUR_GEMINI_API_KEY_HERE" ? DEFAULT_API_KEY : ''),
+            model: localStorage.getItem('MSMI_MODEL') || 'gemini-2.5-flash',
+            temperature: parseFloat(localStorage.getItem('MSMI_TEMP')) || 0.2,
+            mode: 'math',
+            history: [],
+            isGenerating: false
+        };
 
-            function resize() {
-                w = canvas.width = window.innerWidth;
-                h = canvas.height = window.innerHeight;
-            }
-            window.addEventListener('resize', resize);
-            resize();
-
-            function animate() {
-                ctx.clearRect(0, 0, w, h);
-                ctx.lineWidth = 1.5;
-
-                for (let i = 0; i < 3; i++) {
-                    ctx.beginPath();
-                    ctx.strokeStyle = i === 0 ? 'rgba(0, 240, 255, 0.15)' : (i === 1 ? 'rgba(112, 0, 255, 0.15)' : 'rgba(255, 0, 122, 0.1)');
-                    for (let x = 0; x < w; x += 20) {
-                        const y = Math.sin((x * 0.002) + (step * 0.02) + i) * 50 + (h * (0.3 + i * 0.2));
-                        if (x === 0) ctx.moveTo(x, y);
-                        else ctx.lineTo(x, y);
-                    }
-                    ctx.stroke();
-                }
-                step++;
-                requestAnimationFrame(animate);
-            }
-            animate();
-        }
-
-        // Initialize App
-        document.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-            initBgCanvas();
-            updateApiKeyUI();
-            setupTextareaAutoResize();
-            initSpeechRecognition();
-            loadHistoryUI();
+        // Initialize Marked.js Options
+        marked.setOptions({
+            highlight: function(code, lang) {
+                const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+                return hljs.highlight(code, { language }).value;
+            },
+            breaks: true
         });
 
-        // Theme Toggle Functionality
-        function toggleTheme() {
-            document.documentElement.classList.toggle('dark');
-            const isDark = document.documentElement.classList.contains('dark');
-            document.getElementById('themeIcon').setAttribute('data-lucide', isDark ? 'sun' : 'moon');
-            lucide.createIcons();
-            showToast(`Theme switched to ${isDark ? 'Dark' : 'Light'} Mode`, "sun");
+        // System Prompt Presets
+        const SYSTEM_PROMPTS = {
+            math: `You are MSMI AI, a premier mathematical and analytical computing engine. 
+- Always express mathematical concepts using LaTeX syntax ($...$ for inline and $$...$$ for block equations).
+- Show step-by-step rigorous proofs, calculations, and explanations.
+- Be precise, clean, structured, and logical.`,
+            code: `You are MSMI AI, an expert software architect and algorithm engineer.
+- Provide production-grade, highly efficient code.
+- Always wrap code blocks with appropriate markdown language specifiers.
+- Explain time/space complexity using Big-O notation.`,
+            general: `You are MSMI AI, an advanced AI reasoning system with deep problem-solving skills. Be concise, articulate, and accurate.`,
+            concise: `You are MSMI AI. Provide ultra-concise, rapid direct answers with zero filler text.`
+        };
+
+        // DOM Elements
+        const chatMessages = document.getElementById('chatMessages');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const voiceBtn = document.getElementById('voiceBtn');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsModal = document.getElementById('settingsModal');
+        const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+        const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+        const apiKeyInput = document.getElementById('apiKeyInput');
+        const toggleKeyVis = document.getElementById('toggleKeyVis');
+        const modelSelect = document.getElementById('modelSelect');
+        const tempInput = document.getElementById('tempInput');
+        const tempVal = document.getElementById('tempVal');
+        const modePreset = document.getElementById('modePreset');
+        const clearChatBtn = document.getElementById('clearChatBtn');
+        const welcomeBanner = document.getElementById('welcomeBanner');
+        const keyStatusBadge = document.getElementById('keyStatusBadge');
+        const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        // Initialize Application
+        window.addEventListener('DOMContentLoaded', () => {
+            updateKeyStatusUI();
+            setupEventListeners();
+            autoResizeTextarea();
+        });
+
+        function updateKeyStatusUI() {
+            if (appState.apiKey && appState.apiKey.trim() !== '') {
+                keyStatusBadge.textContent = 'Key Active';
+                keyStatusBadge.className = 'text-emerald-600 font-medium';
+            } else {
+                keyStatusBadge.textContent = 'Key Missing';
+                keyStatusBadge.className = 'text-brand-600 font-medium';
+            }
         }
 
-        // Sidebar Toggle
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('w-64');
-            sidebar.classList.toggle('w-16');
-            sidebar.querySelectorAll('span, label, select, .truncate').forEach(el => el.classList.toggle('hidden'));
-        }
-
-        // Navigation Mode Switcher
-        function switchMode(mode) {
-            currentMode = mode;
-            const activeStatus = document.getElementById('activeModeStatus');
-            const presetPanel = document.getElementById('imagePresetPanel');
-
-            ['chat', 'math', 'vision', 'image', 'search'].forEach(m => {
-                const btn = document.getElementById(`nav-${m}`);
-                if (btn) btn.className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition";
+        function setupEventListeners() {
+            // Send Click & Enter Key
+            sendBtn.addEventListener('click', handleSendMessage);
+            userInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage();
+                }
             });
 
-            const activeBtn = document.getElementById(`nav-${mode}`);
-            if (activeBtn) activeBtn.className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition bg-msmi-cyan/10 text-msmi-cyan border border-msmi-cyan/20";
+            // Character Counter & Auto Resize Textarea
+            userInput.addEventListener('input', () => {
+                document.getElementById('charCount').textContent = `${userInput.value.length} characters`;
+                autoResizeTextarea();
+            });
 
-            if (mode === 'image') {
-                presetPanel.classList.remove('hidden');
-                activeStatus.innerText = "Mode: Image Studio";
+            // Settings Modal Open/Close
+            settingsBtn.addEventListener('click', () => {
+                apiKeyInput.value = appState.apiKey;
+                modelSelect.value = appState.model;
+                tempInput.value = appState.temperature;
+                tempVal.textContent = appState.temperature;
+                settingsModal.classList.remove('hidden');
+                setTimeout(() => {
+                    settingsModal.classList.remove('opacity-0');
+                    settingsModal.firstElementChild.classList.remove('scale-95');
+                }, 10);
+            });
+
+            closeSettingsBtn.addEventListener('click', closeSettings);
+
+            // Toggle Password Visibility for API key input
+            toggleKeyVis.addEventListener('click', () => {
+                const type = apiKeyInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                apiKeyInput.setAttribute('type', type);
+                toggleKeyVis.innerHTML = type === 'password' ? '<i class="fa-solid fa-eye"></i>' : '<i class="fa-solid fa-eye-slash"></i>';
+            });
+
+            // Save Settings
+            saveSettingsBtn.addEventListener('click', () => {
+                appState.apiKey = apiKeyInput.value.trim();
+                appState.model = modelSelect.value;
+                appState.temperature = parseFloat(tempInput.value);
+
+                localStorage.setItem('MSMI_GEMINI_KEY', appState.apiKey);
+                localStorage.setItem('MSMI_MODEL', appState.model);
+                localStorage.setItem('MSMI_TEMP', appState.temperature);
+
+                updateKeyStatusUI();
+                closeSettings();
+            });
+
+            tempInput.addEventListener('input', () => {
+                tempVal.textContent = tempInput.value;
+            });
+
+            // Mode Selector Change
+            modePreset.addEventListener('change', (e) => {
+                appState.mode = e.target.value;
+            });
+
+            // Clear Chat History
+            clearChatBtn.addEventListener('click', () => {
+                appState.history = [];
+                chatMessages.innerHTML = '';
+                if (welcomeBanner) chatMessages.appendChild(welcomeBanner);
+            });
+
+            // Preset Prompt Cards
+            document.querySelectorAll('.preset-prompt').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const text = btn.innerText.trim();
+                    userInput.value = text;
+                    autoResizeTextarea();
+                    handleSendMessage();
+                });
+            });
+
+            // Voice Input setup (Web Speech API)
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+
+                recognition.onresult = (e) => {
+                    const transcript = e.results[0][0].transcript;
+                    userInput.value += (userInput.value ? ' ' : '') + transcript;
+                    autoResizeTextarea();
+                    voiceBtn.classList.remove('text-brand-600', 'animate-pulse');
+                };
+
+                recognition.onerror = () => {
+                    voiceBtn.classList.remove('text-brand-600', 'animate-pulse');
+                };
+
+                recognition.onend = () => {
+                    voiceBtn.classList.remove('text-brand-600', 'animate-pulse');
+                };
+
+                voiceBtn.addEventListener('click', () => {
+                    voiceBtn.classList.add('text-brand-600', 'animate-pulse');
+                    recognition.start();
+                });
             } else {
-                presetPanel.classList.add('hidden');
-                activeStatus.innerText = `Mode: ${mode.toUpperCase()} Core`;
-            }
-            lucide.createIcons();
-        }
-
-        // Modals
-        function openSettingsModal() {
-            document.getElementById('apiKeyInput').value = apiKey;
-            document.getElementById('settingsModal').classList.remove('hidden');
-        }
-        function closeSettingsModal() { document.getElementById('settingsModal').classList.add('hidden'); }
-        
-        function saveApiKey() {
-            apiKey = document.getElementById('apiKeyInput').value.trim();
-            localStorage.setItem('msmi_api_key', apiKey);
-            updateApiKeyUI();
-            closeSettingsModal();
-            showToast("Gemini API Key saved!", "check-circle");
-        }
-
-        function removeApiKey() {
-            apiKey = '';
-            localStorage.removeItem('msmi_api_key');
-            document.getElementById('apiKeyInput').value = '';
-            updateApiKeyUI();
-            closeSettingsModal();
-            showToast("API Key removed", "trash-2");
-        }
-
-        function updateApiKeyUI() {
-            const dot = document.getElementById('keyStatusDot');
-            const warn = document.getElementById('noKeyWarning');
-            if (apiKey) {
-                dot.className = "w-2 h-2 rounded-full bg-emerald-400 shadow-cyan-glow";
-                if (warn) warn.classList.add('hidden');
-            } else {
-                dot.className = "w-2 h-2 rounded-full bg-red-500";
-                if (warn) warn.classList.remove('hidden');
-            }
-        }
-
-        function openPersonaModal() {
-            document.getElementById('systemInstructionInput').value = systemInstruction;
-            document.getElementById('personaModal').classList.remove('hidden');
-        }
-        function closePersonaModal() { document.getElementById('personaModal').classList.add('hidden'); }
-        
-        function savePersonaInstructions() {
-            systemInstruction = document.getElementById('systemInstructionInput').value.trim();
-            localStorage.setItem('msmi_system_prompt', systemInstruction);
-            closePersonaModal();
-            showToast("Persona configuration saved", "sliders");
-        }
-
-        // Camera Scan Functionality
-        async function openCameraModal() {
-            document.getElementById('cameraModal').classList.remove('hidden');
-            await startCamera();
-        }
-
-        async function startCamera() {
-            try {
-                cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-                document.getElementById('cameraVideo').srcObject = cameraStream;
-            } catch (err) {
-                showToast("Unable to access camera: " + err.message, "alert-triangle");
-            }
-        }
-
-        function capturePhoto() {
-            const video = document.getElementById('cameraVideo');
-            const canvas = document.getElementById('cameraCanvas');
-            canvas.width = video.videoWidth || 640;
-            canvas.height = video.videoHeight || 480;
-
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            
-            const dataUrl = canvas.toDataURL('image/jpeg');
-            const base64Data = dataUrl.split(',')[1];
-
-            currentAttachedFile = {
-                base64: base64Data,
-                mimeType: 'image/jpeg',
-                name: 'camera_capture.jpg',
-                size: (base64Data.length * 0.75 / 1024).toFixed(1) + ' KB',
-                rawUrl: dataUrl
-            };
-
-            document.getElementById('filePreviewImg').src = dataUrl;
-            document.getElementById('fileName').innerText = 'camera_capture.jpg';
-            document.getElementById('fileSize').innerText = currentAttachedFile.size;
-            document.getElementById('filePreviewPanel').classList.remove('hidden');
-
-            closeCameraModal();
-            if (currentMode !== 'vision' && currentMode !== 'math') switchMode('vision');
-            showToast("Photo captured! Ready for math or object analysis.", "camera");
-        }
-
-        function closeCameraModal() {
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop());
-                cameraStream = null;
-            }
-            document.getElementById('cameraModal').classList.add('hidden');
-        }
-
-        // File Selection & Drag Drop
-        function handleFileSelect(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                const base64Data = evt.target.result.split(',')[1];
-                currentAttachedFile = {
-                    base64: base64Data,
-                    mimeType: file.type || 'text/plain',
-                    name: file.name,
-                    size: (file.size / 1024).toFixed(1) + ' KB',
-                    rawUrl: evt.target.result
-                };
-
-                document.getElementById('filePreviewImg').src = file.type.startsWith('image/') 
-                    ? evt.target.result 
-                    : 'https://placehold.co/100x100/0d1322/00F0FF?text=FILE';
-                document.getElementById('fileName').innerText = file.name;
-                document.getElementById('fileSize').innerText = currentAttachedFile.size;
-                document.getElementById('filePreviewPanel').classList.remove('hidden');
-
-                if (currentMode !== 'vision' && currentMode !== 'math') switchMode('vision');
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function removeAttachedFile() {
-            currentAttachedFile = null;
-            document.getElementById('fileInput').value = '';
-            document.getElementById('filePreviewPanel').classList.add('hidden');
-        }
-
-        // Form Submit Handler
-        async function handleFormSubmit(e) {
-            e.preventDefault();
-            if (isGenerating) return;
-
-            const inputEl = document.getElementById('userInput');
-            const prompt = inputEl ? inputEl.value.trim() : '';
-
-            if (!prompt && !currentAttachedFile) return;
-
-            const welcomeBanner = document.getElementById('welcomeBanner');
-            if (welcomeBanner) welcomeBanner.remove();
-
-            appendMessage('user', prompt, currentAttachedFile);
-
-            if (inputEl) {
-                inputEl.value = '';
-                inputEl.style.height = 'auto';
-            }
-            const fileToSend = currentAttachedFile;
-            removeAttachedFile();
-
-            isGenerating = true;
-
-            if (currentMode === 'image') {
-                await processImageStudio(prompt);
-            } else if (currentMode === 'search') {
-                await processLiveSearchChat(prompt);
-            } else if (currentMode === 'math') {
-                await processMathSolver(prompt, fileToSend);
-            } else if (currentMode === 'vision') {
-                await processVisionAndObjectDetector(prompt, fileToSend);
-            } else {
-                await processStandardChat(prompt, fileToSend);
+                voiceBtn.style.display = 'none';
             }
 
-            isGenerating = false;
+            // Mobile Sidebar Toggle
+            mobileSidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
         }
 
-        // Standard Chat Engine
-        async function processStandardChat(prompt, file) {
-            const aiMsgEl = appendMessage('assistant', '');
-            const contentEl = aiMsgEl.querySelector('.message-content');
-            showLoading(contentEl, "MSMI Logic Core Processing...");
+        function closeSettings() {
+            settingsModal.classList.add('opacity-0');
+            settingsModal.firstElementChild.classList.add('scale-95');
+            setTimeout(() => {
+                settingsModal.classList.add('hidden');
+            }, 200);
+        }
+
+        function autoResizeTextarea() {
+            userInput.style.height = 'auto';
+            userInput.style.height = Math.min(userInput.scrollHeight, 192) + 'px';
+        }
+
+        // Main Messaging Logic
+        async function handleSendMessage() {
+            const text = userInput.value.trim();
+            if (!text || appState.isGenerating) return;
+
+            if (!appState.apiKey) {
+                alert("Please click on 'API Settings' to enter your Google Gemini API Key.");
+                settingsBtn.click();
+                return;
+            }
+
+            // Hide Banner
+            if (welcomeBanner && welcomeBanner.parentNode) {
+                welcomeBanner.remove();
+            }
+
+            // Render User Message
+            appendMessage('user', text);
+            userInput.value = '';
+            autoResizeTextarea();
+
+            // Prepare Assistant Placeholder
+            const botMessageEl = appendMessage('assistant', '');
+            const contentDiv = botMessageEl.querySelector('.markdown-body');
+            contentDiv.classList.add('streaming-cursor');
+
+            appState.isGenerating = true;
+            sendBtn.disabled = true;
 
             try {
-                const selectedModel = document.getElementById('modelSelector').value;
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`;
+                // Build Payload with System Instructions and Chat History
+                const payloadContents = [
+                    ...appState.history.map(msg => ({
+                        role: msg.role === 'user' ? 'user' : 'model',
+                        parts: [{ text: msg.content }]
+                    })),
+                    { role: 'user', parts: [{ text: text }] }
+                ];
 
-                const parts = [];
-                if (prompt) parts.push({ text: prompt });
-                if (file) parts.push({ inlineData: { mimeType: file.mimeType, data: file.base64 } });
+                const systemInstructionText = SYSTEM_PROMPTS[appState.mode] || SYSTEM_PROMPTS.math;
+                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${appState.model}:streamGenerateContent?alt=sse&key=${appState.apiKey}`;
 
-                const payload = {
-                    contents: [{ parts: parts }],
-                    systemInstruction: { parts: [{ text: systemInstruction }] }
-                };
-
-                const res = await fetchWithRetry(apiUrl, {
+                const response = await fetch(endpoint, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const data = await res.json();
-                const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
-
-                renderFormattedOutput(contentEl, responseText);
-                saveSession(prompt, responseText);
-            } catch (err) {
-                contentEl.innerHTML = `<span class="text-red-400 font-bold">Execution Error: ${err.message}</span>`;
-            }
-        }
-
-        // Specialized Math & LaTeX Engine
-        async function processMathSolver(prompt, file) {
-            const aiMsgEl = appendMessage('assistant', '');
-            const contentEl = aiMsgEl.querySelector('.message-content');
-            showLoading(contentEl, "Solving LaTeX Equations & Derivations...");
-
-            try {
-                const selectedModel = document.getElementById('modelSelector').value;
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`;
-
-                const mathInstruction = "You are a specialized Math & Physics Solver. Solve equations step-by-step. ALWAYS output mathematical expressions using LaTeX syntax. Use inline math $...$ and block math $$...$$. Provide explicit numerical and algebraic steps.";
-
-                const parts = [];
-                if (prompt) parts.push({ text: prompt });
-                else parts.push({ text: "Please solve the mathematical problem shown in this image step-by-step with LaTeX equations." });
-                if (file) parts.push({ inlineData: { mimeType: file.mimeType, data: file.base64 } });
-
-                const payload = {
-                    contents: [{ parts: parts }],
-                    systemInstruction: { parts: [{ text: mathInstruction }] }
-                };
-
-                const res = await fetchWithRetry(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const data = await res.json();
-                const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "No solution derived.";
-
-                renderFormattedOutput(contentEl, text);
-                saveSession("Math: " + (prompt || "Image equation"), text);
-            } catch (err) {
-                contentEl.innerHTML = `<span class="text-red-400 font-bold">Math Engine Error: ${err.message}</span>`;
-            }
-        }
-
-        // Vision & Object Detection Engine
-        async function processVisionAndObjectDetector(prompt, file) {
-            const aiMsgEl = appendMessage('assistant', '');
-            const contentEl = aiMsgEl.querySelector('.message-content');
-            showLoading(contentEl, "Analyzing Image Features & Objects...");
-
-            try {
-                const selectedModel = document.getElementById('modelSelector').value;
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`;
-
-                const visionInstruction = "You are MSMI Vision Core. Identify all prominent objects, text, diagrams, structures, or handwritten math in the image. List key objects detected, provide context, and explain everything clearly.";
-
-                const parts = [];
-                if (prompt) parts.push({ text: prompt });
-                else parts.push({ text: "Perform comprehensive object identification, scene breakdown, and text analysis on this image." });
-                
-                if (file) {
-                    parts.push({ inlineData: { mimeType: file.mimeType, data: file.base64 } });
-                } else {
-                    throw new Error("Please attach an image or capture a photo to perform Vision analysis.");
-                }
-
-                const payload = {
-                    contents: [{ parts: parts }],
-                    systemInstruction: { parts: [{ text: visionInstruction }] }
-                };
-
-                const res = await fetchWithRetry(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const data = await res.json();
-                const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "No vision analysis generated.";
-
-                renderFormattedOutput(contentEl, text);
-                saveSession("Vision Scan", text);
-            } catch (err) {
-                contentEl.innerHTML = `<span class="text-red-400 font-bold">Vision Error: ${err.message}</span>`;
-            }
-        }
-
-        // Grounded Search Engine
-        async function processLiveSearchChat(prompt) {
-            const aiMsgEl = appendMessage('assistant', '');
-            const contentEl = aiMsgEl.querySelector('.message-content');
-            showLoading(contentEl, "Grounding with Live Google Search...");
-
-            try {
-                const selectedModel = document.getElementById('modelSelector').value;
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`;
-
-                const payload = {
-                    contents: [{ parts: [{ text: prompt }] }],
-                    tools: [{ "google_search": {} }]
-                };
-
-                const res = await fetchWithRetry(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const data = await res.json();
-                const candidate = data.candidates?.[0];
-                const text = candidate?.content?.parts?.[0]?.text || "No grounded result.";
-
-                let citations = '';
-                const attrs = candidate?.groundingMetadata?.groundingAttributions;
-                if (attrs && attrs.length > 0) {
-                    citations = '<div class="mt-4 pt-3 border-t border-slate-800 text-xs text-slate-400"><p class="font-bold text-msmi-cyan mb-1">Search Sources:</p><div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">';
-                    attrs.forEach(a => {
-                        if (a.web?.uri && a.web?.title) {
-                            citations += `<a href="${a.web.uri}" target="_blank" class="p-2 bg-slate-900 border border-slate-800 hover:border-msmi-cyan rounded-lg text-xs text-slate-300 truncate block"><i data-lucide="globe" class="w-3 h-3 inline mr-1 text-msmi-cyan"></i> ${a.web.title}</a>`;
+                    body: JSON.stringify({
+                        contents: payloadContents,
+                        systemInstruction: { parts: [{ text: systemInstructionText }] },
+                        generationConfig: {
+                            temperature: appState.temperature,
                         }
-                    });
-                    citations += '</div></div>';
-                }
-
-                renderFormattedOutput(contentEl, text + citations);
-                saveSession(prompt, text);
-            } catch (err) {
-                contentEl.innerHTML = `<span class="text-red-400 font-bold">Search Error: ${err.message}</span>`;
-            }
-        }
-
-        // Image Generation Studio Engine
-        async function processImageStudio(prompt) {
-            const aiMsgEl = appendMessage('assistant', '');
-            const contentEl = aiMsgEl.querySelector('.message-content');
-            showLoading(contentEl, "Generating High-Res Cyber Artwork...");
-
-            try {
-                const style = document.getElementById('imageStyle').value;
-                const aspect = document.getElementById('imageAspect').value;
-                const fullPrompt = `${prompt}, style: ${style}`;
-
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:generateContent?key=${apiKey}`;
-
-                const payload = {
-                    contents: [{ parts: [{ text: fullPrompt }] }],
-                    generationConfig: {
-                        responseModalities: ['IMAGE', 'TEXT'],
-                        imageConfig: { aspectRatio: aspect }
-                    }
-                };
-
-                const res = await fetchWithRetry(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    })
                 });
 
-                const data = await res.json();
-                const parts = data.candidates?.[0]?.content?.parts || [];
-                const imgPart = parts.find(p => p.inlineData);
-
-                if (imgPart) {
-                    const imgUrl = `data:${imgPart.inlineData.mimeType};base64,${imgPart.inlineData.data}`;
-                    contentEl.innerHTML = `
-                        <div class="space-y-3">
-                            <p class="text-xs text-slate-300">Generated artwork for: <span class="italic text-msmi-cyan">"${prompt}"</span></p>
-                            <div class="relative group max-w-lg rounded-2xl overflow-hidden border border-msmi-cyan/40 shadow-cyan-glow bg-slate-900">
-                                <img src="${imgUrl}" alt="${prompt}" class="w-full h-auto object-cover">
-                                <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center space-x-3">
-                                    <a href="${imgUrl}" download="msmi-artwork.png" class="p-2.5 bg-slate-900 hover:bg-black text-white rounded-xl text-xs font-bold border border-msmi-cyan/50 flex items-center">
-                                        <i data-lucide="download" class="w-4 h-4 mr-1 text-msmi-cyan"></i> Save Image
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
-                    lucide.createIcons();
-                } else {
-                    const fallback = parts.find(p => p.text)?.text || "Unable to render image.";
-                    renderFormattedOutput(contentEl, fallback);
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(errData.error?.message || `API Error: ${response.status}`);
                 }
+
+                // Process Server-Sent Events (SSE) Streaming
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let fullResponseText = '';
+                let buffer = '';
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop(); // keep partial line in buffer
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const jsonStr = line.replace('data: ', '').trim();
+                            if (jsonStr === '[DONE]') continue;
+                            try {
+                                const parsed = JSON.parse(jsonStr);
+                                const chunkText = parsed.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                                fullResponseText += chunkText;
+
+                                // Update UI dynamically
+                                contentDiv.innerHTML = marked.parse(fullResponseText);
+                                renderMathInElement(contentDiv, {
+                                    delimiters: [
+                                        {left: '$$', right: '$$', display: true},
+                                        {left: '$', right: '$', display: false},
+                                        {left: '\\(', right: '\\)', display: false},
+                                        {left: '\\[', right: '\\]', display: true}
+                                    ],
+                                    throwOnError: false
+                                });
+                                scrollToBottom();
+                            } catch (e) {
+                                // Ignore json parse errors for split chunks
+                            }
+                        }
+                    }
+                }
+
+                contentDiv.classList.remove('streaming-cursor');
+                
+                // Add to internal history
+                appState.history.push({ role: 'user', content: text });
+                appState.history.push({ role: 'assistant', content: fullResponseText });
+
+                // Attach Copy code events
+                attachCopyButtons(botMessageEl);
+
             } catch (err) {
-                contentEl.innerHTML = `<span class="text-red-400 font-bold">Image Studio Error: ${err.message}</span>`;
+                contentDiv.classList.remove('streaming-cursor');
+                contentDiv.innerHTML = `<div class="p-3 bg-red-50 border border-red-200 text-brand-700 rounded-lg font-medium text-xs">
+                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> Error: ${err.message}
+                </div>`;
+            } finally {
+                appState.isGenerating = false;
+                sendBtn.disabled = false;
             }
         }
 
-        function enhancePrompt() {
-            const input = document.getElementById('userInput');
-            if (input && input.value) {
-                input.value = `Masterpiece quality, hyper-detailed, cinematic lighting, 8k resolution: ${input.value}`;
-                showToast("Prompt enhanced with visual details!", "sparkles");
-            }
-        }
+        // DOM Message Renderer
+        function appendMessage(role, content) {
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex gap-3 max-w-4xl mx-auto ${role === 'user' ? 'justify-end' : 'justify-start'}`;
 
-        // Retry Fetch Mechanism
-        async function fetchWithRetry(url, options, retries = 3, delay = 1000) {
-            try {
-                const res = await fetch(url, options);
-                if (!res.ok) {
-                    const errText = await res.text();
-                    throw new Error(`API Status ${res.status}: ${errText}`);
-                }
-                return res;
-            } catch (err) {
-                if (retries > 0) {
-                    await new Promise(r => setTimeout(r, delay));
-                    return fetchWithRetry(url, options, retries - 1, delay * 2);
-                }
-                throw err;
-            }
-        }
-
-        // Append Message UI
-        function appendMessage(role, text, file = null) {
-            const container = document.getElementById('messagesContainer');
-            const msgDiv = document.createElement('div');
-            const isUser = role === 'user';
-
-            msgDiv.className = `flex ${isUser ? 'justify-end' : 'justify-start'}`;
-
-            let fileHtml = '';
-            if (file) {
-                fileHtml = `
-                    <div class="mb-2 rounded-xl overflow-hidden border border-slate-700/80 max-w-xs">
-                        ${file.mimeType.startsWith('image/') 
-                            ? `<img src="${file.rawUrl}" class="w-full h-32 object-cover">` 
-                            : `<div class="p-3 bg-slate-900 text-xs flex items-center space-x-2"><i data-lucide="file-text" class="w-4 h-4 text-msmi-cyan"></i><span class="truncate">${file.name}</span></div>`}
+            if (role === 'user') {
+                wrapper.innerHTML = `
+                    <div class="max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 bg-brand-600 text-white shadow-sm font-sans text-sm">
+                        ${escapeHtml(content).replace(/\n/g, '<br>')}
+                    </div>
+                    <div class="w-8 h-8 rounded-xl bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                        You
+                    </div>
+                `;
+            } else {
+                wrapper.innerHTML = `
+                    <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-700 to-brand-500 text-white flex items-center justify-center font-black text-xs shadow-glow-red flex-shrink-0 mt-1">
+                        M
+                    </div>
+                    <div class="max-w-[85%] sm:max-w-[85%] bg-slate-50 border border-red-50 rounded-2xl px-5 py-4 text-slate-800 shadow-sm relative group">
+                        <div class="markdown-body text-sm"></div>
                     </div>
                 `;
             }
 
-            msgDiv.innerHTML = `
-                <div class="flex space-x-3 max-w-3xl ${isUser ? 'flex-row-reverse space-x-reverse' : 'flex-row'}">
-                    <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${isUser ? 'bg-gradient-to-tr from-msmi-cyan to-msmi-purple text-black font-bold' : 'bg-slate-900 text-msmi-cyan border border-slate-700'}">
-                        <i data-lucide="${isUser ? 'user' : 'cpu'}" class="w-4 h-4"></i>
-                    </div>
-                    <div class="space-y-1">
-                        <div class="p-4 rounded-2xl text-xs md:text-sm ${isUser ? 'bg-slate-800 text-white rounded-tr-none border border-slate-700' : 'bg-slate-900/90 border border-slate-800 text-slate-100 rounded-tl-none shadow-sm'}">
-                            ${fileHtml}
-                            <div class="message-content prose prose-invert max-w-none text-xs md:text-sm">${text}</div>
-                        </div>
-                        ${!isUser ? `
-                            <div class="flex items-center space-x-3 text-[10px] text-slate-500 pl-1">
-                                <button onclick="copyMessage(this)" class="hover:text-msmi-cyan flex items-center"><i data-lucide="copy" class="w-3 h-3 mr-1"></i> Copy</button>
-                                <button onclick="readAloud(this)" class="hover:text-msmi-cyan flex items-center"><i data-lucide="volume-2" class="w-3 h-3 mr-1"></i> Speak</button>
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `;
-
-            container.appendChild(msgDiv);
-            container.scrollTop = container.scrollHeight;
-            lucide.createIcons();
-            return msgDiv;
+            chatMessages.appendChild(wrapper);
+            scrollToBottom();
+            return wrapper;
         }
 
-        function showLoading(container, msg) {
-            container.innerHTML = `
-                <div class="flex items-center space-x-2 text-msmi-cyan py-1">
-                    <div class="w-2 h-2 rounded-full bg-msmi-cyan animate-ping"></div>
-                    <span class="text-xs font-semibold tracking-wide">${msg}</span>
-                </div>
-            `;
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // Universal Formatted Output (Markdown, Syntax Highlight, and KaTeX Math)
-        function renderFormattedOutput(container, rawText) {
-            // Render markdown first
-            container.innerHTML = marked.parse(rawText);
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
 
-            // Render KaTeX Math Equations safely
-            if (typeof renderMathInElement === 'function') {
-                try {
-                    renderMathInElement(container, {
-                        delimiters: [
-                            {left: '$$', right: '$$', display: true},
-                            {left: '$', right: '$', display: false},
-                            {left: '\\(', right: '\\)', display: false},
-                            {left: '\\[', right: '\\]', display: true}
-                        ],
-                        throwOnError: false,
-                        errorColor: '#ef4444'
+        function attachCopyButtons(container) {
+            const preBlocks = container.querySelectorAll('pre');
+            preBlocks.forEach((pre) => {
+                if (pre.querySelector('.copy-btn')) return;
+                const button = document.createElement('button');
+                button.className = 'copy-btn absolute top-2 right-2 bg-slate-700 text-slate-200 text-xs px-2 py-1 rounded hover:bg-slate-600 transition-colors';
+                button.innerHTML = '<i class="fa-regular fa-copy"></i> Copy';
+                pre.style.position = 'relative';
+                
+                button.addEventListener('click', () => {
+                    const code = pre.querySelector('code')?.innerText || pre.innerText;
+                    navigator.clipboard.writeText(code).then(() => {
+                        button.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> Copied!';
+                        setTimeout(() => {
+                            button.innerHTML = '<i class="fa-regular fa-copy"></i> Copy';
+                        }, 2000);
                     });
-                } catch (e) {
-                    console.error("KaTeX rendering error:", e);
-                }
-            }
-
-            // Syntax highlighting and code block live sandbox
-            container.querySelectorAll('pre code').forEach((block) => {
-                hljs.highlightElement(block);
-
-                const lang = block.className || '';
-                if (lang.includes('html') || lang.includes('javascript')) {
-                    const runBtn = document.createElement('button');
-                    runBtn.className = "absolute top-2 right-2 px-2 py-1 bg-msmi-cyan/20 text-msmi-cyan border border-msmi-cyan/40 rounded text-[10px] font-bold hover:bg-msmi-cyan hover:text-black transition";
-                    runBtn.innerText = "Run Live Sandbox";
-                    runBtn.onclick = () => openPreviewModal(block.innerText);
-                    block.parentElement.appendChild(runBtn);
-                }
+                });
+                pre.appendChild(button);
             });
-            lucide.createIcons();
-        }
-
-        // Live Code Sandbox
-        function openPreviewModal(code) {
-            const modal = document.getElementById('previewModal');
-            const iframe = document.getElementById('previewFrame');
-            iframe.srcdoc = code;
-            modal.classList.remove('hidden');
-        }
-        function closePreviewModal() { document.getElementById('previewModal').classList.add('hidden'); }
-
-        // Speech Recognition
-        function initSpeechRecognition() {
-            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                speechRecognition = new SpeechRecognition();
-                speechRecognition.onresult = (e) => {
-                    const input = document.getElementById('userInput');
-                    if (input) input.value = e.results[0][0].transcript;
-                    toggleVoiceAI(false);
-                };
-            }
-        }
-
-        function toggleVoiceAI(force) {
-            if (!speechRecognition) return;
-            isListening = force !== undefined ? force : !isListening;
-            const wave = document.getElementById('voiceWaveOverlay');
-
-            if (isListening) {
-                speechRecognition.start();
-                if (wave) wave.classList.remove('hidden');
-                showToast("Voice Assistant Listening...", "mic");
-            } else {
-                speechRecognition.stop();
-                if (wave) wave.classList.add('hidden');
-            }
-        }
-
-        function readAloud(btn) {
-            const text = btn.closest('.space-y-1').querySelector('.message-content').innerText;
-            window.speechSynthesis.cancel();
-            const utt = new SpeechSynthesisUtterance(text);
-            window.speechSynthesis.speak(utt);
-            showToast("Reading aloud...", "volume-2");
-        }
-
-        function copyMessage(btn) {
-            const text = btn.closest('.space-y-1').querySelector('.message-content').innerText;
-            navigator.clipboard.writeText(text);
-            showToast("Copied to clipboard!", "check");
-        }
-
-        // Session History Management
-        function saveSession(prompt, response) {
-            chatSessions.unshift({ id: Date.now(), prompt: prompt.substring(0, 30) + '...' });
-            if (chatSessions.length > 10) chatSessions.pop();
-            localStorage.setItem('msmi_sessions', JSON.stringify(chatSessions));
-            loadHistoryUI();
-        }
-
-        function loadHistoryUI() {
-            const list = document.getElementById('historyList');
-            if (!list) return;
-            list.innerHTML = '';
-            chatSessions.forEach(s => {
-                const item = document.createElement('div');
-                item.className = "p-1.5 rounded-lg text-xs text-slate-400 hover:text-msmi-cyan hover:bg-slate-900/80 cursor-pointer truncate transition";
-                item.innerText = s.prompt;
-                list.appendChild(item);
-            });
-        }
-
-        function clearHistory() {
-            chatSessions = [];
-            localStorage.removeItem('msmi_sessions');
-            loadHistoryUI();
-            showToast("History cleared", "trash-2");
-        }
-
-        function createNewChat() {
-            const container = document.getElementById('messagesContainer');
-            if (container) container.innerHTML = '';
-            showToast("New chat session created", "plus-circle");
-        }
-
-        // Textarea Formatting
-        function setupTextareaAutoResize() {
-            const tx = document.getElementById('userInput');
-            if (!tx) return;
-            tx.addEventListener('input', () => {
-                tx.style.height = 'auto';
-                tx.style.height = Math.min(tx.scrollHeight, 128) + 'px';
-            });
-        }
-
-        function handleKeyDown(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                const form = document.getElementById('chatForm');
-                if (form) {
-                    form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-                }
-            }
-        }
-
-        function useQuickPrompt(text) {
-            const input = document.getElementById('userInput');
-            if (input) {
-                input.value = text;
-                input.focus();
-                input.dispatchEvent(new Event('input'));
-            }
-        }
-
-        function showToast(msg, icon = 'info') {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toastMsg');
-            const toastIcon = document.getElementById('toastIcon');
-
-            if (!toast || !toastMsg || !toastIcon) return;
-
-            toastMsg.innerText = msg;
-            toastIcon.setAttribute('data-lucide', icon);
-            lucide.createIcons();
-
-            toast.classList.remove('translate-y-10', 'opacity-0');
-            setTimeout(() => toast.classList.add('translate-y-10', 'opacity-0'), 3000);
         }
     </script>
 </body>
