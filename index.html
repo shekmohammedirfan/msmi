@@ -1,1227 +1,269 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-black text-white selection:bg-red-600 selection:text-white">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MSMI Music Player - Play Your World</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        msmi: {
-                            red: '#ff1e38',
-                            darkRed: '#a80b1e',
-                            bg: '#0a0a0c',
-                            card: '#14141a',
-                            border: '#262630'
-                        }
-                    },
-                    animation: {
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'spin-slow': 'spin 12s linear infinite',
-                        'glow': 'glow 2s ease-in-out infinite alternate',
-                        'edge-pulse': 'edgeGlow 2s infinite alternate'
-                    },
-                    keyframes: {
-                        glow: {
-                            '0%': { boxShadow: '0 0 15px rgba(255, 30, 56, 0.4)' },
-                            '100%': { boxShadow: '0 0 35px rgba(255, 30, 56, 0.8)' }
-                        },
-                        edgeGlow: {
-                            '0%': { boxShadow: '0 0 10px rgba(255, 30, 56, 0.3), inset 0 0 10px rgba(255, 30, 56, 0.3)' },
-                            '100%': { boxShadow: '0 0 30px var(--edge-color, #ff1e38), inset 0 0 20px var(--edge-color, #ff1e38)' }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --edge-color: #ff1e38;
-            --edge-glow: 20px;
-            --edge-speed: 2s;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            overflow-x: hidden;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0a0a0c;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #2a2a35;
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #ff1e38;
-        }
-
-        /* Glassmorphic Effects */
-        .glass-card {
-            background: rgba(20, 20, 26, 0.75);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .glass-nav {
-            background: rgba(10, 10, 12, 0.88);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-        }
-
-        /* Edge Lighting Animated Border */
-        .edge-lighting-on {
-            border: 2px solid var(--edge-color) !important;
-            box-shadow: 0 0 var(--edge-glow) var(--edge-color), inset 0 0 calc(var(--edge-glow) / 2) var(--edge-color) !important;
-            animation: edgePulse var(--edge-speed) infinite alternate ease-in-out;
-        }
-
-        @keyframes edgePulse {
-            0% {
-                box-shadow: 0 0 calc(var(--edge-glow) * 0.4) var(--edge-color), inset 0 0 calc(var(--edge-glow) * 0.2) var(--edge-color);
-            }
-            100% {
-                box-shadow: 0 0 calc(var(--edge-glow) * 1.5) var(--edge-color), inset 0 0 calc(var(--edge-glow) * 0.8) var(--edge-color);
-            }
-        }
-
-        /* Visualizer Bar Animation */
-        .bar-anim {
-            animation: bounceBar 1.2s ease-in-out infinite alternate;
-        }
-        @keyframes bounceBar {
-            0% { height: 15%; }
-            100% { height: 95%; }
-        }
-
-        /* Audio Range Slider */
-        input[type=range] {
-            -webkit-appearance: none;
-            background: transparent;
-        }
-        input[type=range]:focus {
-            outline: none;
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            height: 4px;
-            cursor: pointer;
-            background: #2a2a38;
-            border-radius: 2px;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            height: 14px;
-            width: 14px;
-            border-radius: 50%;
-            background: #ff1e38;
-            cursor: pointer;
-            -webkit-appearance: none;
-            margin-top: -5px;
-            box-shadow: 0 0 10px rgba(255, 30, 56, 0.8);
-        }
-    </style>
-</head>
-<body class="h-full bg-msmi-bg text-gray-100 flex justify-center items-center p-0 md:p-4">
-
-    <!-- Mobile Screen Frame Wrapper -->
-    <div id="appContainer" class="relative w-full max-w-md h-full md:h-[880px] bg-msmi-bg md:rounded-[40px] md:border-8 md:border-[#1e1e26] flex flex-col overflow-hidden transition-all duration-300 edge-lighting-on">
-        
-        <!-- ==================== SPLASH SCREEN ==================== -->
-        <div id="splashScreen" class="absolute inset-0 z-50 bg-msmi-bg flex flex-col justify-between items-center p-8 transition-opacity duration-700">
-            <div class="w-full flex justify-between items-center text-xs text-gray-400 pt-2 font-mono">
-                <span id="splashTime">10:24</span>
-                <div class="flex items-center space-x-2">
-                    <i class="fas fa-signal"></i>
-                    <i class="fas fa-wifi"></i>
-                    <i class="fas fa-battery-full"></i>
-                </div>
-            </div>
-
-            <div class="flex flex-col items-center justify-center my-auto text-center">
-                <div class="relative mb-6">
-                    <div class="w-36 h-36 rounded-full border-2 border-msmi-red flex items-center justify-center animate-glow relative">
-                        <div class="w-28 h-28 rounded-full bg-gradient-to-tr from-msmi-darkRed to-msmi-red/20 flex items-center justify-center">
-                            <i class="fas fa-headphones text-5xl text-msmi-red drop-shadow-[0_0_12px_rgba(255,30,56,0.8)]"></i>
-                        </div>
-                    </div>
-                </div>
-                <h1 class="text-2xl font-extrabold tracking-wider text-white">MSMI_MUSIC_PLAYER</h1>
-                <p class="text-msmi-red text-sm font-semibold tracking-widest mt-1 italic">Play Your World</p>
-
-                <div class="flex items-end justify-center space-x-1.5 h-12 mt-8 w-48">
-                    <div class="w-1.5 bg-msmi-red rounded-full bar-anim" style="animation-delay: 0.1s"></div>
-                    <div class="w-1.5 bg-msmi-red rounded-full bar-anim" style="animation-delay: 0.4s"></div>
-                    <div class="w-1.5 bg-msmi-red rounded-full bar-anim" style="animation-delay: 0.2s"></div>
-                    <div class="w-1.5 bg-msmi-red rounded-full bar-anim" style="animation-delay: 0.6s"></div>
-                    <div class="w-1.5 bg-msmi-red rounded-full bar-anim" style="animation-delay: 0.3s"></div>
-                    <div class="w-1.5 bg-msmi-red rounded-full bar-anim" style="animation-delay: 0.5s"></div>
-                </div>
-            </div>
-
-            <div class="w-full max-w-xs mb-8 text-center">
-                <div class="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden mb-3">
-                    <div id="splashProgress" class="bg-msmi-red h-full w-0 transition-all duration-300"></div>
-                </div>
-                <span class="text-xs text-gray-400 tracking-wider">Loading Audio Engine...</span>
-            </div>
-        </div>
-
-        <!-- ==================== HEADER BAR ==================== -->
-        <header id="topHeader" class="px-5 pt-3 pb-2 flex items-center justify-between z-20 bg-msmi-bg/90 backdrop-blur-md border-b border-white/5">
-            <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 rounded-full bg-msmi-red/20 border border-msmi-red/50 flex items-center justify-center">
-                    <i class="fas fa-headphones text-msmi-red text-sm"></i>
-                </div>
-                <div>
-                    <h1 class="text-lg font-black tracking-wider text-msmi-red leading-none">MSMI</h1>
-                    <span class="text-[9px] text-gray-400 tracking-widest uppercase">Music Player</span>
-                </div>
-            </div>
-            <div class="flex items-center space-x-3 text-gray-300">
-                <button onclick="switchTab('local')" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition"><i class="fas fa-search text-sm"></i></button>
-                <button onclick="switchTab('settings')" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition"><i class="fas fa-sliders-h text-sm"></i></button>
-            </div>
-        </header>
-
-        <!-- ==================== MAIN CONTENT AREA ==================== -->
-        <main class="flex-1 overflow-y-auto relative pb-32">
-
-            <!-- 1. HOME SCREEN VIEW -->
-            <section id="viewHome" class="p-4 space-y-6">
-                <!-- Hero Banner Card -->
-                <div class="relative rounded-2xl overflow-hidden glass-card p-5 border border-msmi-red/30 bg-gradient-to-r from-msmi-darkRed/40 via-msmi-card to-black shadow-lg">
-                    <div class="relative z-10 max-w-[65%]">
-                        <span class="px-2 py-0.5 text-[10px] uppercase font-extrabold bg-msmi-red text-white rounded">Featured</span>
-                        <h2 class="text-xl font-bold mt-2 leading-tight">Good Music<br/><span class="text-msmi-red">Better Mood</span></h2>
-                        <p class="text-xs text-gray-400 mt-1">MSMI Player</p>
-                        <button onclick="playTrack(0)" class="mt-3 px-4 py-1.5 bg-msmi-red text-white text-xs font-semibold rounded-full flex items-center space-x-2 hover:bg-red-600 transition shadow-lg shadow-msmi-red/30">
-                            <i class="fas fa-play text-[10px]"></i>
-                            <span>Play Now</span>
-                        </button>
-                    </div>
-                    <div class="absolute -right-4 -bottom-4 w-32 h-32 opacity-80 pointer-events-none">
-                        <i class="fas fa-compact-disc text-8xl text-msmi-red/30 animate-spin-slow"></i>
-                    </div>
-                </div>
-
-                <!-- Recently Played Section -->
-                <div>
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="text-sm font-bold text-gray-200 uppercase tracking-wider">Recently Played</h3>
-                        <button onclick="switchTab('playlists')" class="text-xs text-msmi-red hover:underline font-medium">Playlists</button>
-                    </div>
-                    <div id="recentlyPlayedList" class="space-y-2">
-                        <!-- Dynamic items -->
-                    </div>
-                </div>
-
-                <!-- Quick Actions / Imports -->
-                <div>
-                    <h3 class="text-sm font-bold text-gray-200 uppercase tracking-wider mb-3">Quick Actions</h3>
-                    <div class="grid grid-cols-2 gap-3">
-                        <label class="glass-card p-3 rounded-xl flex items-center space-x-3 border-l-4 border-l-msmi-red hover:bg-white/5 transition cursor-pointer">
-                            <div class="w-10 h-10 rounded-lg bg-msmi-red/20 flex items-center justify-center text-msmi-red">
-                                <i class="fas fa-folder-open"></i>
-                            </div>
-                            <div class="text-left">
-                                <span class="block text-xs font-bold">Open Folder</span>
-                                <span class="text-[10px] text-gray-400">Scan entire folder</span>
-                            </div>
-                            <input type="file" id="folderInputHome" webkitdirectory directory multiple class="hidden" onchange="handleFolderSelect(event)">
-                        </label>
-                        <button onclick="switchTab('youtube')" class="glass-card p-3 rounded-xl flex items-center space-x-3 border-l-4 border-l-red-600 hover:bg-white/5 transition">
-                            <div class="w-10 h-10 rounded-lg bg-red-600/20 flex items-center justify-center text-red-500">
-                                <i class="fab fa-youtube"></i>
-                            </div>
-                            <div class="text-left">
-                                <span class="block text-xs font-bold">YouTube Stream</span>
-                                <span class="text-[10px] text-gray-400">Online Audio</span>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 2. LOCAL MUSIC SCREEN VIEW -->
-            <section id="viewLocal" class="p-4 hidden space-y-4">
-                <!-- Search Local Songs -->
-                <div class="relative">
-                    <i class="fas fa-search absolute left-3 top-3 text-gray-400 text-xs"></i>
-                    <input type="text" id="localSearchInput" oninput="filterLocalTracks()" placeholder="Search local songs, artists..." class="w-full bg-msmi-card text-xs pl-9 pr-4 py-2.5 rounded-xl border border-white/10 focus:outline-none focus:border-msmi-red transition text-white">
-                </div>
-
-                <!-- Sub Header Navigation Tabs -->
-                <div class="flex justify-around bg-msmi-card/80 p-1 rounded-xl border border-white/5 text-xs font-medium">
-                    <button onclick="switchLocalSubtab('songs')" id="subtabSongs" class="subtab-btn px-3 py-1.5 rounded-lg bg-msmi-red text-white transition">Songs</button>
-                    <button onclick="switchLocalSubtab('artists')" id="subtabArtists" class="subtab-btn px-3 py-1.5 rounded-lg text-gray-400 hover:text-white transition">Artists</button>
-                    <button onclick="switchLocalSubtab('albums')" id="subtabAlbums" class="subtab-btn px-3 py-1.5 rounded-lg text-gray-400 hover:text-white transition">Albums</button>
-                    <button onclick="switchLocalSubtab('folders')" id="subtabFolders" class="subtab-btn px-3 py-1.5 rounded-lg text-gray-400 hover:text-white transition">Folders</button>
-                </div>
-
-                <!-- Custom Local File & Folder Open Action Banner -->
-                <div class="grid grid-cols-2 gap-2">
-                    <label class="glass-card p-3 rounded-xl flex items-center justify-between border border-dashed border-msmi-red/40 hover:bg-white/5 cursor-pointer transition">
-                        <div class="flex items-center space-x-2">
-                            <i class="fas fa-file-audio text-msmi-red text-lg"></i>
-                            <div>
-                                <h4 class="text-xs font-bold">Add Files</h4>
-                                <p class="text-[9px] text-gray-400">MP3, WAV, FLAC</p>
-                            </div>
-                        </div>
-                        <input type="file" id="audioFileInput" accept="audio/*" multiple class="hidden" onchange="handleFileSelect(event)">
-                    </label>
-
-                    <label class="glass-card p-3 rounded-xl flex items-center justify-between border border-dashed border-msmi-red/40 hover:bg-white/5 cursor-pointer transition">
-                        <div class="flex items-center space-x-2">
-                            <i class="fas fa-folder-plus text-msmi-red text-lg"></i>
-                            <div>
-                                <h4 class="text-xs font-bold">Add Folder</h4>
-                                <p class="text-[9px] text-gray-400">Recursive scan</p>
-                            </div>
-                        </div>
-                        <input type="file" id="folderInput" webkitdirectory directory multiple class="hidden" onchange="handleFolderSelect(event)">
-                    </label>
-                </div>
-
-                <!-- Track List Output -->
-                <div id="localTrackList" class="space-y-1">
-                    <!-- Dynamic local track list -->
-                </div>
-            </section>
-
-            <!-- 3. SMART PLAYLISTS SCREEN VIEW -->
-            <section id="viewPlaylists" class="p-4 hidden space-y-4">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-sm font-bold uppercase text-gray-300 tracking-wider">Playlists & Favorites</h3>
-                    <button onclick="createNewPlaylistPrompt()" class="px-3 py-1.5 bg-msmi-red text-white text-xs font-bold rounded-lg flex items-center space-x-1 hover:bg-red-600 transition">
-                        <i class="fas fa-plus"></i>
-                        <span>New Playlist</span>
-                    </button>
-                </div>
-
-                <!-- Favorites Header Tile -->
-                <div onclick="showPlaylistItems('favorites')" class="glass-card p-4 rounded-xl flex items-center justify-between hover:bg-white/5 transition cursor-pointer border-l-4 border-l-msmi-red">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-lg bg-msmi-red/20 flex items-center justify-center text-msmi-red">
-                            <i class="fas fa-heart"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-xs font-bold">Favorites</h4>
-                            <p id="favCountLabel" class="text-[10px] text-gray-400">0 Songs</p>
-                        </div>
-                    </div>
-                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
-                </div>
-
-                <!-- Custom Playlists Container -->
-                <div id="customPlaylistsList" class="space-y-2">
-                    <!-- Dynamic Playlists -->
-                </div>
-
-                <!-- Selected Playlist Songs Listing Modal/View -->
-                <div id="playlistDetailContainer" class="hidden space-y-2 pt-2 border-t border-white/10">
-                    <div class="flex justify-between items-center mb-2">
-                        <h4 id="currentPlaylistTitle" class="text-xs font-bold text-msmi-red uppercase">Playlist Songs</h4>
-                        <button onclick="closePlaylistDetail()" class="text-xs text-gray-400 hover:text-white">Close</button>
-                    </div>
-                    <div id="playlistTrackList" class="space-y-1"></div>
-                </div>
-            </section>
-
-            <!-- 4. YOUTUBE MUSIC SCREEN VIEW -->
-            <section id="viewYoutube" class="p-4 hidden space-y-4">
-                <div class="relative">
-                    <i class="fas fa-search absolute left-3 top-3 text-gray-400 text-xs"></i>
-                    <input type="text" id="ytSearchInput" onkeyup="filterYtTracks()" placeholder="Search YouTube Music..." class="w-full bg-msmi-card text-xs pl-9 pr-4 py-2.5 rounded-xl border border-white/10 focus:outline-none focus:border-msmi-red transition text-white">
-                </div>
-
-                <div class="flex space-x-2 overflow-x-auto pb-1 text-xs">
-                    <button class="px-4 py-1.5 rounded-full bg-msmi-red text-white font-semibold whitespace-nowrap">Trending</button>
-                    <button class="px-4 py-1.5 rounded-full bg-msmi-card border border-white/10 text-gray-300 hover:bg-white/10 whitespace-nowrap">Top Charts</button>
-                    <button class="px-4 py-1.5 rounded-full bg-msmi-card border border-white/10 text-gray-300 hover:bg-white/10 whitespace-nowrap">Gaming</button>
-                </div>
-
-                <div id="ytMusicList" class="space-y-2">
-                    <!-- Dynamic YT Items -->
-                </div>
-            </section>
-
-            <!-- 5. SETTINGS SCREEN VIEW -->
-            <section id="viewSettings" class="p-4 hidden space-y-4">
-                <h3 class="text-sm font-bold uppercase text-gray-300 tracking-wider">Customization & Settings</h3>
-                
-                <!-- Edge Lighting Options Panel -->
-                <div class="glass-card rounded-2xl p-4 space-y-4 text-xs border border-msmi-red/30">
-                    <h4 class="font-bold text-msmi-red flex items-center space-x-2">
-                        <i class="fas fa-border-all"></i>
-                        <span>Red Edge Lighting</span>
-                    </h4>
-
-                    <div class="flex justify-between items-center pb-2 border-b border-white/5">
-                        <div>
-                            <span class="font-semibold block">Enable Edge Light</span>
-                            <span class="text-gray-400 text-[10px]">Glow border surrounding player</span>
-                        </div>
-                        <input type="checkbox" id="edgeLightToggle" checked onchange="updateEdgeLightingSettings()" class="accent-msmi-red w-4 h-4 cursor-pointer">
-                    </div>
-
-                    <div class="space-y-1">
-                        <div class="flex justify-between">
-                            <span class="text-gray-300">Glow Intensity</span>
-                            <span id="glowValLabel" class="text-msmi-red font-mono">20px</span>
-                        </div>
-                        <input type="range" id="glowIntensitySlider" min="5" max="40" value="20" oninput="updateEdgeLightingSettings()" class="w-full">
-                    </div>
-
-                    <div class="space-y-1">
-                        <div class="flex justify-between">
-                            <span class="text-gray-300">Pulse Speed</span>
-                            <span id="speedValLabel" class="text-msmi-red font-mono">2.0s</span>
-                        </div>
-                        <input type="range" id="pulseSpeedSlider" min="5" max="40" value="20" oninput="updateEdgeLightingSettings()" class="w-full">
-                    </div>
-
-                    <div class="space-y-1">
-                        <span class="text-gray-300 block mb-1">Color Mode</span>
-                        <div class="grid grid-cols-3 gap-2">
-                            <button onclick="setEdgeColor('#ff1e38')" class="p-1.5 rounded-lg bg-msmi-card border border-msmi-red text-center hover:bg-msmi-red/20 transition">Pure Red</button>
-                            <button onclick="setEdgeColor('#dc2626')" class="p-1.5 rounded-lg bg-msmi-card border border-red-600 text-center hover:bg-red-600/20 transition">Crimson</button>
-                            <button onclick="setEdgeColor('#ff0055')" class="p-1.5 rounded-lg bg-msmi-card border border-pink-600 text-center hover:bg-pink-600/20 transition">Cyber Red</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Preferences Panel -->
-                <div class="glass-card rounded-2xl p-4 space-y-3 text-xs">
-                    <div class="flex justify-between items-center pb-2 border-b border-white/5">
-                        <div>
-                            <span class="font-semibold block">Background Playback</span>
-                            <span class="text-gray-400 text-[10px]">Continue music on tab switch</span>
-                        </div>
-                        <input type="checkbox" checked class="accent-msmi-red w-4 h-4">
-                    </div>
-                    <div class="flex justify-between items-center pb-2 border-b border-white/5">
-                        <div>
-                            <span class="font-semibold block">Harmonic Audio Effects</span>
-                            <span class="text-gray-400 text-[10px]">Hardware Equalizer acceleration</span>
-                        </div>
-                        <input type="checkbox" checked class="accent-msmi-red w-4 h-4">
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <span class="font-semibold block">Auto-Save Playlists</span>
-                            <span class="text-gray-400 text-[10px]">Save favorites to localStorage</span>
-                        </div>
-                        <input type="checkbox" id="autoSaveToggle" checked class="accent-msmi-red w-4 h-4">
-                    </div>
-                </div>
-
-                <div class="glass-card rounded-2xl p-4 text-xs space-y-2">
-                    <h4 class="font-bold text-msmi-red">About MSMI Music Player</h4>
-                    <p class="text-gray-400">Version 3.5.0 • Play Your World</p>
-                    <p class="text-gray-500 text-[10px]">Built with HTML5 Audio & Web Audio API Harmonic Visualizer.</p>
-                </div>
-            </section>
-        </main>
-
-        <!-- ==================== NOW PLAYING / EQUALIZER MODAL ==================== -->
-        <div id="nowPlayingModal" class="absolute inset-0 z-40 bg-msmi-bg flex flex-col justify-between p-6 transform translate-y-full transition-transform duration-500 overflow-y-auto">
-            <!-- Modal Header -->
-            <div class="flex justify-between items-center">
-                <button id="closeNowPlayingBtn" class="w-10 h-10 rounded-full glass-card flex items-center justify-center text-gray-300 hover:text-white">
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <span class="text-xs uppercase font-extrabold tracking-widest text-gray-400">Now Playing</span>
-                <button id="toggleFavModalBtn" onclick="toggleCurrentFavorite()" class="w-10 h-10 rounded-full glass-card flex items-center justify-center text-gray-400 hover:text-msmi-red transition">
-                    <i id="favModalIcon" class="far fa-heart"></i>
-                </button>
-            </div>
-
-            <!-- Main Audio Control Panel -->
-            <div id="playerMainView" class="flex flex-col items-center my-auto space-y-6">
-                <!-- Circular Visualizer Artwork Frame -->
-                <div class="relative w-64 h-64 flex items-center justify-center my-2">
-                    <div id="vinylGlow" class="absolute inset-0 rounded-full border-2 border-msmi-red/40 animate-glow"></div>
-                    <canvas id="visualizerCanvas" width="280" height="280" class="absolute inset-0 z-10 pointer-events-none"></canvas>
-                    <div id="albumArtContainer" class="w-52 h-52 rounded-full overflow-hidden border-4 border-msmi-card shadow-[0_0_30px_rgba(255,30,56,0.5)] z-20 transition-transform duration-700">
-                        <img id="npTrackImage" src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500&q=80" alt="Album Art" class="w-full h-full object-cover">
-                    </div>
-                </div>
-
-                <!-- Track Info -->
-                <div class="text-center space-y-1">
-                    <h2 id="npTrackTitle" class="text-xl font-bold tracking-wide line-clamp-1">Blinding Lights</h2>
-                    <p id="npTrackArtist" class="text-xs text-gray-400 font-medium">The Weeknd</p>
-                </div>
-
-                <!-- Seek Slider -->
-                <div class="w-full space-y-1">
-                    <div class="relative flex items-center">
-                        <input type="range" id="seekSlider" min="0" max="100" value="0" class="w-full">
-                    </div>
-                    <div class="flex justify-between text-[10px] text-gray-400 font-mono">
-                        <span id="currentTime">0:00</span>
-                        <span id="totalDuration">0:00</span>
-                    </div>
-                </div>
-
-                <!-- Playback Controls -->
-                <div class="flex items-center justify-between w-full max-w-xs px-2">
-                    <button id="shuffleBtn" onclick="toggleShuffle()" class="text-gray-400 hover:text-white transition"><i class="fas fa-random text-sm"></i></button>
-                    <button id="prevBtn" class="text-xl text-gray-200 hover:text-white transition"><i class="fas fa-step-backward"></i></button>
-                    <button id="playPauseBtnModal" class="w-14 h-14 rounded-full bg-msmi-red text-white text-xl flex items-center justify-center shadow-[0_0_20px_rgba(255,30,56,0.6)] hover:scale-105 transition">
-                        <i class="fas fa-play ml-0.5"></i>
-                    </button>
-                    <button id="nextBtn" class="text-xl text-gray-200 hover:text-white transition"><i class="fas fa-step-forward"></i></button>
-                    <button id="repeatBtn" onclick="toggleRepeat()" class="text-gray-400 hover:text-white transition"><i class="fas fa-redo text-sm"></i></button>
-                </div>
-
-                <!-- Volume Control -->
-                <div class="flex items-center space-x-3 w-full max-w-xs px-4">
-                    <i class="fas fa-volume-down text-gray-400 text-xs"></i>
-                    <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.8" oninput="setVolume(this.value)" class="w-full">
-                    <i class="fas fa-volume-up text-gray-400 text-xs"></i>
-                </div>
-
-                <!-- Harmonic Effects Button -->
-                <button onclick="toggleHarmonicPanel()" class="px-4 py-2 glass-card rounded-full text-xs font-semibold text-msmi-red flex items-center space-x-2 hover:bg-msmi-red/10 transition border border-msmi-red/30">
-                    <i class="fas fa-wave-square"></i>
-                    <span>Harmonic Equalizer</span>
-                </button>
-            </div>
-
-            <!-- Harmonic Equalizer View -->
-            <div id="harmonicPanel" class="hidden flex-col space-y-5 my-auto py-4">
-                <div class="text-center">
-                    <h3 class="text-lg font-bold text-msmi-red flex items-center justify-center space-x-2">
-                        <i class="fas fa-sliders-h"></i>
-                        <span>Harmonic Equalizer</span>
-                    </h3>
-                    <p class="text-[10px] text-gray-400">Web Audio API Sound Enhancement</p>
-                </div>
-
-                <!-- Presets -->
-                <div class="flex justify-around text-xs bg-msmi-card p-1.5 rounded-xl border border-white/5">
-                    <button onclick="applyPreset('flat')" class="eq-preset px-2 py-1 rounded-md active bg-msmi-red text-white">Flat</button>
-                    <button onclick="applyPreset('bass')" class="eq-preset px-2 py-1 rounded-md text-gray-400">Bass</button>
-                    <button onclick="applyPreset('rock')" class="eq-preset px-2 py-1 rounded-md text-gray-400">Rock</button>
-                    <button onclick="applyPreset('pop')" class="eq-preset px-2 py-1 rounded-md text-gray-400">Pop</button>
-                    <button onclick="applyPreset('vocal')" class="eq-preset px-2 py-1 rounded-md text-gray-400">Vocal</button>
-                    <button onclick="applyPreset('edm')" class="eq-preset px-2 py-1 rounded-md text-gray-400">EDM</button>
-                </div>
-
-                <!-- 5 Band Sliders -->
-                <div class="grid grid-cols-5 gap-2 h-44 glass-card p-4 rounded-2xl items-center">
-                    <div class="flex flex-col items-center h-full justify-between">
-                        <span class="text-[10px] text-gray-400">60Hz</span>
-                        <input type="range" id="eq60" min="-12" max="12" value="0" oninput="updateEqBand(0, this.value)" class="h-28 -rotate-90 origin-center w-28">
-                        <span id="val60" class="text-[10px] text-msmi-red font-mono">0dB</span>
-                    </div>
-                    <div class="flex flex-col items-center h-full justify-between">
-                        <span class="text-[10px] text-gray-400">230Hz</span>
-                        <input type="range" id="eq230" min="-12" max="12" value="0" oninput="updateEqBand(1, this.value)" class="h-28 -rotate-90 origin-center w-28">
-                        <span id="val230" class="text-[10px] text-msmi-red font-mono">0dB</span>
-                    </div>
-                    <div class="flex flex-col items-center h-full justify-between">
-                        <span class="text-[10px] text-gray-400">910Hz</span>
-                        <input type="range" id="eq910" min="-12" max="12" value="0" oninput="updateEqBand(2, this.value)" class="h-28 -rotate-90 origin-center w-28">
-                        <span id="val910" class="text-[10px] text-msmi-red font-mono">0dB</span>
-                    </div>
-                    <div class="flex flex-col items-center h-full justify-between">
-                        <span class="text-[10px] text-gray-400">4kHz</span>
-                        <input type="range" id="eq4k" min="-12" max="12" value="0" oninput="updateEqBand(3, this.value)" class="h-28 -rotate-90 origin-center w-28">
-                        <span id="val4k" class="text-[10px] text-msmi-red font-mono">0dB</span>
-                    </div>
-                    <div class="flex flex-col items-center h-full justify-between">
-                        <span class="text-[10px] text-gray-400">14kHz</span>
-                        <input type="range" id="eq14k" min="-12" max="12" value="0" oninput="updateEqBand(4, this.value)" class="h-28 -rotate-90 origin-center w-28">
-                        <span id="val14k" class="text-[10px] text-msmi-red font-mono">0dB</span>
-                    </div>
-                </div>
-
-                <!-- Bass Boost Dial -->
-                <div class="glass-card p-3 rounded-xl flex items-center justify-between">
-                    <span class="text-xs font-semibold text-gray-300">Bass Boost 3D</span>
-                    <input type="range" id="bassBoostSlider" min="0" max="15" value="0" oninput="updateBassBoost(this.value)" class="w-36">
-                </div>
-
-                <button onclick="toggleHarmonicPanel()" class="w-full py-2 bg-msmi-card rounded-xl text-xs font-bold text-gray-300 hover:text-white">Back to Player</button>
-            </div>
-        </div>
-
-        <!-- ==================== PERSISTENT MINI PLAYER ==================== -->
-        <div id="miniPlayer" class="absolute bottom-16 left-3 right-3 glass-card rounded-2xl p-2.5 flex items-center justify-between z-30 cursor-pointer shadow-2xl border border-msmi-red/20 hover:border-msmi-red/50 transition">
-            <div id="miniPlayerClickArea" class="flex items-center space-x-3 flex-1 overflow-hidden">
-                <img id="miniTrackImage" src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=150&q=80" alt="Art" class="w-10 h-10 rounded-xl object-cover">
-                <div class="truncate">
-                    <h4 id="miniTrackTitle" class="text-xs font-bold truncate">Blinding Lights</h4>
-                    <p id="miniTrackArtist" class="text-[10px] text-gray-400 truncate">The Weeknd</p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-2">
-                <button id="miniPlayBtn" class="w-8 h-8 rounded-full bg-msmi-red text-white flex items-center justify-center text-xs shadow-md">
-                    <i class="fas fa-play ml-0.5"></i>
-                </button>
-                <button id="miniNextBtn" class="w-8 h-8 rounded-full bg-white/5 text-gray-300 flex items-center justify-center text-xs hover:text-white">
-                    <i class="fas fa-step-forward"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- ==================== NAVIGATION BOTTOM BAR ==================== -->
-        <nav class="absolute bottom-0 inset-x-0 h-16 glass-nav flex justify-around items-center border-t border-white/10 z-30 px-2">
-            <button onclick="switchTab('home')" id="navHome" class="nav-item active flex flex-col items-center space-y-1 text-msmi-red">
-                <i class="fas fa-home text-base"></i>
-                <span class="text-[10px] font-medium">Home</span>
-            </button>
-            <button onclick="switchTab('local')" id="navLocal" class="nav-item flex flex-col items-center space-y-1 text-gray-400 hover:text-white">
-                <i class="fas fa-music text-base"></i>
-                <span class="text-[10px] font-medium">Local</span>
-            </button>
-            <button onclick="switchTab('playlists')" id="navPlaylists" class="nav-item flex flex-col items-center space-y-1 text-gray-400 hover:text-white">
-                <i class="fas fa-list-ul text-base"></i>
-                <span class="text-[10px] font-medium">Playlists</span>
-            </button>
-            <button onclick="switchTab('youtube')" id="navYoutube" class="nav-item flex flex-col items-center space-y-1 text-gray-400 hover:text-white">
-                <i class="fab fa-youtube text-base"></i>
-                <span class="text-[10px] font-medium">YouTube</span>
-            </button>
-            <button onclick="switchTab('settings')" id="navSettings" class="nav-item flex flex-col items-center space-y-1 text-gray-400 hover:text-white">
-                <i class="fas fa-cog text-base"></i>
-                <span class="text-[10px] font-medium">Settings</span>
-            </button>
-        </nav>
-
-    </div>
-
-    <!-- Hidden HTML5 Audio Element -->
-    <audio id="audioPlayer" preload="auto" crossorigin="anonymous"></audio>
-
-    <!-- ==================== JAVASCRIPT ENGINE ==================== -->
-    <script>
-        // Track Database
-        let trackList = [
-            {
-                id: 1,
-                title: "Blinding Lights",
-                artist: "The Weeknd",
-                album: "After Hours",
-                duration: "3:20",
-                image: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500&q=80",
-                url: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=synthwave-80s-110045.mp3",
-                source: "preset"
-            },
-            {
-                id: 2,
-                title: "Faded",
-                artist: "Alan Walker",
-                album: "Different World",
-                duration: "3:32",
-                image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&q=80",
-                url: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=energetic-hip-hop-8303.mp3",
-                source: "preset"
-            },
-            {
-                id: 3,
-                title: "Raataan Lambiyan",
-                artist: "Arijit Singh",
-                album: "Shershaah",
-                duration: "3:59",
-                image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80",
-                url: "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=smooth-waters-115977.mp3",
-                source: "preset"
-            },
-            {
-                id: 4,
-                title: "Yellow",
-                artist: "Coldplay",
-                album: "Parachutes",
-                duration: "4:29",
-                image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&q=80",
-                url: "https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f795cb.mp3?filename=ambient-piano-124843.mp3",
-                source: "preset"
-            },
-            {
-                id: 5,
-                title: "Believer",
-                artist: "Imagine Dragons",
-                album: "Evolve",
-                duration: "3:24",
-                image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&q=80",
-                url: "https://cdn.pixabay.com/download/audio/2022/03/10/audio_c2a4f001c9.mp3?filename=action-rock-103323.mp3",
-                source: "preset"
-            }
-        ];
-
-        let ytTrackList = [
-            { id: 101, title: "AP Dhillon - Brown Munde", channel: "AP Dhillon", time: "3:52", img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&q=80", url: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=energetic-hip-hop-8303.mp3" },
-            { id: 102, title: "Arijit Singh - Tum Hi Ho", channel: "T-Series", time: "4:32", img: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&q=80", url: "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=smooth-waters-115977.mp3" },
-            { id: 103, title: "Yo Yo Honey Singh - Blue Eyes", channel: "T-Series", time: "3:17", img: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&q=80", url: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=synthwave-80s-110045.mp3" },
-            { id: 104, title: "Ed Sheeran - Perfect", channel: "Ed Sheeran", time: "4:40", img: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=300&q=80", url: "https://cdn.pixabay.com/download/audio/2022/11/06/audio_24855490bc.mp3?filename=soft-acoustic-126830.mp3" }
-        ];
-
-        // System State
-        let currentTrackIndex = 0;
-        let isPlaying = false;
-        let isShuffle = false;
-        let isRepeat = false;
-        let favoriteTrackIds = new Set();
-        let customPlaylists = { "Party Hits": [1, 2], "Workout Boost": [4, 5] };
-        let currentSubtab = 'songs';
-
-        // Web Audio Context & Equalizer Nodes
-        let audioCtx, sourceNode, analyserNode, gainNode;
-        let eqBands = [];
-        let eqFrequencies = [60, 230, 910, 4000, 14000];
-
-        // DOM Elements
-        const audio = document.getElementById('audioPlayer');
-        const playPauseBtnModal = document.getElementById('playPauseBtnModal');
-        const miniPlayBtn = document.getElementById('miniPlayBtn');
-        const seekSlider = document.getElementById('seekSlider');
-        const currentTimeEl = document.getElementById('currentTime');
-        const totalDurationEl = document.getElementById('totalDuration');
-        const albumArtContainer = document.getElementById('albumArtContainer');
-
-        // Initializer
-        window.addEventListener('load', () => {
-            // Splash Progress Simulation
-            const progress = document.getElementById('splashProgress');
-            let width = 0;
-            const interval = setInterval(() => {
-                if (width >= 100) {
-                    clearInterval(interval);
-                    document.getElementById('splashScreen').classList.add('opacity-0');
-                    setTimeout(() => document.getElementById('splashScreen').style.display = 'none', 700);
-                } else {
-                    width += 15;
-                    progress.style.width = width + '%';
-                }
-            }, 80);
-
-            loadSavedData();
-            renderTracks();
-            renderYtTracks();
-            renderPlaylists();
-            loadTrack(0);
-        });
-
-        // Local Storage Sync
-        function loadSavedData() {
-            try {
-                const savedFavs = localStorage.getItem('msmi_favs');
-                if(savedFavs) favoriteTrackIds = new Set(JSON.parse(savedFavs));
-                const savedPlaylists = localStorage.getItem('msmi_playlists');
-                if(savedPlaylists) customPlaylists = JSON.parse(savedPlaylists);
-            } catch(e) {}
-        }
-
-        function saveData() {
-            try {
-                localStorage.setItem('msmi_favs', JSON.stringify([...favoriteTrackIds]));
-                localStorage.setItem('msmi_playlists', JSON.stringify(customPlaylists));
-            } catch(e) {}
-        }
-
-        // Tab Navigation
-        function switchTab(tab) {
-            ['Home', 'Local', 'Playlists', 'Youtube', 'Settings'].forEach(view => {
-                document.getElementById(`view${view}`).classList.add('hidden');
-            });
-            document.querySelectorAll('.nav-item').forEach(btn => {
-                btn.classList.remove('text-msmi-red');
-                btn.classList.add('text-gray-400');
-            });
-
-            const activeView = document.getElementById(`view${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
-            if(activeView) activeView.classList.remove('hidden');
-
-            const activeNav = document.getElementById(`nav${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
-            if(activeNav) {
-                activeNav.classList.remove('text-gray-400');
-                activeNav.classList.add('text-msmi-red');
-            }
-        }
-
-        // Subtab Navigation
-        function switchLocalSubtab(type) {
-            currentSubtab = type;
-            ['songs', 'artists', 'albums', 'folders'].forEach(t => {
-                const btn = document.getElementById(`subtab${t.charAt(0).toUpperCase() + t.slice(1)}`);
-                if(btn) {
-                    btn.classList.remove('bg-msmi-red', 'text-white');
-                    btn.classList.add('text-gray-400');
-                }
-            });
-            const activeBtn = document.getElementById(`subtab${type.charAt(0).toUpperCase() + type.slice(1)}`);
-            if(activeBtn) {
-                activeBtn.classList.add('bg-msmi-red', 'text-white');
-                activeBtn.classList.remove('text-gray-400');
-            }
-            renderTracks();
-        }
-
-        // File and Folder Import
-        function handleFileSelect(e) {
-            const files = Array.from(e.target.files);
-            processAudioFiles(files);
-        }
-
-        function handleFolderSelect(e) {
-            const files = Array.from(e.target.files).filter(f => f.type.startsWith('audio/') || f.name.match(/\.(mp3|wav|flac|m4a|ogg)$/i));
-            processAudioFiles(files);
-        }
-
-        function processAudioFiles(files) {
-            if(!files.length) return;
-            files.forEach(file => {
-                const url = URL.createObjectURL(file);
-                trackList.unshift({
-                    id: Date.now() + Math.random(),
-                    title: file.name.replace(/\.[^/.]+$/, ""),
-                    artist: "Local Device",
-                    album: "Local Storage",
-                    duration: "Local",
-                    image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&q=80",
-                    url: url,
-                    source: "local"
-                });
-            });
-            renderTracks();
-            playTrack(0);
-        }
-
-        // Render Local Tracks
-        function renderTracks(filterQuery = '') {
-            const listContainer = document.getElementById('localTrackList');
-            const recentContainer = document.getElementById('recentlyPlayedList');
-            listContainer.innerHTML = '';
-            recentContainer.innerHTML = '';
-
-            let filtered = trackList.filter(t => t.title.toLowerCase().includes(filterQuery.toLowerCase()) || t.artist.toLowerCase().includes(filterQuery.toLowerCase()));
-
-            filtered.forEach((track, index) => {
-                const isFav = favoriteTrackIds.has(track.id);
-                const item = document.createElement('div');
-                item.className = `glass-card p-3 rounded-xl flex items-center justify-between hover:bg-white/5 transition cursor-pointer border-l-2 ${index === currentTrackIndex ? 'border-l-msmi-red bg-msmi-red/10' : 'border-l-transparent'}`;
-                
-                item.innerHTML = `
-                    <div onclick="playTrack(${index})" class="flex items-center space-x-3 overflow-hidden flex-1">
-                        <i class="fas fa-music ${index === currentTrackIndex ? 'text-msmi-red' : 'text-gray-500'} text-sm"></i>
-                        <div class="truncate">
-                            <h4 class="text-xs font-bold ${index === currentTrackIndex ? 'text-msmi-red' : 'text-gray-200'} truncate">${track.title}</h4>
-                            <p class="text-[10px] text-gray-400 truncate">${track.artist} • ${track.album}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <button onclick="toggleFavorite(${track.id}, event)" class="text-xs ${isFav ? 'text-msmi-red' : 'text-gray-500'} hover:text-msmi-red">
-                            <i class="${isFav ? 'fas' : 'far'} fa-heart"></i>
-                        </button>
-                        <span class="text-[10px] text-gray-500 font-mono">${track.duration}</span>
-                    </div>
-                `;
-                listContainer.appendChild(item);
-
-                if (index < 3) {
-                    const recItem = item.cloneNode(true);
-                    recentContainer.appendChild(recItem);
-                }
-            });
-        }
-
-        function filterLocalTracks() {
-            const q = document.getElementById('localSearchInput').value;
-            renderTracks(q);
-        }
-
-        // Render Youtube
-        function renderYtTracks() {
-            const ytContainer = document.getElementById('ytMusicList');
-            ytContainer.innerHTML = '';
-            ytTrackList.forEach((yt) => {
-                const item = document.createElement('div');
-                item.className = 'glass-card p-2.5 rounded-xl flex items-center justify-between hover:bg-white/5 transition cursor-pointer';
-                item.onclick = () => {
-                    trackList.unshift({
-                        id: yt.id,
-                        title: yt.title,
-                        artist: yt.channel,
-                        album: "YouTube Stream",
-                        duration: yt.time,
-                        image: yt.img,
-                        url: yt.url,
-                        source: "youtube"
-                    });
-                    renderTracks();
-                    playTrack(0);
-                };
-                item.innerHTML = `
-                    <div class="flex items-center space-x-3 overflow-hidden">
-                        <img src="${yt.img}" class="w-12 h-12 rounded-lg object-cover">
-                        <div class="truncate">
-                            <h4 class="text-xs font-bold text-gray-200 truncate">${yt.title}</h4>
-                            <p class="text-[10px] text-gray-400 truncate">${yt.channel}</p>
-                        </div>
-                    </div>
-                    <i class="fab fa-youtube text-red-500 text-lg"></i>
-                `;
-                ytContainer.appendChild(item);
-            });
-        }
-
-        // Render Playlists
-        function renderPlaylists() {
-            const container = document.getElementById('customPlaylistsList');
-            document.getElementById('favCountLabel').innerText = `${favoriteTrackIds.size} Songs`;
-            container.innerHTML = '';
-
-            Object.keys(customPlaylists).forEach(name => {
-                const songsCount = customPlaylists[name].length;
-                const div = document.createElement('div');
-                div.className = 'glass-card p-4 rounded-xl flex items-center justify-between hover:bg-white/5 transition cursor-pointer border-l-4 border-l-msmi-darkRed';
-                div.onclick = () => showPlaylistItems(name);
-                div.innerHTML = `
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-lg bg-msmi-darkRed/30 flex items-center justify-center text-msmi-red">
-                            <i class="fas fa-list"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-xs font-bold">${name}</h4>
-                            <p class="text-[10px] text-gray-400">${songsCount} Songs</p>
-                        </div>
-                    </div>
-                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function createNewPlaylistPrompt() {
-            const name = prompt("Enter new playlist name:");
-            if(name && !customPlaylists[name]) {
-                customPlaylists[name] = [];
-                saveData();
-                renderPlaylists();
-            }
-        }
-
-        function showPlaylistItems(name) {
-            const container = document.getElementById('playlistDetailContainer');
-            const list = document.getElementById('playlistTrackList');
-            document.getElementById('currentPlaylistTitle').innerText = name;
-            container.classList.remove('hidden');
-            list.innerHTML = '';
-
-            let songIds = name === 'favorites' ? [...favoriteTrackIds] : customPlaylists[name];
-            let playlistTracks = trackList.filter(t => songIds.includes(t.id));
-
-            if(!playlistTracks.length) {
-                list.innerHTML = `<p class="text-xs text-gray-500 text-center py-4">No songs in this playlist</p>`;
-                return;
-            }
-
-            playlistTracks.forEach((track) => {
-                const item = document.createElement('div');
-                item.className = 'glass-card p-2.5 rounded-xl flex items-center justify-between';
-                item.innerHTML = `
-                    <div class="truncate">
-                        <h5 class="text-xs font-bold truncate">${track.title}</h5>
-                        <p class="text-[10px] text-gray-400 truncate">${track.artist}</p>
-                    </div>
-                    <button onclick="playDirectTrack(${track.id})" class="text-xs text-msmi-red p-2"><i class="fas fa-play"></i></button>
-                `;
-                list.appendChild(item);
-            });
-        }
-
-        function closePlaylistDetail() {
-            document.getElementById('playlistDetailContainer').classList.add('hidden');
-        }
-
-        function playDirectTrack(id) {
-            const idx = trackList.findIndex(t => t.id === id);
-            if(idx !== -1) playTrack(idx);
-        }
-
-        // Favorites Handler
-        function toggleFavorite(id, e) {
-            if(e) e.stopPropagation();
-            if(favoriteTrackIds.has(id)) favoriteTrackIds.delete(id);
-            else favoriteTrackIds.add(id);
-            saveData();
-            renderTracks();
-            renderPlaylists();
-            updateFavModalIcon();
-        }
-
-        function toggleCurrentFavorite() {
-            const currentTrack = trackList[currentTrackIndex];
-            if(currentTrack) toggleFavorite(currentTrack.id);
-        }
-
-        function updateFavModalIcon() {
-            const currentTrack = trackList[currentTrackIndex];
-            const icon = document.getElementById('favModalIcon');
-            if(currentTrack && favoriteTrackIds.has(currentTrack.id)) {
-                icon.className = "fas fa-heart text-msmi-red";
-            } else {
-                icon.className = "far fa-heart text-gray-400";
-            }
-        }
-
-        // Audio Engine Logic
-        function playTrack(index) {
-            currentTrackIndex = index;
-            loadTrack(index);
-            if (!audioCtx) initWebAudio();
-            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-
-            audio.play().then(() => {
-                isPlaying = true;
-                updatePlayState();
-            }).catch(() => {});
-        }
-
-        function loadTrack(index) {
-            const track = trackList[index];
-            if(!track) return;
-            audio.src = track.url;
-
-            document.getElementById('npTrackTitle').innerText = track.title;
-            document.getElementById('npTrackArtist').innerText = track.artist;
-            document.getElementById('npTrackImage').src = track.image;
-
-            document.getElementById('miniTrackTitle').innerText = track.title;
-            document.getElementById('miniTrackArtist').innerText = track.artist;
-            document.getElementById('miniTrackImage').src = track.image;
-
-            updateFavModalIcon();
-            renderTracks();
-        }
-
-        function togglePlay() {
-            if (!audioCtx) initWebAudio();
-            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-
-            if (isPlaying) {
-                audio.pause();
-                isPlaying = false;
-            } else {
-                audio.play();
-                isPlaying = true;
-            }
-            updatePlayState();
-        }
-
-        function updatePlayState() {
-            if (isPlaying) {
-                playPauseBtnModal.innerHTML = '<i class="fas fa-pause"></i>';
-                miniPlayBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                albumArtContainer.classList.add('animate-spin-slow');
-            } else {
-                playPauseBtnModal.innerHTML = '<i class="fas fa-play ml-0.5"></i>';
-                miniPlayBtn.innerHTML = '<i class="fas fa-play ml-0.5"></i>';
-                albumArtContainer.classList.remove('animate-spin-slow');
-            }
-        }
-
-        audio.addEventListener('timeupdate', () => {
-            if (audio.duration) {
-                const progress = (audio.currentTime / audio.duration) * 100;
-                seekSlider.value = progress;
-                currentTimeEl.innerText = formatTime(audio.currentTime);
-                totalDurationEl.innerText = formatTime(audio.duration);
-            }
-        });
-
-        audio.addEventListener('ended', () => {
-            if(isRepeat) {
-                playTrack(currentTrackIndex);
-            } else if(isShuffle) {
-                let nextIdx = Math.floor(Math.random() * trackList.length);
-                playTrack(nextIdx);
-            } else {
-                currentTrackIndex = (currentTrackIndex + 1) % trackList.length;
-                playTrack(currentTrackIndex);
-            }
-        });
-
-        seekSlider.addEventListener('input', () => {
-            if (audio.duration) audio.currentTime = (seekSlider.value / 100) * audio.duration;
-        });
-
-        document.getElementById('nextBtn').onclick = () => {
-            currentTrackIndex = (currentTrackIndex + 1) % trackList.length;
-            playTrack(currentTrackIndex);
-        };
-
-        document.getElementById('prevBtn').onclick = () => {
-            currentTrackIndex = (currentTrackIndex - 1 + trackList.length) % trackList.length;
-            playTrack(currentTrackIndex);
-        };
-
-        playPauseBtnModal.onclick = togglePlay;
-        miniPlayBtn.onclick = (e) => { e.stopPropagation(); togglePlay(); };
-
-        function setVolume(val) { audio.volume = val; }
-        function toggleShuffle() { isShuffle = !isShuffle; document.getElementById('shuffleBtn').classList.toggle('text-msmi-red', isShuffle); }
-        function toggleRepeat() { isRepeat = !isRepeat; document.getElementById('repeatBtn').classList.toggle('text-msmi-red', isRepeat); }
-
-        // Modal Expand
-        document.getElementById('miniPlayerClickArea').onclick = () => {
-            document.getElementById('nowPlayingModal').classList.remove('translate-y-full');
-        };
-        document.getElementById('closeNowPlayingBtn').onclick = () => {
-            document.getElementById('nowPlayingModal').classList.add('translate-y-full');
-        };
-
-        function toggleHarmonicPanel() {
-            const playerView = document.getElementById('playerMainView');
-            const harmonicView = document.getElementById('harmonicPanel');
-            harmonicView.classList.toggle('hidden');
-            harmonicView.classList.toggle('flex');
-            playerView.classList.toggle('hidden');
-        }
-
-        // Web Audio API & Bands Setup
-        function initWebAudio() {
-            try {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                audioCtx = new AudioContext();
-                sourceNode = audioCtx.createMediaElementSource(audio);
-                analyserNode = audioCtx.createAnalyser();
-                analyserNode.fftSize = 64;
-
-                // Create 5-band EQ
-                eqBands = eqFrequencies.map(freq => {
-                    const filter = audioCtx.createBiquadFilter();
-                    filter.type = 'peaking';
-                    filter.frequency.value = freq;
-                    filter.Q.value = 1;
-                    filter.gain.value = 0;
-                    return filter;
-                });
-
-                // Connect Chain
-                sourceNode.connect(eqBands[0]);
-                for(let i = 0; i < eqBands.length - 1; i++) {
-                    eqBands[i].connect(eqBands[i+1]);
-                }
-                eqBands[eqBands.length - 1].connect(analyserNode);
-                analyserNode.connect(audioCtx.destination);
-
-                drawVisualizer();
-            } catch(e) {}
-        }
-
-        function updateEqBand(index, value) {
-            if(eqBands[index]) eqBands[index].gain.value = parseFloat(value);
-            const labels = ['val60', 'val230', 'val910', 'val4k', 'val14k'];
-            document.getElementById(labels[index]).innerText = `${value}dB`;
-        }
-
-        function updateBassBoost(val) {
-            if(eqBands[0]) eqBands[0].gain.value = parseFloat(val);
-            document.getElementById('val60').innerText = `${val}dB`;
-            document.getElementById('eq60').value = val;
-        }
-
-        function applyPreset(preset) {
-            const presets = {
-                flat: [0, 0, 0, 0, 0],
-                bass: [8, 5, 0, -2, -4],
-                rock: [5, 3, -1, 4, 6],
-                pop: [-1, 2, 5, 2, -2],
-                vocal: [-3, 1, 6, 3, -1],
-                edm: [7, 4, -2, 3, 5]
-            };
-            const values = presets[preset];
-            if (values) {
-                values.forEach((val, i) => updateEqBand(i, val));
-            }
-        }
-
-        // Canvas Visualizer Loop
-        function drawVisualizer() {
-            const canvas = document.getElementById('visualizerCanvas');
-            const ctx = canvas.getContext('2d');
-            const bufferLength = analyserNode.frequencyBinCount;
-            const dataArray = new Uint8Array(bufferLength);
-
-            function render() {
-                requestAnimationFrame(render);
-                analyserNode.getByteFrequencyData(dataArray);
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                const centerX = canvas.width / 2;
-                const centerY = canvas.height / 2;
-                const radius = 105;
-
-                for (let i = 0; i < bufferLength; i++) {
-                    const barHeight = (dataArray[i] / 255) * 35;
-                    const rad = (i * 2 * Math.PI) / bufferLength;
-
-                    const x1 = centerX + Math.cos(rad) * radius;
-                    const y1 = centerY + Math.sin(rad) * radius;
-                    const x2 = centerX + Math.cos(rad) * (radius + barHeight);
-                    const y2 = centerY + Math.sin(rad) * (radius + barHeight);
-
-                    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--edge-color') || '#ff1e38';
-                    ctx.lineWidth = 3;
-                    ctx.beginPath();
-                    ctx.moveTo(x1, y1);
-                    ctx.lineTo(x2, y2);
-                    ctx.stroke();
-                }
-            }
-            render();
-        }
-
-        // Settings Edge Lighting Controls
-        function updateEdgeLightingSettings() {
-            const app = document.getElementById('appContainer');
-            const enabled = document.getElementById('edgeLightToggle').checked;
-            const glow = document.getElementById('glowIntensitySlider').value;
-            const speed = (45 - document.getElementById('pulseSpeedSlider').value) / 10;
-
-            document.getElementById('glowValLabel').innerText = `${glow}px`;
-            document.getElementById('speedValLabel').innerText = `${speed.toFixed(1)}s`;
-
-            if(enabled) {
-                app.classList.add('edge-lighting-on');
-            } else {
-                app.classList.remove('edge-lighting-on');
-            }
-
-            document.documentElement.style.setProperty('--edge-glow', `${glow}px`);
-            document.documentElement.style.setProperty('--edge-speed', `${speed}s`);
-        }
-
-        function setEdgeColor(color) {
-            document.documentElement.style.setProperty('--edge-color', color);
-        }
-
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-        }
-    </script>
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="color-scheme" content="dark">
+<title>MSMI_MUSIC_PLAYER</title>
+<style>
+@property --a{syntax:'<angle>';initial-value:0deg;inherits:false}
+:root{--ac:#ff1f1f;--e1:#ff1a1a;--e2:#ff7a00;--e3:#ff1a1a;--ew:3px;--eg:18px;--es:6s;--bg:#050507;--card:#111116;--card2:#1a1a21;--ln:#23232b;--tx:#f4f4f7;--mu:#9a9aa8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;background:#000;color:var(--tx);font-family:Inter,Roboto,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;transition:transform .15s,background .2s,color .2s}button:active{transform:scale(.92)}
+input,select{font:inherit;color:inherit}.ic{display:block;flex:none}.fill{fill:currentColor}
+#app{position:relative;max-width:480px;height:100%;margin:0 auto;display:flex;flex-direction:column;background:radial-gradient(110% 40% at 50% 0,#1a0709 0,var(--bg) 70%);overflow:hidden}
+.hd{display:flex;align-items:center;gap:6px;padding:14px 14px 8px 18px}
+.brand{font-weight:800;letter-spacing:1px;font-size:22px;color:var(--ac);flex:1;text-shadow:0 0 18px color-mix(in srgb,var(--ac) 50%,transparent)}
+.ttl{font-size:17px;font-weight:600;flex:1;margin-left:6px}
+.ib{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex:none}.ib:hover{background:var(--card2)}
+.tb{display:flex;border-bottom:1px solid var(--ln);margin:0 6px}.tb button{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0 10px;font-size:11px;color:#c9c9d2;position:relative}
+.tb button.on{color:var(--ac)}.tb button.on::after{content:"";position:absolute;bottom:-1px;left:22%;right:22%;height:2px;background:var(--ac);box-shadow:0 0 10px var(--ac);border-radius:2px}
+main{flex:1;overflow-y:auto;padding:12px 16px 14px;scrollbar-width:none}main::-webkit-scrollbar{display:none}main.in{animation:vin .35s ease}
+h2{font-size:15px;margin:20px 0 8px;display:flex;justify-content:space-between;align-items:center;font-weight:600}h2 a{color:var(--mu);font-weight:500;font-size:12px;cursor:pointer}
+.hero{border-radius:16px;padding:20px 18px;background:linear-gradient(110deg,#240508,#0c0c10 80%);border:1px solid #3a1116;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;min-height:112px}
+.hero h1{margin:0 0 12px;font-size:20px;line-height:1.2;font-weight:700}.hero b{color:var(--ac);font-size:15px;letter-spacing:1px}
+.hart{width:92px;height:92px;border-radius:50%;border:2px solid var(--ac);box-shadow:0 0 30px color-mix(in srgb,var(--ac) 60%,transparent);display:grid;place-items:center;overflow:hidden;background:#150608;color:var(--ac);animation:glow 3.5s ease-in-out infinite;flex:none}.hart img{width:100%;height:100%;object-fit:cover}
+.qp{display:grid;grid-template-columns:1fr 1fr;gap:12px}.qp button{display:flex;align-items:center;gap:10px;justify-content:center;padding:14px;border-radius:12px;background:#190709;border:1px solid var(--ac);font-weight:600;font-size:14px;box-shadow:0 0 16px color-mix(in srgb,var(--ac) 18%,transparent)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:14px;background:var(--card);border:1px solid color-mix(in srgb,var(--ac) 40%,#222);font-weight:600;font-size:14px;width:100%}.btn.pri{background:var(--ac);border-color:var(--ac);color:#fff}
+.pills{display:flex;gap:4px;padding:4px;border-radius:99px;background:var(--card);overflow-x:auto;scrollbar-width:none;margin-bottom:8px}.pills button{flex:1 0 auto;padding:8px 14px;border-radius:99px;font-size:13px;font-weight:600;color:#d4d4dc;white-space:nowrap}.pills button.on{background:var(--ac);color:#fff;box-shadow:0 0 14px color-mix(in srgb,var(--ac) 45%,transparent)}
+.chip{padding:8px 16px;border-radius:99px;background:var(--card);font-size:13px;font-weight:600;color:#d4d4dc;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;flex:none}.chip.on{background:var(--ac);color:#fff}.tabs{display:flex;gap:8px;overflow-x:auto;padding:10px 0;scrollbar-width:none}
+.search{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--ln);background:var(--card);outline:0;margin-bottom:6px}.search:focus{border-color:var(--ac)}
+.sbar{display:flex;align-items:center;gap:10px;padding:0 14px;border-radius:12px;border:1px solid var(--ln);background:var(--card);color:var(--mu)}.sbar input{flex:1;background:none;border:0;outline:0;padding:12px 0;color:var(--tx)}
+.song{display:flex;align-items:center;gap:12px;padding:9px 4px;cursor:pointer;animation:rise .4s both;animation-delay:calc(var(--i,0)*35ms);border-radius:10px}.song:active{background:var(--card)}.song.cur .tt{color:var(--ac)}
+.lr{border-bottom:1px solid #15151a;border-radius:0}
+.art{width:44px;height:44px;border-radius:9px;flex:none;display:grid;place-items:center;background:var(--card2);border:1px solid #24242c;color:#e6e6ee;overflow:hidden;position:relative}.art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.mt{flex:1;min-width:0}.tt{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sb{font-size:11.5px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}.dur{font-size:12px;color:var(--mu)}
+.th{width:100px;aspect-ratio:16/9;border-radius:8px;flex:none;position:relative;overflow:hidden;background:linear-gradient(135deg,#2a0b0e,#111);display:grid;place-items:center;color:var(--ac)}.th img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.th span{position:absolute;right:4px;bottom:3px;background:#000b;font-size:10px;padding:1px 4px;border-radius:4px;font-weight:600}
+.yt2 .tt{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.eqb{display:flex;gap:3px;align-items:flex-end;height:18px;z-index:1}.eqb i{width:3px;background:var(--ac);border-radius:2px;animation:eq .8s ease-in-out infinite}.eqb i:nth-child(2){animation-delay:.2s}.eqb i:nth-child(3){animation-delay:.4s}
+.empty{text-align:center;color:var(--mu);padding:30px 10px;font-size:14px;line-height:1.5}
+.card{background:var(--card);border-radius:16px;padding:14px;margin-bottom:12px}
+.set{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;font-size:14px;border-bottom:1px solid var(--ln)}.set:last-child{border:0}
+.set input[type=range]{width:50%;accent-color:var(--ac)}.set input[type=color]{width:44px;height:30px;border:0;background:none;padding:0}.set select{background:var(--card2);border:1px solid #2a2a35;border-radius:8px;padding:6px}
+.sw{appearance:none;width:44px;height:26px;border-radius:99px;background:#333;position:relative;transition:.25s;flex:none}.sw:checked{background:var(--ac)}.sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.25s}.sw:checked::after{left:21px}
+.pre{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.pre button{padding:7px 12px;border-radius:10px;font-size:12px;font-weight:600;border:1px solid #333;display:flex;align-items:center;gap:6px}.pre i{width:12px;height:12px;border-radius:50%}.pre .on{border-color:var(--ac);color:var(--ac)}
+#ytw{max-height:0;overflow:hidden;padding:0 16px;transition:max-height .4s}#ytw.show{max-height:320px;padding-bottom:6px}#ytf{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;background:#000;display:block}
+#mini{display:none;align-items:center;gap:10px;margin:0 8px 8px;padding:9px 10px;border-radius:12px;background:#15151b;border:1px solid #2a1417;position:relative;overflow:hidden;animation:rise .4s}
+#mini .bar{position:absolute;left:0;top:0;height:2px;background:var(--ac);width:0;box-shadow:0 0 8px var(--ac)}
+#np{position:absolute;inset:0;z-index:20;background:#000;display:none;flex-direction:column;padding:12px 22px 18px;transform:translateY(100%);transition:transform .35s cubic-bezier(.2,.8,.2,1);overflow-y:auto}#np.open{transform:none}
+#np::before{content:"";position:absolute;left:0;right:0;top:0;height:60%;background:radial-gradient(70% 55% at 50% 38%,#2d0709,transparent 75%);pointer-events:none}#np>*{position:relative}
+.rw{margin:18px auto 6px;width:min(64vw,270px);aspect-ratio:1;transform:scale(calc(1 + var(--b,0)*.07));transition:transform .08s}
+.ring{width:100%;height:100%;border-radius:50%;padding:12px;border:3px solid var(--ac);box-shadow:0 0 50px color-mix(in srgb,var(--ac) 65%,transparent),inset 0 0 36px color-mix(in srgb,var(--ac) 45%,transparent)}
+.ringart{width:100%;height:100%;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#3b0c10,#0a0a0d);color:var(--ac);font-size:80px;font-weight:800;position:relative}.ringart img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+canvas{width:100%;height:44px;display:block;margin-top:6px}
+input[type=range].seek{-webkit-appearance:none;appearance:none;height:18px;background:transparent;width:100%;margin:0}
+.seek::-webkit-slider-runnable-track{height:3px;border-radius:3px;background:linear-gradient(var(--ac),var(--ac)) 0/var(--p,0%) 100% no-repeat,#44444c}.seek::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--ac);margin-top:-4.5px;box-shadow:0 0 8px var(--ac)}
+.seek::-moz-range-track{height:3px;border-radius:3px;background:#44444c}.seek::-moz-range-progress{height:3px;background:var(--ac)}.seek::-moz-range-thumb{width:12px;height:12px;border:0;border-radius:50%;background:var(--ac)}
+.ctl{display:flex;align-items:center;justify-content:space-between}.ctl button{width:48px;height:48px;border-radius:50%;display:grid;place-items:center}.ctl .on{color:var(--ac)}
+.ctl .pp{width:66px;height:66px;background:var(--ac);color:#fff;box-shadow:0 0 28px color-mix(in srgb,var(--ac) 65%,transparent)}
+.nb{display:flex;align-items:center;justify-content:space-between;margin-top:22px;color:var(--ac)}.nb .hx{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500}
+#sheet{position:absolute;inset:0;z-index:30;background:#000a;display:none;align-items:flex-end}#sheet>div{width:100%;max-height:82%;overflow:auto;background:var(--card);border-radius:22px 22px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));animation:up .3s cubic-bezier(.2,.8,.2,1)}
+#sheet h3{margin:0 0 10px}.mi{padding:13px 4px;border-bottom:1px solid #22222c;font-size:15px;display:flex;align-items:center;gap:12px;width:100%;text-align:left}.mi small{color:var(--mu);margin-left:auto}
+.in{width:100%;padding:12px;border-radius:12px;border:1px solid #333;background:var(--card2);margin:6px 0 12px;outline:0}
+.fx{display:grid;grid-template-columns:64px 1fr;gap:8px;align-items:center;font-size:13px;margin:8px 0}.fx input{accent-color:var(--ac);width:100%}
+#splash{position:absolute;inset:0;z-index:60;background:radial-gradient(90% 50% at 50% 38%,#1c0507,#000 70%);display:flex;flex-direction:column;align-items:center;transition:opacity .6s,visibility .6s;padding-top:17%}#splash.off{opacity:0;visibility:hidden}
+#splash .lg{animation:pop .9s cubic-bezier(.2,.9,.3,1.2) both,glow 2s 1s ease-in-out infinite;border-radius:50%}
+#splash h1{margin:22px 0 4px;font-size:21px;letter-spacing:.5px;font-weight:700;animation:rise .8s .3s both}#splash h1 b{color:var(--ac)}#splash i{color:var(--ac);font-family:"Brush Script MT","Segoe Script",cursive;font-size:21px;animation:rise .8s .5s both}
+.spec{display:flex;gap:4px;align-items:flex-end;height:78px;margin-top:auto;-webkit-box-reflect:below 0 linear-gradient(transparent 40%,#0005)}.spec span{width:5px;background:linear-gradient(var(--ac),#9a0000);border-radius:1px;animation:eq 1s ease-in-out infinite}
+.ldt{margin:34px 0 8px;font-size:13px;color:#ddd}.ldb{width:62%;height:3px;border-radius:3px;background:#2a2a30;margin-bottom:8%;overflow:hidden}.ldb div{height:100%;width:0;background:var(--ac);box-shadow:0 0 10px var(--ac);animation:load 2.6s ease-in-out forwards}
+#edgeW{position:fixed;inset:0;pointer-events:none;z-index:100;filter:drop-shadow(0 0 var(--eg) var(--e1));opacity:var(--eo,1)}
+#edge{position:absolute;inset:0;padding:var(--ew);border-radius:var(--er,0);background:conic-gradient(from var(--a),var(--e1),var(--e2),var(--e3),var(--e1));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+#edgeG{position:fixed;inset:0;pointer-events:none;z-index:99;box-shadow:inset 0 0 calc(var(--eg)*2.2) calc(var(--eg)*.25) var(--e1);opacity:calc(var(--eo,1)*.45)}
+body.m-spin #edge{animation:spin var(--es) linear infinite}body.m-pulse #edgeW{animation:pulse calc(var(--es)/3) ease-in-out infinite}body.m-off #edgeW,body.m-off #edgeG{display:none}
+@keyframes spin{to{--a:360deg}}@keyframes pulse{50%{opacity:.35}}@keyframes glow{50%{box-shadow:0 0 34px var(--ac)}}@keyframes rise{from{opacity:0;transform:translateY(10px)}}@keyframes vin{from{opacity:0;transform:translateY(8px)}}@keyframes up{from{transform:translateY(40px);opacity:0}}@keyframes eq{0%,100%{height:15%}50%{height:100%}}@keyframes pop{from{opacity:0;transform:scale(.6)}}@keyframes load{to{width:100%}}
+</style></head>
+<body class="m-spin">
+<div id="edgeW"><div id="edge"></div></div><div id="edgeG"></div>
+<div id="app">
+<div id="hd"></div>
+<div id="ytw"><iframe id="ytf" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
+<main id="main"></main>
+<div id="mini"><div class="art" id="mA"></div><div class="mt"><div class="tt" id="mT"></div><div class="sb" id="mS"></div></div><div class="eqb" id="mE" style="width:20px"><i></i><i></i><i></i></div><button class="ib" id="mP"></button><button class="ib" data-a="nx" data-ic="next"></button><div class="bar" id="mB"></div></div>
+<div id="np">
+<div style="display:flex;align-items:center;gap:4px"><button class="ib" data-a="npx" data-ic="down"></button><b style="font-size:15px;flex:1;text-align:center;font-weight:500">Now Playing</b><button class="ib" data-a="fx" data-ic="eq" style="color:var(--ac)"></button><button class="ib" data-a="npm" data-ic="more"></button></div>
+<div class="rw"><div class="ring"><div class="ringart" id="ring"></div></div></div>
+<canvas id="viz" width="400" height="44"></canvas>
+<div style="text-align:center;margin-top:10px"><div class="tt" id="nT" style="font-size:20px;font-weight:600"></div><div class="sb" id="nS" style="font-size:14px"></div></div>
+<input type="range" class="seek" id="seek" min="0" max="1000" value="0" style="margin-top:16px">
+<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--mu)"><span id="cur">0:00</span><span id="tot">0:00</span></div>
+<div class="ctl" style="margin-top:8px"><button id="bSh" data-a="sh" data-ic="shuffle"></button><button data-a="pv" data-ic="prev"></button><button class="pp" id="bPl"></button><button data-a="nx" data-ic="next"></button><button id="bRp" data-a="rp"></button></div>
+<div class="nb"><button class="ib" data-a="fx" data-ic="eq"></button><button class="hx" data-a="fx"><span data-ic="wave" data-s="20"></span>Harmonic Effects</button><button class="ib" data-a="tmr" id="bTm" data-ic="timer"></button></div>
+</div>
+<div id="sheet"><div id="shc"></div></div>
+<div id="splash"><div class="lg" id="slg"></div><h1><b>MSMI</b>_MUSIC_PLAYER</h1><i>Play Your World</i><div class="spec" id="spec"></div><div class="ldt">Loading...</div><div class="ldb"><div></div></div></div>
+</div>
+<input type="file" id="fFolder" webkitdirectory directory multiple hidden><input type="file" id="fFiles" accept="audio/*,.mp3,.wav,.flac,.m4a,.ogg,.aac,.opus" multiple hidden>
+<audio id="au" preload="auto"></audio>
+<script>
+const $=s=>document.querySelector(s),au=$('#au');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const LS=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}},SV=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const fmt=t=>{if(!isFinite(t)||t<0)return'0:00';t=Math.floor(t);return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')};
+const P={headphones:'<path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/>',play:'<polygon class="fill" points="6 3 20 12 6 21"/>',pause:'<rect class="fill" x="6" y="4" width="4" height="16" rx="1"/><rect class="fill" x="14" y="4" width="4" height="16" rx="1"/>',next:'<polygon class="fill" points="5 4 15 12 5 20"/><line x1="19" x2="19" y1="5" y2="19"/>',prev:'<polygon class="fill" points="19 20 9 12 19 4"/><line x1="5" x2="5" y1="19" y2="5"/>',shuffle:'<path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"/><path d="m18 2 4 4-4 4"/><path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2"/><path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"/><path d="m18 14 4 4-4 4"/>',repeat:'<path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>',repeat1:'<path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/><path d="M11 10h1v4"/>',home:'<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',music:'<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',yt:'<rect x="3" y="4" width="18" height="16" rx="3"/><path class="fill" d="m10 9 5 3-5 3z"/>',ytl:'<path d="M2.5 17a24 24 0 0 1 0-10 2 2 0 0 1 1.4-1.4 50 50 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24 24 0 0 1 0 10 2 2 0 0 1-1.4 1.4 50 50 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path class="fill" d="m10 15 5-3-5-3z"/>',eq:'<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M2 14h4M10 8h4M18 16h4"/>',wave:'<path d="M2 12h2M6 8v8M10 4v16M14 7v10M18 9v6M22 12h-1"/>',search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',heart:'<path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z"/>',plus:'<path d="M5 12h14M12 5v14"/>',more:'<circle cx="12" cy="12" r="1.4"/><circle cx="12" cy="5" r="1.4"/><circle cx="12" cy="19" r="1.4"/>',folder:'<path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9L9.6 3.9A2 2 0 0 0 7.9 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z"/>',down:'<path d="m6 9 6 6 6-6"/>',back:'<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>',menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',timer:'<path d="M10 2h4M12 14l3-3"/><circle cx="12" cy="14" r="8"/>',trash:'<path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',x:'<path d="M18 6 6 18M6 6l12 12"/>',dl:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>',file:'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/>',mic:'<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',ext:'<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',trend:'<path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/>'};
+const I=(n,s=22)=>`<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${P[n]}</svg>`;
+const icons=()=>document.querySelectorAll('[data-ic]').forEach(e=>e.innerHTML=I(e.dataset.ic,+e.dataset.s||(e.classList.contains('ib')?22:26)));
+const LOGO=(s)=>`<svg width="${s}" height="${s}" viewBox="0 0 120 120" fill="none"><circle cx="60" cy="60" r="56" stroke="#ff1f1f" stroke-width="3.5"/><circle cx="60" cy="60" r="49" fill="#120305"/><path d="M26 66V58a34 34 0 0 1 68 0v8" stroke="#ff1f1f" stroke-width="9" stroke-linecap="round"/><rect x="22" y="62" width="13" height="24" rx="6" fill="#ff1f1f"/><rect x="85" y="62" width="13" height="24" rx="6" fill="#ff1f1f"/><g stroke="#ff5a5a" stroke-width="3" stroke-linecap="round"><path d="M44 52v16M51 44v32M58 38v44M65 44v32M72 50v20M79 55v10"/></g><text x="60" y="100" text-anchor="middle" font-family="Inter,Arial" font-weight="800" font-size="17" fill="#ff1f1f">MSMI</text></svg>`;
+const PRESETS={Crimson:['#ff1a1a','#ff7a00','#ff1a1a'],Neon:['#00f0ff','#ff00e5','#00f0ff'],Ocean:['#00b4ff','#00ffa3','#00b4ff'],Aurora:['#7c4dff','#00e676','#7c4dff'],Sunset:['#ff4e50','#f9d423','#ff4e50'],Ice:['#ffffff','#5ac8ff','#ffffff']};
+const FXP={Flat:[0,0,0,0,0],'Bass Boost':[10,6,2,0,0],Vocal:[0,-2,3,4,1],Treble:[0,0,0,2,5],Rock:[5,4,-2,-3,3]};
+let S=Object.assign({edge:true,mode:'spin',c1:'#ff1a1a',c2:'#ff7a00',c3:'#ff1a1a',w:3,glow:18,speed:6,react:true,round:24,accent:'#ff1f1f',fx:[0,0,0,0,0],rev:0,d3:false,rate:1,ytk:''},LS('msmi_set',{}));
+let T=[],byId={},PL=LS('msmi_pl',{}),FAV=new Set(LS('msmi_fav',[])),REC=LS('msmi_rec',[]),PC=LS('msmi_pc',{}),YF=LS('msmi_yf',[]);
+let view='home',lib={tab:'Songs',q:'',f:null,sort:'title',so:false},plOpen=null,queue=[],qi=-1,shuf=false,rep=0,mode='local',pend=null,LST={},lastView='',sleepEnd=0,sleepT=null,lp=0;
+let yt={id:null,title:'',ch:'',list:[],i:-1,st:-1,t:0,d:0},ytRes=[],ytMsg='',ytTab='Trending',ytAuto=false;
+function applyTheme(){const r=document.documentElement.style;r.setProperty('--ac',S.accent);r.setProperty('--e1',S.c1);r.setProperty('--e2',S.c2);r.setProperty('--e3',S.c3);r.setProperty('--ew',S.w+'px');r.setProperty('--eg',S.glow+'px');r.setProperty('--es',S.speed+'s');r.setProperty('--er',S.round+'px');document.body.className=!S.edge?'m-off':'m-'+S.mode;SV('msmi_set',S)}
+/* audio graph */
+let ctx,bass,eq=[],pan,wet,an,fd;
+function initAudio(){if(ctx)return;try{ctx=new(window.AudioContext||window.webkitAudioContext)();const src=ctx.createMediaElementSource(au);bass=ctx.createBiquadFilter();bass.type='lowshelf';bass.frequency.value=120;let pv=bass;src.connect(bass);
+[230,910,3600,14000].forEach(f=>{const b=ctx.createBiquadFilter();b.type='peaking';b.frequency.value=f;pv.connect(b);pv=b;eq.push(b)});
+pan=ctx.createStereoPanner();pv.connect(pan);an=ctx.createAnalyser();an.fftSize=128;fd=new Uint8Array(an.frequencyBinCount);pan.connect(an);
+const cv=ctx.createConvolver(),L=ctx.sampleRate*2,bf=ctx.createBuffer(2,L,ctx.sampleRate);for(let c=0;c<2;c++){const d=bf.getChannelData(c);for(let i=0;i<L;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/L,2.5)}
+cv.buffer=bf;wet=ctx.createGain();pan.connect(cv);cv.connect(wet);wet.connect(an);an.connect(ctx.destination);applyFx();setInterval(()=>{if(pan)pan.pan.value=S.d3?Math.sin(Date.now()/1430)*.9:0},60)}catch(e){ctx=null}}
+function applyFx(){if(!ctx)return;bass.gain.value=S.fx[0];eq.forEach((b,i)=>b.gain.value=S.fx[i+1]);wet.gain.value=S.rev/100}
+/* ID3 tags + cover art */
+const dec=(b,enc)=>{try{let e=['iso-8859-1','utf-16le','utf-16be','utf-8'][enc]||'utf-8';if(enc===1&&b[0]===0xFE)e='utf-16be';return new TextDecoder(e).decode(b).replace(/^\uFEFF/,'').replace(/\0+$/,'')}catch(x){return''}};
+async function readTags(f){try{const h=new Uint8Array(await f.slice(0,10).arrayBuffer());if(String.fromCharCode(h[0],h[1],h[2])!=='ID3'||h[3]<3)return{};const ver=h[3],sz=((h[6]&127)<<21)|((h[7]&127)<<14)|((h[8]&127)<<7)|(h[9]&127);
+const d=new Uint8Array(await f.slice(10,10+Math.min(sz,6e6)).arrayBuffer()),dv=new DataView(d.buffer),o={};let p=0;
+while(p+10<d.length){const id=String.fromCharCode(d[p],d[p+1],d[p+2],d[p+3]);if(!/^[A-Z0-9]{4}$/.test(id))break;const n=ver===4?((d[p+4]&127)<<21)|((d[p+5]&127)<<14)|((d[p+6]&127)<<7)|(d[p+7]&127):dv.getUint32(p+4);const b=d.subarray(p+10,p+10+n);p+=10+n;
+if(id==='TIT2')o.title=dec(b.subarray(1),b[0]);else if(id==='TPE1')o.artist=dec(b.subarray(1),b[0]);else if(id==='TALB')o.album=dec(b.subarray(1),b[0]);
+else if(id==='APIC'&&!o.pic){const enc=b[0];let i=1;while(i<b.length&&b[i])i++;let mime=new TextDecoder('iso-8859-1').decode(b.subarray(1,i));i+=2;if(enc===0||enc===3){while(i<b.length&&b[i])i++;i++}else{while(i<b.length-1&&!(b[i]===0&&b[i+1]===0))i++;i+=2}
+if(i<b.length)o.pic=URL.createObjectURL(new Blob([b.subarray(i)],{type:/^image\//.test(mime)?mime:'image/jpeg'}))}}return o}catch(e){return{}}}
+/* library */
+function addFiles(list){const fs=[...list].filter(f=>/^audio\//.test(f.type)||/\.(mp3|wav|flac|m4a|ogg|aac|opus|wma)$/i.test(f.name));let n=0;const add=[];
+fs.forEach(f=>{const id=f.name+'|'+f.size;if(byId[id])return;const b=f.name.replace(/\.[^.]+$/,'').replace(/_/g,' '),m=b.split(/\s+-\s+/),p=(f.webkitRelativePath||'').split('/');
+const t={id,file:f,url:URL.createObjectURL(f),title:m.length>1?m.slice(1).join(' - '):b,artist:m.length>1?m[0]:'',album:'',folder:p.length>1?p.slice(0,-1).join('/'):'Files',dur:0,pic:'',added:Date.now()+n};T.push(t);byId[id]=t;add.push(t);n++});
+toast(n?n+' songs added':'No new audio files found');render();
+(async()=>{let k=0;for(const t of add){const tg=await readTags(t.file);if(tg.title)t.title=tg.title;if(tg.artist)t.artist=tg.artist;if(tg.album)t.album=tg.album;if(tg.pic)t.pic=tg.pic;
+await new Promise(r=>{const a=new Audio();a.preload='metadata';a.onloadedmetadata=()=>{t.dur=a.duration;r()};a.onerror=r;a.src=t.url;setTimeout(r,1500)});if(++k%6===0||k===add.length){if(view==='home'||view==='local'){const s=$('#main').scrollTop;render();$('#main').scrollTop=s}if(cur()&&mode==='local')ui()}}})()}
+$('#fFolder').onchange=e=>addFiles(e.target.files);$('#fFiles').onchange=e=>addFiles(e.target.files);
+function toast(m){const d=document.createElement('div');d.textContent=m;d.style.cssText='position:fixed;left:50%;bottom:150px;transform:translateX(-50%);background:var(--ac);color:#fff;padding:10px 18px;border-radius:99px;z-index:200;font-size:13px;font-weight:600;animation:rise .3s';document.body.appendChild(d);setTimeout(()=>d.remove(),1900)}
+const artist=t=>t.artist||'<unknown>';
+const artOf=t=>t.pic?`<img src="${t.pic}" alt="">`:I('music',20);
+const ythumb=id=>`<img src="https://i.ytimg.com/vi/${id}/mqdefault.jpg" onerror="this.remove()" alt="">`;
+/* transport */
+const cur=()=>mode==='yt'?(yt.id?{title:yt.title||'YouTube video',artist:yt.ch||'YouTube',id:'yt:'+yt.id}:null):byId[queue[qi]];
+const playing=()=>mode==='yt'?yt.st===1:!au.paused;
+function ytCmd(f,a=''){try{$('#ytf').contentWindow.postMessage(JSON.stringify({event:'command',func:f,args:a}),'*')}catch(e){}}
+function play(id,list){if(mode==='yt'){ytCmd('pauseVideo')}mode='local';queue=(list||T.map(t=>t.id)).slice();qi=queue.indexOf(id);load()}
+function load(){const t=byId[queue[qi]];if(!t)return;initAudio();if(ctx&&ctx.state==='suspended')ctx.resume();au.src=t.url;au.playbackRate=S.rate;au.play().catch(()=>{});
+REC=[t.id,...REC.filter(x=>x!==t.id)].slice(0,30);PC[t.id]=(PC[t.id]||0)+1;SV('msmi_rec',REC);SV('msmi_pc',PC);
+if('mediaSession'in navigator){const m=navigator.mediaSession;try{m.metadata=new MediaMetadata({title:t.title,artist:artist(t),album:t.album||'MSMI Music Player',artwork:t.pic?[{src:t.pic}]:[]})}catch(e){}[['previoustrack',prev],['nexttrack',()=>next()],['play',toggle],['pause',toggle],['seekto',d=>{au.currentTime=d.seekTime}]].forEach(([a,f])=>{try{m.setActionHandler(a,f)}catch(e){}})}
+ui();render()}
+function ytPlay(i,list){const v=(list||yt.list)[i];if(!v)return;au.pause();mode='yt';yt.list=list||yt.list;yt.i=i;yt.id=v.id;yt.title=v.title;yt.ch=v.ch;yt.st=-1;yt.t=0;yt.d=0;
+$('#ytf').src=`https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&enablejsapi=1&playsinline=1&rel=0`;ui();render()}
+$('#ytf').onload=()=>{try{$('#ytf').contentWindow.postMessage(JSON.stringify({event:'listening',id:1,channel:'widget'}),'*')}catch(e){}};
+addEventListener('message',e=>{if(!/youtube/.test(e.origin))return;let d;try{d=JSON.parse(e.data)}catch(_){return}if(!d||!d.info)return;const i=d.info;
+if(d.event==='onStateChange')yt.st=i;if(d.event==='infoDelivery'){if(i.playerState!=null)yt.st=i.playerState;if(i.currentTime!=null)yt.t=i.currentTime;if(i.duration)yt.d=i.duration}
+if(yt.st===0){yt.st=-1;next(true)}if(mode==='yt')prog(yt.t,yt.d);ui()});
+function next(auto){if(mode==='yt'){if(yt.list.length)ytPlay(shuf?Math.floor(Math.random()*yt.list.length):(yt.i+1)%yt.list.length);return}
+if(!queue.length)return;if(rep===2&&auto){au.currentTime=0;au.play();return}if(shuf)qi=Math.floor(Math.random()*queue.length);else if(qi<queue.length-1)qi++;else if(rep===1||!auto)qi=0;else{au.pause();return}load()}
+function prev(){if(mode==='yt'){if(yt.list.length)ytPlay((yt.i-1+yt.list.length)%yt.list.length);return}if(au.currentTime>3){au.currentTime=0;return}qi=qi>0?qi-1:queue.length-1;load()}
+function toggle(){if(!cur())return;if(mode==='yt')ytCmd(yt.st===1?'pauseVideo':'playVideo');else au.paused?au.play():au.pause()}
+au.onended=()=>next(true);au.onplay=au.onpause=()=>ui();
+function prog(c,d){const p=d?c/d*100:0;$('#mB').style.width=p+'%';if(!seeking){$('#seek').value=p*10;$('#seek').style.setProperty('--p',p+'%')}$('#cur').textContent=fmt(c);$('#tot').textContent=fmt(d)}
+au.ontimeupdate=()=>{if(mode!=='local')return;prog(au.currentTime,au.duration);try{navigator.mediaSession.setPositionState({duration:au.duration||0,position:au.currentTime,playbackRate:au.playbackRate})}catch(e){}};
+let seeking=false;$('#seek').oninput=e=>{seeking=true;e.target.style.setProperty('--p',e.target.value/10+'%');const d=mode==='yt'?yt.d:au.duration;$('#cur').textContent=fmt(e.target.value/1000*d)};
+$('#seek').onchange=e=>{seeking=false;if(mode==='yt')ytCmd('seekTo',[e.target.value/1000*yt.d,true]);else au.currentTime=e.target.value/1000*au.duration};
+function ui(){const t=cur();$('#mini').style.display=t?'flex':'none';if(!t)return;const p=playing();
+$('#mT').textContent=$('#nT').textContent=t.title;$('#mS').textContent=$('#nS').textContent=mode==='yt'?t.artist:artist(t);
+const a=mode==='yt'?ythumb(yt.id):artOf(t);$('#mA').innerHTML=a;$('#ring').innerHTML=mode==='yt'?a:(t.pic?a:esc((t.title[0]||'♪').toUpperCase()));
+$('#mP').innerHTML=I(p?'pause':'play',20);$('#bPl').innerHTML=I(p?'pause':'play',30);$('#mE').style.visibility=p?'visible':'hidden';
+$('#bSh').classList.toggle('on',shuf);$('#bRp').classList.toggle('on',rep>0);$('#bRp').innerHTML=I(rep===2?'repeat1':'repeat');$('#bTm').style.opacity=sleepEnd>Date.now()?1:.75;$('#bTm').style.filter=sleepEnd>Date.now()?'drop-shadow(0 0 6px var(--ac))':''}
+$('#mP').onclick=$('#bPl').onclick=toggle;
+$('#mini').onclick=e=>{if(!e.target.closest('button'))openNP(true)};
+function openNP(o){const n=$('#np');if(o){n.style.display='flex';requestAnimationFrame(()=>n.classList.add('open'))}else{n.classList.remove('open');setTimeout(()=>n.style.display='none',350)}}
+const cv=$('#viz'),g=cv.getContext('2d');
+(function loop(){let l=0;const on=an&&mode==='local'&&!au.paused;if(on){an.getByteFrequencyData(fd);l=(fd[1]+fd[2]+fd[3])/765}else if(mode==='yt'&&yt.st===1)l=.25+.2*Math.abs(Math.sin(Date.now()/230));
+if($('#np').classList.contains('open')){g.clearRect(0,0,400,44);g.fillStyle=S.accent;for(let i=0;i<32;i++){const v=on?fd[i]/255:(playing()?.15+.3*Math.abs(Math.sin(Date.now()/300+i)):.04),h=v*42+2;g.globalAlpha=.35+v*.65;g.beginPath();g.roundRect(i*12.5+2,44-h,8.5,h,3);g.fill()}$('.rw').style.setProperty('--b',l)}
+document.documentElement.style.setProperty('--eo',S.react&&S.edge&&S.mode!=='pulse'?(playing()?.55+l*.6:.85):1);requestAnimationFrame(loop)})();
+/* sheets */
+function sheet(h){$('#shc').innerHTML=h;$('#sheet').style.display='flex';icons()}const closeSheet=()=>$('#sheet').style.display='none';
+$('#sheet').onclick=e=>{if(e.target.id==='sheet')closeSheet()};
+const mi=(a,v,ic,t,x='')=>`<button class="mi" data-a="${a}" data-v="${esc(v)}">${I(ic,20)}${t}${x}</button>`;
+function songMenu(id){const t=byId[id];if(!t)return;sheet(`<h3>${esc(t.title)}</h3>`+mi('fav',id,'heart',FAV.has(id)?'Remove from favorites':'Add to favorites')+mi('atp',id,'plus','Add to playlist')+mi('pn',id,'next','Play next')+(view==='local'&&plOpen?mi('prm',id,'x','Remove from playlist'):''))}
+function addTo(id){pend=id;sheet(`<h3>Add to playlist</h3>`+Object.keys(PL).map(k=>mi('pa',k,'list',esc(k),`<small>${PL[k].length}</small>`)).join('')+`<input class="in" id="npn" placeholder="New playlist name"><button class="btn pri" data-a="npc">Create${id?' &amp; add':''}</button>`)}
+function fxSheet(){const L=['Bass','230 Hz','910 Hz','3.6 kHz','14 kHz'];sheet(`<h3>Harmonic Effects</h3><div class="pre">${Object.keys(FXP).map(k=>`<button data-a="fxp" data-v="${k}">${k}</button>`).join('')}</div>`+
+L.map((l,i)=>`<div class="fx"><span>${l}</span><input type="range" min="${i?-12:0}" max="${i?12:15}" value="${S.fx[i]}" oninput="S.fx[${i}]=+this.value;applyFx();SV('msmi_set',S)"></div>`).join('')+
+`<div class="fx"><span>Reverb</span><input type="range" min="0" max="100" value="${S.rev}" oninput="S.rev=+this.value;applyFx();SV('msmi_set',S)"></div>
+<div class="set"><span>3D Audio</span><input type="checkbox" class="sw" ${S.d3?'checked':''} onchange="S.d3=this.checked;SV('msmi_set',S)"></div><div style="font-size:13px;margin-top:8px">Speed</div><div class="pre">${[.75,1,1.25,1.5,2].map(r=>`<button class="${S.rate===r?'on':''}" data-a="spd" data-v="${r}">${r}x</button>`).join('')}</div>`)}
+/* actions */
+const A={
+ps:(v,e)=>play(v,LST[e.dataset.l]),mn:songMenu,go:v=>go(v),back:()=>go('home'),folder:()=>$('#fFolder').click(),files:()=>$('#fFiles').click(),
+srch:()=>{if(view==='yt'){const q=$('#yq');q&&q.focus()}else{lib.so=true;go('local');setTimeout(()=>$('#sq')&&$('#sq').focus(),60)}},
+menu:()=>sheet(`<h3>Menu</h3>`+mi('go','local','music','Local music')+mi('plv','','list','Playlists')+mi('favv','','heart','Favorites')+mi('fx','','eq','Harmonic Effects')+mi('tmr','','timer','Sleep timer')+mi('folder','','folder','Open music folder')+mi('go','set','gear','Settings')),
+plv:()=>{closeSheet();lib.tab='Playlists';plOpen=null;go('local')},favv:()=>{closeSheet();lib.tab='Favorites';go('local')},seeall:()=>{lib.tab='Songs';lib.sort='recent';go('local')},
+fav:v=>{FAV.has(v)?FAV.delete(v):FAV.add(v);SV('msmi_fav',[...FAV]);closeSheet();render()},
+atp:v=>addTo(v),pn:v=>{queue.splice(qi+1,0,v);closeSheet();toast('Playing next')},
+pa:v=>{if(!PL[v].includes(pend))PL[v].push(pend);SV('msmi_pl',PL);closeSheet();toast('Added to '+v);render()},
+npc:()=>{const n=$('#npn').value.trim();if(!n)return;PL[n]=PL[n]||[];if(pend&&!PL[n].includes(pend))PL[n].push(pend);SV('msmi_pl',PL);closeSheet();toast('Playlist saved');render()},
+npl:()=>{pend=null;sheet(`<h3>New playlist</h3><input class="in" id="npn" placeholder="Playlist name"><button class="btn pri" data-a="npc">Create</button>`)},
+plo:v=>{plOpen=v;render()},plb:()=>{plOpen=null;render()},plp:()=>{const l=PL[plOpen].filter(i=>byId[i]);if(l.length)play(l[0],l)},
+pld:()=>{if(confirm('Delete this playlist?')){delete PL[plOpen];SV('msmi_pl',PL);plOpen=null;render()}},prm:v=>{PL[plOpen]=PL[plOpen].filter(i=>i!==v);SV('msmi_pl',PL);closeSheet();render()},
+nx:()=>next(),pv:()=>prev(),sh:()=>{shuf=!shuf;ui()},rp:()=>{rep=(rep+1)%3;ui()},npx:()=>openNP(false),
+npm:()=>{const t=cur();if(!t)return;sheet(`<h3>${esc(t.title)}</h3>`+(mode==='local'?mi('fav',t.id,'heart',FAV.has(t.id)?'Remove from favorites':'Add to favorites')+mi('atp',t.id,'plus','Add to playlist')+mi('que','','list','Queue'):mi('yfv',yt.id,'heart','Save video'))+mi('fx','','eq','Harmonic Effects')+mi('tmr','','timer','Sleep timer'))},
+fx:fxSheet,fxp:v=>{S.fx=FXP[v].slice();applyFx();SV('msmi_set',S);fxSheet()},spd:v=>{S.rate=+v;au.playbackRate=S.rate;SV('msmi_set',S);fxSheet()},
+que:()=>{sheet(`<h3>Up next</h3>`+(queue.map((id,i)=>byId[id]?`<div class="mi" style="cursor:pointer" data-a="qp" data-v="${i}"><span style="color:${i===qi?'var(--ac)':'inherit'};flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(byId[id].title)}</span><button class="ib" data-a="qr" data-v="${i}">${I('x',16)}</button></div>`:'').join('')||'<div class="empty">Queue is empty</div>'))},
+qp:v=>{qi=+v;load();closeSheet()},qr:v=>{v=+v;queue.splice(v,1);if(v<qi)qi--;else if(v===qi){qi=Math.min(qi,queue.length-1);if(queue.length)load();else au.pause()}A.que()},
+tmr:()=>sheet(`<h3>Sleep timer</h3>`+[15,30,45,60,0].map(m=>mi('slp',m,'timer',m?m+' minutes':'Off')).join('')),
+slp:v=>{clearTimeout(sleepT);sleepEnd=0;if(+v){sleepEnd=Date.now()+v*6e4;sleepT=setTimeout(()=>{au.pause();if(mode==='yt')ytCmd('pauseVideo');sleepEnd=0;ui();toast('Sleep timer ended')},v*6e4);toast('Sleep in '+v+' min')}closeSheet();ui()},
+ysr:()=>ytGo($('#yq').value.trim()),yt_:v=>{ytTab=v;if(v==='Trending')ytSearch('',1);else if(v==='Top Music')ytSearch('top music');else render()},
+ypl:v=>ytPlay(+v,ytTab==='Playlists'?YF:ytRes),yfv:v=>{const r=ytRes.find(x=>x.id===v)||yt.list.find(x=>x.id===v);if(r&&!YF.some(x=>x.id===v)){YF.push({id:r.id,title:r.title,ch:r.ch,dur:r.dur});SV('msmi_yf',YF);toast('Saved to Playlists')}closeSheet()},
+yo:()=>window.open('https://www.youtube.com/results?search_query='+encodeURIComponent($('#yq')?$('#yq').value:''),'_blank'),
+sav:async()=>{try{const d=await claude.use('downloads');await d.save({filename:'MSMI_MUSIC_PLAYER.html',data:'<!DOCTYPE html>\n'+document.documentElement.outerHTML})}catch(e){toast('Download not available here')}},
+rst:()=>{if(confirm('Reset all settings, playlists and favorites?')){localStorage.clear();location.reload()}},
+tab:v=>{lib.tab=v;lib.f=null;plOpen=null;render()},sub:(v,e)=>{lib.f=[e.dataset.k,v];render()},lb:()=>{lib.f=null;render()},pre:v=>{const c=PRESETS[v];S.c1=c[0];S.c2=c[1];S.c3=c[2];applyTheme();render()}};
+document.addEventListener('click',e=>{if(lp===-1){lp=0;return}const t=e.target.closest('[data-a]');if(t&&A[t.dataset.a])A[t.dataset.a](t.dataset.v,t,e)});
+document.addEventListener('pointerdown',e=>{const r=e.target.closest('.lr[data-v]');if(!r)return;lp=setTimeout(()=>{lp=-1;songMenu(r.dataset.v)},550)});
+['pointerup','pointermove','pointercancel'].forEach(v=>document.addEventListener(v,()=>{if(lp>0){clearTimeout(lp);lp=0}}));
+document.addEventListener('contextmenu',e=>{const r=e.target.closest('.lr[data-v]');if(r){e.preventDefault();songMenu(r.dataset.v)}});
+document.addEventListener('keydown',e=>{if(/INPUT|SELECT/.test(e.target.tagName))return;if(e.code==='Space'){e.preventDefault();toggle()}if(e.code==='ArrowRight'&&mode==='local')au.currentTime+=5;if(e.code==='ArrowLeft'&&mode==='local')au.currentTime-=5});
+/* youtube (search needs network + API key: works in the saved standalone file) */
+function ytGo(q){const r=q.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/)||q.match(/^([\w-]{11})$/);if(r){ytPlay(0,[{id:r[1],title:'YouTube video',ch:'YouTube'}]);return}if(q)ytSearch(q)}
+async function ytSearch(q,trend){const k=S.ytk;ytTab=trend?'Trending':ytTab==='Playlists'?'Top Music':ytTab;ytMsg='';
+if(!k){ytMsg='To search YouTube by song title, add a YouTube API key in Settings. You can also paste any YouTube link above.';ytRes=[];return render()}
+ytMsg='Searching...';render();try{const u=trend?`https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&videoCategoryId=10&regionCode=IN&maxResults=20&key=${k}`:`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&videoCategoryId=10&maxResults=20&q=${encodeURIComponent(q)}&key=${k}`;
+const j=await(await fetch(u)).json();if(j.error)throw new Error(j.error.message);const de=s=>s.replace(/&amp;|&#39;|&quot;/g,m=>({'&amp;':'&','&#39;':"'",'&quot;':'"'}[m]));
+ytRes=(j.items||[]).map(x=>({id:x.id.videoId||x.id,title:de(x.snippet.title),ch:x.snippet.channelTitle}));ytMsg=ytRes.length?'':'No results';render();
+try{const d=await(await fetch(`https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${ytRes.map(v=>v.id).join(',')}&key=${k}`)).json();d.items.forEach(x=>{const v=ytRes.find(y=>y.id===x.id),m=x.contentDetails.duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);if(v)v.dur=(+m[1]||0)*3600+(+m[2]||0)*60+(+m[3]||0)});render()}catch(e){}}
+catch(e){ytRes=[];ytMsg='Could not reach YouTube ('+(e.message||'network blocked')+'). The in-chat preview blocks outside requests: use Settings > Save standalone app and open that file to search.';render()}}
+/* views */
+const TABS=[['home','home','Home'],['local','file','Local'],['yt','yt','YouTube'],['set','gear','Settings']];
+function go(v){view=v;if(v!=='local'){plOpen=null;lib.f=null}render()}
+function hdr(){if(view==='home')return`<div class="hd"><div class="brand">MSMI</div><button class="ib" data-a="srch">${I('search',22)}</button><button class="ib" data-a="menu">${I('menu',22)}</button></div><div class="tb">${TABS.map(t=>`<button class="${t[0]==='home'?'on':''}" data-a="go" data-v="${t[0]}">${I(t[1],22)}${t[2]}</button>`).join('')}</div>`;
+const n={local:'Local Music',yt:'YouTube Music',set:'Settings'}[view];return`<div class="hd" style="padding-left:8px"><button class="ib" data-a="back">${I('back',22)}</button><div class="ttl">${n}</div>${view==='set'?'':`<button class="ib" data-a="srch">${I('search',22)}</button><button class="ib" data-a="menu">${I('more',22)}</button>`}</div>`}
+function hrow(t,k,i){return`<div class="song lr" style="--i:${Math.min(i,12)}" data-a="ps" data-v="${esc(t.id)}" data-l="${k}"><div class="art">${artOf(t)}</div><div class="mt"><div class="tt">${esc(t.title)}</div><div class="sb">${esc(artist(t))}</div></div><span class="dur">${t.dur?fmt(t.dur):''}</span><button class="ib" data-a="mn" data-v="${esc(t.id)}">${I('more',18)}</button></div>`}
+function lrow(t,k,i){const c=mode==='local'&&queue[qi]===t.id;return`<div class="song lr${c?' cur':''}" style="--i:${Math.min(i,12)}" data-a="ps" data-v="${esc(t.id)}" data-l="${k}"><div class="art">${c&&!au.paused?'<div class="eqb"><i></i><i></i><i></i></div>':artOf(t)}</div><div class="mt"><div class="tt">${esc(t.title)}</div><div class="sb">${esc(artist(t))}</div></div><span class="dur">${t.dur?fmt(t.dur):''}</span></div>`}
+const list=(ts,k,f=lrow)=>{LST[k]=ts.map(t=>t.id);return ts.length?ts.map((t,i)=>f(t,k,i)).join(''):'<div class="empty">Nothing here yet</div>'};
+const openB=()=>`<div class="qp" style="margin-top:14px"><button data-a="folder">${I('folder',20)}Open Folder</button><button data-a="files">${I('file',20)}Open Files</button></div>`;
+function yrow(v,i){return`<div class="song yt2" style="--i:${Math.min(i,12)}" data-a="ypl" data-v="${i}"><div class="th">${I('play',20)}${ythumb(v.id)}${v.dur?`<span>${fmt(v.dur)}</span>`:''}</div><div class="mt"><div class="tt">${esc(v.title)}</div><div class="sb">${esc(v.ch)}</div></div><button class="ib" data-a="yfv" data-v="${esc(v.id)}">${I('heart',18)}</button></div>`}
+function body(){
+if(view==='home'){const rec=REC.map(i=>byId[i]).filter(Boolean).slice(0,3),fav=[...FAV].map(i=>byId[i]).filter(Boolean),lt=cur()&&mode==='local'?cur():rec[0];
+return`<div class="hero"><div><h1>Good Music<br>Better Mood</h1><b>MSMI</b></div><div class="hart">${lt&&lt.pic?`<img src="${lt.pic}" alt="">`:I('headphones',44)}</div></div>
+<h2>Recently Played ${rec.length?'<a data-a="seeall">See All</a>':''}</h2>${rec.length?list(rec,'r',hrow):'<div class="empty">Play something and it will show up here</div>'}
+${fav.length?'<h2>Favorites</h2>'+list(fav.slice(0,4),'f',hrow):''}
+<h2>Quick Play</h2><div class="qp"><button data-a="go" data-v="local"><span style="color:var(--ac)">${I('music',24)}</span>Local Files</button><button data-a="go" data-v="yt"><span style="color:var(--ac)">${I('ytl',26)}</span>YouTube</button></div>`}
+if(view==='local'){const tabs=['Songs','Artists','Albums','Folders','Playlists','Favorites'];let h=`<div class="pills">${tabs.map(x=>`<button class="${lib.tab===x?'on':''}" data-a="tab" data-v="${x}">${x}</button>`).join('')}</div>`;
+if(!T.length&&lib.tab!=='Playlists')return h+'<div class="empty">No songs yet.<br>Open a folder or pick files from your device.</div>'+openB();
+if(lib.tab==='Playlists'){if(plOpen&&PL[plOpen]){const ts=PL[plOpen].map(i=>byId[i]).filter(Boolean);return h+`<h2>${esc(plOpen)} <a data-a="plb">All playlists</a></h2><div class="qp"><button data-a="plp">${I('play',18)}Play</button><button data-a="pld">${I('trash',18)}Delete</button></div><div style="height:6px"></div>${list(ts,'p')}`}
+return h+`<button class="btn pri" data-a="npl">${I('plus',18)}New Playlist</button><div style="height:8px"></div>`+(Object.keys(PL).map((k,i)=>`<div class="song lr" style="--i:${i}" data-a="plo" data-v="${esc(k)}"><div class="art">${I('list',20)}</div><div class="mt"><div class="tt">${esc(k)}</div><div class="sb">${PL[k].length} songs</div></div></div>`).join('')||'<div class="empty">Create a playlist, then hold a song to add it.</div>')}
+if(lib.tab==='Artists'||lib.tab==='Albums'||lib.tab==='Folders'){if(!lib.f){const k={Artists:'artist',Albums:'album',Folders:'folder'}[lib.tab],gr={};T.forEach(t=>{const n=t[k]||(k==='artist'?'<unknown>':'<unknown>');(gr[n]=gr[n]||[]).push(t)});
+return h+(Object.keys(gr).sort().map((n,i)=>{const pic=(gr[n].find(t=>t.pic)||{}).pic;return`<div class="song lr" style="--i:${Math.min(i,12)}" data-a="sub" data-k="${k}" data-v="${esc(n)}"><div class="art">${pic?`<img src="${pic}" alt="">`:I(k==='artist'?'mic':k==='folder'?'folder':'music',20)}</div><div class="mt"><div class="tt">${esc(n)}</div><div class="sb">${gr[n].length} songs</div></div></div>`}).join(''))}}
+let ts=lib.tab==='Favorites'?T.filter(t=>FAV.has(t.id)):T.slice();if(lib.f)ts=ts.filter(t=>(t[lib.f[0]]||'<unknown>')===lib.f[1]);const q=lib.q.toLowerCase();if(q)ts=ts.filter(t=>(t.title+' '+t.artist).toLowerCase().includes(q));
+ts.sort((a,b)=>lib.sort==='artist'?a.artist.localeCompare(b.artist):lib.sort==='recent'?b.added-a.added:lib.sort==='plays'?(PC[b.id]||0)-(PC[a.id]||0):a.title.localeCompare(b.title));
+return h+(lib.f?`<button class="chip on" data-a="lb" style="margin-bottom:8px">${I('back',14)} ${esc(lib.f[1])}</button>`:'')+(lib.so||lib.q?`<div style="display:flex;gap:8px"><input class="search" id="sq" placeholder="Search songs or artists" value="${esc(lib.q)}" oninput="lib.q=this.value;render();const e=$('#sq');e.focus();e.setSelectionRange(99,99)"><select class="search" style="width:104px" onchange="lib.sort=this.value;render()">${[['title','A–Z'],['artist','Artist'],['recent','Recent'],['plays','Played']].map(o=>`<option value="${o[0]}"${lib.sort===o[0]?' selected':''}>${o[1]}</option>`).join('')}</select></div>`:'')+list(ts,'c')}
+if(view==='yt'){const lst=ytTab==='Playlists'?YF:ytRes;return`<div class="sbar">${I('search',18)}<input id="yq" placeholder="Search YouTube..." onkeydown="if(event.key==='Enter')A.ysr()"></div>
+<div class="tabs">${['Trending','Top Music','Playlists'].map(x=>`<button class="chip${ytTab===x?' on':''}" data-a="yt_" data-v="${x}">${x}</button>`).join('')}</div>
+${ytMsg&&ytTab!=='Playlists'?`<div class="card" style="font-size:13px;color:var(--mu);line-height:1.5">${esc(ytMsg)}<br><br><button class="chip" data-a="yo">${I('ext',14)}Open results on YouTube</button></div>`:''}
+${lst.map((v,i)=>yrow(v,i)).join('')||(ytTab==='Playlists'?'<div class="empty">Saved videos appear here</div>':'')}`}
+return settings()}
+function render(){const m=$('#main'),keep=m.scrollTop,sq=document.activeElement&&document.activeElement.id==='yq'?document.activeElement.value:null;
+$('#hd').innerHTML=hdr();m.innerHTML=body();m.scrollTop=keep;if(sq!==null&&$('#yq'))$('#yq').value=sq;
+if(view!==lastView){m.classList.remove('in');void m.offsetWidth;m.classList.add('in');lastView=view;m.scrollTop=0;if(view==='yt'&&!ytAuto&&S.ytk){ytAuto=true;ytSearch('',1)}}
+$('#ytw').classList.toggle('show',view==='yt'&&!!yt.id);icons()}
+function settings(){const sl=(k,l,a,b)=>`<div class="set"><span>${l}</span><input type="range" min="${a}" max="${b}" value="${S[k]}" oninput="S.${k}=+this.value;applyTheme()"></div>`,co=(k,l)=>`<div class="set"><span>${l}</span><input type="color" value="${S[k]}" oninput="S.${k}=this.value;applyTheme()"></div>`,sw=(k,l)=>`<div class="set"><span>${l}</span><input type="checkbox" class="sw" ${S[k]?'checked':''} onchange="S.${k}=this.checked;applyTheme()"></div>`;
+return`<h2 style="margin-top:4px">Edge Light</h2><div class="card">${sw('edge','Enable edge light')}<div class="set"><span>Animation</span><select onchange="S.mode=this.value;applyTheme()">${[['spin','Rotating'],['pulse','Pulsing'],['static','Static']].map(o=>`<option value="${o[0]}"${S.mode===o[0]?' selected':''}>${o[1]}</option>`).join('')}</select></div>${sw('react','React to music')}${co('c1','Colour 1')}${co('c2','Colour 2')}${co('c3','Colour 3')}${sl('w','Thickness',1,10)}${sl('glow','Glow',0,50)}${sl('speed','Cycle time (seconds)',2,20)}${sl('round','Corner radius',0,48)}
+<div class="pre">${Object.entries(PRESETS).map(([n,c])=>`<button data-a="pre" data-v="${n}"><i style="background:linear-gradient(90deg,${c[0]},${c[1]})"></i>${n}</button>`).join('')}</div></div>
+<h2>Appearance</h2><div class="card">${co('accent','Accent colour')}</div>
+<h2>YouTube</h2><div class="card"><div style="font-size:13px;color:var(--mu);margin-bottom:6px">YouTube Data API key (for title search)</div><input class="in" style="margin-bottom:0" value="${esc(S.ytk)}" placeholder="Paste API key" onchange="S.ytk=this.value.trim();ytAuto=false;SV('msmi_set',S)"></div>
+<h2>App</h2><div class="card"><button class="btn" data-a="folder">${I('folder',18)}Add music folder</button><div style="height:8px"></div><button class="btn" data-a="sav">${I('dl',18)}Save standalone app (enables YouTube search)</button><div style="height:8px"></div><button class="btn" data-a="rst">${I('trash',18)}Reset app data</button></div>
+<p style="text-align:center;color:var(--mu);font-size:12px">MSMI_MUSIC_PLAYER · Play Your World</p>`}
+/* boot */
+$('#slg').innerHTML=LOGO(124);$('#spec').innerHTML=Array.from({length:30},(_,i)=>`<span style="animation-delay:${(i*37%11)/10}s;animation-duration:${.7+(i*13%7)/10}s"></span>`).join('');
+applyTheme();icons();render();ui();setTimeout(()=>$('#splash').classList.add('off'),2900);
+</script></body></html>
