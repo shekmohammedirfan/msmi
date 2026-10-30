@@ -1,7 +1,6 @@
 -- MSMI Supabase account portal schema
--- Run the entire script in Supabase Dashboard > SQL Editor > New query.
--- This creates a public profile row for each new Auth user.
--- Passwords are NOT stored in this table; Supabase Auth manages them.
+-- Run once in Supabase Dashboard > SQL Editor > New query.
+-- Passwords are handled by Supabase Auth; never store plaintext passwords here.
 
 create table if not exists public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
@@ -11,32 +10,23 @@ create table if not exists public.profiles (
   constraint username_format check (username ~ '^[A-Za-z0-9_]{3,24}$')
 );
 
--- Usernames are unique without regard to uppercase/lowercase.
 create unique index if not exists profiles_username_lower_unique
   on public.profiles (lower(username));
 
 alter table public.profiles enable row level security;
 
--- A signed-in user can read only their own profile.
 drop policy if exists "Users can read own profile" on public.profiles;
 create policy "Users can read own profile"
-  on public.profiles for select
-  to authenticated
+  on public.profiles for select to authenticated
   using (auth.uid() = id);
 
--- A signed-in user can update only their own profile.
 drop policy if exists "Users can update own profile" on public.profiles;
 create policy "Users can update own profile"
-  on public.profiles for update
-  to authenticated
-  using (auth.uid() = id)
-  with check (auth.uid() = id);
+  on public.profiles for update to authenticated
+  using (auth.uid() = id) with check (auth.uid() = id);
 
--- Keep updated_at current when a profile is edited.
 create or replace function public.set_updated_at()
-returns trigger
-language plpgsql
-as $$
+returns trigger language plpgsql as $$
 begin
   new.updated_at = now();
   return new;
@@ -48,7 +38,6 @@ create trigger profiles_set_updated_at
 before update on public.profiles
 for each row execute procedure public.set_updated_at();
 
--- Create the profile automatically when Supabase Auth creates a user.
 create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
@@ -59,15 +48,12 @@ declare
   requested_username text;
 begin
   requested_username := new.raw_user_meta_data ->> 'username';
-
   if requested_username is null
      or requested_username !~ '^[A-Za-z0-9_]{3,24}$' then
     requested_username := 'user_' || substr(replace(new.id::text, '-', ''), 1, 12);
   end if;
-
   insert into public.profiles (id, username)
   values (new.id, requested_username);
-
   return new;
 end;
 $$;
@@ -77,6 +63,4 @@ create trigger on_auth_user_created
 after insert on auth.users
 for each row execute procedure public.handle_new_user();
 
--- IMPORTANT:
--- Do not add a public INSERT policy. The trusted Auth trigger creates profiles.
--- Do not store passwords, password hashes, API secret keys or service-role keys here.
+-- No public INSERT policy is needed: the Auth trigger creates each profile.
