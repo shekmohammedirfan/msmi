@@ -114,7 +114,7 @@
       </section>
 
       <section class="card">
-        <div class="tabs">
+        <div class="tabs" id="accountTabs">
           <button class="tab active" id="loginTab" type="button">Sign in</button>
           <button class="tab" id="signupTab" type="button">Create account</button>
         </div>
@@ -156,6 +156,18 @@
           <div class="rowline"><button class="link" id="backToLogin" type="button">Back to sign in</button></div>
           <p class="message" id="resetMessage" role="status" aria-live="polite"></p>
         </form>
+
+        <form id="newPasswordForm" class="hidden">
+          <h2>Choose a new password</h2>
+          <p class="sub">After Supabase verifies your recovery link, enter a new password for your MSMI account.</p>
+          <label for="newPassword">New password</label>
+          <input id="newPassword" type="password" minlength="8" autocomplete="new-password" placeholder="At least 8 characters" required>
+          <label for="confirmNewPassword">Confirm new password</label>
+          <input id="confirmNewPassword" type="password" minlength="8" autocomplete="new-password" placeholder="Enter it again" required>
+          <button class="primary" id="updatePasswordBtn" type="submit">Update password</button>
+          <div class="rowline"><button class="link" id="cancelPasswordUpdate" type="button">Back to sign in</button></div>
+          <p class="message" id="newPasswordMessage" role="status" aria-live="polite"></p>
+        </form>
       </section>
     </div>
   </main>
@@ -189,6 +201,21 @@
     const SUPABASE_URL = "https://cffibglxemgwhxlrwxwp.supabase.co";
     const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_RUEclwul1uUV4GcABFBmXg_PSpEJGeE";
 
+    // Set this to your production Vercel URL, without a trailing slash.
+    // Example: https://msmi-account-portal.vercel.app
+    // On a deployed Vercel site, its current domain is used automatically.
+    const PRODUCTION_APP_URL = "https://msmiworld.vercel.app";
+
+    function getPasswordRecoveryRedirectUrl() {
+      const host = window.location.hostname;
+      const isLocal = host === "localhost" || host === "127.0.0.1";
+      const baseUrl = isLocal ? PRODUCTION_APP_URL : window.location.origin;
+      if (!baseUrl.startsWith("https://") || baseUrl.includes("YOUR-VERCEL-PROJECT")) {
+        throw new Error("Set PRODUCTION_APP_URL to your real Vercel website URL in index.html before requesting a password reset.");
+      }
+      return baseUrl.replace(/\/+$/, "") + "/?mode=reset";
+    }
+
     const configured = SUPABASE_URL.startsWith("https://") &&
       !SUPABASE_URL.includes("YOUR_") &&
       !SUPABASE_PUBLISHABLE_KEY.includes("YOUR_");
@@ -211,16 +238,28 @@
       button.textContent = busy ? "Please wait…" : (label || button.dataset.originalText);
     }
     function showTab(tab) {
+      $("accountTabs").classList.remove("hidden");
       $("loginForm").classList.toggle("hidden", tab !== "login");
       $("signupForm").classList.toggle("hidden", tab !== "signup");
       $("resetForm").classList.add("hidden");
+      $("newPasswordForm").classList.add("hidden");
       $("loginTab").classList.toggle("active", tab === "login");
       $("signupTab").classList.toggle("active", tab === "signup");
     }
     function showReset() {
+      $("accountTabs").classList.remove("hidden");
       $("loginForm").classList.add("hidden");
       $("signupForm").classList.add("hidden");
+      $("newPasswordForm").classList.add("hidden");
       $("resetForm").classList.remove("hidden");
+    }
+    function showPasswordUpdate() {
+      showDashboard(false);
+      $("accountTabs").classList.add("hidden");
+      $("loginForm").classList.add("hidden");
+      $("signupForm").classList.add("hidden");
+      $("resetForm").classList.add("hidden");
+      $("newPasswordForm").classList.remove("hidden");
     }
     function showDashboard(show) {
       $("authView").classList.toggle("hidden", show);
@@ -235,6 +274,11 @@
     }
     function cleanUsername(value) { return value.trim(); }
     function validUsername(value) { return /^[a-zA-Z0-9_]{3,24}$/.test(value); }
+
+    // Supabase returns to this page with a recovery session in the URL fragment.
+    let recoveryMode = new URLSearchParams(window.location.search).get("mode") === "reset" ||
+      new URLSearchParams(window.location.hash.slice(1)).get("type") === "recovery";
+    if (recoveryMode) showPasswordUpdate();
 
     $("loginTab").addEventListener("click", () => showTab("login"));
     $("signupTab").addEventListener("click", () => showTab("signup"));
@@ -300,14 +344,55 @@
       if (!ensureConfigured()) return;
       const email = $("resetEmail").value.trim();
       try {
-        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-          redirectTo: window.location.origin + window.location.pathname
-        });
+        const redirectTo = getPasswordRecoveryRedirectUrl();
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, { redirectTo });
         if (error) throw error;
-        showMessage("resetMessage", "If the address is registered, a password-reset email will be sent. Check your inbox.", "success");
+        showMessage("resetMessage", "If this email is registered, a password-reset link has been sent. Open it in the same browser and follow the new-password form.", "success");
       } catch (error) {
         showMessage("resetMessage", error.message || "Could not request password reset.", "error");
       }
+    });
+
+    $("newPasswordForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!ensureConfigured()) return;
+      const password = $("newPassword").value;
+      const confirm = $("confirmNewPassword").value;
+      if (password.length < 8) {
+        showMessage("newPasswordMessage", "Use at least 8 characters.", "error"); return;
+      }
+      if (password !== confirm) {
+        showMessage("newPasswordMessage", "The passwords do not match.", "error"); return;
+      }
+      setBusy("updatePasswordBtn", true);
+      try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) throw new Error("The recovery session is missing or expired. Return to sign in and request a new password-reset email.");
+        const { error } = await supabaseClient.auth.updateUser({ password });
+        if (error) throw error;
+
+        // Remove recovery tokens from the address bar after a successful password change.
+        window.history.replaceState({}, document.title, window.location.pathname + "?password-updated=1");
+        recoveryMode = false;
+
+        // Revoke refresh-token sessions on all devices, including this recovery session.
+        const { error: signOutError } = await supabaseClient.auth.signOut({ scope: "global" });
+        if (signOutError) console.warn("Password changed, but global sign-out returned an error:", signOutError.message);
+
+        showTab("login");
+        $("loginPassword").value = "";
+        showMessage("loginMessage", "Your password has been updated. Please sign in using your new password.", "success");
+      } catch (error) {
+        showMessage("newPasswordMessage", error.message || "Could not update password.", "error");
+      } finally {
+        setBusy("updatePasswordBtn", false, "Update password");
+      }
+    });
+
+    $("cancelPasswordUpdate").addEventListener("click", () => {
+      recoveryMode = false;
+      window.history.replaceState({}, document.title, window.location.pathname);
+      showTab("login");
     });
 
     async function renderSession(session) {
@@ -359,9 +444,23 @@
     if (supabaseClient) {
       supabaseClient.auth.getSession().then(({ data, error }) => {
         if (error) console.error(error);
-        if (data && data.session) renderSession(data.session);
+        if (recoveryMode) {
+          showPasswordUpdate();
+          if (!data || !data.session) {
+            showMessage("newPasswordMessage", "Waiting for a valid recovery session. If this message remains, request a fresh reset email.", "error");
+          }
+        } else if (data && data.session) {
+          renderSession(data.session);
+        }
       });
-      supabaseClient.auth.onAuthStateChange((_event, session) => {
+      supabaseClient.auth.onAuthStateChange((event, session) => {
+        if (event === "PASSWORD_RECOVERY") {
+          recoveryMode = true;
+          showPasswordUpdate();
+          showMessage("newPasswordMessage", "Recovery link verified. Set your new password below.", "success");
+          return;
+        }
+        if (recoveryMode) return;
         // Defer follow-up requests until the auth callback has returned.
         window.setTimeout(() => renderSession(session), 0);
       });
