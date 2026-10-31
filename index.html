@@ -77,7 +77,20 @@
     .message { min-height: 20px; margin: 13px 0 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
     .message.error { color: #b42318; } .message.success { color: var(--green); }
     .hidden { display: none !important; }
-    .dashboard { width: min(760px, calc(100% - 32px)); margin: 48px auto; }
+    .dashboard { width: min(1180px, calc(100% - 32px)); margin: 32px auto; }
+    .dashboard-shell{display:grid;grid-template-columns:235px minmax(0,1fr);gap:20px;align-items:start}
+    .feature-sidebar{position:sticky;top:18px;max-height:calc(100vh - 36px);overflow-y:auto;background:#fff;border:1px solid #f0cbd1;border-radius:18px;padding:14px;box-shadow:0 12px 30px #9f0d2410}
+    .sidebar-brand{font-weight:900;color:#a80e27;letter-spacing:1px;padding:8px 10px 14px;border-bottom:1px solid #f4dfe3;margin-bottom:10px}
+    .sidebar-brand small{display:block;font-size:10px;color:#777;font-weight:600;letter-spacing:1.5px;margin-top:4px}
+    .sidebar-nav{display:grid;gap:5px}
+    .sidebar-link{display:flex;align-items:center;gap:10px;width:100%;border:0;background:transparent;color:#454545;text-decoration:none;text-align:left;padding:10px 11px;border-radius:10px;font-family:inherit;font-size:12px;font-weight:650;cursor:pointer;transition:.18s}
+    .sidebar-link:hover,.sidebar-link.active{background:#fff0f2;color:#b10d2b}
+    .sidebar-link .nav-icon{width:20px;text-align:center;font-size:15px}
+    .sidebar-divider{height:1px;background:#f1dfe2;margin:8px 3px}
+    .sidebar-link.admin-link{color:#9f0d24}
+    .dash-card{min-width:0}
+    .dash-card section[id],.dash-card .profile-box[id],.dash-card .dash-head[id]{scroll-margin-top:20px}
+    @media(max-width:850px){.dashboard-shell{grid-template-columns:1fr}.feature-sidebar{position:relative;top:auto;max-height:none}.sidebar-nav{display:flex;overflow-x:auto;padding-bottom:5px}.sidebar-link{flex:0 0 auto;width:auto;white-space:nowrap}.sidebar-divider{display:none}.dash-card{padding:20px}}
     .dash-card { background: #fff; border: 1px solid #f0e5e7; border-radius: 22px; padding: 30px; box-shadow: 0 16px 45px #3a11100d; }
     .dash-head { display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; }
     .pill { background: var(--soft); color: var(--red); padding: 7px 11px; border-radius: 30px; font-size: 11px; font-weight: 800; }
@@ -272,13 +285,36 @@
   </main>
 
   <main id="dashboardView" class="dashboard hidden">
-    <section class="dash-card">
-      <div class="dash-head">
+    <div class="dashboard-shell">
+      <aside class="feature-sidebar" aria-label="MSMI portal navigation">
+        <div class="sidebar-brand">MSMI PORTAL<small>FEATURE NAVIGATION</small></div>
+        <nav class="sidebar-nav" id="featureSidebarNav">
+          <a class="sidebar-link active" href="#dashboardOverview"><span class="nav-icon">⌂</span>Overview</a>
+          <a class="sidebar-link" href="#profileSummary"><span class="nav-icon">◉</span>Account profile</a>
+          <a class="sidebar-link" href="#announcementCard"><span class="nav-icon">▣</span>Announcements</a>
+          <a class="sidebar-link" href="#passwordChangeCard"><span class="nav-icon">♙</span>Password settings</a>
+          <a class="sidebar-link" href="#privateEditorBox"><span class="nav-icon">✎</span>Private notepad</a>
+          <a class="sidebar-link" href="#publicEditorBox"><span class="nav-icon">▤</span>Public notepad</a>
+          <a class="sidebar-link" href="#messagesBox"><span class="nav-icon">✉</span>Live messages</a>
+          <a class="sidebar-link" href="#v2Notifications"><span class="nav-icon">♢</span>Notifications</a>
+          <a class="sidebar-link" href="#v2Profile"><span class="nav-icon">◎</span>Advanced profile</a>
+          <a class="sidebar-link" href="#v2SmartNotes"><span class="nav-icon">▧</span>Smart notepad</a>
+          <a class="sidebar-link" href="#v2CloudDrive"><span class="nav-icon">☁</span>Cloud drive</a>
+          <a class="sidebar-link" href="#v2Groups"><span class="nav-icon">♧</span>Group chat</a>
+          <a class="sidebar-link" href="#v2Security"><span class="nav-icon">♜</span>Account security</a>
+          <a class="sidebar-link" href="#usernameSettings"><span class="nav-icon">⚙</span>Username settings</a>
+          <a class="sidebar-link admin-link hidden" id="adminNavItem" href="#adminPanel"><span class="nav-icon">★</span>Admin console</a>
+          <div class="sidebar-divider"></div>
+          <button class="sidebar-link" type="button" id="sidebarLogout"><span class="nav-icon">⇥</span>Sign out</button>
+        </nav>
+      </aside>
+      <section class="dash-card">
+      <div class="dash-head" id="dashboardOverview">
         <div><div class="eyebrow" style="color:#a80e27">MSMI MEMBER AREA</div><h2 style="margin-top:8px">Your dashboard</h2></div>
         <span class="pill">SIGNED IN</span>
       </div>
       <p class="sub">Your account is connected to the online database.</p>
-      <div class="profile-box">
+      <div class="profile-box" id="profileSummary">
         <div class="profile-line"><span>Username</span><strong id="profileUsername">Loading…</strong></div>
         <div class="profile-line"><span>Email</span><strong id="profileEmail">Loading…</strong></div>
         <div class="profile-line"><span>User ID</span><strong id="profileId" style="font-size:10px;max-width:65%;overflow-wrap:anywhere">Loading…</strong></div>
@@ -381,12 +417,16 @@
         <p class="note-meta">Login history records successful sign-ins from this portal and the browser user-agent. It does not expose passwords or claim to list every active device.</p>
       </section>
 
-      <label for="newUsername">Change username</label>
-      <input id="newUsername" type="text" minlength="3" maxlength="24" placeholder="New username">
-      <button class="primary" id="saveUsernameBtn" type="button" style="margin-top:12px">Save username</button>
-      <p class="message" id="profileMessage" role="status" aria-live="polite"></p>
+      <section class="v2-panel" id="usernameSettings">
+        <div class="section-title"><div><h2>Username settings</h2><p class="sub">Update the username used in your MSMI account.</p></div><span class="pill">ACCOUNT</span></div>
+        <label for="newUsername">Change username</label>
+        <input id="newUsername" type="text" minlength="3" maxlength="24" placeholder="New username">
+        <button class="primary" id="saveUsernameBtn" type="button" style="margin-top:12px">Save username</button>
+        <p class="message" id="profileMessage" role="status" aria-live="polite"></p>
+      </section>
       <button class="primary secondary" id="logoutBtn" type="button" style="margin-top:18px">Sign out</button>
-    </section>
+      </section>
+    </div>
   </main>
   <footer>© <span id="year"></span> MSMI · Keep your password private.</footer>
 
@@ -461,6 +501,22 @@
     function showDashboard(show) {
       $("authView").classList.toggle("hidden", show);
       $("dashboardView").classList.toggle("hidden", !show);
+    }
+
+    // Sidebar navigation: every feature has a direct, working in-page destination.
+    const featureSidebar = document.getElementById('featureSidebarNav');
+    if (featureSidebar) {
+      featureSidebar.addEventListener('click', event => {
+        const link = event.target.closest('a.sidebar-link');
+        if (!link) return;
+        const target = document.querySelector(link.getAttribute('href'));
+        if (!target || target.classList.contains('hidden')) return;
+        event.preventDefault();
+        featureSidebar.querySelectorAll('a.sidebar-link').forEach(item => item.classList.toggle('active', item === link));
+        target.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+      const sideLogout = document.getElementById('sidebarLogout');
+      if (sideLogout) sideLogout.addEventListener('click', () => document.getElementById('logoutBtn').click());
     }
     function ensureConfigured() {
       if (!supabaseClient) {
@@ -1010,6 +1066,7 @@
       if(!session)return;
       const isAdmin=(session.user.email||'').toLowerCase()===MSMI_ADMIN_EMAIL;
       $('adminPanel').classList.toggle('hidden',!isAdmin);
+      $('adminNavItem')?.classList.toggle('hidden',!isAdmin);
       try{await loadAnnouncement();}catch(e){showMessage('adminStatus','Announcement load error: '+e.message,'error');}
       if(isAdmin){try{await loadAdminConsole();}catch(e){showMessage('adminStatus','Admin data load error: '+e.message,'error');}}
     };
