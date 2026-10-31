@@ -118,20 +118,27 @@
     .editor-fullscreen {position:fixed!important;inset:12px!important;z-index:1000;background:white;padding:22px!important;overflow:auto;box-shadow:0 0 0 100vmax #0008}
     .editor-fullscreen textarea {min-height:65vh!important}
 
-    /* MSMI red neon edge lighting and larger shared editor */
+    /* MSMI animated red edge: the bright segment travels around each box border. */
+    @property --msmi-edge-angle {
+      syntax: "<angle>";
+      inherits: false;
+      initial-value: 0deg;
+    }
     .notepad-box,.public-note-box,.messages-box,.admin-panel,.announcement-card,.password-card{
       position:relative;isolation:isolate;border:1px solid #f0a4b0;
       box-shadow:0 0 14px #c8102e25,0 14px 38px #9f0d2412;
     }
     .notepad-box::before,.public-note-box::before,.messages-box::before,.admin-panel::before,.announcement-card::before,.password-card::before{
-      content:"";position:absolute;inset:-2px;border-radius:inherit;padding:2px;pointer-events:none;z-index:-1;
-      background:conic-gradient(from 0deg,transparent 0 55%,#ff173d 66%,#fff 70%,#c8102e 76%,transparent 86% 100%);
+      content:"";position:absolute;inset:-2px;border-radius:inherit;padding:2px;pointer-events:none;z-index:2;
+      background:conic-gradient(from var(--msmi-edge-angle),transparent 0deg 292deg,#c8102e 310deg,#ff1744 326deg,#fff 333deg,#ff1744 340deg,transparent 356deg 360deg);
       -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-      -webkit-mask-composite:xor;mask-composite:exclude;
-      animation:msmiEdgeRotate 3.6s linear infinite;
+      -webkit-mask-composite:xor;
+      mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+      mask-composite:exclude;
+      animation:msmiEdgeTravel 3.2s linear infinite;
       filter:drop-shadow(0 0 5px #ff1744);
     }
-    @keyframes msmiEdgeRotate{to{transform:rotate(360deg)}}
+    @keyframes msmiEdgeTravel { to { --msmi-edge-angle:360deg; } }
     @media(prefers-reduced-motion:reduce){.notepad-box::before,.public-note-box::before,.messages-box::before,.admin-panel::before,.announcement-card::before,.password-card::before{animation:none}}
     .messages-box{border-color:#e78b9a}
     .rich-editor{width:100%;min-height:420px;max-height:75vh;overflow:auto;resize:vertical;border:1px solid #d99aa4;border-radius:12px;padding:18px;outline:none;background:#fff;color:#171717;font:15px/1.75 Inter,system-ui,sans-serif;white-space:normal;overflow-wrap:anywhere}
@@ -325,10 +332,10 @@
     const SUPABASE_URL = "https://cffibglxemgwhxlrwxwp.supabase.co";
     const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_RUEclwul1uUV4GcABFBmXg_PSpEJGeE";
 
-    // Optional: set this to your deployed HTTPS site URL. Leave blank when hosted
-    // on Vercel/Netlify/custom HTTPS domain; the current domain is used automatically.
+    // Optional: set this to your deployed HTTPS site base URL (example: https://your-site.vercel.app).
+    // Leave blank when the portal and reset page are hosted together on the same HTTPS origin.
     // Never send password-reset links to localhost: a recipient's computer cannot reach your PC.
-    const PUBLIC_APP_URL = "https://msmiworld.vercel.app";
+    const PUBLIC_APP_URL = "https://msmiworld.vercel.app/";
 
     function getPasswordRecoveryRedirectUrl() {
       const host = window.location.hostname;
@@ -563,6 +570,7 @@
 
         if (error) throw error;
         $("notepadText").dataset.dirty = "false";
+        clearMsmiDraft("notepadText");
         showMessage("noteMessage", "Your note was saved securely online.", "success");
         $("noteUpdated").textContent = "Last saved: " + new Date(data.updated_at).toLocaleString();
       } catch (error) {
@@ -667,6 +675,7 @@
         const {data,error}=await supabaseClient.from('shared_notes').upsert({id:1,content:$('publicNoteText').value,updated_by:user.id,updated_at:new Date().toISOString()},{onConflict:'id'}).select('updated_at').single();
         if(error) throw error;
         $('publicNoteText').dataset.dirty='false';
+        clearMsmiDraft('publicNoteText');
         $('publicNoteUpdated').textContent='Last shared update: '+new Date(data.updated_at).toLocaleString();
         showMessage('publicNoteMessage','Shared document saved. All members can now see this version.','success');
       } catch(e) { showMessage('publicNoteMessage','Could not save shared note: '+e.message,'error'); }
@@ -707,7 +716,7 @@
         const {data,error}=await supabaseClient.rpc('send_message_to_email',{p_recipient_email:email,p_body:body});
         if(error) throw error;
         if(data && data.ok===false) throw new Error(data.message||'Could not send message.');
-        $('messageBody').value=''; showMessage('messageStatus','Message sent to '+email+'.','success'); await loadMessages();
+        $('messageBody').value=''; clearMsmiDraft('messageBody'); showMessage('messageStatus','Message sent to '+email+'.','success'); await loadMessages();
       } catch(e) { showMessage('messageStatus','Could not send message: '+e.message,'error'); }
       finally { setBusy('sendMessageBtn',false,'Send Message'); }
     });
@@ -845,6 +854,39 @@
       editor.dataset.dirty='false'; editor.addEventListener('input',()=>{editor.dataset.dirty='true'; const map=id==='notepadText'?['privateWordCount','privateCharCount']:['publicWordCount','publicCharCount']; const t=plainEditorText(id); $(map[0]).textContent=(t.trim()?t.trim().split(/\s+/).length:0)+' words'; $(map[1]).textContent=t.length+' characters';});
     }
     richEditorIds.forEach(replaceTextareaWithEditor);
+
+    // Keep in-progress writing safe across accidental refreshes and auth re-renders.
+    // Drafts are stored only in this browser tab's sessionStorage and are user-scoped.
+    let msmiDraftUserId = null;
+    function msmiDraftKey(id){ return 'msmi_portal_draft_' + (msmiDraftUserId || 'guest') + '_' + id; }
+    function saveMsmiDraft(id){
+      if(!msmiDraftUserId) return;
+      try { const el=$(id); if(el) sessionStorage.setItem(msmiDraftKey(id), String(el.value ?? '')); } catch(e) { console.warn('Draft cache unavailable:',e); }
+    }
+    function clearMsmiDraft(id){
+      if(!msmiDraftUserId) return;
+      try { sessionStorage.removeItem(msmiDraftKey(id)); } catch(e) { console.warn('Draft cache unavailable:',e); }
+    }
+    function restoreMsmiDrafts(userId){
+      msmiDraftUserId=userId;
+      ['notepadText','publicNoteText','messageToEmail','messageBody'].forEach(id=>{
+        try {
+          const saved=sessionStorage.getItem(msmiDraftKey(id));
+          if(saved===null) return;
+          const el=$(id); if(!el) return;
+          el.value=saved;
+          if(id==='notepadText' || id==='publicNoteText'){
+            el.dataset.dirty='true';
+            const isPrivate=id==='notepadText';
+            updateStats(id,isPrivate?'privateWordCount':'publicWordCount',isPrivate?'privateCharCount':'publicCharCount');
+          }
+        } catch(e) { console.warn('Draft restore unavailable:',e); }
+      });
+    }
+    ['notepadText','publicNoteText','messageToEmail','messageBody'].forEach(id=>{
+      const el=$(id); if(el) el.addEventListener('input',()=>saveMsmiDraft(id));
+    });
+
     document.addEventListener('click',e=>{
       const btn=e.target.closest('.editor-toolbar button'); if(!btn) return;
       e.preventDefault(); e.stopImmediatePropagation();
@@ -929,11 +971,12 @@
     const originalRenderSession=renderSession;
     let msmiRenderedUserId=null;
     renderSession=async function(session){
-      if(!session){msmiRenderedUserId=null;await originalRenderSession(session);return;}
+      if(!session){msmiRenderedUserId=null;msmiDraftUserId=null;await originalRenderSession(session);return;}
       if(msmiRenderedUserId===session.user.id && !$('dashboardView').classList.contains('hidden')) return;
       msmiRenderedUserId=session.user.id;
       await originalRenderSession(session);
       if(!session)return;
+      restoreMsmiDrafts(session.user.id);
       const isAdmin=(session.user.email||'').toLowerCase()===MSMI_ADMIN_EMAIL;
       $('adminPanel').classList.toggle('hidden',!isAdmin);
       try{await loadAnnouncement();}catch(e){showMessage('adminStatus','Announcement load error: '+e.message,'error');}
