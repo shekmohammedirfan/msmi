@@ -1,138 +1,127 @@
--- MSMI ACCOUNT PORTAL + PRIVATE NOTEPAD + SHARED NOTEPAD + LIVE MESSAGES
--- Run this complete script in Supabase Dashboard > SQL Editor.
--- Safe to re-run. Supabase Auth stores password hashes; never store passwords here.
+-- MSMI portal schema upgrade: rich notes, shared announcement, member search,
+-- admin read-only oversight of private notes/messages, and secure password-reset workflow.
+-- Run this AFTER (or instead of) the previous MSMI_schema.sql in Supabase SQL Editor.
+-- IMPORTANT: passwords are managed by Supabase Auth and are NEVER exposed by this script.
 
--- MEMBER PROFILES
-create table if not exists public.profiles (
-  id uuid primary key references auth.users(id) on delete cascade,
-  username text not null,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  constraint username_format check (username ~ '^[A-Za-z0-9_]{3,24}$')
-);
-create unique index if not exists profiles_username_lower_unique on public.profiles(lower(username));
-alter table public.profiles enable row level security;
-drop policy if exists "Users can read own profile" on public.profiles;
-create policy "Users can read own profile" on public.profiles for select to authenticated using (auth.uid() = id);
-drop policy if exists "Users can update own profile" on public.profiles;
-create policy "Users can update own profile" on public.profiles for update to authenticated using (auth.uid() = id) with check (auth.uid() = id);
-grant select, update on public.profiles to authenticated;
+-- Existing tables expected from the previous MSMI schema:
+-- public.profiles, public.user_notes, public.shared_notes, public.user_messages
 
-create or replace function public.set_updated_at()
-returns trigger language plpgsql as $$ begin new.updated_at = now(); return new; end; $$;
-drop trigger if exists profiles_set_updated_at on public.profiles;
-create trigger profiles_set_updated_at before update on public.profiles for each row execute procedure public.set_updated_at();
-
-create or replace function public.handle_new_user()
-returns trigger language plpgsql security definer set search_path = '' as $$
-declare requested_username text;
-begin
-  requested_username := new.raw_user_meta_data ->> 'username';
-  if requested_username is null or requested_username !~ '^[A-Za-z0-9_]{3,24}$' then
-    requested_username := 'user_' || substr(replace(new.id::text, '-', ''), 1, 12);
-  end if;
-  insert into public.profiles(id, username) values(new.id, requested_username)
-  on conflict (id) do nothing;
-  return new;
-end; $$;
-drop trigger if exists on_auth_user_created on auth.users;
-create trigger on_auth_user_created after insert on auth.users for each row execute procedure public.handle_new_user();
-
--- PRIVATE NOTEPAD: one private row per signed-in user.
-create table if not exists public.user_notes (
-  user_id uuid primary key references auth.users(id) on delete cascade,
-  content text not null default '',
-  updated_at timestamptz not null default now()
-);
-alter table public.user_notes enable row level security;
-drop policy if exists "Users can read own note" on public.user_notes;
-create policy "Users can read own note" on public.user_notes for select to authenticated using(auth.uid() = user_id);
-drop policy if exists "Users can insert own note" on public.user_notes;
-create policy "Users can insert own note" on public.user_notes for insert to authenticated with check(auth.uid() = user_id);
-drop policy if exists "Users can update own note" on public.user_notes;
-create policy "Users can update own note" on public.user_notes for update to authenticated using(auth.uid() = user_id) with check(auth.uid() = user_id);
-grant select, insert, update on public.user_notes to authenticated;
-
--- PUBLIC NOTEPAD: exactly one shared document (id=1), editable by every authenticated member.
-create table if not exists public.shared_notes (
+create table if not exists public.admin_announcements (
   id smallint primary key check (id = 1),
   content text not null default '',
   updated_by uuid references auth.users(id) on delete set null,
   updated_at timestamptz not null default now()
 );
-insert into public.shared_notes(id, content) values(1, '') on conflict(id) do nothing;
-alter table public.shared_notes enable row level security;
-drop policy if exists "Members can read shared note" on public.shared_notes;
-create policy "Members can read shared note" on public.shared_notes for select to authenticated using(true);
-drop policy if exists "Members can create shared note" on public.shared_notes;
-create policy "Members can create shared note" on public.shared_notes for insert to authenticated with check(id = 1 and updated_by = auth.uid());
-drop policy if exists "Members can edit shared note" on public.shared_notes;
-create policy "Members can edit shared note" on public.shared_notes for update to authenticated using(true) with check(id = 1 and updated_by = auth.uid());
-grant select, insert, update on public.shared_notes to authenticated;
+insert into public.admin_announcements(id,content) values(1,'Welcome to MSMI.') on conflict(id) do nothing;
+alter table public.admin_announcements enable row level security;
+drop policy if exists "Authenticated members can read admin announcement" on public.admin_announcements;
+create policy "Authenticated members can read admin announcement"
+  on public.admin_announcements for select to authenticated using (true);
+drop policy if exists "Only MSMI admin can insert announcement" on public.admin_announcements;
+create policy "Only MSMI admin can insert announcement"
+  on public.admin_announcements for insert to authenticated
+  with check (lower(coalesce(auth.jwt()->>'email','')) = 'shekmohammedirfan412@gmail.com' and updated_by = auth.uid());
+drop policy if exists "Only MSMI admin can update announcement" on public.admin_announcements;
+create policy "Only MSMI admin can update announcement"
+  on public.admin_announcements for update to authenticated
+  using (lower(coalesce(auth.jwt()->>'email','')) = 'shekmohammedirfan412@gmail.com')
+  with check (lower(coalesce(auth.jwt()->>'email','')) = 'shekmohammedirfan412@gmail.com' and updated_by = auth.uid());
+grant select, insert, update on public.admin_announcements to authenticated;
 
--- PRIVATE IN-APP MESSAGES: recipient is resolved from registered Auth email on the server.
-create table if not exists public.user_messages (
-  id uuid primary key default gen_random_uuid(),
-  sender_id uuid not null references auth.users(id) on delete cascade,
-  recipient_id uuid not null references auth.users(id) on delete cascade,
-  sender_email text not null,
-  recipient_email text not null,
-  body text not null check (char_length(body) between 1 and 5000),
-  created_at timestamptz not null default now(),
-  constraint no_self_message check(sender_id <> recipient_id)
-);
-create index if not exists user_messages_sender_created_idx on public.user_messages(sender_id, created_at desc);
-create index if not exists user_messages_recipient_created_idx on public.user_messages(recipient_id, created_at desc);
-alter table public.user_messages enable row level security;
-drop policy if exists "Members can read their messages" on public.user_messages;
-create policy "Members can read their messages" on public.user_messages for select to authenticated
-using(auth.uid() = sender_id or auth.uid() = recipient_id);
-drop policy if exists "Members can delete their messages" on public.user_messages;
-create policy "Members can delete their messages" on public.user_messages for delete to authenticated
-using(auth.uid() = sender_id or auth.uid() = recipient_id);
-revoke all on public.user_messages from anon, authenticated;
-grant select, delete on public.user_messages to authenticated;
+-- Search suggestions for the recipient field. Returns only matching email + username,
+-- never password data or other account secrets. A short query is required.
+create or replace function public.search_members_for_message(p_query text)
+returns table(email text, username text)
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare q text := lower(trim(coalesce(p_query,'')));
+begin
+  if auth.uid() is null then raise exception 'Sign in required.'; end if;
+  if length(q) < 2 then return; end if;
+  return query
+    select lower(u.email)::text, p.username::text
+    from auth.users u
+    left join public.profiles p on p.id = u.id
+    where u.email is not null
+      and u.id <> auth.uid()
+      and (lower(u.email) like '%' || q || '%' or lower(coalesce(p.username,'')) like '%' || q || '%')
+    order by lower(u.email)
+    limit 8;
+end;
+$$;
+revoke all on function public.search_members_for_message(text) from public, anon;
+grant execute on function public.search_members_for_message(text) to authenticated;
 
--- RPC avoids exposing auth.users email addresses to browser queries.
-create or replace function public.send_message_to_email(p_recipient_email text, p_body text)
+-- Admin-only portal overview. SECURITY DEFINER bypasses normal table RLS, but the
+-- function checks the verified JWT email on the server before returning anything.
+-- It includes member profiles, private note contents, and private message contents,
+-- as explicitly requested for the MSMI admin. It deliberately excludes passwords.
+create or replace function public.admin_get_portal_data()
 returns jsonb
 language plpgsql
 security definer
 set search_path = ''
 as $$
-declare
-  v_sender_id uuid := auth.uid();
-  v_sender_email text;
-  v_recipient_id uuid;
-  v_recipient_email text;
-  v_message_id uuid;
+declare result jsonb;
 begin
-  if v_sender_id is null then raise exception 'You must be signed in to send messages.'; end if;
-  if p_recipient_email is null or length(trim(p_recipient_email)) = 0 then raise exception 'Recipient email is required.'; end if;
-  if p_body is null or length(trim(p_body)) = 0 or char_length(p_body) > 5000 then raise exception 'Message must contain 1 to 5000 characters.'; end if;
+  if auth.uid() is null or lower(coalesce(auth.jwt()->>'email','')) <> 'shekmohammedirfan412@gmail.com' then
+    raise exception 'Administrator access required.' using errcode = '42501';
+  end if;
 
-  select lower(email) into v_sender_email from auth.users where id = v_sender_id;
-  select id, lower(email) into v_recipient_id, v_recipient_email
-  from auth.users where lower(email) = lower(trim(p_recipient_email)) and email_confirmed_at is not null limit 1;
-  if v_recipient_id is null then raise exception 'No confirmed MSMI account was found for that email address.'; end if;
-  if v_recipient_id = v_sender_id then raise exception 'You cannot send a message to your own account.'; end if;
-
-  insert into public.user_messages(sender_id, recipient_id, sender_email, recipient_email, body)
-  values(v_sender_id, v_recipient_id, coalesce(v_sender_email,''), v_recipient_email, trim(p_body))
-  returning id into v_message_id;
-  return jsonb_build_object('ok', true, 'message_id', v_message_id);
+  select jsonb_build_object(
+    'users', coalesce((
+      select jsonb_agg(jsonb_build_object(
+        'id',u.id,
+        'email',u.email,
+        'username',p.username,
+        'created_at',u.created_at,
+        'last_sign_in_at',u.last_sign_in_at,
+        'email_confirmed_at',u.email_confirmed_at
+      ) order by u.created_at desc)
+      from auth.users u left join public.profiles p on p.id=u.id
+    ), '[]'::jsonb),
+    'private_notes', coalesce((
+      select jsonb_agg(jsonb_build_object(
+        'user_id',n.user_id,
+        'email',u.email,
+        'content',n.content,
+        'updated_at',n.updated_at
+      ) order by n.updated_at desc)
+      from public.user_notes n join auth.users u on u.id=n.user_id
+    ), '[]'::jsonb),
+    'messages', coalesce((
+      select jsonb_agg(jsonb_build_object(
+        'id',m.id,
+        'sender_email',m.sender_email,
+        'recipient_email',m.recipient_email,
+        'body',m.body,
+        'created_at',m.created_at
+      ) order by m.created_at desc)
+      from public.user_messages m
+    ), '[]'::jsonb)
+  ) into result;
+  return result;
 end;
 $$;
-revoke all on function public.send_message_to_email(text,text) from public, anon;
-grant execute on function public.send_message_to_email(text,text) to authenticated;
+revoke all on function public.admin_get_portal_data() from public, anon;
+grant execute on function public.admin_get_portal_data() to authenticated;
 
--- Enable Supabase Realtime for live inbox updates (safe if already enabled).
+-- Ensure only the administrator can edit the announcement even if older permissive
+-- policies were added earlier. Remove known legacy write policies before creating ours.
+drop policy if exists "Members can edit announcement" on public.admin_announcements;
+drop policy if exists "Members can create announcement" on public.admin_announcements;
+
+-- Enable Realtime for the shared announcement so signed-in dashboards can refresh it.
 do $$
 begin
-  if not exists (select 1 from pg_publication_tables where pubname='supabase_realtime' and schemaname='public' and tablename='user_messages') then
-    alter publication supabase_realtime add table public.user_messages;
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname='supabase_realtime' and schemaname='public' and tablename='admin_announcements'
+  ) then
+    alter publication supabase_realtime add table public.admin_announcements;
   end if;
 end $$;
 
--- Refresh PostgREST's schema cache so the new tables/RPC are immediately visible.
 notify pgrst, 'reload schema';
