@@ -118,27 +118,20 @@
     .editor-fullscreen {position:fixed!important;inset:12px!important;z-index:1000;background:white;padding:22px!important;overflow:auto;box-shadow:0 0 0 100vmax #0008}
     .editor-fullscreen textarea {min-height:65vh!important}
 
-    /* MSMI animated red edge: the bright segment travels around each box border. */
-    @property --msmi-edge-angle {
-      syntax: "<angle>";
-      inherits: false;
-      initial-value: 0deg;
-    }
+    /* MSMI red neon edge lighting and larger shared editor */
     .notepad-box,.public-note-box,.messages-box,.admin-panel,.announcement-card,.password-card{
       position:relative;isolation:isolate;border:1px solid #f0a4b0;
       box-shadow:0 0 14px #c8102e25,0 14px 38px #9f0d2412;
     }
     .notepad-box::before,.public-note-box::before,.messages-box::before,.admin-panel::before,.announcement-card::before,.password-card::before{
-      content:"";position:absolute;inset:-2px;border-radius:inherit;padding:2px;pointer-events:none;z-index:2;
-      background:conic-gradient(from var(--msmi-edge-angle),transparent 0deg 292deg,#c8102e 310deg,#ff1744 326deg,#fff 333deg,#ff1744 340deg,transparent 356deg 360deg);
+      content:"";position:absolute;inset:-2px;border-radius:inherit;padding:2px;pointer-events:none;z-index:-1;
+      background:conic-gradient(from 0deg,transparent 0 55%,#ff173d 66%,#fff 70%,#c8102e 76%,transparent 86% 100%);
       -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-      -webkit-mask-composite:xor;
-      mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-      mask-composite:exclude;
-      animation:msmiEdgeTravel 3.2s linear infinite;
+      -webkit-mask-composite:xor;mask-composite:exclude;
+      animation:msmiEdgeRotate 3.6s linear infinite;
       filter:drop-shadow(0 0 5px #ff1744);
     }
-    @keyframes msmiEdgeTravel { to { --msmi-edge-angle:360deg; } }
+    @keyframes msmiEdgeRotate{to{transform:rotate(360deg)}}
     @media(prefers-reduced-motion:reduce){.notepad-box::before,.public-note-box::before,.messages-box::before,.admin-panel::before,.announcement-card::before,.password-card::before{animation:none}}
     .messages-box{border-color:#e78b9a}
     .rich-editor{width:100%;min-height:420px;max-height:75vh;overflow:auto;resize:vertical;border:1px solid #d99aa4;border-radius:12px;padding:18px;outline:none;background:#fff;color:#171717;font:15px/1.75 Inter,system-ui,sans-serif;white-space:normal;overflow-wrap:anywhere}
@@ -165,6 +158,16 @@
       .intro { min-height: 260px; } .card { min-height: 480px; }
       .top-note { display: none; }
     }
+
+    .v2-panel{position:relative;isolation:isolate;margin:24px 0;padding:20px;background:#fff;border:1px solid #efb3bd;border-radius:16px;box-shadow:0 0 15px #c8102e18,0 12px 30px #9f0d2410;overflow:hidden}
+    .v2-panel:before{content:"";position:absolute;inset:0;border-radius:inherit;padding:2px;pointer-events:none;z-index:0;background:conic-gradient(from var(--v2-angle,0deg),transparent 0 72%,#ff1744 80%,#fff 84%,#c8102e 90%,transparent 97%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:v2Edge 4s linear infinite}
+    @property --v2-angle{syntax:"<angle>";inherits:false;initial-value:0deg}@keyframes v2Edge{to{--v2-angle:360deg}}
+    .v2-panel>*{position:relative;z-index:1}.v2-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0}.v2-actions input{flex:1;min-width:160px}
+    .v2-list{display:grid;gap:8px;margin-top:12px;max-height:360px;overflow:auto}.v2-item{border:1px solid #f0d8dc;border-radius:10px;padding:11px;background:#fffafb;overflow-wrap:anywhere}.v2-item strong{font-size:13px}.v2-item p{margin:5px 0;white-space:pre-wrap}.v2-item small{font-size:10px;color:#777}.v2-item button{margin:4px 5px 0 0;padding:6px 9px;border:1px solid #e5b7bf;background:white;color:#a10f29;border-radius:7px;cursor:pointer}
+    .v2-note-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:16px}.v2-note-grid textarea,.v2-panel textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;font:14px/1.5 inherit;resize:vertical}.v2-panel input[type=file]{padding:8px}.v2-profile-grid{display:grid;grid-template-columns:140px 1fr;gap:18px}.v2-avatar{width:100px;height:100px;border-radius:50%;display:grid;place-items:center;background:#c8102e;color:white;font-weight:900;font-size:28px;overflow:hidden;background-size:cover;background-position:center}.v2-avatar.has-photo{color:transparent}.v2-chat{max-height:300px;min-height:130px}.v2-item.unread{border-left:4px solid #c8102e;background:#fff3f5}.v2-item.selected{outline:2px solid #c8102e}.v2-panel .primary{max-width:280px}.v2-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-top:12px}.v2-stat{padding:14px;border:1px solid #f0d8dc;border-radius:12px;background:#fff;text-align:center}.v2-stat strong{display:block;font-size:24px;color:#c8102e}.v2-stat small{color:#666;font-size:11px}.v2-panel button:disabled{opacity:.6;cursor:wait}
+    @media(max-width:700px){.v2-note-grid,.v2-profile-grid{grid-template-columns:1fr}.v2-panel{padding:15px}.v2-actions input{min-width:100%}}
+    @media(prefers-reduced-motion:reduce){.v2-panel:before{animation:none}}
+
   </style>
 </head>
 <body>
@@ -276,7 +279,7 @@
         <p class="sub" style="margin-top:12px">Admin access includes member profiles, private note contents and private message contents. Tell members this is an administrator-accessible service. Passwords are never readable; use password reset instead.</p>
         <label for="adminAnnouncementInput">Edit dashboard announcement</label><textarea id="adminAnnouncementInput" style="width:100%;min-height:90px;padding:12px;border:1px solid #ddd;border-radius:10px"></textarea>
         <button class="primary" id="saveAnnouncementBtn" type="button" style="margin-top:10px">Publish announcement</button><p class="message" id="adminStatus" role="status"></p>
-        <div class="admin-grid" style="margin-top:16px"><div><h3>Registered members</h3><div id="adminUsers" class="admin-data">Loading…</div></div><div><h3>Private notes & messages</h3><div id="adminPrivateData" class="admin-data">Loading…</div></div></div>
+        <div class="admin-grid" style="margin-top:16px"><div><h3>Registered members</h3><div id="adminUsers" class="admin-data">Loading…</div></div><div><h3>Private notes & messages</h3><div id="adminPrivateData" class="admin-data">Loading…</div></div></div><div class="v2-panel" id="adminAnalyticsPanel"><div class="section-title"><h3>Portal analytics</h3><button class="tool-btn" id="refreshAdminAnalytics" type="button">Refresh analytics</button></div><div class="v2-stats" id="adminAnalytics"><p class="note-meta">Loading analytics…</p></div></div>
         <label for="adminResetEmail">Send a password reset link to a member</label><input id="adminResetEmail" type="email" placeholder="member@example.com"><button class="primary secondary" id="adminResetPasswordBtn" type="button" style="margin-top:10px">Send reset link</button>
       </section>
 
@@ -315,6 +318,46 @@
         <div class="section-title"><h3 style="margin:8px 0">Inbox & Sent</h3><button class="tool-btn" id="refreshMessagesBtn" type="button">Refresh messages</button></div>
         <div id="messageList" class="message-list"><p class="note-meta">Sign in to view messages.</p></div>
       </section>
+
+      <section class="v2-panel" id="v2Notifications">
+        <div class="section-title"><div><h2>Notifications</h2><p class="sub">Private alerts for messages, group activity and portal updates.</p></div><span class="pill" id="notificationCount">0 unread</span></div>
+        <div class="v2-actions"><button class="tool-btn" id="refreshNotifications">Refresh</button><button class="tool-btn" id="markAllNotifications">Mark all read</button></div>
+        <div id="notificationList" class="v2-list"><p class="note-meta">Loading notifications…</p></div>
+        <p class="message" id="notificationStatus" role="status"></p>
+      </section>
+
+      <section class="v2-panel" id="v2Profile">
+        <div class="section-title"><div><h2>Advanced profile</h2><p class="sub">Add a display name, short bio, status and profile photo.</p></div><span class="pill">PROFILE</span></div>
+        <div class="v2-profile-grid"><div><div class="v2-avatar" id="profileAvatarPreview">MS</div><label for="profileAvatarFile">Profile photo</label><input type="file" id="profileAvatarFile" accept="image/png,image/jpeg,image/webp"></div><div><label for="profileDisplayName">Display name</label><input id="profileDisplayName" maxlength="60" placeholder="Your display name"><label for="profileStatus">Status</label><input id="profileStatus" maxlength="100" placeholder="Available / Studying / Busy"><label for="profileBio">About me</label><textarea id="profileBio" maxlength="500" rows="3" placeholder="Write a short bio..."></textarea><button class="primary" id="saveAdvancedProfile" type="button">Save profile</button></div></div>
+        <p class="message" id="advancedProfileStatus" role="status"></p>
+      </section>
+
+      <section class="v2-panel" id="v2SmartNotes">
+        <div class="section-title"><div><h2>Smart Notepad · Multiple notes</h2><p class="sub">Create separate private notes. Existing main notepad remains unchanged.</p></div><span class="pill">PRIVATE</span></div>
+        <div class="v2-note-grid"><div><div class="v2-actions"><button class="tool-btn" id="createSmartNote">＋ New note</button><button class="tool-btn" id="refreshSmartNotes">Refresh</button></div><div id="smartNoteList" class="v2-list"><p class="note-meta">Loading notes…</p></div></div><div><label for="smartNoteTitle">Note title</label><input id="smartNoteTitle" maxlength="100" placeholder="Untitled note"><label for="smartNoteContent">Note content</label><textarea id="smartNoteContent" rows="10" placeholder="Write your private note..."></textarea><div class="v2-actions"><button class="primary" id="saveSmartNote">Save note</button><button class="tool-btn" id="deleteSmartNote">Delete</button></div><p class="message" id="smartNoteStatus" role="status"></p></div></div>
+      </section>
+
+      <section class="v2-panel" id="v2CloudDrive">
+        <div class="section-title"><div><h2>MSMI Cloud Drive</h2><p class="sub">Private file storage. Your files are isolated by your account.</p></div><span class="pill">PRIVATE STORAGE</span></div>
+        <label for="cloudFiles">Choose files (maximum 20 MB per file)</label><input id="cloudFiles" type="file" multiple>
+        <button class="primary" id="uploadCloudFiles" type="button">Upload selected files</button>
+        <div class="v2-actions"><button class="tool-btn" id="refreshCloudFiles">Refresh files</button><span class="note-meta" id="cloudUsage">Files are private to your account.</span></div>
+        <div id="cloudFileList" class="v2-list"><p class="note-meta">Loading files…</p></div><p class="message" id="cloudStatus" role="status"></p>
+      </section>
+
+      <section class="v2-panel" id="v2Groups">
+        <div class="section-title"><div><h2>Group chat</h2><p class="sub">Create private groups, invite registered MSMI members and chat together.</p></div><span class="pill">GROUPS</span></div>
+        <div class="v2-note-grid"><div><label for="newGroupName">New group name</label><input id="newGroupName" maxlength="70" placeholder="ECE Project Team"><button class="primary" id="createGroup" type="button">Create group</button><div id="groupList" class="v2-list"><p class="note-meta">Loading groups…</p></div></div><div><div class="section-title"><strong id="activeGroupTitle">Select a group</strong><span id="groupMemberCount" class="pill">0 members</span></div><label for="groupInviteEmail">Invite member by registered email</label><div class="v2-actions"><input id="groupInviteEmail" type="email" placeholder="member@example.com"><button class="tool-btn" id="inviteGroupMember" type="button">Invite</button></div><div id="groupMessages" class="v2-list v2-chat"><p class="note-meta">Choose a group to view messages.</p></div><label for="groupMessageText">Message</label><textarea id="groupMessageText" rows="3" maxlength="3000" placeholder="Write to your group..."></textarea><button class="primary" id="sendGroupMessage" type="button">Send to group</button></div></div>
+        <p class="message" id="groupStatus" role="status"></p>
+      </section>
+
+      <section class="v2-panel" id="v2Security">
+        <div class="section-title"><div><h2>Account security</h2><p class="sub">Review recent sign-ins and revoke sessions on other devices.</p></div><span class="pill">SECURITY</span></div>
+        <div class="v2-actions"><button class="tool-btn" id="refreshLoginHistory">Refresh login history</button><button class="primary" id="signOutEverywhere">Sign out all devices</button></div>
+        <div id="loginHistory" class="v2-list"><p class="note-meta">Loading login history…</p></div><p class="message" id="securityStatus" role="status"></p>
+        <p class="note-meta">Login history records successful sign-ins from this portal and the browser user-agent. It does not expose passwords or claim to list every active device.</p>
+      </section>
+
       <label for="newUsername">Change username</label>
       <input id="newUsername" type="text" minlength="3" maxlength="24" placeholder="New username">
       <button class="primary" id="saveUsernameBtn" type="button" style="margin-top:12px">Save username</button>
@@ -332,8 +375,8 @@
     const SUPABASE_URL = "https://cffibglxemgwhxlrwxwp.supabase.co";
     const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_RUEclwul1uUV4GcABFBmXg_PSpEJGeE";
 
-    // Optional: set this to your deployed HTTPS site base URL (example: https://your-site.vercel.app).
-    // Leave blank when the portal and reset page are hosted together on the same HTTPS origin.
+    // Optional: set this to your deployed HTTPS site URL. Leave blank when hosted
+    // on Vercel/Netlify/custom HTTPS domain; the current domain is used automatically.
     // Never send password-reset links to localhost: a recipient's computer cannot reach your PC.
     const PUBLIC_APP_URL = "https://msmiworld.vercel.app/";
 
@@ -570,7 +613,6 @@
 
         if (error) throw error;
         $("notepadText").dataset.dirty = "false";
-        clearMsmiDraft("notepadText");
         showMessage("noteMessage", "Your note was saved securely online.", "success");
         $("noteUpdated").textContent = "Last saved: " + new Date(data.updated_at).toLocaleString();
       } catch (error) {
@@ -675,7 +717,6 @@
         const {data,error}=await supabaseClient.from('shared_notes').upsert({id:1,content:$('publicNoteText').value,updated_by:user.id,updated_at:new Date().toISOString()},{onConflict:'id'}).select('updated_at').single();
         if(error) throw error;
         $('publicNoteText').dataset.dirty='false';
-        clearMsmiDraft('publicNoteText');
         $('publicNoteUpdated').textContent='Last shared update: '+new Date(data.updated_at).toLocaleString();
         showMessage('publicNoteMessage','Shared document saved. All members can now see this version.','success');
       } catch(e) { showMessage('publicNoteMessage','Could not save shared note: '+e.message,'error'); }
@@ -692,17 +733,18 @@
       heading.textContent=(row.sender_id===currentUserId?'Sent to: '+(row.recipient_email||'member'):'From: '+(row.sender_email||'member'));
       const date=document.createElement('small'); date.textContent=' · '+new Date(row.created_at).toLocaleString();
       const body=document.createElement('p'); body.textContent=row.body;
+      if(row.sender_id===currentUserId && row.is_read) article.append(document.createTextNode('✓✓ Read'));
+      if(row.sender_id===currentUserId && !row.is_read) article.append(document.createTextNode('✓ Sent'));
+      if(row.edited_at){const edited=document.createElement('small');edited.textContent=' · edited';article.append(edited);}
+      if(row.sender_id===currentUserId){const edit=document.createElement('button');edit.type='button';edit.textContent='Edit';edit.addEventListener('click',async()=>{const next=prompt('Edit your message:',row.body);if(next===null)return;if(!next.trim())return showMessage('messageStatus','Message cannot be empty.','error');try{const {error}=await supabaseClient.rpc('edit_own_portal_message',{p_message_id:row.id,p_body:next.trim()});if(error)throw error;await loadMessages();showMessage('messageStatus','Message updated.','success');}catch(e){showMessage('messageStatus',e.message,'error');}});article.append(edit);}
+      if(row.recipient_id===currentUserId && !row.is_read){const read=document.createElement('button');read.type='button';read.textContent='Mark read';read.addEventListener('click',async()=>{const {error}=await supabaseClient.from('user_messages').update({is_read:true}).eq('id',row.id);if(error)showMessage('messageStatus',error.message,'error');else await loadMessages();});article.append(read);}
       const del=document.createElement('button'); del.type='button'; del.textContent='Delete';
-      del.addEventListener('click',async()=>{
-        if(!confirm('Delete this message from your message view?')) return;
-        const {error}=await supabaseClient.from('user_messages').delete().eq('id',row.id);
-        if(error) showMessage('messageStatus','Could not delete message: '+error.message,'error'); else {showMessage('messageStatus','Message deleted.','success'); await loadMessages();}
-      });
+      del.addEventListener('click',async()=>{if(!confirm('Delete this message from your message view?')) return;const {error}=await supabaseClient.from('user_messages').delete().eq('id',row.id);if(error) showMessage('messageStatus','Could not delete message: '+error.message,'error'); else {showMessage('messageStatus','Message deleted.','success'); await loadMessages();}});
       article.append(heading,date,body,del); return article;
     }
     async function loadMessages() {
       const {data:{user},error:userError}=await supabaseClient.auth.getUser(); if(userError) throw userError; if(!user) return;
-      const {data,error}=await supabaseClient.from('user_messages').select('id,sender_id,recipient_id,sender_email,recipient_email,body,created_at').order('created_at',{ascending:false}).limit(100);
+      const {data,error}=await supabaseClient.from('user_messages').select('id,sender_id,recipient_id,sender_email,recipient_email,body,created_at,is_read,edited_at').order('created_at',{ascending:false}).limit(100);
       if(error) throw error;
       const list=$('messageList'); list.replaceChildren();
       if(!data?.length){const empty=document.createElement('p');empty.className='note-meta';empty.textContent='No messages yet. Start a conversation using a member email.';list.append(empty);return;}
@@ -716,7 +758,7 @@
         const {data,error}=await supabaseClient.rpc('send_message_to_email',{p_recipient_email:email,p_body:body});
         if(error) throw error;
         if(data && data.ok===false) throw new Error(data.message||'Could not send message.');
-        $('messageBody').value=''; clearMsmiDraft('messageBody'); showMessage('messageStatus','Message sent to '+email+'.','success'); await loadMessages();
+        $('messageBody').value=''; showMessage('messageStatus','Message sent to '+email+'.','success'); await loadMessages();
       } catch(e) { showMessage('messageStatus','Could not send message: '+e.message,'error'); }
       finally { setBusy('sendMessageBtn',false,'Send Message'); }
     });
@@ -854,39 +896,6 @@
       editor.dataset.dirty='false'; editor.addEventListener('input',()=>{editor.dataset.dirty='true'; const map=id==='notepadText'?['privateWordCount','privateCharCount']:['publicWordCount','publicCharCount']; const t=plainEditorText(id); $(map[0]).textContent=(t.trim()?t.trim().split(/\s+/).length:0)+' words'; $(map[1]).textContent=t.length+' characters';});
     }
     richEditorIds.forEach(replaceTextareaWithEditor);
-
-    // Keep in-progress writing safe across accidental refreshes and auth re-renders.
-    // Drafts are stored only in this browser tab's sessionStorage and are user-scoped.
-    let msmiDraftUserId = null;
-    function msmiDraftKey(id){ return 'msmi_portal_draft_' + (msmiDraftUserId || 'guest') + '_' + id; }
-    function saveMsmiDraft(id){
-      if(!msmiDraftUserId) return;
-      try { const el=$(id); if(el) sessionStorage.setItem(msmiDraftKey(id), String(el.value ?? '')); } catch(e) { console.warn('Draft cache unavailable:',e); }
-    }
-    function clearMsmiDraft(id){
-      if(!msmiDraftUserId) return;
-      try { sessionStorage.removeItem(msmiDraftKey(id)); } catch(e) { console.warn('Draft cache unavailable:',e); }
-    }
-    function restoreMsmiDrafts(userId){
-      msmiDraftUserId=userId;
-      ['notepadText','publicNoteText','messageToEmail','messageBody'].forEach(id=>{
-        try {
-          const saved=sessionStorage.getItem(msmiDraftKey(id));
-          if(saved===null) return;
-          const el=$(id); if(!el) return;
-          el.value=saved;
-          if(id==='notepadText' || id==='publicNoteText'){
-            el.dataset.dirty='true';
-            const isPrivate=id==='notepadText';
-            updateStats(id,isPrivate?'privateWordCount':'publicWordCount',isPrivate?'privateCharCount':'publicCharCount');
-          }
-        } catch(e) { console.warn('Draft restore unavailable:',e); }
-      });
-    }
-    ['notepadText','publicNoteText','messageToEmail','messageBody'].forEach(id=>{
-      const el=$(id); if(el) el.addEventListener('input',()=>saveMsmiDraft(id));
-    });
-
     document.addEventListener('click',e=>{
       const btn=e.target.closest('.editor-toolbar button'); if(!btn) return;
       e.preventDefault(); e.stopImmediatePropagation();
@@ -971,12 +980,11 @@
     const originalRenderSession=renderSession;
     let msmiRenderedUserId=null;
     renderSession=async function(session){
-      if(!session){msmiRenderedUserId=null;msmiDraftUserId=null;await originalRenderSession(session);return;}
+      if(!session){msmiRenderedUserId=null;await originalRenderSession(session);return;}
       if(msmiRenderedUserId===session.user.id && !$('dashboardView').classList.contains('hidden')) return;
       msmiRenderedUserId=session.user.id;
       await originalRenderSession(session);
       if(!session)return;
-      restoreMsmiDrafts(session.user.id);
       const isAdmin=(session.user.email||'').toLowerCase()===MSMI_ADMIN_EMAIL;
       $('adminPanel').classList.toggle('hidden',!isAdmin);
       try{await loadAnnouncement();}catch(e){showMessage('adminStatus','Announcement load error: '+e.message,'error');}
@@ -984,5 +992,49 @@
     };
 
   </script>
+
+<script>
+/* MSMI PORTAL V2 ADD-ON. Uses the existing Supabase client and leaves legacy tables/features intact. */
+(()=>{
+ const byId=id=>document.getElementById(id), esc=s=>String(s??'');
+ let v2User=null, activeSmartNote=null, activeGroup=null, groupChannel=null, notificationChannel=null, v2Channels=[], v2Booting=false, v2BootedUserId=null;
+ const errText=e=>e?.message||String(e||'Unknown error');
+ const status=(id,msg,kind='')=>{const el=byId(id);if(el){el.textContent=msg;el.className='message'+(kind?' '+kind:'');}};
+ const node=(tag,cls,txt)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n;};
+ const btn=(label,fn)=>{const b=node('button','',label);b.type='button';b.addEventListener('click',fn);return b;};
+ async function currentUser(){const {data,error}=await supabaseClient.auth.getUser();if(error)throw error;if(!data.user)throw new Error('Sign in required.');v2User=data.user;return data.user;}
+ async function loadNotifications(){const u=await currentUser();const {data,error}=await supabaseClient.from('portal_notifications').select('id,title,body,kind,created_at,read_at').eq('user_id',u.id).order('created_at',{ascending:false}).limit(50);if(error)throw error;const box=byId('notificationList');box.replaceChildren();let unread=0;(data||[]).forEach(r=>{if(!r.read_at)unread++;const item=node('article','v2-item'+(!r.read_at?' unread':''));item.append(node('strong','',r.title||'Notification'),node('p','',r.body||''),node('small','',new Date(r.created_at).toLocaleString()));if(!r.read_at)item.append(btn('Mark read',async()=>{const {error}=await supabaseClient.from('portal_notifications').update({read_at:new Date().toISOString()}).eq('id',r.id);if(error)throw error;await loadNotifications();}));box.append(item);});if(!data?.length)box.append(node('p','note-meta','No notifications yet.'));byId('notificationCount').textContent=unread+' unread';}
+ byId('refreshNotifications').addEventListener('click',()=>loadNotifications().then(()=>status('notificationStatus','Notifications refreshed.','success')).catch(e=>status('notificationStatus',errText(e),'error')));
+ byId('markAllNotifications').addEventListener('click',async()=>{try{const u=await currentUser();const {error}=await supabaseClient.from('portal_notifications').update({read_at:new Date().toISOString()}).eq('user_id',u.id).is('read_at',null);if(error)throw error;await loadNotifications();status('notificationStatus','All notifications marked as read.','success');}catch(e){status('notificationStatus',errText(e),'error');}});
+ async function loadAdvancedProfile(){const u=await currentUser();const {data,error}=await supabaseClient.from('profiles').select('display_name,bio,status_message,avatar_url').eq('id',u.id).maybeSingle();if(error)throw error;byId('profileDisplayName').value=data?.display_name||'';byId('profileBio').value=data?.bio||'';byId('profileStatus').value=data?.status_message||'';const avatar=byId('profileAvatarPreview');avatar.textContent=(data?.display_name||u.email||'MS').slice(0,2).toUpperCase();if(data?.avatar_url){const {data:signed,error:signedError}=await supabaseClient.storage.from('msmi-cloud').createSignedUrl(data.avatar_url,3600);if(!signedError&&signed?.signedUrl){avatar.style.backgroundImage=`url("${signed.signedUrl}")`;avatar.classList.add('has-photo');}else{avatar.style.backgroundImage='';avatar.classList.remove('has-photo');}}else{avatar.style.backgroundImage='';avatar.classList.remove('has-photo');}}
+ byId('saveAdvancedProfile').addEventListener('click',async()=>{try{const u=await currentUser();let avatar_url=null;const file=byId('profileAvatarFile').files[0];if(file){if(file.size>5*1024*1024)throw new Error('Profile image must be 5 MB or smaller.');if(!/^image\/(png|jpeg|webp)$/.test(file.type))throw new Error('Choose a PNG, JPG or WEBP image.');const path=`${u.id}/avatar-${Date.now()}.${file.name.split('.').pop().toLowerCase()}`;const {error:upErr}=await supabaseClient.storage.from('msmi-cloud').upload(path,file,{upsert:true,contentType:file.type});if(upErr)throw upErr;avatar_url=path;}
+ const payload={display_name:byId('profileDisplayName').value.trim(),bio:byId('profileBio').value.trim(),status_message:byId('profileStatus').value.trim()};if(avatar_url)payload.avatar_url=avatar_url;const {error}=await supabaseClient.from('profiles').update(payload).eq('id',u.id);if(error)throw error;await loadAdvancedProfile();status('advancedProfileStatus','Profile saved.','success');}catch(e){status('advancedProfileStatus',errText(e),'error');}});
+ async function loadSmartNotes(){const u=await currentUser();const {data,error}=await supabaseClient.from('user_notes_v2').select('id,title,content,updated_at').eq('user_id',u.id).order('updated_at',{ascending:false});if(error)throw error;const box=byId('smartNoteList');box.replaceChildren();(data||[]).forEach(r=>{const it=node('article','v2-item'+(activeSmartNote===r.id?' selected':''));it.append(node('strong','',r.title),node('small','',new Date(r.updated_at).toLocaleString()),btn('Open',()=>{activeSmartNote=r.id;byId('smartNoteTitle').value=r.title;byId('smartNoteContent').value=r.content||'';loadSmartNotes();}),btn('Download',()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([r.content||''],{type:'text/plain'}));a.download=(r.title||'note')+'.txt';a.click();URL.revokeObjectURL(a.href);}));box.append(it);});if(!data?.length)box.append(node('p','note-meta','No saved notes yet. Create your first note.'));}
+ byId('createSmartNote').addEventListener('click',()=>{activeSmartNote=null;byId('smartNoteTitle').value='';byId('smartNoteContent').value='';status('smartNoteStatus','New note draft.','');byId('smartNoteTitle').focus();});byId('refreshSmartNotes').addEventListener('click',()=>loadSmartNotes().catch(e=>status('smartNoteStatus',errText(e),'error')));
+ byId('saveSmartNote').addEventListener('click',async()=>{try{const u=await currentUser(),title=byId('smartNoteTitle').value.trim()||'Untitled note',content=byId('smartNoteContent').value;if(activeSmartNote){const {error}=await supabaseClient.from('user_notes_v2').update({title,content,updated_at:new Date().toISOString()}).eq('id',activeSmartNote).eq('user_id',u.id);if(error)throw error;}else{const {data,error}=await supabaseClient.from('user_notes_v2').insert({user_id:u.id,title,content}).select('id').single();if(error)throw error;activeSmartNote=data.id;}await loadSmartNotes();status('smartNoteStatus','Note saved securely.','success');}catch(e){status('smartNoteStatus',errText(e),'error');}});
+ byId('deleteSmartNote').addEventListener('click',async()=>{try{if(!activeSmartNote)throw new Error('Open a saved note first.');if(!confirm('Delete this saved note permanently?'))return;const u=await currentUser();const {error}=await supabaseClient.from('user_notes_v2').delete().eq('id',activeSmartNote).eq('user_id',u.id);if(error)throw error;activeSmartNote=null;byId('smartNoteTitle').value='';byId('smartNoteContent').value='';await loadSmartNotes();status('smartNoteStatus','Note deleted.','success');}catch(e){status('smartNoteStatus',errText(e),'error');}});
+ async function loadCloudFiles(){const u=await currentUser();const {data,error}=await supabaseClient.storage.from('msmi-cloud').list(u.id,{limit:100,sortBy:{column:'created_at',order:'desc'}});if(error)throw error;const box=byId('cloudFileList');box.replaceChildren();(data||[]).filter(f=>f.name&&!f.name.startsWith('.')).forEach(f=>{const path=`${u.id}/${f.name}`,it=node('article','v2-item');it.append(node('strong','',f.name),node('small','',`${f.metadata?.size?Math.ceil(f.metadata.size/1024)+' KB':'Stored file'} · ${f.created_at?new Date(f.created_at).toLocaleString():''}`),btn('Download',async()=>{const {data,error}=await supabaseClient.storage.from('msmi-cloud').download(path);if(error)throw error;const url=URL.createObjectURL(data),a=document.createElement('a');a.href=url;a.download=f.name;a.click();URL.revokeObjectURL(url);}),btn('Delete',async()=>{if(!confirm('Delete '+f.name+'?'))return;const {error}=await supabaseClient.storage.from('msmi-cloud').remove([path]);if(error)throw error;await loadCloudFiles();}));box.append(it);});if(!data?.length)box.append(node('p','note-meta','Your drive is empty.'));}
+ byId('uploadCloudFiles').addEventListener('click',async()=>{try{const u=await currentUser(),files=[...byId('cloudFiles').files];if(!files.length)throw new Error('Choose at least one file.');for(const f of files){if(f.size>20*1024*1024)throw new Error(`${f.name} is larger than 20 MB.`);const safe=f.name.replace(/[^a-zA-Z0-9._-]/g,'_'),path=`${u.id}/${Date.now()}-${safe}`;const {error}=await supabaseClient.storage.from('msmi-cloud').upload(path,f,{upsert:false});if(error)throw error;}byId('cloudFiles').value='';await loadCloudFiles();status('cloudStatus','Upload completed.','success');}catch(e){status('cloudStatus',errText(e),'error');}});byId('refreshCloudFiles').addEventListener('click',()=>loadCloudFiles().catch(e=>status('cloudStatus',errText(e),'error')));
+ async function loadGroups(){const u=await currentUser();const {data,error}=await supabaseClient.from('chat_group_members').select('group_id,chat_groups(id,name,created_at)').eq('user_id',u.id);if(error)throw error;const box=byId('groupList');box.replaceChildren();(data||[]).forEach(m=>{const g=m.chat_groups;if(!g)return;const b=btn(g.name,()=>selectGroup(g));b.className='v2-item'+(activeGroup?.id===g.id?' selected':'');box.append(b);});if(!data?.length)box.append(node('p','note-meta','No groups yet. Create one to begin.'));}
+ async function selectGroup(g){activeGroup=g;byId('activeGroupTitle').textContent=g.name;await loadGroups();await loadGroupMessages();const {data:memberCount,error}=await supabaseClient.rpc('portal_group_member_count',{p_group_id:g.id});if(!error)byId('groupMemberCount').textContent=memberCount+' members';if(groupChannel)supabaseClient.removeChannel(groupChannel);groupChannel=supabaseClient.channel('msmi-group-'+g.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'group_messages',filter:'group_id=eq.'+g.id},loadGroupMessages).subscribe();v2Channels.push(groupChannel);}
+ async function loadGroupMessages(){if(!activeGroup)return;const {data,error}=await supabaseClient.from('group_messages').select('id,sender_id,body,created_at').eq('group_id',activeGroup.id).order('created_at',{ascending:true}).limit(150);if(error)throw error;const box=byId('groupMessages');box.replaceChildren();(data||[]).forEach(m=>{const it=node('article','v2-item');it.append(node('strong','',m.sender_id===v2User?.id?'You':'Group member'),node('small','',new Date(m.created_at).toLocaleString()),node('p','',m.body));box.append(it);});if(!data?.length)box.append(node('p','note-meta','No group messages yet.'));box.scrollTop=box.scrollHeight;}
+ byId('createGroup').addEventListener('click',async()=>{try{const name=byId('newGroupName').value.trim();if(!name)throw new Error('Enter a group name.');const {data,error}=await supabaseClient.rpc('create_portal_group',{p_name:name});if(error)throw error;byId('newGroupName').value='';await loadGroups();const {data:g,error:ge}=await supabaseClient.from('chat_groups').select('id,name,created_at').eq('id',data.group_id).single();if(ge)throw ge;await selectGroup(g);status('groupStatus','Group created. Invite members by email.','success');}catch(e){status('groupStatus',errText(e),'error');}});
+ byId('inviteGroupMember').addEventListener('click',async()=>{try{if(!activeGroup)throw new Error('Select a group first.');const email=byId('groupInviteEmail').value.trim();if(!email)throw new Error('Enter the member email.');const {error}=await supabaseClient.rpc('invite_portal_group_member',{p_group_id:activeGroup.id,p_email:email});if(error)throw error;byId('groupInviteEmail').value='';const {data:memberCount}=await supabaseClient.rpc('portal_group_member_count',{p_group_id:activeGroup.id});byId('groupMemberCount').textContent=(memberCount??'')+' members';status('groupStatus','Member added to the group.','success');}catch(e){status('groupStatus',errText(e),'error');}});
+ byId('sendGroupMessage').addEventListener('click',async()=>{try{if(!activeGroup)throw new Error('Select a group first.');const body=byId('groupMessageText').value.trim();if(!body)throw new Error('Write a message first.');const u=await currentUser();const {error}=await supabaseClient.from('group_messages').insert({group_id:activeGroup.id,sender_id:u.id,body});if(error)throw error;byId('groupMessageText').value='';await loadGroupMessages();}catch(e){status('groupStatus',errText(e),'error');}});
+ async function loadLoginHistory(){const u=await currentUser();const {data,error}=await supabaseClient.from('portal_login_activity').select('id,created_at,user_agent').eq('user_id',u.id).order('created_at',{ascending:false}).limit(20);if(error)throw error;const box=byId('loginHistory');box.replaceChildren();(data||[]).forEach(r=>{const it=node('article','v2-item');it.append(node('strong','',new Date(r.created_at).toLocaleString()),node('p','',r.user_agent||'Browser details not recorded'));box.append(it);});if(!data?.length)box.append(node('p','note-meta','No portal login events recorded yet.'));}
+ byId('refreshLoginHistory').addEventListener('click',()=>loadLoginHistory().then(()=>status('securityStatus','Login history refreshed.','success')).catch(e=>status('securityStatus',errText(e),'error')));
+ byId('signOutEverywhere').addEventListener('click',async()=>{if(!confirm('Sign out this account from all devices? You will need to sign in again.'))return;try{const {error}=await supabaseClient.auth.signOut({scope:'global'});if(error)throw error;status('securityStatus','All sessions have been signed out.','success');location.reload();}catch(e){status('securityStatus',errText(e),'error');}});
+ async function loadAdminAnalytics(){const {data,error}=await supabaseClient.rpc('admin_portal_analytics');if(error)throw error;const box=byId('adminAnalytics');box.replaceChildren();const labels=[['Members',data.members],['Private notes',data.private_notes],['Messages',data.messages],['Groups',data.groups],['Group messages',data.group_messages],['Stored files',data.files]];labels.forEach(([k,v])=>{const it=node('div','v2-stat');it.append(node('strong','',String(v??0)),node('small','',k));box.append(it);});}
+ byId('refreshAdminAnalytics').addEventListener('click',()=>loadAdminAnalytics().catch(e=>status('adminStatus','Analytics: '+errText(e),'error')));
+ // Secure event recorder: the RPC associates this browser event with auth.uid() server-side.
+ async function recordLogin(){if(!supabaseClient)return;try{await supabaseClient.rpc('record_portal_login',{p_user_agent:navigator.userAgent.slice(0,500)});}catch(e){console.warn('Login history recorder:',e.message);}}
+ async function bootV2(){if(!supabaseClient||v2Booting)return;v2Booting=true;try{const u=await currentUser();if(v2BootedUserId===u.id)return;v2BootedUserId=u.id;if(notificationChannel)supabaseClient.removeChannel(notificationChannel);notificationChannel=supabaseClient.channel('msmi-notifications-'+u.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'portal_notifications',filter:'user_id=eq.'+u.id},()=>loadNotifications().catch(console.error)).subscribe();await Promise.allSettled([loadNotifications(),loadAdvancedProfile(),loadSmartNotes(),loadCloudFiles(),loadGroups(),loadLoginHistory(),recordLogin()]);if((u.email||'').toLowerCase()==='shekmohammedirfan412@gmail.com'){await loadAdminAnalytics().catch(e=>status('adminStatus','Analytics: '+errText(e),'error'));}}catch(e){console.warn('MSMI V2 startup:',e.message);}finally{v2Booting=false;}}
+ // Avoid an initial duplicate login event; only log when the auth state changes to SIGNED_IN.
+ supabaseClient?.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'&&session){setTimeout(()=>bootV2(),0);}else if(event==='SIGNED_OUT'){v2User=null;v2BootedUserId=null;activeGroup=null;if(groupChannel)supabaseClient.removeChannel(groupChannel);if(notificationChannel)supabaseClient.removeChannel(notificationChannel);}});
+ // Existing renderSession is in the preceding script. Boot once after the page has rendered its dashboard.
+ const watch=new MutationObserver(()=>{if(!byId('dashboardView').classList.contains('hidden')&&v2User?.id!==undefined)return;if(!byId('dashboardView').classList.contains('hidden'))bootV2();});watch.observe(byId('dashboardView'),{attributes:true,attributeFilter:['class']});
+})();
+</script>
+
 </body>
 </html>
