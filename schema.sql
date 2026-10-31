@@ -63,4 +63,30 @@ create trigger on_auth_user_created
 after insert on auth.users
 for each row execute procedure public.handle_new_user();
 
--- No public INSERT policy is needed: the Auth trigger creates each profile.
+-- No public INSERT policy is needed: the Auth trigger creates each profile.\n\n
+-- PRIVATE ONLINE NOTEPAD
+-- Each authenticated user has exactly one private notepad row.
+create table if not exists public.user_notes (
+  user_id uuid primary key references auth.users (id) on delete cascade,
+  content text not null default '',
+  updated_at timestamptz not null default now()
+);
+
+alter table public.user_notes enable row level security;
+
+drop policy if exists "Users can read own note" on public.user_notes;
+create policy "Users can read own note"
+  on public.user_notes for select to authenticated
+  using (auth.uid() = user_id);
+
+drop policy if exists "Users can insert own note" on public.user_notes;
+create policy "Users can insert own note"
+  on public.user_notes for insert to authenticated
+  with check (auth.uid() = user_id);
+
+drop policy if exists "Users can update own note" on public.user_notes;
+create policy "Users can update own note"
+  on public.user_notes for update to authenticated
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
