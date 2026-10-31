@@ -118,21 +118,47 @@
     .editor-fullscreen {position:fixed!important;inset:12px!important;z-index:1000;background:white;padding:22px!important;overflow:auto;box-shadow:0 0 0 100vmax #0008}
     .editor-fullscreen textarea {min-height:65vh!important}
 
-    /* MSMI red neon edge lighting and larger shared editor */
-    .notepad-box,.public-note-box,.messages-box,.admin-panel,.announcement-card,.password-card{
-      position:relative;isolation:isolate;border:1px solid #f0a4b0;
+    /* MSMI EDGE LIGHT: animate the conic-gradient angle, not the whole box.
+       This keeps the red light travelling along the actual perimeter. */
+    @property --msmi-edge-angle {
+      syntax: "<angle>";
+      inherits: false;
+      initial-value: 0deg;
+    }
+    .dash-card,.profile-box,.notepad-box,.public-note-box,.messages-box,.admin-panel,.announcement-card,.password-card,.v2-panel{
+      position:relative;
+      isolation:isolate;
+      border:1px solid #f0a4b0;
       box-shadow:0 0 14px #c8102e25,0 14px 38px #9f0d2412;
     }
-    .notepad-box::before,.public-note-box::before,.messages-box::before,.admin-panel::before,.announcement-card::before,.password-card::before{
-      content:"";position:absolute;inset:-2px;border-radius:inherit;padding:2px;pointer-events:none;z-index:-1;
-      background:conic-gradient(from 0deg,transparent 0 55%,#ff173d 66%,#fff 70%,#c8102e 76%,transparent 86% 100%);
+    .dash-card::before,.profile-box::before,.notepad-box::before,.public-note-box::before,.messages-box::before,.admin-panel::before,.announcement-card::before,.password-card::before,.v2-panel::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border:0;
+      border-radius:inherit;
+      padding:2px;
+      pointer-events:none;
+      z-index:0;
+      background:conic-gradient(from var(--msmi-edge-angle),transparent 0deg 265deg,#ff173d 300deg,#fff 312deg,#c8102e 326deg,transparent 350deg 360deg);
       -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-      -webkit-mask-composite:xor;mask-composite:exclude;
-      animation:msmiEdgeRotate 3.6s linear infinite;
-      filter:drop-shadow(0 0 5px #ff1744);
+      -webkit-mask-composite:xor;
+      mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+      mask-composite:exclude;
+      animation:msmiEdgeTravel 3.2s linear infinite;
+      filter:drop-shadow(0 0 4px #ff1744);
     }
-    @keyframes msmiEdgeRotate{to{transform:rotate(360deg)}}
-    @media(prefers-reduced-motion:reduce){.notepad-box::before,.public-note-box::before,.messages-box::before,.admin-panel::before,.announcement-card::before,.password-card::before{animation:none}}
+    .dash-card>*,.profile-box>*,.notepad-box>*,.public-note-box>*,.messages-box>*,.admin-panel>*,.announcement-card>*,.password-card>*,.v2-panel>*{
+      position:relative;
+      z-index:1;
+    }
+    @keyframes msmiEdgeTravel {
+      from { --msmi-edge-angle:0deg; }
+      to { --msmi-edge-angle:360deg; }
+    }
+    @media(prefers-reduced-motion:reduce){
+      .dash-card::before,.profile-box::before,.dash-card::before,.profile-box::before,.notepad-box::before,.public-note-box::before,.messages-box::before,.admin-panel::before,.announcement-card::before,.password-card::before,.v2-panel::before{animation:none}
+    }
     .messages-box{border-color:#e78b9a}
     .rich-editor{width:100%;min-height:420px;max-height:75vh;overflow:auto;resize:vertical;border:1px solid #d99aa4;border-radius:12px;padding:18px;outline:none;background:#fff;color:#171717;font:15px/1.75 Inter,system-ui,sans-serif;white-space:normal;overflow-wrap:anywhere}
     .rich-editor:focus{border-color:#c8102e;box-shadow:0 0 0 3px #c8102e19,0 0 20px #c8102e35}
@@ -159,14 +185,11 @@
       .top-note { display: none; }
     }
 
-    .v2-panel{position:relative;isolation:isolate;margin:24px 0;padding:20px;background:#fff;border:1px solid #efb3bd;border-radius:16px;box-shadow:0 0 15px #c8102e18,0 12px 30px #9f0d2410;overflow:hidden}
-    .v2-panel:before{content:"";position:absolute;inset:0;border-radius:inherit;padding:2px;pointer-events:none;z-index:0;background:conic-gradient(from var(--v2-angle,0deg),transparent 0 72%,#ff1744 80%,#fff 84%,#c8102e 90%,transparent 97%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:v2Edge 4s linear infinite}
-    @property --v2-angle{syntax:"<angle>";inherits:false;initial-value:0deg}@keyframes v2Edge{to{--v2-angle:360deg}}
+    .v2-panel{margin:24px 0;padding:20px;background:#fff;border:1px solid #efb3bd;border-radius:16px;overflow:hidden}
     .v2-panel>*{position:relative;z-index:1}.v2-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0}.v2-actions input{flex:1;min-width:160px}
     .v2-list{display:grid;gap:8px;margin-top:12px;max-height:360px;overflow:auto}.v2-item{border:1px solid #f0d8dc;border-radius:10px;padding:11px;background:#fffafb;overflow-wrap:anywhere}.v2-item strong{font-size:13px}.v2-item p{margin:5px 0;white-space:pre-wrap}.v2-item small{font-size:10px;color:#777}.v2-item button{margin:4px 5px 0 0;padding:6px 9px;border:1px solid #e5b7bf;background:white;color:#a10f29;border-radius:7px;cursor:pointer}
     .v2-note-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:16px}.v2-note-grid textarea,.v2-panel textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;font:14px/1.5 inherit;resize:vertical}.v2-panel input[type=file]{padding:8px}.v2-profile-grid{display:grid;grid-template-columns:140px 1fr;gap:18px}.v2-avatar{width:100px;height:100px;border-radius:50%;display:grid;place-items:center;background:#c8102e;color:white;font-weight:900;font-size:28px;overflow:hidden;background-size:cover;background-position:center}.v2-avatar.has-photo{color:transparent}.v2-chat{max-height:300px;min-height:130px}.v2-item.unread{border-left:4px solid #c8102e;background:#fff3f5}.v2-item.selected{outline:2px solid #c8102e}.v2-panel .primary{max-width:280px}.v2-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-top:12px}.v2-stat{padding:14px;border:1px solid #f0d8dc;border-radius:12px;background:#fff;text-align:center}.v2-stat strong{display:block;font-size:24px;color:#c8102e}.v2-stat small{color:#666;font-size:11px}.v2-panel button:disabled{opacity:.6;cursor:wait}
     @media(max-width:700px){.v2-note-grid,.v2-profile-grid{grid-template-columns:1fr}.v2-panel{padding:15px}.v2-actions input{min-width:100%}}
-    @media(prefers-reduced-motion:reduce){.v2-panel:before{animation:none}}
 
   </style>
 </head>
