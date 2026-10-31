@@ -107,7 +107,7 @@
     .editor-stats {display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:11px;margin-top:8px}
     .public-note-box,.messages-box {margin:25px 0;padding:20px;background:#fff;border:1px solid #f0dfe2;border-radius:15px}
     .message-compose {display:grid;gap:10px;margin:14px 0}
-    .message-compose textarea {width:100%;min-height:110px;padding:12px;border:1px solid #ddd;border-radius:10px;font:14px/1.5 inherit;resize:vertical}
+    .message-compose textarea {width:100%;min-height:180px;padding:12px;border:1px solid #ddd;border-radius:10px;font:14px/1.5 inherit;resize:vertical}
     .message-list {display:grid;gap:10px;margin-top:14px}
     .message-item {border:1px solid #eee;border-radius:12px;padding:12px;background:#fffafb;overflow-wrap:anywhere}
     .message-item p {white-space:pre-wrap;margin:8px 0;line-height:1.5}
@@ -120,14 +120,23 @@
 
     /* MSMI red neon edge lighting and larger shared editor */
     .notepad-box,.public-note-box,.messages-box,.admin-panel,.announcement-card,.password-card{
-      position:relative;border:1px solid #f0a4b0;box-shadow:0 0 0 1px #c8102e22,0 0 18px #c8102e25,0 14px 38px #9f0d2412;
-      animation:msmiGlow 3.2s ease-in-out infinite alternate;
+      position:relative;isolation:isolate;border:1px solid #f0a4b0;
+      box-shadow:0 0 14px #c8102e25,0 14px 38px #9f0d2412;
     }
-    @keyframes msmiGlow{from{box-shadow:0 0 0 1px #c8102e22,0 0 10px #c8102e20,0 14px 38px #9f0d2410}to{box-shadow:0 0 0 1px #c8102e66,0 0 25px #c8102e55,0 14px 38px #9f0d2422}}
+    .notepad-box::before,.public-note-box::before,.messages-box::before,.admin-panel::before,.announcement-card::before,.password-card::before{
+      content:"";position:absolute;inset:-2px;border-radius:inherit;padding:2px;pointer-events:none;z-index:-1;
+      background:conic-gradient(from 0deg,transparent 0 55%,#ff173d 66%,#fff 70%,#c8102e 76%,transparent 86% 100%);
+      -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;mask-composite:exclude;
+      animation:msmiEdgeRotate 3.6s linear infinite;
+      filter:drop-shadow(0 0 5px #ff1744);
+    }
+    @keyframes msmiEdgeRotate{to{transform:rotate(360deg)}}
+    @media(prefers-reduced-motion:reduce){.notepad-box::before,.public-note-box::before,.messages-box::before,.admin-panel::before,.announcement-card::before,.password-card::before{animation:none}}
     .messages-box{border-color:#e78b9a}
-    .rich-editor{width:100%;min-height:340px;max-height:75vh;overflow:auto;resize:vertical;border:1px solid #d99aa4;border-radius:12px;padding:18px;outline:none;background:#fff;color:#171717;font:15px/1.75 Inter,system-ui,sans-serif;white-space:normal;overflow-wrap:anywhere}
+    .rich-editor{width:100%;min-height:420px;max-height:75vh;overflow:auto;resize:vertical;border:1px solid #d99aa4;border-radius:12px;padding:18px;outline:none;background:#fff;color:#171717;font:15px/1.75 Inter,system-ui,sans-serif;white-space:normal;overflow-wrap:anywhere}
     .rich-editor:focus{border-color:#c8102e;box-shadow:0 0 0 3px #c8102e19,0 0 20px #c8102e35}
-    #publicNoteText{min-height:520px}
+    #publicNoteText{min-height:420px}
     .rich-editor:empty:before{content:attr(data-placeholder);color:#999;pointer-events:none}
     .rich-editor h1{font-size:2em;margin:.55em 0}.rich-editor h2{font-size:1.5em;margin:.5em 0}
     .rich-editor blockquote{border-left:4px solid #c8102e;padding:8px 14px;margin:12px 0;background:#fff4f5}
@@ -324,11 +333,11 @@
     function getPasswordRecoveryRedirectUrl() {
       const host = window.location.hostname;
       const isLocal = host === "localhost" || host === "127.0.0.1" || window.location.protocol === "file:";
-      const baseUrl = PUBLIC_APP_URL.trim() || (isLocal ? "" : window.location.origin);
+      const baseUrl = PUBLIC_APP_URL.trim() || (isLocal ? "" : window.location.origin + window.location.pathname.replace(/[^/]*$/, ""));
       if (!baseUrl.startsWith("https://")) {
-        throw new Error("Password recovery needs your deployed HTTPS MSMI website. Deploy this HTML first, set PUBLIC_APP_URL to that HTTPS address (or open the deployed site), then add the same URL in Supabase Authentication → URL Configuration → Redirect URLs. Do not use localhost:3000.");
+        throw new Error("Password recovery requires your deployed HTTPS website. Upload MSMI_Reset_Password.html beside this portal, set PUBLIC_APP_URL to your HTTPS site base URL, and add the exact reset-page URL in Supabase Authentication → URL Configuration → Redirect URLs. Do not use localhost:3000.");
       }
-      return baseUrl.replace(/\/+$/, "") + "/?mode=reset";
+      return new URL("MSMI_Reset_Password.html", baseUrl.endsWith("/") ? baseUrl : baseUrl + "/").href;
     }
 
     const configured = SUPABASE_URL.startsWith("https://") &&
@@ -526,7 +535,11 @@
         .maybeSingle();
 
       if (error) throw error;
-      $("notepadText").value = data?.content || "";
+      const editor = $("notepadText");
+      if (!editor.dataset.dirty || editor.dataset.dirty !== "true") {
+        editor.value = data?.content || "";
+        editor.dataset.dirty = "false";
+      }
       $("noteUpdated").textContent = data?.updated_at
         ? "Last saved: " + new Date(data.updated_at).toLocaleString()
         : "No online note saved yet. Write something and select Save Online.";
@@ -549,6 +562,7 @@
           .single();
 
         if (error) throw error;
+        $("notepadText").dataset.dirty = "false";
         showMessage("noteMessage", "Your note was saved securely online.", "success");
         $("noteUpdated").textContent = "Last saved: " + new Date(data.updated_at).toLocaleString();
       } catch (error) {
@@ -638,7 +652,11 @@
     async function loadPublicNote() {
       const {data,error}=await supabaseClient.from('shared_notes').select('content,updated_at').eq('id',1).maybeSingle();
       if(error) throw error;
-      $('publicNoteText').value=data?.content || '';
+      const editor = $('publicNoteText');
+      if (editor.dataset.dirty !== 'true') {
+        editor.value=data?.content || '';
+        editor.dataset.dirty='false';
+      }
       updateStats('publicNoteText','publicWordCount','publicCharCount');
       $('publicNoteUpdated').textContent=data?.updated_at ? 'Last shared update: '+new Date(data.updated_at).toLocaleString() : 'No shared text saved yet.';
     }
@@ -648,14 +666,14 @@
         const {data:{user},error:userError}=await supabaseClient.auth.getUser(); if(userError) throw userError; if(!user) throw new Error('Sign in required.');
         const {data,error}=await supabaseClient.from('shared_notes').upsert({id:1,content:$('publicNoteText').value,updated_by:user.id,updated_at:new Date().toISOString()},{onConflict:'id'}).select('updated_at').single();
         if(error) throw error;
+        $('publicNoteText').dataset.dirty='false';
         $('publicNoteUpdated').textContent='Last shared update: '+new Date(data.updated_at).toLocaleString();
         showMessage('publicNoteMessage','Shared document saved. All members can now see this version.','success');
       } catch(e) { showMessage('publicNoteMessage','Could not save shared note: '+e.message,'error'); }
       finally { setBusy('savePublicNoteBtn',false,'Save Shared Note'); }
     }
     $('savePublicNoteBtn').addEventListener('click',savePublicNote);
-    $('publicReloadBtn').addEventListener('click',()=>loadPublicNote().then(()=>showMessage('publicNoteMessage','Latest shared version loaded.','success')).catch(e=>showMessage('publicNoteMessage',e.message,'error')));
-    $('copyPublicNoteBtn').addEventListener('click',()=>copyText($('publicNoteText').value,'publicNoteMessage').catch(e=>showMessage('publicNoteMessage',e.message,'error')));
+    $('publicReloadBtn').addEventListener('click',()=>{if($('publicNoteText').dataset.dirty==='true'&&!confirm('Discard your unsaved public note draft and load the latest shared version?'))return;$('publicNoteText').dataset.dirty='false';loadPublicNote().then(()=>showMessage('publicNoteMessage','Latest shared version loaded.','success')).catch(e=>showMessage('publicNoteMessage',e.message,'error'));});
 
     // PRIVATE LIVE MESSAGING. Email is resolved server-side by a restricted RPC.
     let messageChannel = null;
@@ -699,7 +717,7 @@
       messageChannel=supabaseClient.channel('msmi-live-'+userId)
         .on('postgres_changes',{event:'*',schema:'public',table:'user_messages'},()=>loadMessages().catch(console.error))
         .on('postgres_changes',{event:'UPDATE',schema:'public',table:'shared_notes',filter:'id=eq.1'},()=>{
-          if (document.activeElement !== $('publicNoteText')) loadPublicNote().catch(console.error);
+          if ($('publicNoteText').dataset.dirty !== 'true' && document.activeElement !== $('publicNoteText')) loadPublicNote().catch(console.error);
         })
         .on('postgres_changes',{event:'*',schema:'public',table:'admin_announcements',filter:'id=eq.1'},()=>loadAnnouncement().catch(console.error))
         .subscribe();
@@ -758,8 +776,8 @@
       if (error) showMessage("profileMessage", error.message, "error");
       else {
         if (messageChannel) { await supabaseClient.removeChannel(messageChannel); messageChannel = null; }
-        $("notepadText").value = "";
-        $("publicNoteText").value = "";
+        $("notepadText").value = ""; $("notepadText").dataset.dirty = "false";
+        $("publicNoteText").value = ""; $("publicNoteText").dataset.dirty = "false";
         $('messageList').replaceChildren();
         $("noteUpdated").textContent = "Sign in to load your private note.";
         showMessage("noteMessage", "");
@@ -786,8 +804,9 @@
           showMessage("newPasswordMessage", "Recovery link verified. Set your new password below.", "success");
           return;
         }
-        if (recoveryMode) return;
-        // Defer follow-up requests until the auth callback has returned.
+        // Token refreshes happen in the background. Re-rendering the dashboard
+        // on every refresh used to overwrite drafts and message text being typed.
+        if (recoveryMode || !["SIGNED_IN", "SIGNED_OUT"].includes(event)) return;
         window.setTimeout(() => renderSession(session), 0);
       });
     } else {
@@ -823,7 +842,7 @@
       editor.dataset.placeholder=old.getAttribute('placeholder') || 'Start writing…'; editor.spellcheck=true;
       Object.defineProperty(editor,'value',{get(){return sanitizeEditorHTML(editor.innerHTML);},set(v){const str=String(v ?? ''); if(/<\/?(b|strong|i|em|u|p|div|br|ul|ol|li|h1|h2|blockquote|pre|code|a)(\s|>|\/)/i.test(str)) editor.innerHTML=sanitizeEditorHTML(str); else editor.textContent=str;}});
       old.replaceWith(editor);
-      editor.addEventListener('input',()=>{const map=id==='notepadText'?['privateWordCount','privateCharCount']:['publicWordCount','publicCharCount']; const t=plainEditorText(id); $(map[0]).textContent=(t.trim()?t.trim().split(/\s+/).length:0)+' words'; $(map[1]).textContent=t.length+' characters';});
+      editor.dataset.dirty='false'; editor.addEventListener('input',()=>{editor.dataset.dirty='true'; const map=id==='notepadText'?['privateWordCount','privateCharCount']:['publicWordCount','publicCharCount']; const t=plainEditorText(id); $(map[0]).textContent=(t.trim()?t.trim().split(/\s+/).length:0)+' words'; $(map[1]).textContent=t.length+' characters';});
     }
     richEditorIds.forEach(replaceTextareaWithEditor);
     document.addEventListener('click',e=>{
@@ -908,7 +927,11 @@
 
     // Replace session rendering with admin visibility checks and announcement loading.
     const originalRenderSession=renderSession;
+    let msmiRenderedUserId=null;
     renderSession=async function(session){
+      if(!session){msmiRenderedUserId=null;await originalRenderSession(session);return;}
+      if(msmiRenderedUserId===session.user.id && !$('dashboardView').classList.contains('hidden')) return;
+      msmiRenderedUserId=session.user.id;
       await originalRenderSession(session);
       if(!session)return;
       const isAdmin=(session.user.email||'').toLowerCase()===MSMI_ADMIN_EMAIL;
