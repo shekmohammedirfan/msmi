@@ -86,7 +86,19 @@
     .profile-line:last-child { border: 0; }
     .profile-line span:first-child { color: var(--muted); }
     .secondary { background: #fff; color: var(--red); border: 1px solid #e8b9c1; box-shadow: none; }
-    footer { text-align: center; color: #8b8b8b; font-size: 11px; padding: 20px; }
+
+    .notepad-box { margin: 25px 0; padding: 20px; background: #fff; border: 1px solid #f0dfe2; border-radius: 15px; }
+    .notepad-head { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:8px; }
+    .notepad-box textarea {
+      width:100%; min-height:260px; resize:vertical; border:1px solid #dedede; border-radius:11px;
+      padding:14px; outline:none; font:14px/1.6 ui-monospace, SFMono-Regular, Consolas, monospace;
+      background:#fff; color:var(--ink);
+    }
+    .notepad-box textarea:focus { border-color:var(--red); box-shadow:0 0 0 3px #c8102e13; }
+    .note-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+    .note-actions .primary { flex:1; min-width:140px; }
+    .note-meta { color:var(--muted); font-size:11px; margin-top:8px; }
+\n    footer { text-align: center; color: #8b8b8b; font-size: 11px; padding: 20px; }
     @media (max-width: 760px) {
       main { margin: 22px auto; } .layout { grid-template-columns: 1fr; gap: 16px; }
       .intro { min-height: 260px; } .card { min-height: 480px; }
@@ -184,7 +196,25 @@
         <div class="profile-line"><span>Email</span><strong id="profileEmail">Loading…</strong></div>
         <div class="profile-line"><span>User ID</span><strong id="profileId" style="font-size:10px;max-width:65%;overflow-wrap:anywhere">Loading…</strong></div>
       </div>
-      <label for="newUsername">Change username</label>
+
+      <section class="notepad-box">
+        <div class="notepad-head">
+          <div>
+            <h2 style="font-size:21px;margin:0">My Online Notepad</h2>
+            <p class="sub" style="margin:5px 0 0">Private notes saved to your MSMI account.</p>
+          </div>
+          <span class="pill">PRIVATE</span>
+        </div>
+        <label for="notepadText">Your text</label>
+        <textarea id="notepadText" placeholder="Start writing your notes here..."></textarea>
+        <div class="note-actions">
+          <button class="primary" id="saveNoteBtn" type="button">Save Online</button>
+          <button class="primary secondary" id="copyNoteBtn" type="button">Copy Text</button>
+        </div>
+        <p class="message" id="noteMessage" role="status" aria-live="polite"></p>
+        <p class="note-meta" id="noteUpdated">Your saved note will appear here after loading.</p>
+      </section>
+\n      <label for="newUsername">Change username</label>
       <input id="newUsername" type="text" minlength="3" maxlength="24" placeholder="New username">
       <button class="primary" id="saveUsernameBtn" type="button" style="margin-top:12px">Save username</button>
       <p class="message" id="profileMessage" role="status" aria-live="polite"></p>
@@ -395,6 +425,76 @@
       showTab("login");
     });
 
+
+    // PRIVATE ONLINE NOTEPAD
+    // One row per authenticated user. Database RLS enforces ownership.
+    async function loadUserNote() {
+      if (!supabaseClient) return;
+      const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+      if (userError) throw userError;
+      if (!user) throw new Error("Please sign in again to load your note.");
+
+      const { data, error } = await supabaseClient
+        .from("user_notes")
+        .select("content, updated_at")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (error) throw error;
+      $("notepadText").value = data?.content || "";
+      $("noteUpdated").textContent = data?.updated_at
+        ? "Last saved: " + new Date(data.updated_at).toLocaleString()
+        : "No online note saved yet. Write something and select Save Online.";
+    }
+
+    $("saveNoteBtn").addEventListener("click", async () => {
+      if (!ensureConfigured()) return;
+      setBusy("saveNoteBtn", true, "Save Online");
+      showMessage("noteMessage", "Saving your note...");
+      try {
+        const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+        if (userError) throw userError;
+        if (!user) throw new Error("Your session has expired. Please sign in again.");
+
+        const content = $("notepadText").value;
+        const { data, error } = await supabaseClient
+          .from("user_notes")
+          .upsert({ user_id: user.id, content, updated_at: new Date().toISOString() }, { onConflict: "user_id" })
+          .select("updated_at")
+          .single();
+
+        if (error) throw error;
+        showMessage("noteMessage", "Your note was saved securely online.", "success");
+        $("noteUpdated").textContent = "Last saved: " + new Date(data.updated_at).toLocaleString();
+      } catch (error) {
+        showMessage("noteMessage", "Could not save note: " + (error.message || "Unknown error"), "error");
+      } finally {
+        setBusy("saveNoteBtn", false, "Save Online");
+      }
+    });
+
+    $("copyNoteBtn").addEventListener("click", async () => {
+      const content = $("notepadText").value;
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(content);
+        } else {
+          const temporary = document.createElement("textarea");
+          temporary.value = content;
+          temporary.style.position = "fixed";
+          temporary.style.opacity = "0";
+          document.body.appendChild(temporary);
+          temporary.select();
+          const copied = document.execCommand("copy");
+          temporary.remove();
+          if (!copied) throw new Error("Copy was blocked by the browser.");
+        }
+        showMessage("noteMessage", "Notepad text copied to your clipboard.", "success");
+      } catch (error) {
+        showMessage("noteMessage", "Could not copy text. Please select the text and copy it manually.", "error");
+      }
+    });
+
     async function renderSession(session) {
       if (!session) { showDashboard(false); return; }
       showDashboard(true);
@@ -407,6 +507,12 @@
         if (error) throw error;
         $("profileUsername").textContent = data.username;
         $("newUsername").value = data.username;
+        try {
+          await loadUserNote();
+          showMessage("noteMessage", "");
+        } catch (noteError) {
+          showMessage("noteMessage", "Could not load your online note. Check that the user_notes table and RLS policies were created. " + noteError.message, "error");
+        }
       } catch (error) {
         $("profileUsername").textContent = "Profile not found";
         showMessage("profileMessage", "Could not load profile. Check that schema.sql was run in Supabase SQL Editor. " + error.message, "error");
@@ -438,7 +544,12 @@
       if (!ensureConfigured()) return;
       const { error } = await supabaseClient.auth.signOut();
       if (error) showMessage("profileMessage", error.message, "error");
-      else { showDashboard(false); showTab("login"); }
+      else {
+        $("notepadText").value = "";
+        $("noteUpdated").textContent = "Sign in to load your private note.";
+        showMessage("noteMessage", "");
+        showDashboard(false); showTab("login");
+      }
     });
 
     if (supabaseClient) {
