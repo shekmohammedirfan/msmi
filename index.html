@@ -117,6 +117,32 @@
     .public-badge {background:#eef6ff;color:#1758a6}
     .editor-fullscreen {position:fixed!important;inset:12px!important;z-index:1000;background:white;padding:22px!important;overflow:auto;box-shadow:0 0 0 100vmax #0008}
     .editor-fullscreen textarea {min-height:65vh!important}
+
+    /* MSMI red neon edge lighting and larger shared editor */
+    .notepad-box,.public-note-box,.messages-box,.admin-panel,.announcement-card,.password-card{
+      position:relative;border:1px solid #f0a4b0;box-shadow:0 0 0 1px #c8102e22,0 0 18px #c8102e25,0 14px 38px #9f0d2412;
+      animation:msmiGlow 3.2s ease-in-out infinite alternate;
+    }
+    @keyframes msmiGlow{from{box-shadow:0 0 0 1px #c8102e22,0 0 10px #c8102e20,0 14px 38px #9f0d2410}to{box-shadow:0 0 0 1px #c8102e66,0 0 25px #c8102e55,0 14px 38px #9f0d2422}}
+    .messages-box{border-color:#e78b9a}
+    .rich-editor{width:100%;min-height:340px;max-height:75vh;overflow:auto;resize:vertical;border:1px solid #d99aa4;border-radius:12px;padding:18px;outline:none;background:#fff;color:#171717;font:15px/1.75 Inter,system-ui,sans-serif;white-space:normal;overflow-wrap:anywhere}
+    .rich-editor:focus{border-color:#c8102e;box-shadow:0 0 0 3px #c8102e19,0 0 20px #c8102e35}
+    #publicNoteText{min-height:520px}
+    .rich-editor:empty:before{content:attr(data-placeholder);color:#999;pointer-events:none}
+    .rich-editor h1{font-size:2em;margin:.55em 0}.rich-editor h2{font-size:1.5em;margin:.5em 0}
+    .rich-editor blockquote{border-left:4px solid #c8102e;padding:8px 14px;margin:12px 0;background:#fff4f5}
+    .rich-editor pre{background:#191919;color:#fff;padding:12px;border-radius:8px;white-space:pre-wrap}
+    .editor-toolbar .tool-btn{min-width:38px}
+    .announcement-card,.password-card,.admin-panel{margin:22px 0;padding:20px;background:#fff;border-radius:16px}
+    .announcement-text{white-space:pre-wrap;line-height:1.6;margin-top:10px}
+    .admin-panel{background:#fffafb}
+    .admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .admin-data{max-height:360px;overflow:auto;border:1px solid #f0cbd1;border-radius:10px;padding:12px;background:white;white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px}
+    .suggestions{border:1px solid #e8b9c1;border-radius:10px;background:#fff;box-shadow:0 8px 20px #00000012;max-height:180px;overflow:auto}
+    .suggestion-item{display:block;width:100%;text-align:left;padding:10px;border:0;border-bottom:1px solid #f5e5e8;background:white;cursor:pointer;color:#222}
+    .suggestion-item:hover{background:#fff0f2}
+    @media(max-width:760px){.admin-grid{grid-template-columns:1fr}#publicNoteText{min-height:420px}}
+
     footer { text-align: center; color: #8b8b8b; font-size: 11px; padding: 20px; }
     @media (max-width: 760px) {
       main { margin: 22px auto; } .layout { grid-template-columns: 1fr; gap: 16px; }
@@ -216,6 +242,28 @@
         <div class="profile-line"><span>User ID</span><strong id="profileId" style="font-size:10px;max-width:65%;overflow-wrap:anywhere">Loading…</strong></div>
       </div>
 
+      <section class="announcement-card" id="announcementCard">
+        <div class="section-title"><div><h2 style="font-size:20px;margin:0">MSMI Admin Announcement</h2><p class="sub" style="margin:5px 0 0">Official notice from the portal administrator</p></div><span class="pill">ADMIN NOTICE</span></div>
+        <div id="announcementText" class="announcement-text">Loading announcement…</div>
+      </section>
+
+      <section class="password-card" id="passwordChangeCard">
+        <h2 style="font-size:20px">Change my password</h2><p class="sub">Update the password for your own account.</p>
+        <label for="currentPassword">Current password</label><input id="currentPassword" type="password" autocomplete="current-password">
+        <label for="dashboardNewPassword">New password</label><input id="dashboardNewPassword" type="password" minlength="8" autocomplete="new-password">
+        <label for="dashboardConfirmPassword">Confirm new password</label><input id="dashboardConfirmPassword" type="password" minlength="8" autocomplete="new-password">
+        <button class="primary" id="changeOwnPasswordBtn" type="button" style="margin-top:12px">Update my password</button><p class="message" id="passwordChangeStatus" role="status"></p>
+      </section>
+
+      <section class="admin-panel hidden" id="adminPanel">
+        <div class="section-title"><div><div class="eyebrow" style="color:#a80e27">RESTRICTED ACCESS</div><h2 style="font-size:22px;margin:5px 0">MSMI Administrator Console</h2><p class="sub" style="margin:0">Administrator: shekmohammedirfan412@gmail.com</p></div><span class="pill">ADMIN ONLY</span></div>
+        <p class="sub" style="margin-top:12px">Admin access includes member profiles, private note contents and private message contents. Tell members this is an administrator-accessible service. Passwords are never readable; use password reset instead.</p>
+        <label for="adminAnnouncementInput">Edit dashboard announcement</label><textarea id="adminAnnouncementInput" style="width:100%;min-height:90px;padding:12px;border:1px solid #ddd;border-radius:10px"></textarea>
+        <button class="primary" id="saveAnnouncementBtn" type="button" style="margin-top:10px">Publish announcement</button><p class="message" id="adminStatus" role="status"></p>
+        <div class="admin-grid" style="margin-top:16px"><div><h3>Registered members</h3><div id="adminUsers" class="admin-data">Loading…</div></div><div><h3>Private notes & messages</h3><div id="adminPrivateData" class="admin-data">Loading…</div></div></div>
+        <label for="adminResetEmail">Send a password reset link to a member</label><input id="adminResetEmail" type="email" placeholder="member@example.com"><button class="primary secondary" id="adminResetPasswordBtn" type="button" style="margin-top:10px">Send reset link</button>
+      </section>
+
       <section class="notepad-box" id="privateEditorBox">
         <div class="notepad-head"><div><h2 style="font-size:21px;margin:0">My Online Notepad</h2><p class="sub" style="margin:5px 0 0">Private notes saved to your MSMI account.</p></div><span class="pill">PRIVATE</span></div>
         <label for="notepadText">Your text</label>
@@ -247,7 +295,7 @@
 
       <section class="messages-box" id="messagesBox">
         <div class="section-title"><div><h2 style="font-size:21px;margin:0">MSMI Live Messages</h2><p class="sub" style="margin:5px 0 0">Send private in-app messages to another member using their registered email.</p></div><span class="pill">LIVE</span></div>
-        <div class="message-compose"><label for="messageToEmail">Recipient email</label><input id="messageToEmail" type="email" placeholder="member@example.com" required><label for="messageBody">Message</label><textarea id="messageBody" placeholder="Write your message…" maxlength="5000"></textarea><button class="primary" id="sendMessageBtn" type="button">Send Message</button><p class="message" id="messageStatus" role="status" aria-live="polite"></p></div>
+        <div class="message-compose"><label for="messageToEmail">Recipient email</label><input id="messageToEmail" type="email" placeholder="Type a member email or username…" autocomplete="off" required><div id="memberSuggestions" class="suggestions hidden"></div><label for="messageBody">Message</label><textarea id="messageBody" placeholder="Write your message…" maxlength="5000"></textarea><button class="primary" id="sendMessageBtn" type="button">Send Message</button><p class="message" id="messageStatus" role="status" aria-live="polite"></p></div>
         <div class="section-title"><h3 style="margin:8px 0">Inbox & Sent</h3><button class="tool-btn" id="refreshMessagesBtn" type="button">Refresh messages</button></div>
         <div id="messageList" class="message-list"><p class="note-meta">Sign in to view messages.</p></div>
       </section>
@@ -271,7 +319,7 @@
     // Optional: set this to your deployed HTTPS site URL. Leave blank when hosted
     // on Vercel/Netlify/custom HTTPS domain; the current domain is used automatically.
     // Never send password-reset links to localhost: a recipient's computer cannot reach your PC.
-    const PUBLIC_APP_URL = "https://msmiworld.vercel.app/";
+    const PUBLIC_APP_URL = "https://msmiworld.vercel.app";
 
     function getPasswordRecoveryRedirectUrl() {
       const host = window.location.hostname;
@@ -653,6 +701,7 @@
         .on('postgres_changes',{event:'UPDATE',schema:'public',table:'shared_notes',filter:'id=eq.1'},()=>{
           if (document.activeElement !== $('publicNoteText')) loadPublicNote().catch(console.error);
         })
+        .on('postgres_changes',{event:'*',schema:'public',table:'admin_announcements',filter:'id=eq.1'},()=>loadAnnouncement().catch(console.error))
         .subscribe();
     }
 
@@ -744,6 +793,130 @@
     } else {
       console.info("MSMI portal: add your Supabase project URL and publishable key to connect.");
     }
+
+
+    // MSMI 2026 dashboard enhancements
+    const MSMI_ADMIN_EMAIL = 'shekmohammedirfan412@gmail.com';
+    const richEditorIds = ['notepadText','publicNoteText'];
+    function sanitizeEditorHTML(html) {
+      const parser = new DOMParser(); const doc = parser.parseFromString(String(html || ''), 'text/html');
+      const allowed = new Set(['B','STRONG','I','EM','U','P','DIV','BR','UL','OL','LI','H1','H2','BLOCKQUOTE','PRE','CODE','A']);
+      const walk = node => {
+        [...node.childNodes].forEach(child => {
+          if (child.nodeType === 1) {
+            if (!allowed.has(child.tagName)) { child.replaceWith(...child.childNodes); return; }
+            [...child.attributes].forEach(a => {
+              if (child.tagName === 'A' && a.name === 'href' && /^https?:\/\//i.test(a.value)) return;
+              child.removeAttribute(a.name);
+            });
+            if (child.tagName === 'A') child.setAttribute('rel','noopener noreferrer');
+            walk(child);
+          }
+        });
+      };
+      walk(doc.body); return doc.body.innerHTML;
+    }
+    function plainEditorText(id){return $(id)?.innerText || '';}
+    function replaceTextareaWithEditor(id){
+      const old=$(id); if(!old || old.dataset.richReady) return;
+      const editor=document.createElement('div'); editor.id=id; editor.className='rich-editor'; editor.contentEditable='true'; editor.setAttribute('role','textbox'); editor.setAttribute('aria-multiline','true'); editor.dataset.richReady='1';
+      editor.dataset.placeholder=old.getAttribute('placeholder') || 'Start writing…'; editor.spellcheck=true;
+      Object.defineProperty(editor,'value',{get(){return sanitizeEditorHTML(editor.innerHTML);},set(v){const str=String(v ?? ''); if(/<\/?(b|strong|i|em|u|p|div|br|ul|ol|li|h1|h2|blockquote|pre|code|a)(\s|>|\/)/i.test(str)) editor.innerHTML=sanitizeEditorHTML(str); else editor.textContent=str;}});
+      old.replaceWith(editor);
+      editor.addEventListener('input',()=>{const map=id==='notepadText'?['privateWordCount','privateCharCount']:['publicWordCount','publicCharCount']; const t=plainEditorText(id); $(map[0]).textContent=(t.trim()?t.trim().split(/\s+/).length:0)+' words'; $(map[1]).textContent=t.length+' characters';});
+    }
+    richEditorIds.forEach(replaceTextareaWithEditor);
+    document.addEventListener('click',e=>{
+      const btn=e.target.closest('.editor-toolbar button'); if(!btn) return;
+      e.preventDefault(); e.stopImmediatePropagation();
+      const toolbar=btn.closest('.editor-toolbar'); const editor=$(toolbar.dataset.editor); if(!editor) return;
+      editor.focus();
+      const action=btn.dataset.action;
+      if(action==='bold') document.execCommand('bold');
+      else if(action==='italic') document.execCommand('italic');
+      else if(action==='underline') document.execCommand('underline');
+      else if(action==='undo') document.execCommand('undo');
+      else if(action==='redo') document.execCommand('redo');
+      else if(btn.dataset.insert){
+        const value=btn.dataset.insert;
+        if(value==='# ') document.execCommand('formatBlock',false,'H1');
+        else if(value==='## ') document.execCommand('formatBlock',false,'H2');
+        else if(value==='- ') document.execCommand('insertUnorderedList');
+        else if(value==='1. ') document.execCommand('insertOrderedList');
+        else if(value==='> ') document.execCommand('formatBlock',false,'BLOCKQUOTE');
+        else if(value==='`code`') document.execCommand('formatBlock',false,'PRE');
+      }
+      else if(btn.dataset.fullscreen) $(btn.dataset.fullscreen).classList.toggle('editor-fullscreen');
+      editor.dispatchEvent(new Event('input',{bubbles:true}));
+    },true);
+    // Copy/download actions export readable text, not HTML markup.
+    document.addEventListener('click',e=>{
+      const b=e.target.closest('#copyNoteBtn,#copyPublicNoteBtn,#privateDownloadBtn,#publicDownloadBtn'); if(!b) return;
+      e.preventDefault(); e.stopImmediatePropagation();
+      const isPublic=b.id==='copyPublicNoteBtn'||b.id==='publicDownloadBtn'; const id=isPublic?'publicNoteText':'notepadText'; const text=plainEditorText(id);
+      if(b.id.includes('Download')) downloadText(isPublic?'msmi-public-notes.txt':'msmi-private-notes.txt',text);
+      else copyText(text,isPublic?'publicNoteMessage':'noteMessage').catch(err=>showMessage(isPublic?'publicNoteMessage':'noteMessage',err.message,'error'));
+    },true);
+    // Existing text helpers expect .value; editor value getter/setter above preserves database compatibility.
+
+    $('changeOwnPasswordBtn').addEventListener('click',async()=>{
+      const current=$('currentPassword').value, next=$('dashboardNewPassword').value, confirmNext=$('dashboardConfirmPassword').value;
+      if(!current||!next) return showMessage('passwordChangeStatus','Enter your current and new passwords.','error');
+      if(next.length<8) return showMessage('passwordChangeStatus','Use at least 8 characters.','error');
+      if(next!==confirmNext) return showMessage('passwordChangeStatus','The new passwords do not match.','error');
+      try{
+        const {data:{user}}=await supabaseClient.auth.getUser(); if(!user?.email) throw new Error('Please sign in again.');
+        const {error:verifyError}=await supabaseClient.auth.signInWithPassword({email:user.email,password:current}); if(verifyError) throw new Error('Current password is incorrect.');
+        const {error}=await supabaseClient.auth.updateUser({password:next}); if(error) throw error;
+        $('currentPassword').value='';$('dashboardNewPassword').value='';$('dashboardConfirmPassword').value='';showMessage('passwordChangeStatus','Your password was updated successfully.','success');
+      }catch(e){showMessage('passwordChangeStatus',e.message,'error');}
+    });
+
+    async function loadAnnouncement(){
+      const {data,error}=await supabaseClient.from('admin_announcements').select('content,updated_at').eq('id',1).maybeSingle();
+      if(error) throw error; $('announcementText').textContent=data?.content||'No announcement has been published yet.';
+      if($('adminAnnouncementInput')) $('adminAnnouncementInput').value=data?.content||'';
+    }
+    async function loadAdminConsole(){
+      const {data,error}=await supabaseClient.rpc('admin_get_portal_data'); if(error) throw error;
+      const users=data?.users||[], notes=data?.private_notes||[], messages=data?.messages||[];
+      $('adminUsers').textContent=users.length?users.map(u=>`${u.email}\nUsername: ${u.username||'—'}\nCreated: ${u.created_at||'—'}\nLast sign-in: ${u.last_sign_in_at||'—'}\nID: ${u.id}`).join('\n\n──────────────\n\n'):'No registered users returned.';
+      const noteText=notes.map(n=>`PRIVATE NOTE — ${n.email}\nUpdated: ${n.updated_at}\n${n.content||'(empty)'}`).join('\n\n══════════════\n\n');
+      const messageText=messages.map(m=>`MESSAGE — ${m.sender_email} → ${m.recipient_email}\nDate: ${m.created_at}\n${m.body}`).join('\n\n══════════════\n\n');
+      $('adminPrivateData').textContent=(noteText||'No private notes.')+'\n\n================ MESSAGES ================\n\n'+(messageText||'No messages.');
+    }
+    $('saveAnnouncementBtn').addEventListener('click',async()=>{
+      try{const {data:{user}}=await supabaseClient.auth.getUser();const {error}=await supabaseClient.from('admin_announcements').upsert({id:1,content:$('adminAnnouncementInput').value,updated_by:user.id,updated_at:new Date().toISOString()},{onConflict:'id'});if(error)throw error;await loadAnnouncement();showMessage('adminStatus','Announcement published for all members.','success');}
+      catch(e){showMessage('adminStatus','Could not publish: '+e.message,'error');}
+    });
+    $('adminResetPasswordBtn').addEventListener('click',async()=>{
+      const email=$('adminResetEmail').value.trim(); if(!email)return showMessage('adminStatus','Enter the member email.','error');
+      try{const redirect=getPasswordRecoveryRedirectUrl();const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:redirect});if(error)throw error;showMessage('adminStatus','Password reset email requested for '+email+'.','success');}
+      catch(e){showMessage('adminStatus',e.message,'error');}
+    });
+
+    // Search registered members while typing; selecting a result fills the recipient field.
+    let memberSearchTimer=null;
+    $('messageToEmail').addEventListener('input',()=>{
+      clearTimeout(memberSearchTimer); const q=$('messageToEmail').value.trim(); const box=$('memberSuggestions');
+      if(q.length<2){box.classList.add('hidden');box.replaceChildren();return;}
+      memberSearchTimer=setTimeout(async()=>{
+        try{const {data,error}=await supabaseClient.rpc('search_members_for_message',{p_query:q});if(error)throw error;box.replaceChildren();(data||[]).forEach(m=>{const b=document.createElement('button');b.type='button';b.className='suggestion-item';b.textContent=(m.username||'Member')+' — '+m.email;b.addEventListener('click',()=>{$('messageToEmail').value=m.email;box.classList.add('hidden');});box.append(b);});box.classList.toggle('hidden',!box.childElementCount);}
+        catch(e){console.warn('Member search unavailable:',e.message);}
+      },220);
+    });
+
+    // Replace session rendering with admin visibility checks and announcement loading.
+    const originalRenderSession=renderSession;
+    renderSession=async function(session){
+      await originalRenderSession(session);
+      if(!session)return;
+      const isAdmin=(session.user.email||'').toLowerCase()===MSMI_ADMIN_EMAIL;
+      $('adminPanel').classList.toggle('hidden',!isAdmin);
+      try{await loadAnnouncement();}catch(e){showMessage('adminStatus','Announcement load error: '+e.message,'error');}
+      if(isAdmin){try{await loadAdminConsole();}catch(e){showMessage('adminStatus','Admin data load error: '+e.message,'error');}}
+    };
+
   </script>
 </body>
 </html>
