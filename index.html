@@ -98,7 +98,26 @@
     .note-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
     .note-actions .primary { flex:1; min-width:140px; }
     .note-meta { color:var(--muted); font-size:11px; margin-top:8px; }
-\n    footer { text-align: center; color: #8b8b8b; font-size: 11px; padding: 20px; }
+
+    .editor-toolbar {display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}
+    .tool-btn {border:1px solid #e6c5cb;background:#fff;color:#8f1027;border-radius:8px;padding:8px 11px;font-weight:700;cursor:pointer}
+    .tool-btn:hover {background:#fff1f3}
+    .editor-options {display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+    .editor-options select,.editor-options input {width:auto;max-width:180px;padding:9px;border:1px solid #ddd;border-radius:8px}
+    .editor-stats {display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:11px;margin-top:8px}
+    .public-note-box,.messages-box {margin:25px 0;padding:20px;background:#fff;border:1px solid #f0dfe2;border-radius:15px}
+    .message-compose {display:grid;gap:10px;margin:14px 0}
+    .message-compose textarea {width:100%;min-height:110px;padding:12px;border:1px solid #ddd;border-radius:10px;font:14px/1.5 inherit;resize:vertical}
+    .message-list {display:grid;gap:10px;margin-top:14px}
+    .message-item {border:1px solid #eee;border-radius:12px;padding:12px;background:#fffafb;overflow-wrap:anywhere}
+    .message-item p {white-space:pre-wrap;margin:8px 0;line-height:1.5}
+    .message-item small {color:var(--muted)}
+    .message-item button {border:1px solid #e8b9c1;background:#fff;color:var(--red);border-radius:7px;padding:6px 10px;cursor:pointer}
+    .section-title {display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .public-badge {background:#eef6ff;color:#1758a6}
+    .editor-fullscreen {position:fixed!important;inset:12px!important;z-index:1000;background:white;padding:22px!important;overflow:auto;box-shadow:0 0 0 100vmax #0008}
+    .editor-fullscreen textarea {min-height:65vh!important}
+    footer { text-align: center; color: #8b8b8b; font-size: 11px; padding: 20px; }
     @media (max-width: 760px) {
       main { margin: 22px auto; } .layout { grid-template-columns: 1fr; gap: 16px; }
       .intro { min-height: 260px; } .card { min-height: 480px; }
@@ -197,24 +216,42 @@
         <div class="profile-line"><span>User ID</span><strong id="profileId" style="font-size:10px;max-width:65%;overflow-wrap:anywhere">Loading…</strong></div>
       </div>
 
-      <section class="notepad-box">
-        <div class="notepad-head">
-          <div>
-            <h2 style="font-size:21px;margin:0">My Online Notepad</h2>
-            <p class="sub" style="margin:5px 0 0">Private notes saved to your MSMI account.</p>
-          </div>
-          <span class="pill">PRIVATE</span>
-        </div>
+      <section class="notepad-box" id="privateEditorBox">
+        <div class="notepad-head"><div><h2 style="font-size:21px;margin:0">My Online Notepad</h2><p class="sub" style="margin:5px 0 0">Private notes saved to your MSMI account.</p></div><span class="pill">PRIVATE</span></div>
         <label for="notepadText">Your text</label>
-        <textarea id="notepadText" placeholder="Start writing your notes here..."></textarea>
-        <div class="note-actions">
-          <button class="primary" id="saveNoteBtn" type="button">Save Online</button>
-          <button class="primary secondary" id="copyNoteBtn" type="button">Copy Text</button>
+        <div class="editor-toolbar" data-editor="notepadText">
+          <button class="tool-btn" data-action="bold" type="button"><b>B</b></button><button class="tool-btn" data-action="italic" type="button"><i>I</i></button><button class="tool-btn" data-action="underline" type="button"><u>U</u></button>
+          <button class="tool-btn" data-insert="# " type="button">H1</button><button class="tool-btn" data-insert="## " type="button">H2</button><button class="tool-btn" data-insert="- " type="button">• List</button><button class="tool-btn" data-insert="1. " type="button">1. List</button><button class="tool-btn" data-insert="> " type="button">Quote</button><button class="tool-btn" data-insert="`code`" type="button">Code</button>
+          <button class="tool-btn" data-action="undo" type="button">↶ Undo</button><button class="tool-btn" data-action="redo" type="button">↷ Redo</button><button class="tool-btn" data-fullscreen="privateEditorBox" type="button">⛶ Fullscreen</button>
         </div>
-        <p class="message" id="noteMessage" role="status" aria-live="polite"></p>
-        <p class="note-meta" id="noteUpdated">Your saved note will appear here after loading.</p>
+        <textarea id="notepadText" placeholder="Start writing your notes here..." spellcheck="true"></textarea>
+        <div class="editor-options"><input id="privateFind" placeholder="Find text"><input id="privateReplace" placeholder="Replace with"><button class="tool-btn" id="privateReplaceBtn" type="button">Replace all</button><button class="tool-btn" id="privateDownloadBtn" type="button">Download .txt</button><button class="tool-btn" id="privateClearBtn" type="button">Clear</button></div>
+        <div class="editor-stats"><span id="privateWordCount">0 words</span><span id="privateCharCount">0 characters</span></div>
+        <div class="note-actions"><button class="primary" id="saveNoteBtn" type="button">Save Online</button><button class="primary secondary" id="copyNoteBtn" type="button">Copy Text</button></div>
+        <p class="message" id="noteMessage" role="status" aria-live="polite"></p><p class="note-meta" id="noteUpdated">Your saved note will appear here after loading.</p>
       </section>
-\n      <label for="newUsername">Change username</label>
+
+      <section class="public-note-box" id="publicEditorBox">
+        <div class="section-title"><div><h2 style="font-size:21px;margin:0">MSMI Public Notepad</h2><p class="sub" style="margin:5px 0 0">One shared document for all registered members. Everyone can edit it.</p></div><span class="pill public-badge">SHARED</span></div>
+        <label for="publicNoteText">Shared document</label>
+        <div class="editor-toolbar" data-editor="publicNoteText">
+          <button class="tool-btn" data-action="bold" type="button"><b>B</b></button><button class="tool-btn" data-action="italic" type="button"><i>I</i></button><button class="tool-btn" data-action="underline" type="button"><u>U</u></button>
+          <button class="tool-btn" data-insert="# " type="button">H1</button><button class="tool-btn" data-insert="## " type="button">H2</button><button class="tool-btn" data-insert="- " type="button">• List</button><button class="tool-btn" data-insert="1. " type="button">1. List</button><button class="tool-btn" data-insert="> " type="button">Quote</button><button class="tool-btn" data-action="undo" type="button">↶ Undo</button><button class="tool-btn" data-action="redo" type="button">↷ Redo</button><button class="tool-btn" data-fullscreen="publicEditorBox" type="button">⛶ Fullscreen</button>
+        </div>
+        <textarea id="publicNoteText" placeholder="Write something for all MSMI members..." spellcheck="true"></textarea>
+        <div class="editor-options"><button class="tool-btn" id="publicDownloadBtn" type="button">Download .txt</button><button class="tool-btn" id="publicReloadBtn" type="button">Reload shared version</button></div>
+        <div class="editor-stats"><span id="publicWordCount">0 words</span><span id="publicCharCount">0 characters</span></div>
+        <div class="note-actions"><button class="primary" id="savePublicNoteBtn" type="button">Save Shared Note</button><button class="primary secondary" id="copyPublicNoteBtn" type="button">Copy Public Text</button></div>
+        <p class="message" id="publicNoteMessage" role="status" aria-live="polite"></p><p class="note-meta" id="publicNoteUpdated">Loading shared document…</p>
+      </section>
+
+      <section class="messages-box" id="messagesBox">
+        <div class="section-title"><div><h2 style="font-size:21px;margin:0">MSMI Live Messages</h2><p class="sub" style="margin:5px 0 0">Send private in-app messages to another member using their registered email.</p></div><span class="pill">LIVE</span></div>
+        <div class="message-compose"><label for="messageToEmail">Recipient email</label><input id="messageToEmail" type="email" placeholder="member@example.com" required><label for="messageBody">Message</label><textarea id="messageBody" placeholder="Write your message…" maxlength="5000"></textarea><button class="primary" id="sendMessageBtn" type="button">Send Message</button><p class="message" id="messageStatus" role="status" aria-live="polite"></p></div>
+        <div class="section-title"><h3 style="margin:8px 0">Inbox & Sent</h3><button class="tool-btn" id="refreshMessagesBtn" type="button">Refresh messages</button></div>
+        <div id="messageList" class="message-list"><p class="note-meta">Sign in to view messages.</p></div>
+      </section>
+      <label for="newUsername">Change username</label>
       <input id="newUsername" type="text" minlength="3" maxlength="24" placeholder="New username">
       <button class="primary" id="saveUsernameBtn" type="button" style="margin-top:12px">Save username</button>
       <p class="message" id="profileMessage" role="status" aria-live="polite"></p>
@@ -231,17 +268,17 @@
     const SUPABASE_URL = "https://cffibglxemgwhxlrwxwp.supabase.co";
     const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_RUEclwul1uUV4GcABFBmXg_PSpEJGeE";
 
-    // Set this to your production Vercel URL, without a trailing slash.
-    // Example: https://msmi-account-portal.vercel.app
-    // On a deployed Vercel site, its current domain is used automatically.
-    const PRODUCTION_APP_URL = "https://msmiworld.vercel.app";
+    // Optional: set this to your deployed HTTPS site URL. Leave blank when hosted
+    // on Vercel/Netlify/custom HTTPS domain; the current domain is used automatically.
+    // Never send password-reset links to localhost: a recipient's computer cannot reach your PC.
+    const PUBLIC_APP_URL = "https://msmiworld.vercel.app/";
 
     function getPasswordRecoveryRedirectUrl() {
       const host = window.location.hostname;
-      const isLocal = host === "localhost" || host === "127.0.0.1";
-      const baseUrl = isLocal ? PRODUCTION_APP_URL : window.location.origin;
-      if (!baseUrl.startsWith("https://") || baseUrl.includes("YOUR-VERCEL-PROJECT")) {
-        throw new Error("Set PRODUCTION_APP_URL to your real Vercel website URL in index.html before requesting a password reset.");
+      const isLocal = host === "localhost" || host === "127.0.0.1" || window.location.protocol === "file:";
+      const baseUrl = PUBLIC_APP_URL.trim() || (isLocal ? "" : window.location.origin);
+      if (!baseUrl.startsWith("https://")) {
+        throw new Error("Password recovery needs your deployed HTTPS MSMI website. Deploy this HTML first, set PUBLIC_APP_URL to that HTTPS address (or open the deployed site), then add the same URL in Supabase Authentication → URL Configuration → Redirect URLs. Do not use localhost:3000.");
       }
       return baseUrl.replace(/\/+$/, "") + "/?mode=reset";
     }
@@ -495,6 +532,130 @@
       }
     });
 
+
+    // EDITOR HELPERS: lightweight Markdown-style formatting in plain-text documents.
+    function insertAtCursor(textarea, insertion) {
+      const a = textarea.selectionStart, b = textarea.selectionEnd;
+      const value = textarea.value;
+      textarea.value = value.slice(0, a) + insertion + value.slice(b);
+      textarea.focus(); textarea.selectionStart = textarea.selectionEnd = a + insertion.length;
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+    document.querySelectorAll('.editor-toolbar').forEach(toolbar => {
+      toolbar.addEventListener('click', e => {
+        const btn = e.target.closest('button'); if (!btn) return;
+        const ta = $(toolbar.dataset.editor); if (!ta) return;
+        if (btn.dataset.insert) insertAtCursor(ta, btn.dataset.insert);
+        if (btn.dataset.action === 'bold' || btn.dataset.action === 'italic' || btn.dataset.action === 'underline') {
+          const selected = ta.value.slice(ta.selectionStart, ta.selectionEnd) || 'text';
+          const marks = {bold:'**', italic:'_', underline:'<u>'};
+          const close = btn.dataset.action === 'underline' ? '</u>' : marks[btn.dataset.action];
+          insertAtCursor(ta, marks[btn.dataset.action] + selected + close);
+        }
+        if (btn.dataset.action === 'undo') document.execCommand('undo');
+        if (btn.dataset.action === 'redo') document.execCommand('redo');
+        if (btn.dataset.fullscreen) $(btn.dataset.fullscreen).classList.toggle('editor-fullscreen');
+      });
+    });
+    function updateStats(id, wordId, charId) {
+      const value = $(id).value;
+      $(wordId).textContent = (value.trim() ? value.trim().split(/\s+/).length : 0) + ' words';
+      $(charId).textContent = value.length + ' characters';
+    }
+    [['notepadText','privateWordCount','privateCharCount'],['publicNoteText','publicWordCount','publicCharCount']].forEach(([id,w,c]) => {
+      $(id).addEventListener('input', () => updateStats(id,w,c)); updateStats(id,w,c);
+    });
+    function downloadText(filename, text) {
+      const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+      const url = URL.createObjectURL(blob); const a = document.createElement('a');
+      a.href=url; a.download=filename; a.click(); URL.revokeObjectURL(url);
+    }
+    $('privateDownloadBtn').addEventListener('click', () => downloadText('msmi-private-notes.txt',$('notepadText').value));
+    $('publicDownloadBtn').addEventListener('click', () => downloadText('msmi-public-notes.txt',$('publicNoteText').value));
+    $('privateClearBtn').addEventListener('click', () => { if(confirm('Clear the editor? This does not delete the online saved note until you save.')) {$('notepadText').value=''; updateStats('notepadText','privateWordCount','privateCharCount');} });
+    $('privateReplaceBtn').addEventListener('click', () => {
+      const find=$('privateFind').value; if(!find) return showMessage('noteMessage','Enter text to find.','error');
+      const before=$('notepadText').value; const escaped=find.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+      $('notepadText').value=before.replace(new RegExp(escaped,'g'),$('privateReplace').value);
+      updateStats('notepadText','privateWordCount','privateCharCount'); showMessage('noteMessage','Replace completed. Save online to keep the changes.','success');
+    });
+    async function copyText(text, messageId) {
+      try { await navigator.clipboard.writeText(text); }
+      catch (_) { const t=document.createElement('textarea'); t.value=text; document.body.appendChild(t); t.select(); if(!document.execCommand('copy')) throw new Error('Clipboard permission denied'); t.remove(); }
+      showMessage(messageId,'Text copied to clipboard.','success');
+    }
+    $('copyPublicNoteBtn').addEventListener('click',()=>copyText($('publicNoteText').value,'publicNoteMessage').catch(e=>showMessage('publicNoteMessage',e.message,'error')));
+
+    // SHARED PUBLIC NOTEPAD: all authenticated members can read and edit the same row.
+    async function loadPublicNote() {
+      const {data,error}=await supabaseClient.from('shared_notes').select('content,updated_at').eq('id',1).maybeSingle();
+      if(error) throw error;
+      $('publicNoteText').value=data?.content || '';
+      updateStats('publicNoteText','publicWordCount','publicCharCount');
+      $('publicNoteUpdated').textContent=data?.updated_at ? 'Last shared update: '+new Date(data.updated_at).toLocaleString() : 'No shared text saved yet.';
+    }
+    async function savePublicNote() {
+      setBusy('savePublicNoteBtn',true,'Save Shared Note'); showMessage('publicNoteMessage','Saving shared document…');
+      try {
+        const {data:{user},error:userError}=await supabaseClient.auth.getUser(); if(userError) throw userError; if(!user) throw new Error('Sign in required.');
+        const {data,error}=await supabaseClient.from('shared_notes').upsert({id:1,content:$('publicNoteText').value,updated_by:user.id,updated_at:new Date().toISOString()},{onConflict:'id'}).select('updated_at').single();
+        if(error) throw error;
+        $('publicNoteUpdated').textContent='Last shared update: '+new Date(data.updated_at).toLocaleString();
+        showMessage('publicNoteMessage','Shared document saved. All members can now see this version.','success');
+      } catch(e) { showMessage('publicNoteMessage','Could not save shared note: '+e.message,'error'); }
+      finally { setBusy('savePublicNoteBtn',false,'Save Shared Note'); }
+    }
+    $('savePublicNoteBtn').addEventListener('click',savePublicNote);
+    $('publicReloadBtn').addEventListener('click',()=>loadPublicNote().then(()=>showMessage('publicNoteMessage','Latest shared version loaded.','success')).catch(e=>showMessage('publicNoteMessage',e.message,'error')));
+    $('copyPublicNoteBtn').addEventListener('click',()=>copyText($('publicNoteText').value,'publicNoteMessage').catch(e=>showMessage('publicNoteMessage',e.message,'error')));
+
+    // PRIVATE LIVE MESSAGING. Email is resolved server-side by a restricted RPC.
+    let messageChannel = null;
+    function safeMessageNode(row, currentUserId) {
+      const article=document.createElement('article'); article.className='message-item';
+      const heading=document.createElement('strong');
+      heading.textContent=(row.sender_id===currentUserId?'Sent to: '+(row.recipient_email||'member'):'From: '+(row.sender_email||'member'));
+      const date=document.createElement('small'); date.textContent=' · '+new Date(row.created_at).toLocaleString();
+      const body=document.createElement('p'); body.textContent=row.body;
+      const del=document.createElement('button'); del.type='button'; del.textContent='Delete';
+      del.addEventListener('click',async()=>{
+        if(!confirm('Delete this message from your message view?')) return;
+        const {error}=await supabaseClient.from('user_messages').delete().eq('id',row.id);
+        if(error) showMessage('messageStatus','Could not delete message: '+error.message,'error'); else {showMessage('messageStatus','Message deleted.','success'); await loadMessages();}
+      });
+      article.append(heading,date,body,del); return article;
+    }
+    async function loadMessages() {
+      const {data:{user},error:userError}=await supabaseClient.auth.getUser(); if(userError) throw userError; if(!user) return;
+      const {data,error}=await supabaseClient.from('user_messages').select('id,sender_id,recipient_id,sender_email,recipient_email,body,created_at').order('created_at',{ascending:false}).limit(100);
+      if(error) throw error;
+      const list=$('messageList'); list.replaceChildren();
+      if(!data?.length){const empty=document.createElement('p');empty.className='note-meta';empty.textContent='No messages yet. Start a conversation using a member email.';list.append(empty);return;}
+      data.forEach(row=>list.append(safeMessageNode(row,user.id)));
+    }
+    $('sendMessageBtn').addEventListener('click',async()=>{
+      const email=$('messageToEmail').value.trim().toLowerCase(), body=$('messageBody').value.trim();
+      if(!email || !body) return showMessage('messageStatus','Enter a recipient email and message.','error');
+      setBusy('sendMessageBtn',true,'Send Message');
+      try {
+        const {data,error}=await supabaseClient.rpc('send_message_to_email',{p_recipient_email:email,p_body:body});
+        if(error) throw error;
+        if(data && data.ok===false) throw new Error(data.message||'Could not send message.');
+        $('messageBody').value=''; showMessage('messageStatus','Message sent to '+email+'.','success'); await loadMessages();
+      } catch(e) { showMessage('messageStatus','Could not send message: '+e.message,'error'); }
+      finally { setBusy('sendMessageBtn',false,'Send Message'); }
+    });
+    $('refreshMessagesBtn').addEventListener('click',()=>loadMessages().then(()=>showMessage('messageStatus','Messages refreshed.','success')).catch(e=>showMessage('messageStatus',e.message,'error')));
+    function startMessageRealtime(userId) {
+      if(messageChannel) supabaseClient.removeChannel(messageChannel);
+      messageChannel=supabaseClient.channel('msmi-live-'+userId)
+        .on('postgres_changes',{event:'*',schema:'public',table:'user_messages'},()=>loadMessages().catch(console.error))
+        .on('postgres_changes',{event:'UPDATE',schema:'public',table:'shared_notes',filter:'id=eq.1'},()=>{
+          if (document.activeElement !== $('publicNoteText')) loadPublicNote().catch(console.error);
+        })
+        .subscribe();
+    }
+
     async function renderSession(session) {
       if (!session) { showDashboard(false); return; }
       showDashboard(true);
@@ -513,6 +674,8 @@
         } catch (noteError) {
           showMessage("noteMessage", "Could not load your online note. Check that the user_notes table and RLS policies were created. " + noteError.message, "error");
         }
+        try { await loadPublicNote(); } catch (e) { showMessage('publicNoteMessage','Could not load shared note. Run the updated MSMI SQL. '+e.message,'error'); }
+        try { await loadMessages(); startMessageRealtime(session.user.id); } catch (e) { showMessage('messageStatus','Could not load messages. Run the updated MSMI SQL. '+e.message,'error'); }
       } catch (error) {
         $("profileUsername").textContent = "Profile not found";
         showMessage("profileMessage", "Could not load profile. Check that schema.sql was run in Supabase SQL Editor. " + error.message, "error");
@@ -545,7 +708,10 @@
       const { error } = await supabaseClient.auth.signOut();
       if (error) showMessage("profileMessage", error.message, "error");
       else {
+        if (messageChannel) { await supabaseClient.removeChannel(messageChannel); messageChannel = null; }
         $("notepadText").value = "";
+        $("publicNoteText").value = "";
+        $('messageList').replaceChildren();
         $("noteUpdated").textContent = "Sign in to load your private note.";
         showMessage("noteMessage", "");
         showDashboard(false); showTab("login");
