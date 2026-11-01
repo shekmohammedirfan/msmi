@@ -196,9 +196,15 @@ end; $$;
 revoke all on function public.admin_portal_analytics() from public,anon;
 grant execute on function public.admin_portal_analytics() to authenticated;
 
--- Realtime feeds for notifications and group conversations.
-do $$ begin
- if not exists(select 1 from pg_publication_tables where pubname='supabase_realtime' and schemaname='public' and tablename='portal_notifications') then alter publication supabase_realtime add table public.portal_notifications; end if;
- if not exists(select 1 from pg_publication_tables where pubname='supabase_realtime' and schemaname='public' and tablename='group_messages') then alter publication supabase_realtime add table public.group_messages; end if;
+-- Realtime feeds used by the portal: direct messages, shared notes,
+-- announcements, notifications and group messages.
+-- Existing base migrations may already have added some of these tables.
+do $$ declare t text; begin
+ foreach t in array array['user_messages','shared_notes','admin_announcements','portal_notifications','group_messages'] loop
+  if to_regclass('public.'||t) is not null
+     and not exists(select 1 from pg_publication_tables where pubname='supabase_realtime' and schemaname='public' and tablename=t) then
+   execute format('alter publication supabase_realtime add table public.%I',t);
+  end if;
+ end loop;
 end $$;
 notify pgrst,'reload schema';
