@@ -173,6 +173,19 @@
       .dash-card::before,.profile-box::before,.dash-card::before,.profile-box::before,.notepad-box::before,.public-note-box::before,.messages-box::before,.admin-panel::before,.announcement-card::before,.password-card::before,.v2-panel::before{animation:none}
     }
     .messages-box{border-color:#e78b9a}
+    .message-live-tools{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:10px 0 14px}
+    .message-filter-row{display:flex;gap:6px;flex-wrap:wrap}
+    .message-filter{border:1px solid #efc4cc;background:#fff;color:#8d172b;border-radius:999px;padding:7px 12px;font:inherit;font-size:11px;font-weight:750;cursor:pointer}
+    .message-filter.active{background:#c8102e;color:#fff;border-color:#c8102e}
+    .message-live-state{display:inline-flex;align-items:center;gap:7px;border:1px solid #ead7db;border-radius:999px;padding:6px 10px;font-size:11px;color:#666;background:#fff}
+    .message-live-dot{width:8px;height:8px;border-radius:50%;background:#999;display:inline-block}
+    .message-live-state.connected .message-live-dot{background:#12a05c;box-shadow:0 0 0 3px #12a05c20}
+    .message-live-state.connecting .message-live-dot{background:#e2a400}
+    .message-live-state.disconnected .message-live-dot{background:#c8102e}
+    .message-search{max-width:260px;min-width:180px;padding:9px 12px;font-size:12px}
+    .message-empty{padding:20px;text-align:center;color:#777;border:1px dashed #e9cbd1;border-radius:12px}
+    .message-item button{margin:5px 6px 0 0}
+
     .rich-editor{width:100%;min-height:420px;max-height:75vh;overflow:auto;resize:vertical;border:1px solid #d99aa4;border-radius:12px;padding:18px;outline:none;background:#fff;color:#171717;font:15px/1.75 Inter,system-ui,sans-serif;white-space:normal;overflow-wrap:anywhere}
     .rich-editor:focus{border-color:#c8102e;box-shadow:0 0 0 3px #c8102e19,0 0 20px #c8102e35}
     #publicNoteText{min-height:420px}
@@ -204,6 +217,32 @@
     .v2-note-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:16px}.v2-note-grid textarea,.v2-panel textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;font:14px/1.5 inherit;resize:vertical}.v2-panel input[type=file]{padding:8px}.v2-profile-grid{display:grid;grid-template-columns:140px 1fr;gap:18px}.v2-avatar{width:100px;height:100px;border-radius:50%;display:grid;place-items:center;background:#c8102e;color:white;font-weight:900;font-size:28px;overflow:hidden;background-size:cover;background-position:center}.v2-avatar.has-photo{color:transparent}.v2-chat{max-height:300px;min-height:130px}.v2-item.unread{border-left:4px solid #c8102e;background:#fff3f5}.v2-item.selected{outline:2px solid #c8102e}.v2-panel .primary{max-width:280px}.v2-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-top:12px}.v2-stat{padding:14px;border:1px solid #f0d8dc;border-radius:12px;background:#fff;text-align:center}.v2-stat strong{display:block;font-size:24px;color:#c8102e}.v2-stat small{color:#666;font-size:11px}.v2-panel button:disabled{opacity:.6;cursor:wait}
     @media(max-width:700px){.v2-note-grid,.v2-profile-grid{grid-template-columns:1fr}.v2-panel{padding:15px}.v2-actions input{min-width:100%}}
 
+
+    /* MSMI single-feature workspace and member chat */
+    .portal-page{display:none!important}.portal-page.portal-page-active{display:block!important}
+    .member-workspace{display:grid;grid-template-columns:minmax(220px, .85fr) minmax(0,1.5fr);gap:16px;margin-top:14px}
+    .member-list-panel,.member-detail-panel{border:1px solid #f0dfe2;border-radius:15px;background:#fff;padding:14px;min-width:0}
+    .member-contact{display:flex;align-items:center;gap:11px;width:100%;border:1px solid transparent;background:#fff;text-align:left;padding:10px;border-radius:12px;cursor:pointer;margin:4px 0;color:var(--ink)}
+    .member-contact:hover,.member-contact.selected{background:#fff3f5;border-color:#f1c3cb}
+    .member-avatar{width:43px;height:43px;border-radius:50%;display:grid;place-items:center;flex:0 0 43px;background:linear-gradient(145deg,#e21b3c,#85091e);color:#fff;font-weight:850;overflow:hidden;background-size:cover;background-position:center}
+    .member-avatar.large{width:76px;height:76px;flex-basis:76px;font-size:22px}
+    .member-presence{font-size:11px;color:#6b7280}.member-presence.online{color:#07834b;font-weight:800}
+    .member-chat{display:none;margin-top:16px;border:1px solid #f0dfe2;border-radius:15px;overflow:hidden;background:#f7f4f4}
+    .member-chat.open{display:block}.member-chat-head{padding:12px 15px;background:#fff;border-bottom:1px solid #eadde0;display:flex;align-items:center;gap:10px}
+    .member-chat-thread{height:330px;overflow:auto;padding:15px;display:flex;flex-direction:column;gap:8px;background:linear-gradient(#f9f5f4,#f4efec)}
+    .chat-bubble{max-width:min(78%,520px);padding:9px 12px;border-radius:13px;background:#fff;box-shadow:0 1px 2px #0000000b;overflow-wrap:anywhere;white-space:pre-wrap;font-size:13px;line-height:1.45}
+    .chat-bubble.mine{align-self:flex-end;background:#fce0e5;border-bottom-right-radius:4px}.chat-bubble.theirs{align-self:flex-start;border-bottom-left-radius:4px}
+    .chat-bubble small{display:block;text-align:right;color:#777;font-size:9px;margin-top:5px}
+    .member-chat-compose{display:flex;gap:8px;padding:12px;background:#fff;border-top:1px solid #eadde0;align-items:flex-end}
+    .member-chat-compose textarea{flex:1;min-width:0;resize:vertical;min-height:42px;max-height:110px;padding:10px;border:1px solid #ddd;border-radius:10px;font:13px inherit}
+    .member-chat-compose button{width:auto;min-width:84px}
+    .member-profile-about{padding:12px;background:#fff8f9;border-radius:12px;margin-top:14px;line-height:1.6;font-size:13px;white-space:pre-wrap}
+    .admin-storage-stat{grid-column:1/-1;border:1px solid #edc5cc;border-radius:12px;padding:14px;background:#fff7f8}
+    .admin-storage-stat strong{font-size:23px;color:#a80e27;display:block}
+    .auth-summary{display:grid;gap:10px;margin-top:24px}.auth-summary-item{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:#fff}
+    .auth-summary-item b{color:#ffe0e5}
+    @media(max-width:720px){.member-workspace{grid-template-columns:1fr}.member-chat-thread{height:280px}.member-chat-compose{flex-wrap:wrap}.member-chat-compose button{flex:1}}
+
   </style>
 </head>
 <body>
@@ -219,10 +258,15 @@
         <h1>Your account.<br>One secure place.</h1>
         <p>Create an account or sign in to access your personal dashboard from supported devices.</p>
         <div class="feature-list">
-          <span>Online account registration</span>
-          <span>Secure email and password authentication</span>
-          <span>Personal username profile</span>
+          <span>Gmail verification and secure sign-in</span>
+          <span>Member directory, profile photos and online status</span>
+          <span>WhatsApp-style private and group messaging</span>
+          <span>Private and shared notepads with rich text tools</span>
+          <span>Cloud drive, notifications and announcements</span>
+          <span>Account security, password recovery and profiles</span>
+          <span>Administrator dashboard and storage analytics</span>
         </div>
+        <div class="auth-summary"><div class="auth-summary-item"><b>MSMI</b><span>A unified personal portal for communication, notes, files and account management.</span></div><div class="auth-summary-item"><b>SECURE</b><span>Supabase authentication, email confirmation and account-specific access controls.</span></div></div>
       </section>
 
       <section class="card">
@@ -289,12 +333,13 @@
       <aside class="feature-sidebar" aria-label="MSMI portal navigation">
         <div class="sidebar-brand">MSMI PORTAL<small>FEATURE NAVIGATION</small></div>
         <nav class="sidebar-nav" id="featureSidebarNav">
-          <a class="sidebar-link active" href="#dashboardOverview"><span class="nav-icon">⌂</span>Overview</a>
+          <a class="sidebar-link active" href="#overviewPage"><span class="nav-icon">⌂</span>Overview</a>
           <a class="sidebar-link" href="#profileSummary"><span class="nav-icon">◉</span>Account profile</a>
           <a class="sidebar-link" href="#announcementCard"><span class="nav-icon">▣</span>Announcements</a>
           <a class="sidebar-link" href="#passwordChangeCard"><span class="nav-icon">♙</span>Password settings</a>
           <a class="sidebar-link" href="#privateEditorBox"><span class="nav-icon">✎</span>Private notepad</a>
           <a class="sidebar-link" href="#publicEditorBox"><span class="nav-icon">▤</span>Public notepad</a>
+          <a class="sidebar-link" href="#memberDirectory"><span class="nav-icon">♙</span>Members & chat</a>
           <a class="sidebar-link" href="#messagesBox"><span class="nav-icon">✉</span>Live messages</a>
           <a class="sidebar-link" href="#v2Notifications"><span class="nav-icon">♢</span>Notifications</a>
           <a class="sidebar-link" href="#v2Profile"><span class="nav-icon">◎</span>Advanced profile</a>
@@ -309,23 +354,28 @@
         </nav>
       </aside>
       <section class="dash-card">
+      <section class="portal-page portal-page-active" id="overviewPage">
       <div class="dash-head" id="dashboardOverview">
         <div><div class="eyebrow" style="color:#a80e27">MSMI MEMBER AREA</div><h2 style="margin-top:8px">Your dashboard</h2></div>
         <span class="pill">SIGNED IN</span>
       </div>
       <p class="sub">Your account is connected to the online database.</p>
-      <div class="profile-box" id="profileSummary">
+      </section>
+      <div class="profile-box portal-page" id="profileSummary">
+        <div class="section-title" style="justify-content:flex-start;gap:14px;margin-bottom:14px"><div class="member-avatar large" id="accountProfileAvatar">MS</div><div><h2 id="accountProfileName" style="font-size:21px;margin:0 0 5px">Your profile</h2><span class="member-presence" id="accountProfileStatus">Member account</span></div></div>
+        <div class="member-profile-about" id="accountProfileAbout">Add a short About Me description in Advanced profile.</div>
+        <button class="tool-btn" id="editAccountProfileBtn" type="button" style="margin:12px 0">Edit profile details</button>
         <div class="profile-line"><span>Username</span><strong id="profileUsername">Loading…</strong></div>
         <div class="profile-line"><span>Email</span><strong id="profileEmail">Loading…</strong></div>
         <div class="profile-line"><span>User ID</span><strong id="profileId" style="font-size:10px;max-width:65%;overflow-wrap:anywhere">Loading…</strong></div>
       </div>
 
-      <section class="announcement-card" id="announcementCard">
+      <section class="announcement-card portal-page" id="announcementCard">
         <div class="section-title"><div><h2 style="font-size:20px;margin:0">MSMI Admin Announcement</h2><p class="sub" style="margin:5px 0 0">Official notice from the portal administrator</p></div><span class="pill">ADMIN NOTICE</span></div>
         <div id="announcementText" class="announcement-text">Loading announcement…</div>
       </section>
 
-      <section class="password-card" id="passwordChangeCard">
+      <section class="password-card portal-page" id="passwordChangeCard">
         <h2 style="font-size:20px">Change my password</h2><p class="sub">Update the password for your own account.</p>
         <label for="currentPassword">Current password</label><input id="currentPassword" type="password" autocomplete="current-password">
         <label for="dashboardNewPassword">New password</label><input id="dashboardNewPassword" type="password" minlength="8" autocomplete="new-password">
@@ -333,7 +383,7 @@
         <button class="primary" id="changeOwnPasswordBtn" type="button" style="margin-top:12px">Update my password</button><p class="message" id="passwordChangeStatus" role="status"></p>
       </section>
 
-      <section class="admin-panel hidden" id="adminPanel">
+      <section class="admin-panel hidden portal-page" id="adminPanel">
         <div class="section-title"><div><div class="eyebrow" style="color:#a80e27">RESTRICTED ACCESS</div><h2 style="font-size:22px;margin:5px 0">MSMI Administrator Console</h2><p class="sub" style="margin:0">Administrator: shekmohammedirfan412@gmail.com</p></div><span class="pill">ADMIN ONLY</span></div>
         <p class="sub" style="margin-top:12px">Admin access includes member profiles, private note contents and private message contents. Tell members this is an administrator-accessible service. Passwords are never readable; use password reset instead.</p>
         <label for="adminAnnouncementInput">Edit dashboard announcement</label><textarea id="adminAnnouncementInput" style="width:100%;min-height:90px;padding:12px;border:1px solid #ddd;border-radius:10px"></textarea>
@@ -342,7 +392,7 @@
         <label for="adminResetEmail">Send a password reset link to a member</label><input id="adminResetEmail" type="email" placeholder="member@example.com"><button class="primary secondary" id="adminResetPasswordBtn" type="button" style="margin-top:10px">Send reset link</button>
       </section>
 
-      <section class="notepad-box" id="privateEditorBox">
+      <section class="notepad-box portal-page" id="privateEditorBox">
         <div class="notepad-head"><div><h2 style="font-size:21px;margin:0">My Online Notepad</h2><p class="sub" style="margin:5px 0 0">Private notes saved to your MSMI account.</p></div><span class="pill">PRIVATE</span></div>
         <label for="notepadText">Your text</label>
         <div class="editor-toolbar" data-editor="notepadText">
@@ -357,7 +407,7 @@
         <p class="message" id="noteMessage" role="status" aria-live="polite"></p><p class="note-meta" id="noteUpdated">Your saved note will appear here after loading.</p>
       </section>
 
-      <section class="public-note-box" id="publicEditorBox">
+      <section class="public-note-box portal-page" id="publicEditorBox">
         <div class="section-title"><div><h2 style="font-size:21px;margin:0">MSMI Public Notepad</h2><p class="sub" style="margin:5px 0 0">One shared document for all registered members. Everyone can edit it.</p></div><span class="pill public-badge">SHARED</span></div>
         <label for="publicNoteText">Shared document</label>
         <div class="editor-toolbar" data-editor="publicNoteText">
@@ -371,32 +421,53 @@
         <p class="message" id="publicNoteMessage" role="status" aria-live="polite"></p><p class="note-meta" id="publicNoteUpdated">Loading shared document…</p>
       </section>
 
-      <section class="messages-box" id="messagesBox">
+
+      <section class="v2-panel portal-page" id="memberDirectory">
+        <div class="section-title"><div><h2>MSMI Members</h2><p class="sub">Browse confirmed members, view their profile, online status and start a private conversation.</p></div><button class="tool-btn" id="refreshMemberDirectory" type="button">Refresh members</button></div>
+        <div class="member-workspace">
+          <div class="member-list-panel"><label for="memberSearchInput">Search members</label><input id="memberSearchInput" type="search" placeholder="Search username or name…"><div id="memberContactList" class="v2-list"><p class="note-meta">Loading members…</p></div></div>
+          <div class="member-detail-panel" id="memberDetailPanel"><p class="note-meta">Select a member to view their profile.</p></div>
+        </div>
+        <div class="member-chat" id="memberChatPanel"><div class="member-chat-head" id="memberChatHeader"></div><div class="member-chat-thread" id="memberChatThread"><p class="note-meta">Select a member to start chatting.</p></div><div class="member-chat-compose"><textarea id="memberChatInput" rows="2" maxlength="5000" placeholder="Type a message…"></textarea><button class="primary" id="memberChatSend" type="button">Send</button></div></div>
+        <p class="message" id="memberDirectoryStatus" role="status"></p>
+      </section>
+
+      <section class="messages-box portal-page" id="messagesBox">
         <div class="section-title"><div><h2 style="font-size:21px;margin:0">MSMI Live Messages</h2><p class="sub" style="margin:5px 0 0">Send private in-app messages to another member using their registered email.</p></div><span class="pill">LIVE</span></div>
         <div class="message-compose"><label for="messageToEmail">Recipient email</label><input id="messageToEmail" type="email" placeholder="Type a member email or username…" autocomplete="off" required><div id="memberSuggestions" class="suggestions hidden"></div><label for="messageBody">Message</label><textarea id="messageBody" placeholder="Write your message…" maxlength="5000"></textarea><button class="primary" id="sendMessageBtn" type="button">Send Message</button><p class="message" id="messageStatus" role="status" aria-live="polite"></p></div>
         <div class="section-title"><h3 style="margin:8px 0">Inbox & Sent</h3><button class="tool-btn" id="refreshMessagesBtn" type="button">Refresh messages</button></div>
+        <div class="message-live-tools">
+          <div class="message-filter-row" id="messageFilterRow" aria-label="Filter messages">
+            <button class="message-filter active" type="button" data-message-filter="all">All</button>
+            <button class="message-filter" type="button" data-message-filter="inbox">Inbox</button>
+            <button class="message-filter" type="button" data-message-filter="sent">Sent</button>
+            <button class="message-filter" type="button" data-message-filter="unread">Unread <span id="messageUnreadCount">0</span></button>
+          </div>
+          <span class="message-live-state connecting" id="messageLiveStatus"><i class="message-live-dot"></i><span>Connecting…</span></span>
+        </div>
+        <input class="message-search" id="messageSearch" type="search" placeholder="Search messages or member email…" aria-label="Search messages">
         <div id="messageList" class="message-list"><p class="note-meta">Sign in to view messages.</p></div>
       </section>
 
-      <section class="v2-panel" id="v2Notifications">
+      <section class="v2-panel portal-page" id="v2Notifications">
         <div class="section-title"><div><h2>Notifications</h2><p class="sub">Private alerts for messages, group activity and portal updates.</p></div><span class="pill" id="notificationCount">0 unread</span></div>
         <div class="v2-actions"><button class="tool-btn" id="refreshNotifications">Refresh</button><button class="tool-btn" id="markAllNotifications">Mark all read</button></div>
         <div id="notificationList" class="v2-list"><p class="note-meta">Loading notifications…</p></div>
         <p class="message" id="notificationStatus" role="status"></p>
       </section>
 
-      <section class="v2-panel" id="v2Profile">
+      <section class="v2-panel portal-page" id="v2Profile">
         <div class="section-title"><div><h2>Advanced profile</h2><p class="sub">Add a display name, short bio, status and profile photo.</p></div><span class="pill">PROFILE</span></div>
         <div class="v2-profile-grid"><div><div class="v2-avatar" id="profileAvatarPreview">MS</div><label for="profileAvatarFile">Profile photo</label><input type="file" id="profileAvatarFile" accept="image/png,image/jpeg,image/webp"></div><div><label for="profileDisplayName">Display name</label><input id="profileDisplayName" maxlength="60" placeholder="Your display name"><label for="profileStatus">Status</label><input id="profileStatus" maxlength="100" placeholder="Available / Studying / Busy"><label for="profileBio">About me</label><textarea id="profileBio" maxlength="500" rows="3" placeholder="Write a short bio..."></textarea><button class="primary" id="saveAdvancedProfile" type="button">Save profile</button></div></div>
         <p class="message" id="advancedProfileStatus" role="status"></p>
       </section>
 
-      <section class="v2-panel" id="v2SmartNotes">
+      <section class="v2-panel portal-page" id="v2SmartNotes">
         <div class="section-title"><div><h2>Smart Notepad · Multiple notes</h2><p class="sub">Create separate private notes. Existing main notepad remains unchanged.</p></div><span class="pill">PRIVATE</span></div>
         <div class="v2-note-grid"><div><div class="v2-actions"><button class="tool-btn" id="createSmartNote">＋ New note</button><button class="tool-btn" id="refreshSmartNotes">Refresh</button></div><div id="smartNoteList" class="v2-list"><p class="note-meta">Loading notes…</p></div></div><div><label for="smartNoteTitle">Note title</label><input id="smartNoteTitle" maxlength="100" placeholder="Untitled note"><label for="smartNoteContent">Note content</label><textarea id="smartNoteContent" rows="10" placeholder="Write your private note..."></textarea><div class="v2-actions"><button class="primary" id="saveSmartNote">Save note</button><button class="tool-btn" id="deleteSmartNote">Delete</button></div><p class="message" id="smartNoteStatus" role="status"></p></div></div>
       </section>
 
-      <section class="v2-panel" id="v2CloudDrive">
+      <section class="v2-panel portal-page" id="v2CloudDrive">
         <div class="section-title"><div><h2>MSMI Cloud Drive</h2><p class="sub">Private file storage. Your files are isolated by your account.</p></div><span class="pill">PRIVATE STORAGE</span></div>
         <label for="cloudFiles">Choose files (maximum 20 MB per file)</label><input id="cloudFiles" type="file" multiple>
         <button class="primary" id="uploadCloudFiles" type="button">Upload selected files</button>
@@ -404,20 +475,20 @@
         <div id="cloudFileList" class="v2-list"><p class="note-meta">Loading files…</p></div><p class="message" id="cloudStatus" role="status"></p>
       </section>
 
-      <section class="v2-panel" id="v2Groups">
+      <section class="v2-panel portal-page" id="v2Groups">
         <div class="section-title"><div><h2>Group chat</h2><p class="sub">Create private groups, invite registered MSMI members and chat together.</p></div><span class="pill">GROUPS</span></div>
         <div class="v2-note-grid"><div><label for="newGroupName">New group name</label><input id="newGroupName" maxlength="70" placeholder="ECE Project Team"><button class="primary" id="createGroup" type="button">Create group</button><div id="groupList" class="v2-list"><p class="note-meta">Loading groups…</p></div></div><div><div class="section-title"><strong id="activeGroupTitle">Select a group</strong><span id="groupMemberCount" class="pill">0 members</span></div><label for="groupInviteEmail">Invite member by registered email</label><div class="v2-actions"><input id="groupInviteEmail" type="email" placeholder="member@example.com"><button class="tool-btn" id="inviteGroupMember" type="button">Invite</button></div><div id="groupMessages" class="v2-list v2-chat"><p class="note-meta">Choose a group to view messages.</p></div><label for="groupMessageText">Message</label><textarea id="groupMessageText" rows="3" maxlength="3000" placeholder="Write to your group..."></textarea><button class="primary" id="sendGroupMessage" type="button">Send to group</button></div></div>
         <p class="message" id="groupStatus" role="status"></p>
       </section>
 
-      <section class="v2-panel" id="v2Security">
+      <section class="v2-panel portal-page" id="v2Security">
         <div class="section-title"><div><h2>Account security</h2><p class="sub">Review recent sign-ins and revoke sessions on other devices.</p></div><span class="pill">SECURITY</span></div>
         <div class="v2-actions"><button class="tool-btn" id="refreshLoginHistory">Refresh login history</button><button class="primary" id="signOutEverywhere">Sign out all devices</button></div>
         <div id="loginHistory" class="v2-list"><p class="note-meta">Loading login history…</p></div><p class="message" id="securityStatus" role="status"></p>
         <p class="note-meta">Login history records successful sign-ins from this portal and the browser user-agent. It does not expose passwords or claim to list every active device.</p>
       </section>
 
-      <section class="v2-panel" id="usernameSettings">
+      <section class="v2-panel portal-page" id="usernameSettings">
         <div class="section-title"><div><h2>Username settings</h2><p class="sub">Update the username used in your MSMI account.</p></div><span class="pill">ACCOUNT</span></div>
         <label for="newUsername">Change username</label>
         <input id="newUsername" type="text" minlength="3" maxlength="24" placeholder="New username">
@@ -501,23 +572,33 @@
     function showDashboard(show) {
       $("authView").classList.toggle("hidden", show);
       $("dashboardView").classList.toggle("hidden", !show);
+      if(show){const first=document.getElementById('overviewPage');if(first){document.querySelectorAll('#dashboardView .portal-page').forEach(p=>p.classList.toggle('portal-page-active',p===first));const nav=document.querySelector('#featureSidebarNav a[href="#overviewPage"]');document.querySelectorAll('#featureSidebarNav a.sidebar-link').forEach(a=>a.classList.toggle('active',a===nav));}}
     }
 
-    // Sidebar navigation: every feature has a direct, working in-page destination.
+    // Sidebar behaves like a professional app: one feature page is visible at a time.
     const featureSidebar = document.getElementById('featureSidebarNav');
+    const featurePages = [...document.querySelectorAll('#dashboardView .portal-page')];
+    function openPortalFeature(id, clickedLink) {
+      const target = document.getElementById(id);
+      if (!target || target.classList.contains('hidden')) return;
+      featurePages.forEach(page => page.classList.toggle('portal-page-active', page === target));
+      if (featureSidebar) featureSidebar.querySelectorAll('a.sidebar-link').forEach(item => item.classList.toggle('active', item === clickedLink));
+      target.scrollIntoView({behavior:'smooth',block:'start'});
+      if(id==='memberDirectory' && window.MSMI_loadMemberDirectory) window.MSMI_loadMemberDirectory();
+      if(id==='messagesBox' && window.MSMI_refreshMessages) window.MSMI_refreshMessages();
+    }
     if (featureSidebar) {
       featureSidebar.addEventListener('click', event => {
-        const link = event.target.closest('a.sidebar-link');
-        if (!link) return;
-        const target = document.querySelector(link.getAttribute('href'));
-        if (!target || target.classList.contains('hidden')) return;
+        const link = event.target.closest('a.sidebar-link'); if (!link) return;
         event.preventDefault();
-        featureSidebar.querySelectorAll('a.sidebar-link').forEach(item => item.classList.toggle('active', item === link));
-        target.scrollIntoView({behavior:'smooth', block:'start'});
+        const href=link.getAttribute('href')||'';
+        const id=href==='#overviewPage'?'overviewPage':href.slice(1);
+        openPortalFeature(id,link);
       });
       const sideLogout = document.getElementById('sidebarLogout');
       if (sideLogout) sideLogout.addEventListener('click', () => document.getElementById('logoutBtn').click());
     }
+    document.getElementById('editAccountProfileBtn')?.addEventListener('click',()=>{const link=document.querySelector('#featureSidebarNav a[href="#v2Profile"]');openPortalFeature('v2Profile',link);});
     function ensureConfigured() {
       if (!supabaseClient) {
         alert("Connect Supabase first: edit SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY near the bottom of index.html.");
@@ -562,14 +643,14 @@
       try {
         const { data, error } = await supabaseClient.auth.signUp({
           email, password,
-          options: { data: { username } }
+          options: { data: { username }, emailRedirectTo: window.location.origin + window.location.pathname + '?email_verified=1' }
         });
         if (error) throw error;
         if (data.session) {
           showMessage("signupMessage", "Account created successfully.", "success");
           await renderSession(data.session);
         } else {
-          showMessage("signupMessage", "Registration received. Check your email and click the confirmation link before signing in.", "success");
+          showMessage("signupMessage", "Verification email sent. Open the message in your Gmail inbox and click Confirm email. You will return to this MSMI page to sign in.", "success");
         }
       } catch (error) {
         showMessage("signupMessage", error.message || "Registration failed.", "error");
@@ -821,14 +902,42 @@
       del.addEventListener('click',async()=>{if(!confirm('Delete this message from your message view?')) return;const {error}=await supabaseClient.from('user_messages').delete().eq('id',row.id);if(error) showMessage('messageStatus','Could not delete message: '+error.message,'error'); else {showMessage('messageStatus','Message deleted.','success'); await loadMessages();}});
       article.append(heading,date,body,del); return article;
     }
+    let cachedMessages = [];
+    let activeMessageFilter = 'all';
+    function setMessageLiveState(state, label) {
+      const el=$('messageLiveStatus'); if(!el)return;
+      el.className='message-live-state '+state;
+      const text=el.querySelector('span'); if(text)text.textContent=label;
+    }
+    function renderMessageList(currentUserId) {
+      const list=$('messageList'); list.replaceChildren();
+      const query=($('messageSearch')?.value||'').trim().toLowerCase();
+      const unread=cachedMessages.filter(m=>m.recipient_id===currentUserId&&!m.is_read).length;
+      $('messageUnreadCount').textContent=String(unread);
+      const filtered=cachedMessages.filter(row=>{
+        if(activeMessageFilter==='inbox'&&row.recipient_id!==currentUserId)return false;
+        if(activeMessageFilter==='sent'&&row.sender_id!==currentUserId)return false;
+        if(activeMessageFilter==='unread'&&!(row.recipient_id===currentUserId&&!row.is_read))return false;
+        if(query&&!`${row.sender_email||''} ${row.recipient_email||''} ${row.body||''}`.toLowerCase().includes(query))return false;
+        return true;
+      });
+      if(!filtered.length){const empty=document.createElement('p');empty.className='message-empty';empty.textContent=cachedMessages.length?'No messages match this filter.':'No messages yet. Start a conversation using a member email.';list.append(empty);return;}
+      filtered.forEach(row=>list.append(safeMessageNode(row,currentUserId)));
+    }
+    $('messageFilterRow').addEventListener('click',event=>{
+      const button=event.target.closest('[data-message-filter]');if(!button)return;
+      activeMessageFilter=button.dataset.messageFilter;
+      $('messageFilterRow').querySelectorAll('[data-message-filter]').forEach(b=>b.classList.toggle('active',b===button));
+      supabaseClient.auth.getUser().then(({data})=>renderMessageList(data?.user?.id)).catch(console.error);
+    });
+    $('messageSearch').addEventListener('input',()=>supabaseClient.auth.getUser().then(({data})=>renderMessageList(data?.user?.id)).catch(console.error));
     async function loadMessages() {
       const {data:{user},error:userError}=await supabaseClient.auth.getUser(); if(userError) throw userError; if(!user) return;
-      const {data,error}=await supabaseClient.from('user_messages').select('id,sender_id,recipient_id,sender_email,recipient_email,body,created_at,is_read,edited_at').order('created_at',{ascending:false}).limit(100);
+      const {data,error}=await supabaseClient.from('user_messages').select('id,sender_id,recipient_id,sender_email,recipient_email,body,created_at,is_read,edited_at').order('created_at',{ascending:false}).limit(200);
       if(error) throw error;
-      const list=$('messageList'); list.replaceChildren();
-      if(!data?.length){const empty=document.createElement('p');empty.className='note-meta';empty.textContent='No messages yet. Start a conversation using a member email.';list.append(empty);return;}
-      data.forEach(row=>list.append(safeMessageNode(row,user.id)));
+      cachedMessages=data||[]; renderMessageList(user.id);
     }
+
     $('sendMessageBtn').addEventListener('click',async()=>{
       const email=$('messageToEmail').value.trim().toLowerCase(), body=$('messageBody').value.trim();
       if(!email || !body) return showMessage('messageStatus','Enter a recipient email and message.','error');
@@ -844,14 +953,28 @@
     $('refreshMessagesBtn').addEventListener('click',()=>loadMessages().then(()=>showMessage('messageStatus','Messages refreshed.','success')).catch(e=>showMessage('messageStatus',e.message,'error')));
     function startMessageRealtime(userId) {
       if(messageChannel) supabaseClient.removeChannel(messageChannel);
+      setMessageLiveState('connecting','Connecting…');
       messageChannel=supabaseClient.channel('msmi-live-'+userId)
-        .on('postgres_changes',{event:'*',schema:'public',table:'user_messages'},()=>loadMessages().catch(console.error))
+        .on('postgres_changes',{event:'*',schema:'public',table:'user_messages'},payload=>{
+          loadMessages().catch(console.error);
+          if(selectedMember)loadMemberChat().catch(console.error);
+          if(payload.eventType==='INSERT'&&payload.new?.recipient_id===userId){
+            showMessage('messageStatus','New message received.','success');
+          }
+        })
         .on('postgres_changes',{event:'UPDATE',schema:'public',table:'shared_notes',filter:'id=eq.1'},()=>{
           if ($('publicNoteText').dataset.dirty !== 'true' && document.activeElement !== $('publicNoteText')) loadPublicNote().catch(console.error);
         })
         .on('postgres_changes',{event:'*',schema:'public',table:'admin_announcements',filter:'id=eq.1'},()=>loadAnnouncement().catch(console.error))
-        .subscribe();
+        .subscribe(status=>{
+          if(status==='SUBSCRIBED')setMessageLiveState('connected','Live connection active');
+          else if(status==='CHANNEL_ERROR'||status==='TIMED_OUT'||status==='CLOSED')setMessageLiveState('disconnected','Live connection unavailable');
+          else setMessageLiveState('connecting','Reconnecting…');
+        });
     }
+    document.addEventListener('visibilitychange',()=>{
+      if(document.visibilityState==='visible'&&supabaseClient&&messageChannel)loadMessages().catch(console.error);
+    });
 
     async function renderSession(session) {
       if (!session) { showDashboard(false); return; }
@@ -916,9 +1039,15 @@
     });
 
     if (supabaseClient) {
-      supabaseClient.auth.getSession().then(({ data, error }) => {
+      const emailVerifiedReturn = new URLSearchParams(window.location.search).get('email_verified') === '1';
+      supabaseClient.auth.getSession().then(async ({ data, error }) => {
         if (error) console.error(error);
-        if (recoveryMode) {
+        if (emailVerifiedReturn) {
+          if (data?.session) await supabaseClient.auth.signOut({scope:'local'}).catch(()=>{});
+          showDashboard(false); showTab('login');
+          showMessage('loginMessage','Gmail verified successfully! You can now sign in using your Gmail address and password.','success');
+          history.replaceState({},document.title,window.location.pathname);
+        } else if (recoveryMode) {
           showPasswordUpdate();
           if (!data || !data.session) {
             showMessage("newPasswordMessage", "Waiting for a valid recovery session. If this message remains, request a fresh reset email.", "error");
@@ -1083,11 +1212,24 @@
  const node=(tag,cls,txt)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n;};
  const btn=(label,fn)=>{const b=node('button','',label);b.type='button';b.addEventListener('click',fn);return b;};
  async function currentUser(){const {data,error}=await supabaseClient.auth.getUser();if(error)throw error;if(!data.user)throw new Error('Sign in required.');v2User=data.user;return data.user;}
+ let selectedMember=null, memberChatChannel=null, presenceTimer=null;
+ const initials=s=>String(s||'MS').trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'MS';
+ const isOnline=last=>!!last&&(Date.now()-new Date(last).getTime())<120000;
+ async function updatePresence(){if(!v2User)return;const {error}=await supabaseClient.from('portal_presence').upsert({user_id:v2User.id,last_seen:new Date().toISOString()},{onConflict:'user_id'});if(error)console.warn('Presence update:',error.message);}
+ function memberAvatar(url,label,large=false){const el=node('div','member-avatar'+(large?' large':''),initials(label));if(url){el.style.backgroundImage=`url("${url.replace(/"/g,'%22')}")`;el.textContent='';}return el;}
+ async function loadMemberDirectory(){try{const u=await currentUser();const {data,error}=await supabaseClient.rpc('msmi_member_directory');if(error)throw error;const box=byId('memberContactList');box.replaceChildren();const q=byId('memberSearchInput').value.trim().toLowerCase();const members=(data||[]).filter(m=>m.id!==u.id).filter(m=>!q||`${m.username||''} ${m.display_name||''} ${m.status_message||''}`.toLowerCase().includes(q));members.forEach(m=>{const b=btn('',()=>selectMember(m));b.className='member-contact'+(selectedMember?.id===m.id?' selected':'');b.dataset.memberId=m.id;b.append(memberAvatar(m.avatar_url,m.display_name||m.username));const info=node('span');info.style.minWidth='0';const name=node('strong','',m.display_name||m.username||'MSMI member');const sub=node('small','member-presence'+(isOnline(m.last_seen)?' online':''),isOnline(m.last_seen)?'● Online':'○ Offline');info.append(name,sub,node('small','note-meta','@'+(m.username||'member')));b.append(info);box.append(b);});if(!members.length)box.append(node('p','note-meta',q?'No members match your search.':'No other confirmed members yet.'));}catch(e){status('memberDirectoryStatus',errText(e),'error');}}
+ async function selectMember(m){selectedMember=m;const panel=byId('memberDetailPanel');panel.replaceChildren();const head=node('div','section-title');head.style.justifyContent='flex-start';head.append(memberAvatar(m.avatar_url,m.display_name||m.username,true));const identity=node('div');identity.append(node('h3','',m.display_name||m.username||'MSMI member'),node('small','member-presence'+(isOnline(m.last_seen)?' online':''),isOnline(m.last_seen)?'● Online now':'○ Offline'));head.append(identity);panel.append(head);panel.append(node('div','member-profile-about',m.bio||'This member has not added an About Me description yet.'));const statusText=m.status_message||'No status message';panel.append(node('p','note-meta','Status: '+statusText));panel.append(btn('Send message',async()=>{byId('memberChatPanel').classList.add('open');byId('memberChatHeader').replaceChildren(memberAvatar(m.avatar_url,m.display_name||m.username),node('strong','',m.display_name||m.username));await loadMemberChat();byId('memberChatInput').focus();}));byId('memberContactList').querySelectorAll('.member-contact').forEach(b=>b.classList.toggle('selected',b.dataset.memberId===m.id));}
+ async function loadMemberChat(){if(!selectedMember)return;const u=await currentUser();const other=selectedMember.id;const filter=`and(sender_id.eq.${u.id},recipient_id.eq.${other}),and(sender_id.eq.${other},recipient_id.eq.${u.id})`;const {data,error}=await supabaseClient.from('user_messages').select('id,sender_id,recipient_id,body,created_at,is_read').or(filter).order('created_at',{ascending:true}).limit(300);if(error)throw error;const thread=byId('memberChatThread');thread.replaceChildren();(data||[]).forEach(m=>{const bubble=node('div','chat-bubble '+(m.sender_id===u.id?'mine':'theirs'));bubble.append(document.createTextNode(m.body));bubble.append(node('small','',new Date(m.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})));thread.append(bubble);if(m.recipient_id===u.id&&!m.is_read)supabaseClient.from('user_messages').update({is_read:true}).eq('id',m.id).then(()=>{});});if(!data?.length)thread.append(node('p','note-meta','No messages yet. Say hello to start this conversation.'));thread.scrollTop=thread.scrollHeight;}
+ byId('refreshMemberDirectory').addEventListener('click',()=>loadMemberDirectory());byId('memberSearchInput').addEventListener('input',()=>loadMemberDirectory());
+ byId('memberChatSend').addEventListener('click',async()=>{try{const body=byId('memberChatInput').value.trim();if(!selectedMember)throw new Error('Select a member first.');if(!body)throw new Error('Write a message first.');const {error}=await supabaseClient.rpc('send_message_to_member',{p_recipient_id:selectedMember.id,p_body:body});if(error)throw error;byId('memberChatInput').value='';await loadMemberChat();status('memberDirectoryStatus','Message sent.','success');}catch(e){status('memberDirectoryStatus',errText(e),'error');}});
+ byId('memberChatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();byId('memberChatSend').click();}});
+ window.MSMI_loadMemberDirectory=loadMemberDirectory;window.MSMI_refreshMessages=()=>loadMessages().catch(console.error);
+
  async function loadNotifications(){const u=await currentUser();const {data,error}=await supabaseClient.from('portal_notifications').select('id,title,body,kind,created_at,read_at').eq('user_id',u.id).order('created_at',{ascending:false}).limit(50);if(error)throw error;const box=byId('notificationList');box.replaceChildren();let unread=0;(data||[]).forEach(r=>{if(!r.read_at)unread++;const item=node('article','v2-item'+(!r.read_at?' unread':''));item.append(node('strong','',r.title||'Notification'),node('p','',r.body||''),node('small','',new Date(r.created_at).toLocaleString()));if(!r.read_at)item.append(btn('Mark read',async()=>{const {error}=await supabaseClient.from('portal_notifications').update({read_at:new Date().toISOString()}).eq('id',r.id);if(error)throw error;await loadNotifications();}));box.append(item);});if(!data?.length)box.append(node('p','note-meta','No notifications yet.'));byId('notificationCount').textContent=unread+' unread';}
  byId('refreshNotifications').addEventListener('click',()=>loadNotifications().then(()=>status('notificationStatus','Notifications refreshed.','success')).catch(e=>status('notificationStatus',errText(e),'error')));
  byId('markAllNotifications').addEventListener('click',async()=>{try{const u=await currentUser();const {error}=await supabaseClient.from('portal_notifications').update({read_at:new Date().toISOString()}).eq('user_id',u.id).is('read_at',null);if(error)throw error;await loadNotifications();status('notificationStatus','All notifications marked as read.','success');}catch(e){status('notificationStatus',errText(e),'error');}});
- async function loadAdvancedProfile(){const u=await currentUser();const {data,error}=await supabaseClient.from('profiles').select('display_name,bio,status_message,avatar_url').eq('id',u.id).maybeSingle();if(error)throw error;byId('profileDisplayName').value=data?.display_name||'';byId('profileBio').value=data?.bio||'';byId('profileStatus').value=data?.status_message||'';const avatar=byId('profileAvatarPreview');avatar.textContent=(data?.display_name||u.email||'MS').slice(0,2).toUpperCase();if(data?.avatar_url){const {data:signed,error:signedError}=await supabaseClient.storage.from('msmi-cloud').createSignedUrl(data.avatar_url,3600);if(!signedError&&signed?.signedUrl){avatar.style.backgroundImage=`url("${signed.signedUrl}")`;avatar.classList.add('has-photo');}else{avatar.style.backgroundImage='';avatar.classList.remove('has-photo');}}else{avatar.style.backgroundImage='';avatar.classList.remove('has-photo');}}
- byId('saveAdvancedProfile').addEventListener('click',async()=>{try{const u=await currentUser();let avatar_url=null;const file=byId('profileAvatarFile').files[0];if(file){if(file.size>5*1024*1024)throw new Error('Profile image must be 5 MB or smaller.');if(!/^image\/(png|jpeg|webp)$/.test(file.type))throw new Error('Choose a PNG, JPG or WEBP image.');const path=`${u.id}/avatar-${Date.now()}.${file.name.split('.').pop().toLowerCase()}`;const {error:upErr}=await supabaseClient.storage.from('msmi-cloud').upload(path,file,{upsert:true,contentType:file.type});if(upErr)throw upErr;avatar_url=path;}
+ async function loadAdvancedProfile(){const u=await currentUser();const {data,error}=await supabaseClient.from('profiles').select('username,display_name,bio,status_message,avatar_url').eq('id',u.id).maybeSingle();if(error)throw error;byId('profileDisplayName').value=data?.display_name||'';byId('profileBio').value=data?.bio||'';byId('profileStatus').value=data?.status_message||'';byId('accountProfileName').textContent=data?.display_name||data?.username||u.email||'MSMI Member';byId('accountProfileStatus').textContent=data?.status_message||'MSMI member';byId('accountProfileAbout').textContent=data?.bio||'Add a short About Me description in Advanced profile.';const accountAvatar=byId('accountProfileAvatar');accountAvatar.textContent=initials(data?.display_name||data?.username||u.email);const avatar=byId('profileAvatarPreview');avatar.textContent=(data?.display_name||u.email||'MS').slice(0,2).toUpperCase();if(data?.avatar_url){let photoUrl=data.avatar_url;if(!/^https?:\/\//i.test(photoUrl)){const {data:signed,error:signedError}=await supabaseClient.storage.from('msmi-cloud').createSignedUrl(photoUrl,3600);photoUrl=!signedError?signed?.signedUrl:null;}if(photoUrl){avatar.style.backgroundImage=`url("${photoUrl}")`;avatar.classList.add('has-photo');accountAvatar.style.backgroundImage=`url("${photoUrl}")`;accountAvatar.textContent='';}else{avatar.style.backgroundImage='';avatar.classList.remove('has-photo');accountAvatar.style.backgroundImage='';}}else{avatar.style.backgroundImage='';avatar.classList.remove('has-photo');accountAvatar.style.backgroundImage='';}}
+ byId('saveAdvancedProfile').addEventListener('click',async()=>{try{const u=await currentUser();let avatar_url=null;const file=byId('profileAvatarFile').files[0];if(file){if(file.size>5*1024*1024)throw new Error('Profile image must be 5 MB or smaller.');if(!/^image\/(png|jpeg|webp)$/.test(file.type))throw new Error('Choose a PNG, JPG or WEBP image.');const avatarPath=`${u.id}/avatar-${Date.now()}.${file.name.split('.').pop().toLowerCase()}`;const {error:upErr}=await supabaseClient.storage.from('msmi-avatars').upload(avatarPath,file,{upsert:true,contentType:file.type});if(upErr)throw upErr;avatar_url=supabaseClient.storage.from('msmi-avatars').getPublicUrl(avatarPath).data.publicUrl;}
  const payload={display_name:byId('profileDisplayName').value.trim(),bio:byId('profileBio').value.trim(),status_message:byId('profileStatus').value.trim()};if(avatar_url)payload.avatar_url=avatar_url;const {error}=await supabaseClient.from('profiles').update(payload).eq('id',u.id);if(error)throw error;await loadAdvancedProfile();status('advancedProfileStatus','Profile saved.','success');}catch(e){status('advancedProfileStatus',errText(e),'error');}});
  async function loadSmartNotes(){const u=await currentUser();const {data,error}=await supabaseClient.from('user_notes_v2').select('id,title,content,updated_at').eq('user_id',u.id).order('updated_at',{ascending:false});if(error)throw error;const box=byId('smartNoteList');box.replaceChildren();(data||[]).forEach(r=>{const it=node('article','v2-item'+(activeSmartNote===r.id?' selected':''));it.append(node('strong','',r.title),node('small','',new Date(r.updated_at).toLocaleString()),btn('Open',()=>{activeSmartNote=r.id;byId('smartNoteTitle').value=r.title;byId('smartNoteContent').value=r.content||'';loadSmartNotes();}),btn('Download',()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([r.content||''],{type:'text/plain'}));a.download=(r.title||'note')+'.txt';a.click();URL.revokeObjectURL(a.href);}));box.append(it);});if(!data?.length)box.append(node('p','note-meta','No saved notes yet. Create your first note.'));}
  byId('createSmartNote').addEventListener('click',()=>{activeSmartNote=null;byId('smartNoteTitle').value='';byId('smartNoteContent').value='';status('smartNoteStatus','New note draft.','');byId('smartNoteTitle').focus();});byId('refreshSmartNotes').addEventListener('click',()=>loadSmartNotes().catch(e=>status('smartNoteStatus',errText(e),'error')));
@@ -1096,7 +1238,7 @@
  async function loadCloudFiles(){const u=await currentUser();const {data,error}=await supabaseClient.storage.from('msmi-cloud').list(u.id,{limit:100,sortBy:{column:'created_at',order:'desc'}});if(error)throw error;const box=byId('cloudFileList');box.replaceChildren();(data||[]).filter(f=>f.name&&!f.name.startsWith('.')).forEach(f=>{const path=`${u.id}/${f.name}`,it=node('article','v2-item');it.append(node('strong','',f.name),node('small','',`${f.metadata?.size?Math.ceil(f.metadata.size/1024)+' KB':'Stored file'} · ${f.created_at?new Date(f.created_at).toLocaleString():''}`),btn('Download',async()=>{const {data,error}=await supabaseClient.storage.from('msmi-cloud').download(path);if(error)throw error;const url=URL.createObjectURL(data),a=document.createElement('a');a.href=url;a.download=f.name;a.click();URL.revokeObjectURL(url);}),btn('Delete',async()=>{if(!confirm('Delete '+f.name+'?'))return;const {error}=await supabaseClient.storage.from('msmi-cloud').remove([path]);if(error)throw error;await loadCloudFiles();}));box.append(it);});if(!data?.length)box.append(node('p','note-meta','Your drive is empty.'));}
  byId('uploadCloudFiles').addEventListener('click',async()=>{try{const u=await currentUser(),files=[...byId('cloudFiles').files];if(!files.length)throw new Error('Choose at least one file.');for(const f of files){if(f.size>20*1024*1024)throw new Error(`${f.name} is larger than 20 MB.`);const safe=f.name.replace(/[^a-zA-Z0-9._-]/g,'_'),path=`${u.id}/${Date.now()}-${safe}`;const {error}=await supabaseClient.storage.from('msmi-cloud').upload(path,f,{upsert:false});if(error)throw error;}byId('cloudFiles').value='';await loadCloudFiles();status('cloudStatus','Upload completed.','success');}catch(e){status('cloudStatus',errText(e),'error');}});byId('refreshCloudFiles').addEventListener('click',()=>loadCloudFiles().catch(e=>status('cloudStatus',errText(e),'error')));
  async function loadGroups(){const u=await currentUser();const {data,error}=await supabaseClient.from('chat_group_members').select('group_id,chat_groups(id,name,created_at)').eq('user_id',u.id);if(error)throw error;const box=byId('groupList');box.replaceChildren();(data||[]).forEach(m=>{const g=m.chat_groups;if(!g)return;const b=btn(g.name,()=>selectGroup(g));b.className='v2-item'+(activeGroup?.id===g.id?' selected':'');box.append(b);});if(!data?.length)box.append(node('p','note-meta','No groups yet. Create one to begin.'));}
- async function selectGroup(g){activeGroup=g;byId('activeGroupTitle').textContent=g.name;await loadGroups();await loadGroupMessages();const {data:memberCount,error}=await supabaseClient.rpc('portal_group_member_count',{p_group_id:g.id});if(!error)byId('groupMemberCount').textContent=memberCount+' members';if(groupChannel)supabaseClient.removeChannel(groupChannel);groupChannel=supabaseClient.channel('msmi-group-'+g.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'group_messages',filter:'group_id=eq.'+g.id},loadGroupMessages).subscribe();v2Channels.push(groupChannel);}
+ async function selectGroup(g){activeGroup=g;byId('activeGroupTitle').textContent=g.name;await loadGroups();await loadGroupMessages();const {data:memberCount,error}=await supabaseClient.rpc('portal_group_member_count',{p_group_id:g.id});if(!error)byId('groupMemberCount').textContent=memberCount+' members';if(groupChannel)supabaseClient.removeChannel(groupChannel);groupChannel=supabaseClient.channel('msmi-group-'+g.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'group_messages',filter:'group_id=eq.'+g.id},()=>loadGroupMessages().catch(e=>status('groupStatus',errText(e),'error'))).subscribe();v2Channels.push(groupChannel);}
  async function loadGroupMessages(){if(!activeGroup)return;const {data,error}=await supabaseClient.from('group_messages').select('id,sender_id,body,created_at').eq('group_id',activeGroup.id).order('created_at',{ascending:true}).limit(150);if(error)throw error;const box=byId('groupMessages');box.replaceChildren();(data||[]).forEach(m=>{const it=node('article','v2-item');it.append(node('strong','',m.sender_id===v2User?.id?'You':'Group member'),node('small','',new Date(m.created_at).toLocaleString()),node('p','',m.body));box.append(it);});if(!data?.length)box.append(node('p','note-meta','No group messages yet.'));box.scrollTop=box.scrollHeight;}
  byId('createGroup').addEventListener('click',async()=>{try{const name=byId('newGroupName').value.trim();if(!name)throw new Error('Enter a group name.');const {data,error}=await supabaseClient.rpc('create_portal_group',{p_name:name});if(error)throw error;byId('newGroupName').value='';await loadGroups();const {data:g,error:ge}=await supabaseClient.from('chat_groups').select('id,name,created_at').eq('id',data.group_id).single();if(ge)throw ge;await selectGroup(g);status('groupStatus','Group created. Invite members by email.','success');}catch(e){status('groupStatus',errText(e),'error');}});
  byId('inviteGroupMember').addEventListener('click',async()=>{try{if(!activeGroup)throw new Error('Select a group first.');const email=byId('groupInviteEmail').value.trim();if(!email)throw new Error('Enter the member email.');const {error}=await supabaseClient.rpc('invite_portal_group_member',{p_group_id:activeGroup.id,p_email:email});if(error)throw error;byId('groupInviteEmail').value='';const {data:memberCount}=await supabaseClient.rpc('portal_group_member_count',{p_group_id:activeGroup.id});byId('groupMemberCount').textContent=(memberCount??'')+' members';status('groupStatus','Member added to the group.','success');}catch(e){status('groupStatus',errText(e),'error');}});
@@ -1104,11 +1246,11 @@
  async function loadLoginHistory(){const u=await currentUser();const {data,error}=await supabaseClient.from('portal_login_activity').select('id,created_at,user_agent').eq('user_id',u.id).order('created_at',{ascending:false}).limit(20);if(error)throw error;const box=byId('loginHistory');box.replaceChildren();(data||[]).forEach(r=>{const it=node('article','v2-item');it.append(node('strong','',new Date(r.created_at).toLocaleString()),node('p','',r.user_agent||'Browser details not recorded'));box.append(it);});if(!data?.length)box.append(node('p','note-meta','No portal login events recorded yet.'));}
  byId('refreshLoginHistory').addEventListener('click',()=>loadLoginHistory().then(()=>status('securityStatus','Login history refreshed.','success')).catch(e=>status('securityStatus',errText(e),'error')));
  byId('signOutEverywhere').addEventListener('click',async()=>{if(!confirm('Sign out this account from all devices? You will need to sign in again.'))return;try{const {error}=await supabaseClient.auth.signOut({scope:'global'});if(error)throw error;status('securityStatus','All sessions have been signed out.','success');location.reload();}catch(e){status('securityStatus',errText(e),'error');}});
- async function loadAdminAnalytics(){const {data,error}=await supabaseClient.rpc('admin_portal_analytics');if(error)throw error;const box=byId('adminAnalytics');box.replaceChildren();const labels=[['Members',data.members],['Private notes',data.private_notes],['Messages',data.messages],['Groups',data.groups],['Group messages',data.group_messages],['Stored files',data.files]];labels.forEach(([k,v])=>{const it=node('div','v2-stat');it.append(node('strong','',String(v??0)),node('small','',k));box.append(it);});}
+ async function loadAdminAnalytics(){const {data,error}=await supabaseClient.rpc('admin_portal_analytics');if(error)throw error;const box=byId('adminAnalytics');box.replaceChildren();const labels=[['Members',data.members],['Private notes',data.private_notes],['Messages',data.messages],['Groups',data.groups],['Group messages',data.group_messages],['Stored files',data.files]];labels.forEach(([k,v])=>{const it=node('div','v2-stat');it.append(node('strong','',String(v??0)),node('small','',k));box.append(it);});const storage=node('div','admin-storage-stat');const bytes=Number(data.storage_bytes||0);storage.append(node('strong','',(bytes/1048576).toFixed(2)+' MB'),node('small','',`Total cloud storage used · ${bytes.toLocaleString()} bytes across ${data.files||0} files (administrator only)`));box.append(storage);}
  byId('refreshAdminAnalytics').addEventListener('click',()=>loadAdminAnalytics().catch(e=>status('adminStatus','Analytics: '+errText(e),'error')));
  // Secure event recorder: the RPC associates this browser event with auth.uid() server-side.
  async function recordLogin(){if(!supabaseClient)return;try{await supabaseClient.rpc('record_portal_login',{p_user_agent:navigator.userAgent.slice(0,500)});}catch(e){console.warn('Login history recorder:',e.message);}}
- async function bootV2(){if(!supabaseClient||v2Booting)return;v2Booting=true;try{const u=await currentUser();if(v2BootedUserId===u.id)return;v2BootedUserId=u.id;if(notificationChannel)supabaseClient.removeChannel(notificationChannel);notificationChannel=supabaseClient.channel('msmi-notifications-'+u.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'portal_notifications',filter:'user_id=eq.'+u.id},()=>loadNotifications().catch(console.error)).subscribe();await Promise.allSettled([loadNotifications(),loadAdvancedProfile(),loadSmartNotes(),loadCloudFiles(),loadGroups(),loadLoginHistory(),recordLogin()]);if((u.email||'').toLowerCase()==='shekmohammedirfan412@gmail.com'){await loadAdminAnalytics().catch(e=>status('adminStatus','Analytics: '+errText(e),'error'));}}catch(e){console.warn('MSMI V2 startup:',e.message);}finally{v2Booting=false;}}
+ async function bootV2(){if(!supabaseClient||v2Booting)return;v2Booting=true;try{const u=await currentUser();if(v2BootedUserId===u.id)return;v2BootedUserId=u.id;if(notificationChannel)supabaseClient.removeChannel(notificationChannel);notificationChannel=supabaseClient.channel('msmi-notifications-'+u.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'portal_notifications',filter:'user_id=eq.'+u.id},()=>loadNotifications().catch(console.error)).on('postgres_changes',{event:'*',schema:'public',table:'portal_presence'},()=>loadMemberDirectory().catch(console.error)).subscribe();await Promise.allSettled([loadNotifications(),loadAdvancedProfile(),loadSmartNotes(),loadCloudFiles(),loadGroups(),loadLoginHistory(),loadMemberDirectory(),recordLogin(),updatePresence()]);if(presenceTimer)clearInterval(presenceTimer);presenceTimer=setInterval(()=>updatePresence(),60000);if((u.email||'').toLowerCase()==='shekmohammedirfan412@gmail.com'){await loadAdminAnalytics().catch(e=>status('adminStatus','Analytics: '+errText(e),'error'));}}catch(e){console.warn('MSMI V2 startup:',e.message);}finally{v2Booting=false;}}
  // Avoid an initial duplicate login event; only log when the auth state changes to SIGNED_IN.
  supabaseClient?.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'&&session){setTimeout(()=>bootV2(),0);}else if(event==='SIGNED_OUT'){v2User=null;v2BootedUserId=null;activeGroup=null;if(groupChannel)supabaseClient.removeChannel(groupChannel);if(notificationChannel)supabaseClient.removeChannel(notificationChannel);}});
  // Existing renderSession is in the preceding script. Boot once after the page has rendered its dashboard.
