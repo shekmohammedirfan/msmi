@@ -5,216 +5,1177 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#b91c1c">
 <title>MSMI AI — Intelligence Studio</title>
+
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/github-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
 <style>
 :root{--red:#b91c1c;--red2:#ef4444}
-*{box-sizing:border-box} body{font-family:Inter,sans-serif}
-::-webkit-scrollbar{width:7px;height:7px}::-webkit-scrollbar-thumb{background:#fca5a5;border-radius:20px}
-.markdown-body{overflow-wrap:anywhere;line-height:1.7}.markdown-body p{margin:.55rem 0}.markdown-body h1,.markdown-body h2,.markdown-body h3{font-weight:800;color:#991b1b;margin:1rem 0 .45rem}.markdown-body h1{font-size:1.4rem}.markdown-body h2{font-size:1.2rem}.markdown-body h3{font-size:1.05rem}.markdown-body ul,.markdown-body ol{padding-left:1.5rem;margin:.6rem 0}.markdown-body ul{list-style:disc}.markdown-body ol{list-style:decimal}.markdown-body blockquote{border-left:3px solid #dc2626;background:#fff1f2;padding:.6rem .9rem;margin:.8rem 0;color:#475569}.markdown-body table{border-collapse:collapse;width:100%;display:block;overflow-x:auto;margin:.8rem 0}.markdown-body td,.markdown-body th{border:1px solid #fecaca;padding:.45rem .65rem;text-align:left}.markdown-body th{background:#fff1f2}.markdown-body pre{position:relative;border-radius:12px;padding:1rem;overflow:auto;margin:.8rem 0;background:#111827}.markdown-body code:not(pre code){background:#fee2e2;color:#991b1b;padding:.1rem .3rem;border-radius:4px;font-family:"Fira Code",monospace;font-size:.9em}.markdown-body pre code{font-family:"Fira Code",monospace;font-size:.83rem}.katex-display{overflow-x:auto;overflow-y:hidden;padding:.4rem 0}.bubble{animation:rise .18s ease-out}@keyframes rise{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}.glow{box-shadow:0 0 28px #ef444433}.dot{animation:pulse 1.2s infinite}@keyframes pulse{50%{opacity:.25}}button:disabled{opacity:.5;cursor:not-allowed}
+*{box-sizing:border-box}
+body{font-family:Inter,sans-serif}
+::-webkit-scrollbar{width:7px;height:7px}
+::-webkit-scrollbar-thumb{background:#fca5a5;border-radius:20px}
+.markdown-body{overflow-wrap:anywhere;line-height:1.7}
+.markdown-body p{margin:.55rem 0}
+.markdown-body h1,.markdown-body h2,.markdown-body h3{
+font-weight:800;color:#991b1b;margin:1rem 0 .45rem}
+.markdown-body h1{font-size:1.4rem}
+.markdown-body h2{font-size:1.2rem}
+.markdown-body h3{font-size:1.05rem}
+.markdown-body ul,.markdown-body ol{padding-left:1.5rem;margin:.6rem 0}
+.markdown-body ul{list-style:disc}
+.markdown-body ol{list-style:decimal}
+.markdown-body blockquote{
+border-left:3px solid #dc2626;background:#fff1f2;
+padding:.6rem .9rem;margin:.8rem 0;color:#475569}
+.markdown-body table{
+border-collapse:collapse;width:100%;display:block;
+overflow-x:auto;margin:.8rem 0}
+.markdown-body td,.markdown-body th{
+border:1px solid #fecaca;padding:.45rem .65rem;text-align:left}
+.markdown-body th{background:#fff1f2}
+.markdown-body pre{
+position:relative;border-radius:12px;padding:1rem;
+overflow:auto;margin:.8rem 0;background:#111827}
+.markdown-body code:not(pre code){
+background:#fee2e2;color:#991b1b;padding:.1rem .3rem;
+border-radius:4px;font-family:"Fira Code",monospace;font-size:.9em}
+.markdown-body pre code{font-family:"Fira Code",monospace;font-size:.83rem}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:.4rem 0}
+.bubble{animation:rise .18s ease-out}
+@keyframes rise{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.glow{box-shadow:0 0 28px #ef444433}
+.dot{animation:pulse 1.2s infinite}
+@keyframes pulse{50%{opacity:.25}}
+button:disabled{opacity:.5;cursor:not-allowed}
 </style>
 </head>
+
 <body class="h-screen overflow-hidden bg-slate-50 text-slate-800">
+
 <div class="h-full flex flex-col">
+
 <header class="h-[66px] shrink-0 bg-white border-b border-red-100 px-3 sm:px-6 flex items-center justify-between shadow-sm z-20">
  <div class="flex items-center gap-3 min-w-0">
   <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-800 to-red-500 text-white grid place-items-center font-black text-xl glow">M</div>
-  <div class="min-w-0"><div class="font-extrabold text-lg sm:text-xl tracking-tight">MSMI <span class="text-red-600">AI</span> <span class="text-[10px] align-middle rounded-full bg-red-50 border border-red-100 text-red-700 px-2 py-1">V4.0</span></div><div class="hidden sm:block text-[11px] text-slate-500">Advanced Mathematical & Analytical Intelligence Studio</div></div>
- </div>
- <div class="flex items-center gap-2">
-  <select id="mode" class="max-w-[145px] sm:max-w-none text-xs border border-slate-200 rounded-lg bg-slate-50 px-2 py-2 outline-none focus:border-red-400">
-   <option value="math">🧮 Math & Science</option><option value="code">💻 Software Architect</option><option value="general">🧠 General</option><option value="concise">⚡ Concise</option>
-  </select>
-  <button id="newChat" title="New chat" class="w-9 h-9 rounded-lg hover:bg-red-50 text-slate-500 hover:text-red-700"><i class="fa-solid fa-plus"></i></button>
-  <button id="logout" title="Sign out" class="hidden w-9 h-9 rounded-lg hover:bg-red-50 text-slate-500 hover:text-red-700"><i class="fa-solid fa-right-from-bracket"></i></button>
- </div>
-</header>
-<div class="flex-1 min-h-0 flex">
- <aside id="sidebar" class="hidden md:flex w-64 shrink-0 bg-white border-r border-slate-200 flex-col">
-  <div class="p-4 border-b border-slate-100"><div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3">Quick prompts</div>
-   <div class="space-y-2">
-    <button class="quick w-full text-left rounded-lg p-2.5 bg-slate-50 hover:bg-red-50 text-xs" data-prompt="Explain and solve this problem step by step: "> <i class="fa-solid fa-square-root-variable text-red-500 mr-2"></i>Step-by-step mathematics</button>
-    <button class="quick w-full text-left rounded-lg p-2.5 bg-slate-50 hover:bg-red-50 text-xs" data-prompt="Write an efficient, well-commented program for: "><i class="fa-solid fa-code text-red-500 mr-2"></i>Generate code</button>
-    <button class="quick w-full text-left rounded-lg p-2.5 bg-slate-50 hover:bg-red-50 text-xs" data-prompt="Explain this electronics concept with a simple circuit-level example: "><i class="fa-solid fa-microchip text-red-500 mr-2"></i>Electronics tutor</button>
-    <button class="quick w-full text-left rounded-lg p-2.5 bg-slate-50 hover:bg-red-50 text-xs" data-prompt="Summarize this topic with definitions, key points and examples: "><i class="fa-solid fa-book-open text-red-500 mr-2"></i>Study notes</button>
+  <div class="min-w-0">
+   <div class="font-extrabold text-lg sm:text-xl tracking-tight">
+    MSMI <span class="text-red-600">AI</span>
+    <span class="text-[10px] align-middle rounded-full bg-red-50 border border-red-100 text-red-700 px-2 py-1">V4.1</span>
+   </div>
+   <div class="hidden sm:block text-[11px] text-slate-500">
+    Advanced Mathematical & Analytical Intelligence Studio
    </div>
   </div>
-  <div class="p-4 flex-1 overflow-y-auto"><div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Recent chats</div><div id="historyList" class="space-y-1"></div></div>
-  <div class="p-3 border-t border-slate-100 text-[11px] text-slate-500 flex items-center justify-between"><span><i class="fa-solid fa-shield-halved text-emerald-600 mr-1"></i>Secure connection</span><span id="status">Connecting</span></div>
- </aside>
- <main class="flex-1 min-w-0 flex flex-col bg-white">
-  <section id="authPanel" class="flex-1 overflow-y-auto grid place-items-center p-5">
-   <div class="w-full max-w-sm bg-white border border-red-100 rounded-2xl p-6 shadow-xl shadow-red-100/40">
-    <div class="w-12 h-12 rounded-xl bg-red-600 text-white grid place-items-center text-xl font-black mx-auto mb-3">M</div>
-    <h1 class="text-center text-xl font-extrabold">Welcome to MSMI AI</h1><p class="text-center text-xs text-slate-500 mt-1 mb-5">Sign in to start your AI workspace</p>
-    <label class="block text-xs font-semibold mb-1">Email</label><input id="email" type="email" autocomplete="username" class="w-full border rounded-lg px-3 py-2.5 text-sm mb-3 outline-none focus:border-red-400" placeholder="you@example.com">
-    <label class="block text-xs font-semibold mb-1">Password</label><input id="password" type="password" autocomplete="current-password" class="w-full border rounded-lg px-3 py-2.5 text-sm mb-4 outline-none focus:border-red-400" placeholder="Your password">
-    <button id="signIn" class="w-full rounded-lg bg-red-600 hover:bg-red-700 text-white py-2.5 text-sm font-semibold">Sign in</button>
-    <button id="signUp" class="w-full rounded-lg border border-red-200 text-red-700 hover:bg-red-50 py-2.5 text-sm font-semibold mt-2">Create account</button>
-    <p id="authMessage" class="text-xs text-center text-slate-500 mt-4">Your account must be enabled in Supabase Authentication.</p>
-   </div>
-  </section>
-  <section id="chatPanel" class="hidden flex-1 min-h-0 flex-col">
-   <div id="messages" class="flex-1 overflow-y-auto p-3 sm:p-6 space-y-5">
-    <div id="welcome" class="max-w-2xl mx-auto text-center py-10 sm:py-16">
-     <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-800 to-red-500 text-white grid place-items-center text-2xl font-black mx-auto mb-4 glow">M</div>
-     <h2 class="text-2xl font-extrabold text-slate-900">What can I help you solve?</h2><p class="text-sm text-slate-500 mt-2">Ask questions, solve equations, learn engineering or analyze an image.</p>
-     <div class="grid sm:grid-cols-3 gap-2 mt-7 text-left"><div class="p-3 rounded-xl border bg-red-50/50"><i class="fa-solid fa-square-root-variable text-red-600"></i><b class="block text-xs mt-2">Mathematics</b><span class="text-[11px] text-slate-500">Stepwise solutions & LaTeX</span></div><div class="p-3 rounded-xl border bg-red-50/50"><i class="fa-solid fa-code text-red-600"></i><b class="block text-xs mt-2">Programming</b><span class="text-[11px] text-slate-500">Code, debug & explain</span></div><div class="p-3 rounded-xl border bg-red-50/50"><i class="fa-solid fa-image text-red-600"></i><b class="block text-xs mt-2">Image analysis</b><span class="text-[11px] text-slate-500">Upload diagrams or questions</span></div></div>
+ </div>
+
+ <div class="flex items-center gap-2">
+  <select id="mode" class="max-w-[145px] sm:max-w-none text-xs border border-slate-200 rounded-lg bg-slate-50 px-2 py-2 outline-none focus:border-red-400">
+   <option value="math">🧮 Math & Science</option>
+   <option value="code">💻 Software Architect</option>
+   <option value="general">🧠 General</option>
+   <option value="concise">⚡ Concise</option>
+  </select>
+  <button id="newChat" title="New chat" class="w-9 h-9 rounded-lg hover:bg-red-50 text-slate-500 hover:text-red-700">
+   <i class="fa-solid fa-plus"></i>
+  </button>
+  <button id="logout" title="Sign out" class="hidden w-9 h-9 rounded-lg hover:bg-red-50 text-slate-500 hover:text-red-700">
+   <i class="fa-solid fa-right-from-bracket"></i>
+  </button>
+ </div>
+</header>
+
+<div class="flex-1 min-h-0 flex">
+
+<aside id="sidebar" class="hidden md:flex w-64 shrink-0 bg-white border-r border-slate-200 flex-col">
+
+ <div class="p-4 border-b border-slate-100">
+  <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3">Quick prompts</div>
+  <div class="space-y-2">
+   <button class="quick w-full text-left rounded-lg p-2.5 bg-slate-50 hover:bg-red-50 text-xs" data-prompt="Explain and solve this problem step by step: ">
+    <i class="fa-solid fa-square-root-variable text-red-500 mr-2"></i>Step-by-step mathematics
+   </button>
+   <button class="quick w-full text-left rounded-lg p-2.5 bg-slate-50 hover:bg-red-50 text-xs" data-prompt="Write an efficient, well-commented program for: ">
+    <i class="fa-solid fa-code text-red-500 mr-2"></i>Generate code
+   </button>
+   <button class="quick w-full text-left rounded-lg p-2.5 bg-slate-50 hover:bg-red-50 text-xs" data-prompt="Explain this electronics concept with a simple circuit-level example: ">
+    <i class="fa-solid fa-microchip text-red-500 mr-2"></i>Electronics tutor
+   </button>
+   <button class="quick w-full text-left rounded-lg p-2.5 bg-slate-50 hover:bg-red-50 text-xs" data-prompt="Summarize this topic with definitions, key points and examples: ">
+    <i class="fa-solid fa-book-open text-red-500 mr-2"></i>Study notes
+   </button>
+  </div>
+ </div>
+
+ <div class="p-4 flex-1 overflow-y-auto">
+  <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Recent chats</div>
+  <div id="historyList" class="space-y-1"></div>
+ </div>
+
+ <div class="p-3 border-t border-slate-100 text-[11px] text-slate-500 flex items-center justify-between">
+  <span><i class="fa-solid fa-shield-halved text-emerald-600 mr-1"></i>Secure connection</span>
+  <span id="status">Connecting</span>
+ </div>
+</aside>
+
+<main class="flex-1 min-w-0 flex flex-col bg-white">
+
+<section id="authPanel" class="flex-1 overflow-y-auto grid place-items-center p-5">
+ <div class="w-full max-w-sm bg-white border border-red-100 rounded-2xl p-6 shadow-xl shadow-red-100/40">
+  <div class="w-12 h-12 rounded-xl bg-red-600 text-white grid place-items-center text-xl font-black mx-auto mb-3">M</div>
+  <h1 class="text-center text-xl font-extrabold">Welcome to MSMI AI</h1>
+  <p class="text-center text-xs text-slate-500 mt-1 mb-5">Sign in to start your AI workspace</p>
+
+  <label class="block text-xs font-semibold mb-1">Email</label>
+  <input id="email" type="email" autocomplete="username" class="w-full border rounded-lg px-3 py-2.5 text-sm mb-3 outline-none focus:border-red-400" placeholder="you@example.com">
+
+  <label class="block text-xs font-semibold mb-1">Password</label>
+  <input id="password" type="password" autocomplete="current-password" class="w-full border rounded-lg px-3 py-2.5 text-sm mb-4 outline-none focus:border-red-400" placeholder="Your password">
+
+  <button id="signIn" class="w-full rounded-lg bg-red-600 hover:bg-red-700 text-white py-2.5 text-sm font-semibold">Sign in</button>
+  <button id="signUp" class="w-full rounded-lg border border-red-200 text-red-700 hover:bg-red-50 py-2.5 text-sm font-semibold mt-2">Create account</button>
+
+  <p id="authMessage" class="text-xs text-center text-slate-500 mt-4">
+   Sign in using your MSMI account.
+  </p>
+ </div>
+</section>
+
+<section id="chatPanel" class="hidden flex-1 min-h-0 flex-col">
+
+ <div id="messages" class="flex-1 overflow-y-auto p-3 sm:p-6 space-y-5">
+  <div id="welcome" class="max-w-2xl mx-auto text-center py-10 sm:py-16">
+   <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-800 to-red-500 text-white grid place-items-center text-2xl font-black mx-auto mb-4 glow">M</div>
+   <h2 class="text-2xl font-extrabold text-slate-900">What can I help you solve?</h2>
+   <p class="text-sm text-slate-500 mt-2">Ask questions, solve equations, learn engineering or analyze an image.</p>
+
+   <div class="grid sm:grid-cols-3 gap-2 mt-7 text-left">
+    <div class="p-3 rounded-xl border bg-red-50/50">
+     <i class="fa-solid fa-square-root-variable text-red-600"></i>
+     <b class="block text-xs mt-2">Mathematics</b>
+     <span class="text-[11px] text-slate-500">Stepwise solutions & LaTeX</span>
+    </div>
+    <div class="p-3 rounded-xl border bg-red-50/50">
+     <i class="fa-solid fa-code text-red-600"></i>
+     <b class="block text-xs mt-2">Programming</b>
+     <span class="text-[11px] text-slate-500">Code, debug & explain</span>
+    </div>
+    <div class="p-3 rounded-xl border bg-red-50/50">
+     <i class="fa-solid fa-image text-red-600"></i>
+     <b class="block text-xs mt-2">Image analysis</b>
+     <span class="text-[11px] text-slate-500">Upload diagrams or questions</span>
     </div>
    </div>
-   <div class="border-t border-slate-100 p-3 sm:p-4">
-    <div class="max-w-4xl mx-auto">
-     <div id="imagePreview" class="hidden mb-2 relative w-fit"><img id="previewImg" class="max-h-24 rounded-lg border"><button id="removeImage" class="absolute -top-2 -right-2 bg-slate-800 text-white w-6 h-6 rounded-full text-xs">×</button></div>
-     <div class="rounded-2xl border border-slate-200 bg-slate-50 focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 p-2 flex items-end gap-1">
-      <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp" class="hidden">
-      <button id="attach" title="Attach image" class="w-9 h-9 shrink-0 rounded-xl text-slate-400 hover:text-red-600 hover:bg-white"><i class="fa-solid fa-paperclip"></i></button>
-      <button id="voice" title="Voice input" class="w-9 h-9 shrink-0 rounded-xl text-slate-400 hover:text-red-600 hover:bg-white"><i class="fa-solid fa-microphone"></i></button>
-      <textarea id="prompt" rows="1" placeholder="Message MSMI AI…" class="flex-1 min-w-0 bg-transparent resize-none outline-none text-sm py-2 max-h-36"></textarea>
-      <button id="stop" class="hidden w-9 h-9 shrink-0 rounded-xl bg-slate-700 text-white"><i class="fa-solid fa-stop"></i></button>
-      <button id="send" class="w-10 h-10 shrink-0 rounded-xl bg-red-600 hover:bg-red-700 text-white shadow-md"><i class="fa-solid fa-arrow-up"></i></button>
-     </div>
-     <div class="flex justify-between text-[10px] text-slate-400 px-2 pt-2"><span>Enter to send · Shift+Enter for a new line</span><span id="count">0</span></div>
-    </div>
+  </div>
+ </div>
+
+ <div class="border-t border-slate-100 p-3 sm:p-4">
+  <div class="max-w-4xl mx-auto">
+
+   <div id="imagePreview" class="hidden mb-2 relative w-fit">
+    <img id="previewImg" class="max-h-24 rounded-lg border">
+    <button id="removeImage" class="absolute -top-2 -right-2 bg-slate-800 text-white w-6 h-6 rounded-full text-xs">×</button>
    </div>
-  </section>
- </main>
+
+   <div class="rounded-2xl border border-slate-200 bg-slate-50 focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 p-2 flex items-end gap-1">
+    <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp" class="hidden">
+
+    <button id="attach" title="Attach image" class="w-9 h-9 shrink-0 rounded-xl text-slate-400 hover:text-red-600 hover:bg-white">
+     <i class="fa-solid fa-paperclip"></i>
+    </button>
+
+    <button id="voice" title="Voice input" class="w-9 h-9 shrink-0 rounded-xl text-slate-400 hover:text-red-600 hover:bg-white">
+     <i class="fa-solid fa-microphone"></i>
+    </button>
+
+    <textarea id="prompt" rows="1" placeholder="Message MSMI AI…" class="flex-1 min-w-0 bg-transparent resize-none outline-none text-sm py-2 max-h-36"></textarea>
+
+    <button id="stop" class="hidden w-9 h-9 shrink-0 rounded-xl bg-slate-700 text-white">
+     <i class="fa-solid fa-stop"></i>
+    </button>
+
+    <button id="send" class="w-10 h-10 shrink-0 rounded-xl bg-red-600 hover:bg-red-700 text-white shadow-md">
+     <i class="fa-solid fa-arrow-up"></i>
+    </button>
+   </div>
+
+   <div class="flex justify-between text-[10px] text-slate-400 px-2 pt-2">
+    <span>Enter to send · Shift+Enter for a new line</span>
+    <span id="count">0</span>
+   </div>
+  </div>
+ </div>
+</section>
+
+</main>
 </div>
 </div>
+
 <script>
-/* REQUIRED: Add only your Supabase project URL and publishable/anon key here.
-   Never put your Gemini API key or Supabase service-role key in this HTML. */
+"use strict";
+
+/* =====================================================
+   MSMI AI V4.1 CONFIGURATION
+   Enter your Supabase URL and publishable/anon key.
+   NEVER enter your Gemini API key in this HTML.
+===================================================== */
+
 const SUPABASE_URL = "https://cffibglxemgwhxlrwxwp.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_RUEclwul1uUV4GcABFBmXg_PSpEJGeE";
-const FUNCTION_NAME = "msmi-chat";
+
 const MODEL_LABEL = "Gemini 3.8 Flash";
 
+/* =====================================================
+   INITIALIZATION
+===================================================== */
+
 const $ = id => document.getElementById(id);
-const sbReady = SUPABASE_URL.includes(".supabase.co") && !SUPABASE_URL.includes("YOUR_PROJECT_REF") && !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
-const sb = sbReady ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}) : null;
+
+const sbReady =
+    SUPABASE_URL.startsWith("https://") &&
+    SUPABASE_URL.includes(".supabase.co") &&
+    !SUPABASE_URL.includes("YOUR_PROJECT_REF") &&
+    SUPABASE_ANON_KEY.length > 20 &&
+    !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
+
+const sb = sbReady
+    ? window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY,
+        {
+            auth: {
+                persistSession: true,
+                autoRefreshToken: true,
+                detectSessionInUrl: true
+            }
+        }
+    )
+    : null;
+
 const systemPrompts = {
- math:"You are MSMI AI, a careful mathematics, science and engineering tutor. Explain step by step, show formulas in LaTeX ($...$ inline, $$...$$ display), define symbols and check the result.",
- code:"You are MSMI AI, an expert software architect. Give correct, secure, efficient code with language-labelled fenced blocks, setup instructions and Big-O complexity where relevant.",
- general:"You are MSMI AI, a helpful and accurate reasoning assistant. Structure answers clearly, distinguish facts from uncertainty, and use examples.",
- concise:"You are MSMI AI. Answer directly and concisely while preserving correctness."
+    math:
+        "You are MSMI AI, a careful mathematics, science and engineering tutor. Explain step by step, show formulas in LaTeX ($...$ inline, $$...$$ display), define symbols and check the result.",
+
+    code:
+        "You are MSMI AI, an expert software architect. Give correct, secure, efficient code with language-labelled fenced blocks, setup instructions and Big-O complexity where relevant.",
+
+    general:
+        "You are MSMI AI, a helpful and accurate reasoning assistant. Structure answers clearly, distinguish facts from uncertainty, and use examples.",
+
+    concise:
+        "You are MSMI AI. Answer directly and concisely while preserving correctness."
 };
-const WELCOME_HTML = `<div id="welcome" class="max-w-2xl mx-auto text-center py-10 sm:py-16"><div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-800 to-red-500 text-white grid place-items-center text-2xl font-black mx-auto mb-4 glow">M</div><h2 class="text-2xl font-extrabold text-slate-900">What can I help you solve?</h2><p class="text-sm text-slate-500 mt-2">Ask questions, solve equations, learn engineering or analyze an image.</p><div class="grid sm:grid-cols-3 gap-2 mt-7 text-left"><div class="p-3 rounded-xl border bg-red-50/50"><i class="fa-solid fa-square-root-variable text-red-600"></i><b class="block text-xs mt-2">Mathematics</b><span class="text-[11px] text-slate-500">Stepwise solutions &amp; LaTeX</span></div><div class="p-3 rounded-xl border bg-red-50/50"><i class="fa-solid fa-code text-red-600"></i><b class="block text-xs mt-2">Programming</b><span class="text-[11px] text-slate-500">Code, debug &amp; explain</span></div><div class="p-3 rounded-xl border bg-red-50/50"><i class="fa-solid fa-image text-red-600"></i><b class="block text-xs mt-2">Image analysis</b><span class="text-[11px] text-slate-500">Upload diagrams or questions</span></div></div></div>`;
-let session=null, messages=[], chats=JSON.parse(localStorage.getItem("msmi_chats_v4")||"[]"), activeChatId=null, busy=false, aborter=null, selectedImage=null;
-marked.setOptions({gfm:true,breaks:true});
-function safeMarkdown(s){return marked.parse(s||"");}
-function renderMath(el){if(window.renderMathInElement)renderMathInElement(el,{delimiters:[{left:"$$",right:"$$",display:true},{left:"\\[",right:"\\]",display:true},{left:"$",right:"$",display:false},{left:"\\(",right:"\\)",display:false}],throwOnError:false});}
-function scrollBottom(){const m=$("messages");m.scrollTop=m.scrollHeight;}
-function showStatus(s){$("status").textContent=s;}
-function setAuthUI(on){$("authPanel").classList.toggle("hidden",on);$("chatPanel").classList.toggle("hidden",!on);$("chatPanel").classList.toggle("flex",on);$("logout").classList.toggle("hidden",!on);}
-function showAuthMessage(s,error=false){$("authMessage").textContent=s;$("authMessage").className="text-xs text-center mt-4 "+(error?"text-red-600":"text-slate-500");}
-async function authAction(kind){
- if(!sb){showAuthMessage("Setup required: add your Supabase URL and publishable/anon key in the configuration section of this file.",true);return;}
- const email=$("email").value.trim(),password=$("password").value;
- if(!email||!password){showAuthMessage("Enter your email and password.",true);return;}
- showAuthMessage(kind==="signup"?"Creating account…":"Signing in…");
- const result=kind==="signup"?await sb.auth.signUp({email,password}):await sb.auth.signInWithPassword({email,password});
- if(result.error){showAuthMessage(result.error.message,true);return;}
- if(kind==="signup"&&!result.data.session){showAuthMessage("Account created. Check your email to confirm it, then sign in.");return;}
- session=result.data.session;setAuthUI(!!session);if(session){showAuthMessage("");loadChats();showStatus("Ready");}
+
+let session = null;
+let messages = [];
+let chats = [];
+let activeChatId = null;
+let busy = false;
+let aborter = null;
+let selectedImage = null;
+
+const STORAGE_KEY = "msmi_chats_v41";
+
+marked.setOptions({
+    gfm: true,
+    breaks: true
+});
+
+/* =====================================================
+   UI HELPERS
+===================================================== */
+
+function showStatus(text) {
+    $("status").textContent = text;
 }
-$("signIn").onclick=()=>authAction("signin");$("signUp").onclick=()=>authAction("signup");
-$("logout").onclick=async()=>{if(sb)await sb.auth.signOut();session=null;setAuthUI(false);showStatus("Signed out");};
-async function init(){
- if(!sb){setAuthUI(false);showAuthMessage("Setup required: add your Supabase URL and publishable/anon key in this HTML. Gemini key stays server-side.",true);showStatus("Setup needed");return;}
- const {data}=await sb.auth.getSession();session=data.session;setAuthUI(!!session);
- sb.auth.onAuthStateChange((_event,s)=>{session=s;setAuthUI(!!s);if(s){loadChats();showStatus("Ready");}});
- if(session){loadChats();showStatus("Ready");}else showStatus("Sign in");
+
+function showAuthMessage(text, error = false) {
+    $("authMessage").textContent = text;
+    $("authMessage").className =
+        "text-xs text-center mt-4 " +
+        (error ? "text-red-600" : "text-slate-500");
 }
-function persistChats(){localStorage.setItem("msmi_chats_v4",JSON.stringify(chats));}
-function saveCurrentChat(){
- if(!messages.length)return;
- let c=chats.find(x=>x.id===activeChatId);
- if(!c){c={id:activeChatId||crypto.randomUUID(),title:messages.find(x=>x.role==="user")?.text?.slice(0,42)||"New conversation",messages:[],updated:Date.now()};activeChatId=c.id;chats.unshift(c);}
- c.messages=messages;c.updated=Date.now();persistChats();renderHistory();
+
+function setAuthUI(loggedIn) {
+    $("authPanel").classList.toggle("hidden", loggedIn);
+    $("chatPanel").classList.toggle("hidden", !loggedIn);
+    $("chatPanel").classList.toggle("flex", loggedIn);
+    $("logout").classList.toggle("hidden", !loggedIn);
 }
-function loadChats(){renderHistory();}
-function renderHistory(){
- const root=$("historyList");root.innerHTML="";
- chats.sort((a,b)=>b.updated-a.updated).slice(0,30).forEach(c=>{const b=document.createElement("button");b.className="w-full text-left text-xs px-2.5 py-2 rounded-lg truncate "+(c.id===activeChatId?"bg-red-50 text-red-700":"hover:bg-slate-50 text-slate-600");b.textContent=c.title||"Conversation";b.onclick=()=>openChat(c.id);root.appendChild(b);});
+
+function escapeHTML(text) {
+    return String(text).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[char]);
 }
-function openChat(id){const c=chats.find(x=>x.id===id);if(!c)return;activeChatId=id;messages=c.messages||[];drawMessages();renderHistory();}
-function newChat(){if(busy)return;activeChatId=crypto.randomUUID();messages=[];drawMessages();renderHistory();}
-function drawMessages(){
- const root=$("messages");root.innerHTML="";
- if(!messages.length){root.innerHTML=WELCOME_HTML;return;}
- messages.forEach((m,i)=>addMessageDOM(m.role,m.text,m.imageData,i));
- scrollBottom();
+
+function safeMarkdown(text) {
+    const html = marked.parse(text || "");
+    return DOMPurify.sanitize(html);
 }
-function addMessageDOM(role,text,imageData,index){
- const root=$("messages"),row=document.createElement("div");row.className="bubble flex gap-2 sm:gap-3 max-w-4xl mx-auto "+(role==="user"?"justify-end":"justify-start");
- if(role==="user"){
-  const b=document.createElement("div");b.className="max-w-[88%] sm:max-w-[78%] bg-red-600 text-white rounded-2xl rounded-br-md px-4 py-3 text-sm shadow-sm whitespace-pre-wrap";b.textContent=text||"";
-  if(imageData){const im=document.createElement("img");im.src=imageData;im.className="max-w-full max-h-52 rounded-lg mb-2";b.prepend(im);}
-  row.append(b);const avatar=document.createElement("div");avatar.className="w-8 h-8 rounded-xl bg-slate-200 text-slate-600 grid place-items-center text-[10px] font-bold shrink-0";avatar.textContent="YOU";row.append(avatar);
- }else{
-  const avatar=document.createElement("div");avatar.className="w-8 h-8 rounded-xl bg-gradient-to-br from-red-800 to-red-500 text-white grid place-items-center font-black shrink-0 mt-1";avatar.textContent="M";row.append(avatar);
-  const box=document.createElement("div");box.className="max-w-[92%] min-w-0 sm:max-w-[88%] bg-slate-50 border border-red-50 rounded-2xl rounded-tl-md px-4 py-3 text-sm shadow-sm flex-1";
-  const body=document.createElement("div");body.className="markdown-body";body.innerHTML=safeMarkdown(text);box.append(body);
-  renderMath(body);body.querySelectorAll("pre code").forEach(el=>{try{hljs.highlightElement(el)}catch{}});
-  if(index===messages.length-1&&!busy){const actions=document.createElement("div");actions.className="flex gap-3 mt-3 pt-2 border-t border-slate-200 text-[11px] text-slate-500";
-   const copy=document.createElement("button");copy.innerHTML='<i class="fa-regular fa-copy mr-1"></i>Copy';copy.onclick=()=>navigator.clipboard.writeText(text||"").then(()=>copy.textContent="Copied");
-   const regen=document.createElement("button");regen.innerHTML='<i class="fa-solid fa-rotate-right mr-1"></i>Regenerate';regen.onclick=()=>regenerate();actions.append(copy,regen);box.append(actions);}
-  row.append(box);
- }
- root.append(row);return row;
+
+function renderMath(element) {
+    if (!window.renderMathInElement) return;
+
+    renderMathInElement(element, {
+        delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "\\[", right: "\\]", display: true },
+            { left: "$", right: "$", display: false },
+            { left: "\\(", right: "\\)", display: false }
+        ],
+        throwOnError: false
+    });
 }
-function refreshLastAssistant(){const root=$("messages"),last=root.lastElementChild;if(last)last.remove();addMessageDOM("assistant",messages[messages.length-1].text,null,messages.length-1);scrollBottom();}
-function imageToPart(dataUrl){const [head,data]=dataUrl.split(",");return {inline_data:{mime_type:head.match(/data:(.*?);base64/)[1],data}};}
-async function sendMessage(textOverride=null){
- if(busy)return;if(!session){showAuthMessage("Please sign in first.",true);return;}
- const text=(textOverride??$("prompt").value).trim();if(!text&&!selectedImage)return;
- const userMsg={role:"user",text,imageData:selectedImage};messages.push(userMsg);if(!activeChatId)activeChatId=crypto.randomUUID();
- if($("welcome"))$("welcome").remove();
- addMessageDOM("user",text,selectedImage,messages.length-1);
- $("prompt").value="";resizePrompt();$("count").textContent="0";selectedImage=null;$("imagePreview").classList.add("hidden");
- messages.push({role:"model",text:""});const aiIndex=messages.length-1;busy=true;aborter=new AbortController();$("send").disabled=true;$("stop").classList.remove("hidden");showStatus("Thinking…");
- const row=addMessageDOM("model","",null,aiIndex);const body=row.querySelector(".markdown-body");body.innerHTML='<span class="text-slate-400"><span class="dot">●</span> MSMI AI is thinking…</span>';
- try{
-  const contents=messages.slice(0,-2).map(m=>({role:m.role==="assistant"?"model":"user",parts:[...(m.text?[{text:m.text}]:[]),...(m.imageData?[imageToPart(m.imageData)]:[])]}));
-  const currentParts=[...(text?[{text}]:[]),...(userMsg.imageData?[imageToPart(userMsg.imageData)]:[])];
-  contents.push({role:"user",parts:currentParts});
-  const {data:{session:liveSession}}=await sb.auth.getSession();
-  const response=await fetch(`${SUPABASE_URL}/functions/v1/${FUNCTION_NAME}`,{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_ANON_KEY,"Authorization":`Bearer ${liveSession.access_token}`},body:JSON.stringify({contents,systemInstruction:systemPrompts[$("mode").value]}),signal:aborter.signal});
-  if(!response.ok){let detail="";try{const j=await response.json();detail=j.error||j.message||JSON.stringify(j);}catch{detail=await response.text();}throw new Error(detail||`Request failed (${response.status})`);}
-  const reader=response.body.getReader(),decoder=new TextDecoder();let buffer="",answer="";
-  while(true){const {done,value}=await reader.read();if(done)break;buffer+=decoder.decode(value,{stream:true});const lines=buffer.split(/\r?\n/);buffer=lines.pop();
-   for(const line of lines){if(!line.startsWith("data:"))continue;const raw=line.slice(5).trim();if(!raw||raw==="[DONE]")continue;
-    try{const data=JSON.parse(raw);const chunk=(data.candidates?.[0]?.content?.parts||[]).map(p=>p.text||"").join("");if(chunk){answer+=chunk;messages[aiIndex].text=answer;body.innerHTML=safeMarkdown(answer);renderMath(body);body.querySelectorAll("pre code").forEach(el=>{try{hljs.highlightElement(el)}catch{}});scrollBottom();}}
-    catch(parseErr){/* Ignore non-JSON SSE comments/metadata. */}
-   }
-  }
-  if(!answer)throw new Error("The model returned an empty response. Try again.");
-  messages[aiIndex].text=answer;saveCurrentChat();refreshLastAssistant();showStatus("Ready");
- }catch(err){
-  if(err.name==="AbortError"){messages.pop();showStatus("Stopped");}
-  else{messages[aiIndex].text="";body.innerHTML='<div class="text-red-700 bg-red-50 border border-red-200 rounded-lg p-3 text-xs"><b>Request failed:</b> '+escapeHTML(err.message)+'<p class="mt-1 text-slate-600">Check Supabase deployment, sign-in status, Gemini quota and model availability.</p></div>';showStatus("Error");}
- }finally{busy=false;aborter=null;$("send").disabled=false;$("stop").classList.add("hidden");if(messages[aiIndex]?.text)saveCurrentChat();}
+
+function highlightCode(element) {
+    element.querySelectorAll("pre code").forEach(code => {
+        try {
+            hljs.highlightElement(code);
+        } catch (error) {
+            console.warn("Code highlighting error:", error);
+        }
+    });
 }
-function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function regenerate(){if(busy||messages.length<2)return;const lastUser=[...messages].reverse().find(m=>m.role==="user");if(!lastUser)return;messages.pop();messages.pop();drawMessages();sendMessage(lastUser.text);}
-$("send").onclick=()=>sendMessage();$("stop").onclick=()=>aborter?.abort();$("newChat").onclick=newChat;
-$("prompt").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}});
-$("prompt").addEventListener("input",()=>{resizePrompt();$("count").textContent=$("prompt").value.length;});
-function resizePrompt(){$("prompt").style.height="auto";$("prompt").style.height=Math.min($("prompt").scrollHeight,144)+"px";}
-document.querySelectorAll(".quick").forEach(b=>b.onclick=()=>{$("prompt").value=b.dataset.prompt;resizePrompt();$("prompt").focus();});
-$("attach").onclick=()=>$("imageInput").click();
-$("imageInput").onchange=e=>{const f=e.target.files[0];if(!f)return;if(!["image/png","image/jpeg","image/webp"].includes(f.type)){alert("Use PNG, JPEG or WEBP.");return;}if(f.size>4*1024*1024){alert("Image must be 4 MB or smaller.");return;}const r=new FileReader();r.onload=()=>{selectedImage=r.result;$("previewImg").src=selectedImage;$("imagePreview").classList.remove("hidden");};r.readAsDataURL(f);};
-$("removeImage").onclick=()=>{selectedImage=null;$("imagePreview").classList.add("hidden");$("imageInput").value="";};
-$("voice").onclick=()=>{const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert("Voice input is not supported by this browser.");return;}const rec=new SR();rec.lang=navigator.language||"en-US";rec.onresult=e=>{$("prompt").value+=($("prompt").value?" ":"")+e.results[0][0].transcript;resizePrompt();};rec.start();};
+
+function scrollBottom() {
+    const box = $("messages");
+    box.scrollTop = box.scrollHeight;
+}
+
+/* =====================================================
+   AUTHENTICATION
+===================================================== */
+
+async function authAction(type) {
+    if (!sb) {
+        showAuthMessage(
+            "Configuration error: add your Supabase URL and publishable/anon key.",
+            true
+        );
+        return;
+    }
+
+    const email = $("email").value.trim();
+    const password = $("password").value;
+
+    if (!email || !password) {
+        showAuthMessage("Enter your email and password.", true);
+        return;
+    }
+
+    showAuthMessage(
+        type === "signup" ? "Creating account…" : "Signing in…"
+    );
+
+    try {
+        const result = type === "signup"
+            ? await sb.auth.signUp({ email, password })
+            : await sb.auth.signInWithPassword({ email, password });
+
+        if (result.error) {
+            throw result.error;
+        }
+
+        if (type === "signup" && !result.data.session) {
+            showAuthMessage(
+                "Account created. Confirm your email, then sign in."
+            );
+            return;
+        }
+
+        session = result.data.session;
+
+        if (session) {
+            setAuthUI(true);
+            loadChats();
+            showAuthMessage("");
+            showStatus("Ready");
+        }
+
+    } catch (error) {
+        console.error("Authentication error:", error);
+        showAuthMessage(error.message || "Authentication failed.", true);
+    }
+}
+
+$("signIn").onclick = () => authAction("signin");
+$("signUp").onclick = () => authAction("signup");
+
+$("logout").onclick = async () => {
+    if (!sb) return;
+
+    const { error } = await sb.auth.signOut();
+
+    if (error) {
+        alert(error.message);
+        return;
+    }
+
+    session = null;
+    messages = [];
+    activeChatId = null;
+    setAuthUI(false);
+    showStatus("Signed out");
+};
+
+async function init() {
+    if (!sb) {
+        setAuthUI(false);
+        showStatus("Setup needed");
+        showAuthMessage(
+            "Add your Supabase project URL and publishable/anon key in this HTML.",
+            true
+        );
+        return;
+    }
+
+    try {
+        const { data, error } = await sb.auth.getSession();
+
+        if (error) throw error;
+
+        session = data.session;
+        setAuthUI(!!session);
+
+        if (session) {
+            loadChats();
+            showStatus("Ready");
+        } else {
+            showStatus("Sign in");
+        }
+
+        sb.auth.onAuthStateChange((_event, newSession) => {
+            session = newSession;
+            setAuthUI(!!newSession);
+
+            if (newSession) {
+                loadChats();
+                showStatus("Ready");
+            } else {
+                messages = [];
+                activeChatId = null;
+                showStatus("Sign in");
+            }
+        });
+
+    } catch (error) {
+        console.error("Supabase initialization error:", error);
+        showStatus("Connection error");
+        showAuthMessage(error.message, true);
+    }
+}
+
+/* =====================================================
+   CHAT STORAGE
+===================================================== */
+
+function loadChats() {
+    try {
+        chats = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+        if (!Array.isArray(chats)) chats = [];
+
+    } catch (error) {
+        chats = [];
+    }
+
+    renderHistory();
+}
+
+function persistChats() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(chats));
+    } catch (error) {
+        console.error("Chat storage error:", error);
+        showStatus("Storage full");
+    }
+}
+
+function saveCurrentChat() {
+    if (!messages.length) return;
+
+    let chat = chats.find(item => item.id === activeChatId);
+
+    if (!chat) {
+        chat = {
+            id: activeChatId || crypto.randomUUID(),
+            title:
+                messages.find(item => item.role === "user")
+                    ?.text?.slice(0, 42) || "New conversation",
+            messages: [],
+            updated: Date.now()
+        };
+
+        activeChatId = chat.id;
+        chats.unshift(chat);
+    }
+
+    chat.messages = messages;
+    chat.updated = Date.now();
+
+    persistChats();
+    renderHistory();
+}
+
+function renderHistory() {
+    const root = $("historyList");
+    root.innerHTML = "";
+
+    chats
+        .sort((a, b) => b.updated - a.updated)
+        .slice(0, 30)
+        .forEach(chat => {
+            const button = document.createElement("button");
+
+            button.className =
+                "w-full text-left text-xs px-2.5 py-2 rounded-lg truncate " +
+                (chat.id === activeChatId
+                    ? "bg-red-50 text-red-700"
+                    : "hover:bg-slate-50 text-slate-600");
+
+            button.textContent = chat.title || "Conversation";
+            button.onclick = () => openChat(chat.id);
+
+            root.appendChild(button);
+        });
+}
+
+function openChat(id) {
+    if (busy) return;
+
+    const chat = chats.find(item => item.id === id);
+    if (!chat) return;
+
+    activeChatId = id;
+    messages = chat.messages || [];
+
+    drawMessages();
+    renderHistory();
+}
+
+function newChat() {
+    if (busy) return;
+
+    activeChatId = crypto.randomUUID();
+    messages = [];
+
+    drawMessages();
+    renderHistory();
+}
+
+/* =====================================================
+   MESSAGE DISPLAY
+===================================================== */
+
+const WELCOME_HTML = `
+<div id="welcome" class="max-w-2xl mx-auto text-center py-10 sm:py-16">
+ <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-800 to-red-500 text-white grid place-items-center text-2xl font-black mx-auto mb-4 glow">M</div>
+ <h2 class="text-2xl font-extrabold text-slate-900">What can I help you solve?</h2>
+ <p class="text-sm text-slate-500 mt-2">Ask questions, solve equations, learn engineering or analyze an image.</p>
+ <div class="grid sm:grid-cols-3 gap-2 mt-7 text-left">
+  <div class="p-3 rounded-xl border bg-red-50/50"><i class="fa-solid fa-square-root-variable text-red-600"></i><b class="block text-xs mt-2">Mathematics</b><span class="text-[11px] text-slate-500">Stepwise solutions &amp; LaTeX</span></div>
+  <div class="p-3 rounded-xl border bg-red-50/50"><i class="fa-solid fa-code text-red-600"></i><b class="block text-xs mt-2">Programming</b><span class="text-[11px] text-slate-500">Code, debug &amp; explain</span></div>
+  <div class="p-3 rounded-xl border bg-red-50/50"><i class="fa-solid fa-image text-red-600"></i><b class="block text-xs mt-2">Image analysis</b><span class="text-[11px] text-slate-500">Upload diagrams or questions</span></div>
+ </div>
+</div>`;
+
+function drawMessages() {
+    const root = $("messages");
+    root.innerHTML = "";
+
+    if (!messages.length) {
+        root.innerHTML = WELCOME_HTML;
+        return;
+    }
+
+    messages.forEach((message, index) => {
+        addMessageDOM(
+            message.role,
+            message.text,
+            message.imageData,
+            index
+        );
+    });
+
+    scrollBottom();
+}
+
+function addMessageDOM(role, text, imageData, index) {
+    const root = $("messages");
+    const row = document.createElement("div");
+
+    row.className =
+        "bubble flex gap-2 sm:gap-3 max-w-4xl mx-auto " +
+        (role === "user" ? "justify-end" : "justify-start");
+
+    if (role === "user") {
+        const bubble = document.createElement("div");
+
+        bubble.className =
+            "max-w-[88%] sm:max-w-[78%] bg-red-600 text-white rounded-2xl rounded-br-md px-4 py-3 text-sm shadow-sm whitespace-pre-wrap";
+
+        bubble.textContent = text || "";
+
+        if (imageData) {
+            const image = document.createElement("img");
+            image.src = imageData;
+            image.className = "max-w-full max-h-52 rounded-lg mb-2";
+            bubble.prepend(image);
+        }
+
+        row.append(bubble);
+
+        const avatar = document.createElement("div");
+        avatar.className =
+            "w-8 h-8 rounded-xl bg-slate-200 text-slate-600 grid place-items-center text-[10px] font-bold shrink-0";
+        avatar.textContent = "YOU";
+
+        row.append(avatar);
+
+    } else {
+        const avatar = document.createElement("div");
+
+        avatar.className =
+            "w-8 h-8 rounded-xl bg-gradient-to-br from-red-800 to-red-500 text-white grid place-items-center font-black shrink-0 mt-1";
+
+        avatar.textContent = "M";
+        row.append(avatar);
+
+        const box = document.createElement("div");
+
+        box.className =
+            "max-w-[92%] min-w-0 sm:max-w-[88%] bg-slate-50 border border-red-50 rounded-2xl rounded-tl-md px-4 py-3 text-sm shadow-sm flex-1";
+
+        const body = document.createElement("div");
+        body.className = "markdown-body";
+        body.innerHTML = safeMarkdown(text || "");
+
+        box.append(body);
+
+        renderMath(body);
+        highlightCode(body);
+
+        if (index === messages.length - 1 && !busy) {
+            const actions = document.createElement("div");
+
+            actions.className =
+                "flex gap-3 mt-3 pt-2 border-t border-slate-200 text-[11px] text-slate-500";
+
+            const copy = document.createElement("button");
+            copy.innerHTML = '<i class="fa-regular fa-copy mr-1"></i>Copy';
+
+            copy.onclick = async () => {
+                try {
+                    await navigator.clipboard.writeText(text || "");
+                    copy.textContent = "Copied";
+                } catch {
+                    copy.textContent = "Copy failed";
+                }
+            };
+
+            const regen = document.createElement("button");
+            regen.innerHTML =
+                '<i class="fa-solid fa-rotate-right mr-1"></i>Regenerate';
+            regen.onclick = () => regenerate();
+
+            actions.append(copy, regen);
+            box.append(actions);
+        }
+
+        row.append(box);
+    }
+
+    root.append(row);
+    return row;
+}
+
+function refreshLastAssistant() {
+    const root = $("messages");
+    const last = root.lastElementChild;
+
+    if (last) last.remove();
+
+    const message = messages[messages.length - 1];
+
+    addMessageDOM(
+        "model",
+        message.text,
+        null,
+        messages.length - 1
+    );
+
+    scrollBottom();
+}
+
+/* =====================================================
+   IMAGE HANDLING
+===================================================== */
+
+function imageToPart(dataUrl) {
+    const [header, data] = dataUrl.split(",");
+    const match = header.match(/data:(.*?);base64/);
+
+    if (!match) {
+        throw new Error("Invalid image data.");
+    }
+
+    return {
+        inline_data: {
+            mime_type: match[1],
+            data: data
+        }
+    };
+}
+
+/* =====================================================
+   SUPABASE SQL RPC - GEMINI REQUEST
+   NO EDGE FUNCTION IS USED HERE.
+===================================================== */
+
+async function callGemini(contents, systemInstruction, signal) {
+
+    if (!sb || !session) {
+        throw new Error("Please sign in to Supabase.");
+    }
+
+    // Refresh/check the current session
+    const { data: sessionData, error: sessionError } =
+        await sb.auth.getSession();
+
+    if (sessionError) {
+        throw new Error("Session error: " + sessionError.message);
+    }
+
+    if (!sessionData.session) {
+        throw new Error("Your login session expired. Please sign in again.");
+    }
+
+    // STEP 1: Start the request through SQL RPC
+    const { data: jobId, error: startError } = await sb.rpc(
+        "msmi_start",
+        {
+            p_contents: contents,
+            p_system_instruction: systemInstruction
+        }
+    );
+
+    if (startError) {
+        throw new Error(
+            "Supabase request error: " + startError.message
+        );
+    }
+
+    if (!jobId) {
+        throw new Error("Supabase did not return a request ID.");
+    }
+
+    // STEP 2: Poll the SQL function for the response
+    let result = null;
+
+    for (let attempt = 0; attempt < 90; attempt++) {
+
+        if (signal.aborted) {
+            throw new DOMException("Request stopped", "AbortError");
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        if (signal.aborted) {
+            throw new DOMException("Request stopped", "AbortError");
+        }
+
+        const { data, error } = await sb.rpc(
+            "msmi_poll",
+            {
+                p_job_id: jobId
+            }
+        );
+
+        if (error) {
+            throw new Error(
+                "Supabase response error: " + error.message
+            );
+        }
+
+        if (data?.state === "done") {
+            result = data;
+            break;
+        }
+
+        if (data?.state !== "pending") {
+            throw new Error("Unexpected response from Supabase.");
+        }
+    }
+
+    if (!result) {
+        throw new Error(
+            "Gemini response timed out. Please try again."
+        );
+    }
+
+    if (result.status < 200 || result.status >= 300) {
+        const apiMessage =
+            result.body?.error?.message ||
+            "Gemini API returned HTTP " + result.status;
+
+        throw new Error(apiMessage);
+    }
+
+    const parts =
+        result.body?.candidates?.[0]?.content?.parts || [];
+
+    const answer = parts
+        .map(part => part.text || "")
+        .join("");
+
+    if (!answer) {
+        const reason =
+            result.body?.promptFeedback?.blockReason ||
+            "Gemini returned an empty response.";
+
+        throw new Error(reason);
+    }
+
+    return answer;
+}
+
+/* =====================================================
+   SEND MESSAGE
+===================================================== */
+
+async function sendMessage(textOverride = null) {
+
+    if (busy) return;
+
+    if (!session) {
+        showAuthMessage("Please sign in first.", true);
+        return;
+    }
+
+    const text = (textOverride ?? $("prompt").value).trim();
+
+    if (!text && !selectedImage) return;
+
+    const userMessage = {
+        role: "user",
+        text: text,
+        imageData: selectedImage
+    };
+
+    messages.push(userMessage);
+
+    if (!activeChatId) {
+        activeChatId = crypto.randomUUID();
+    }
+
+    if ($("welcome")) {
+        $("welcome").remove();
+    }
+
+    addMessageDOM(
+        "user",
+        text,
+        selectedImage,
+        messages.length - 1
+    );
+
+    $("prompt").value = "";
+    resizePrompt();
+    $("count").textContent = "0";
+
+    selectedImage = null;
+    $("imagePreview").classList.add("hidden");
+    $("imageInput").value = "";
+
+    // Add temporary assistant message
+    messages.push({
+        role: "model",
+        text: ""
+    });
+
+    const aiIndex = messages.length - 1;
+
+    busy = true;
+    aborter = new AbortController();
+
+    $("send").disabled = true;
+    $("stop").classList.remove("hidden");
+
+    showStatus("Thinking…");
+
+    const row = addMessageDOM(
+        "model",
+        "",
+        null,
+        aiIndex
+    );
+
+    const body = row.querySelector(".markdown-body");
+
+    body.innerHTML =
+        '<span class="text-slate-400"><span class="dot">●</span> MSMI AI is thinking…</span>';
+
+    try {
+
+        // All earlier messages, excluding the current user message
+        // and the temporary assistant placeholder.
+        const contents = messages
+            .slice(0, -2)
+            .map(message => ({
+                role:
+                    (message.role === "assistant" ||
+                     message.role === "model")
+                        ? "model"
+                        : "user",
+
+                parts: [
+                    ...(message.text
+                        ? [{ text: message.text }]
+                        : []),
+
+                    ...(message.imageData
+                        ? [imageToPart(message.imageData)]
+                        : [])
+                ]
+            }));
+
+        // Add the current user message exactly once
+        const currentParts = [
+            ...(text ? [{ text: text }] : []),
+
+            ...(userMessage.imageData
+                ? [imageToPart(userMessage.imageData)]
+                : [])
+        ];
+
+        contents.push({
+            role: "user",
+            parts: currentParts
+        });
+
+        const answer = await callGemini(
+            contents,
+            systemPrompts[$("mode").value],
+            aborter.signal
+        );
+
+        messages[aiIndex].text = answer;
+
+        saveCurrentChat();
+        refreshLastAssistant();
+
+        showStatus("Ready");
+
+    } catch (error) {
+
+        if (error.name === "AbortError") {
+            messages.pop();
+            drawMessages();
+            showStatus("Stopped");
+
+        } else {
+            console.error("MSMI AI request error:", error);
+
+            messages[aiIndex].text = "";
+
+            body.innerHTML =
+                '<div class="text-red-700 bg-red-50 border border-red-200 rounded-lg p-3 text-xs">' +
+                '<b>Request failed:</b> ' +
+                escapeHTML(error.message) +
+                '<p class="mt-2 text-slate-600">Check Supabase RPC, Vault, pg_net and Gemini API status.</p>' +
+                '</div>';
+
+            showStatus("Error");
+        }
+
+    } finally {
+
+        busy = false;
+        aborter = null;
+
+        $("send").disabled = false;
+        $("stop").classList.add("hidden");
+
+        if (messages[aiIndex]?.text) {
+            saveCurrentChat();
+        }
+    }
+}
+
+/* =====================================================
+   REGENERATE RESPONSE
+===================================================== */
+
+function regenerate() {
+
+    if (busy || messages.length < 2) return;
+
+    const lastUserIndex = messages
+        .map(message => message.role)
+        .lastIndexOf("user");
+
+    if (lastUserIndex < 0) return;
+
+    const lastUser = messages[lastUserIndex];
+
+    messages = messages.slice(0, lastUserIndex);
+
+    const text = lastUser.text || "";
+    const image = lastUser.imageData || null;
+
+    selectedImage = image;
+
+    drawMessages();
+
+    sendMessage(text);
+}
+
+/* =====================================================
+   BUTTONS AND INPUTS
+===================================================== */
+
+$("send").onclick = () => sendMessage();
+
+$("stop").onclick = () => {
+    if (aborter) aborter.abort();
+};
+
+$("newChat").onclick = newChat;
+
+$("prompt").addEventListener("keydown", event => {
+    if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+    }
+});
+
+$("prompt").addEventListener("input", () => {
+    resizePrompt();
+    $("count").textContent = $("prompt").value.length;
+});
+
+function resizePrompt() {
+    $("prompt").style.height = "auto";
+
+    $("prompt").style.height =
+        Math.min($("prompt").scrollHeight, 144) + "px";
+}
+
+document.querySelectorAll(".quick").forEach(button => {
+    button.onclick = () => {
+        $("prompt").value = button.dataset.prompt;
+        resizePrompt();
+        $("prompt").focus();
+    };
+});
+
+/* =====================================================
+   IMAGE UPLOAD
+===================================================== */
+
+$("attach").onclick = () => {
+    $("imageInput").click();
+};
+
+$("imageInput").onchange = event => {
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
+        alert("Use PNG, JPEG or WEBP.");
+        event.target.value = "";
+        return;
+    }
+
+    if (file.size > 4 * 1024 * 1024) {
+        alert("Image must be 4 MB or smaller.");
+        event.target.value = "";
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+        selectedImage = reader.result;
+
+        $("previewImg").src = selectedImage;
+        $("imagePreview").classList.remove("hidden");
+    };
+
+    reader.onerror = () => {
+        alert("Could not read this image.");
+    };
+
+    reader.readAsDataURL(file);
+};
+
+$("removeImage").onclick = () => {
+    selectedImage = null;
+    $("imagePreview").classList.add("hidden");
+    $("imageInput").value = "";
+};
+
+/* =====================================================
+   VOICE INPUT
+===================================================== */
+
+$("voice").onclick = () => {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        alert("Voice input is not supported by this browser.");
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = navigator.language || "en-US";
+    recognition.interimResults = false;
+
+    recognition.onresult = event => {
+        const transcript =
+            event.results[0][0].transcript;
+
+        $("prompt").value +=
+            ($("prompt").value ? " " : "") + transcript;
+
+        resizePrompt();
+        $("prompt").focus();
+    };
+
+    recognition.onerror = event => {
+        console.error("Voice recognition error:", event.error);
+    };
+
+    recognition.start();
+};
+
+/* =====================================================
+   START MSMI AI
+===================================================== */
+
 init();
+
 </script>
 </body>
 </html>
