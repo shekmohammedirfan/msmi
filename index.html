@@ -77,13 +77,13 @@
     .message { min-height: 20px; margin: 13px 0 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
     .message.error { color: #b42318; } .message.success { color: var(--green); }
     .hidden { display: none !important; }
-    .dashboard { width: min(1460px, calc(100% - 24px)); margin: 18px auto; }
-    .dashboard-shell{display:grid;grid-template-columns:210px minmax(0,1fr);gap:14px;align-items:start}
-    .feature-sidebar{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow-y:auto;background:#fff;border:1px solid #f0cbd1;border-radius:15px;padding:10px;box-shadow:0 12px 30px #9f0d2410}
+    .dashboard { width: min(1180px, calc(100% - 32px)); margin: 32px auto; }
+    .dashboard-shell{display:grid;grid-template-columns:235px minmax(0,1fr);gap:20px;align-items:start}
+    .feature-sidebar{position:sticky;top:18px;max-height:calc(100vh - 36px);overflow-y:auto;background:#fff;border:1px solid #f0cbd1;border-radius:18px;padding:14px;box-shadow:0 12px 30px #9f0d2410}
     .sidebar-brand{font-weight:900;color:#a80e27;letter-spacing:1px;padding:8px 10px 14px;border-bottom:1px solid #f4dfe3;margin-bottom:10px}
     .sidebar-brand small{display:block;font-size:10px;color:#777;font-weight:600;letter-spacing:1.5px;margin-top:4px}
     .sidebar-nav{display:grid;gap:5px}
-    .sidebar-link{display:flex;align-items:center;gap:9px;width:100%;border:0;background:transparent;color:#454545;text-decoration:none;text-align:left;padding:8px 9px;border-radius:9px;font-family:inherit;font-size:11px;font-weight:650;cursor:pointer;transition:.18s}
+    .sidebar-link{display:flex;align-items:center;gap:10px;width:100%;border:0;background:transparent;color:#454545;text-decoration:none;text-align:left;padding:10px 11px;border-radius:10px;font-family:inherit;font-size:12px;font-weight:650;cursor:pointer;transition:.18s}
     .sidebar-link:hover,.sidebar-link.active{background:#fff0f2;color:#b10d2b}
     .sidebar-link .nav-icon{width:20px;text-align:center;font-size:15px}
     .sidebar-divider{height:1px;background:#f1dfe2;margin:8px 3px}
@@ -91,7 +91,7 @@
     .dash-card{min-width:0}
     .dash-card section[id],.dash-card .profile-box[id],.dash-card .dash-head[id]{scroll-margin-top:20px}
     @media(max-width:850px){.dashboard-shell{grid-template-columns:1fr}.feature-sidebar{position:relative;top:auto;max-height:none}.sidebar-nav{display:flex;overflow-x:auto;padding-bottom:5px}.sidebar-link{flex:0 0 auto;width:auto;white-space:nowrap}.sidebar-divider{display:none}.dash-card{padding:20px}}
-    .dash-card { background: #fff; border: 1px solid #f0e5e7; border-radius: 18px; padding: 20px; box-shadow: 0 16px 45px #3a11100d; }
+    .dash-card { background: #fff; border: 1px solid #f0e5e7; border-radius: 22px; padding: 30px; box-shadow: 0 16px 45px #3a11100d; }
     .dash-head { display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; }
     .pill { background: var(--soft); color: var(--red); padding: 7px 11px; border-radius: 30px; font-size: 11px; font-weight: 800; }
     .profile-box { margin: 25px 0; padding: 20px; background: #fff8f9; border: 1px solid #f6e1e5; border-radius: 15px; }
@@ -220,17 +220,16 @@
 
     /* MSMI single-feature workspace and member chat */
     .portal-page{display:none!important}.portal-page.portal-page-active{display:block!important}
-    .member-workspace{display:grid;grid-template-columns:minmax(270px, .72fr) minmax(0,1.55fr);gap:12px;margin-top:12px}
-    .member-list-panel,.member-detail-panel{border:1px solid #f0dfe2;border-radius:12px;background:#fff;padding:11px;min-width:0}
-    .member-list-panel .v2-list{max-height:min(70vh,760px);min-height:420px;overflow-y:auto;padding-right:3px}.member-contact{min-height:62px;padding:9px 8px}.member-contact .note-meta{margin:2px 0 0;font-size:10px}
+    .member-workspace{display:grid;grid-template-columns:minmax(220px, .85fr) minmax(0,1.5fr);gap:16px;margin-top:14px}
+    .member-list-panel,.member-detail-panel{border:1px solid #f0dfe2;border-radius:15px;background:#fff;padding:14px;min-width:0}
     .member-contact{display:flex;align-items:center;gap:11px;width:100%;border:1px solid transparent;background:#fff;text-align:left;padding:10px;border-radius:12px;cursor:pointer;margin:4px 0;color:var(--ink)}
     .member-contact:hover,.member-contact.selected{background:#fff3f5;border-color:#f1c3cb}
-    .member-avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex:0 0 43px;background:linear-gradient(145deg,#e21b3c,#85091e);color:#fff;font-weight:850;overflow:hidden;background-size:cover;background-position:center}
+    .member-avatar{width:43px;height:43px;border-radius:50%;display:grid;place-items:center;flex:0 0 43px;background:linear-gradient(145deg,#e21b3c,#85091e);color:#fff;font-weight:850;overflow:hidden;background-size:cover;background-position:center}
     .member-avatar.large{width:76px;height:76px;flex-basis:76px;font-size:22px}
     .member-presence{font-size:11px;color:#6b7280}.member-presence.online{color:#07834b;font-weight:800}
     .member-chat{display:none;margin-top:16px;border:1px solid #f0dfe2;border-radius:15px;overflow:hidden;background:#f7f4f4}
     .member-chat.open{display:block}.member-chat-head{padding:12px 15px;background:#fff;border-bottom:1px solid #eadde0;display:flex;align-items:center;gap:10px}
-    .member-chat-thread{height: min(58vh,620px);min-height:420px;overflow:auto;padding:15px;display:flex;flex-direction:column;gap:8px;background:linear-gradient(#f9f5f4,#f4efec)}
+    .member-chat-thread{height:330px;overflow:auto;padding:15px;display:flex;flex-direction:column;gap:8px;background:linear-gradient(#f9f5f4,#f4efec)}
     .chat-bubble{max-width:min(78%,520px);padding:9px 12px;border-radius:13px;background:#fff;box-shadow:0 1px 2px #0000000b;overflow-wrap:anywhere;white-space:pre-wrap;font-size:13px;line-height:1.45}
     .chat-bubble.mine{align-self:flex-end;background:#fce0e5;border-bottom-right-radius:4px}.chat-bubble.theirs{align-self:flex-start;border-bottom-left-radius:4px}
     .chat-bubble small{display:block;text-align:right;color:#777;font-size:9px;margin-top:5px}
@@ -242,16 +241,65 @@
     .admin-storage-stat strong{font-size:23px;color:#a80e27;display:block}
     .auth-summary{display:grid;gap:10px;margin-top:24px}.auth-summary-item{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:#fff}
     .auth-summary-item b{color:#ffe0e5}
-    @media(max-width:850px){.member-workspace{grid-template-columns:minmax(0,1fr)}.member-chat-thread{height:55vh;min-height:300px}.member-chat-compose{flex-wrap:wrap}.member-chat-compose button{flex:1}}
+    @media(max-width:720px){.member-workspace{grid-template-columns:1fr}.member-chat-thread{height:280px}.member-chat-compose{flex-wrap:wrap}.member-chat-compose button{flex:1}}
 
 
-    .overview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0 4px}
-    .overview-tile{min-width:0;border:1px solid #f0d8dc;border-radius:13px;background:linear-gradient(145deg,#fff,#fff8f9);padding:14px}
-    .overview-tile-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.overview-tile h3{font-size:14px;margin:0}
-    .overview-profile{grid-row:span 2}.overview-profile-row{display:flex;align-items:center;gap:12px}.overview-profile-row strong{font-size:14px}.overview-about,.overview-announcement{font-size:12px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere;color:#4b4b4b;max-height:110px;overflow:auto}
-    .overview-notification-list{display:grid;gap:7px;max-height:180px;overflow:auto}.overview-notification{border-bottom:1px solid #f0e5e7;padding:6px 0;font-size:11px}.overview-notification strong{display:block;font-size:12px}.overview-notification small{color:#777}
-    .danger-zone{margin-top:22px;padding:15px;border:1px solid #efb5bd;border-radius:12px;background:#fff6f7}.danger-zone h3{margin:0 0 6px;color:#a10f29;font-size:15px}.danger-zone p{font-size:12px;line-height:1.5;color:#6b3a42}.danger-button{border:0;border-radius:9px;background:#a10f29;color:white;padding:10px 14px;font-weight:800;cursor:pointer}
-    @media(max-width:720px){.overview-grid{grid-template-columns:1fr}.overview-profile{grid-row:auto}.dashboard{width:calc(100% - 14px);margin:8px auto}.dash-card{padding:13px}.feature-sidebar{padding:8px}.sidebar-link{padding:8px}}
+    /* MSMI V4 compact professional workspace */
+    .dashboard{width:min(1500px,calc(100% - 20px));margin:12px auto}
+    .dashboard-shell{grid-template-columns:218px minmax(0,1fr);gap:12px}
+    .feature-sidebar{top:10px;max-height:calc(100vh - 20px);padding:10px;border-radius:14px}
+    .sidebar-brand{padding:6px 8px 10px;margin-bottom:7px}
+    .sidebar-nav{gap:3px}
+    .sidebar-link{padding:8px 9px;font-size:12px;border-radius:8px}
+    .dash-card{padding:16px;border-radius:16px;min-height:calc(100vh - 24px)}
+    .portal-page-active{animation:msmiPageIn .22s ease both}
+    @keyframes msmiPageIn{from{opacity:.45;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+    .v2-panel,.messages-box,.public-note-box,.notepad-box,.announcement-card,.password-card,.profile-box{margin:0 0 12px;padding:15px;border-radius:13px}
+    .sub{margin-bottom:14px}
+    .v2-list{max-height:unset}
+    .overview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+    .overview-card{min-width:0;border:1px solid #f0d8dc;border-radius:13px;padding:14px;background:linear-gradient(145deg,#fff,#fff7f8);box-shadow:0 5px 18px #9f0d2409}
+    .overview-card h3{font-size:13px;margin:0 0 8px;color:#9f0d24}
+    .overview-card p{font-size:12px;line-height:1.5;margin:5px 0;overflow-wrap:anywhere}
+    .overview-card .tool-btn{margin-top:8px}
+    .overview-avatar{display:flex;align-items:center;gap:10px;min-width:0}
+    .overview-avatar .member-avatar{width:46px;height:46px;flex-basis:46px}
+    .member-workspace{display:grid;grid-template-columns:minmax(230px,280px) minmax(190px,240px) minmax(0,1fr);gap:10px;margin-top:12px;align-items:stretch}
+    .member-list-panel,.member-detail-panel{padding:11px;border-radius:12px;min-height:500px}
+    .member-list-panel{display:flex;flex-direction:column;min-width:0}
+    #memberContactList{max-height:calc(100vh - 250px);min-height:360px;overflow:auto;gap:4px}
+    .member-contact{padding:9px 8px;margin:2px 0;gap:9px;border-radius:10px}
+    .member-contact strong{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .member-contact small{display:block;font-size:10px}
+    .member-avatar{position:relative;isolation:isolate}
+    .member-avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit;z-index:1}
+    .member-avatar.large img{width:100%;height:100%}
+    .member-chat{display:flex;flex-direction:column;min-width:0;min-height:500px;height:calc(100vh - 160px);max-height:850px;margin:0;border-radius:13px}.member-chat.open{display:flex}
+    .member-chat-head{min-height:58px;justify-content:space-between;gap:8px;padding:9px 12px}
+    .member-chat-thread{height:auto;min-height:0;flex:1;padding:14px;gap:9px;overscroll-behavior:contain}
+    .chat-bubble{position:relative;max-width:min(82%,620px);padding:10px 12px;border-radius:14px;font-size:13px;box-shadow:0 2px 5px #0000000b;animation:msmiBubbleIn .16s ease both}
+    @keyframes msmiBubbleIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+    .chat-bubble .chat-meta{display:flex;align-items:center;justify-content:flex-end;gap:6px;color:#777;font-size:9px;margin-top:5px}
+    .chat-bubble .chat-actions{display:flex;gap:5px;margin-top:5px;justify-content:flex-end}
+    .chat-bubble .chat-actions button{border:0;background:transparent;color:#9f0d24;font-size:10px;padding:2px 4px;cursor:pointer}
+    .member-chat-compose{flex-wrap:nowrap;padding:10px;gap:8px}
+    .member-chat-compose textarea{min-height:42px;max-height:100px;resize:none}
+    .member-chat-compose button{width:auto;min-width:76px;max-width:100px}
+    .member-detail-panel{display:flex;flex-direction:column;gap:10px}
+    .member-detail-panel .member-profile-about{margin-top:0}
+    .member-detail-panel .primary{margin-top:auto}
+    .chat-live-label{font-size:10px;color:#07834b;white-space:nowrap}
+    .chat-live-label.offline{color:#9a6b00}
+    .danger-btn{border:1px solid #e5aab4!important;background:#fff5f6!important;color:#b42318!important}
+    .danger-zone{border:1px solid #efc1c8;border-radius:12px;padding:14px;background:#fff8f9;margin-top:18px}
+    .danger-zone h3{margin:0 0 6px;color:#a10f29;font-size:15px}
+    .danger-zone p{font-size:12px;line-height:1.5;color:#666}
+    .danger-zone input{max-width:420px}
+    .compact-action{width:auto!important;max-width:none!important;padding:9px 13px!important}
+    @media(max-width:1100px){.member-workspace{grid-template-columns:minmax(220px,280px) minmax(0,1fr)}.member-detail-panel{grid-column:2;grid-row:1}.member-chat{grid-column:1/-1;height:560px}.member-list-panel{grid-row:1/3}.overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:760px){.dashboard{width:calc(100% - 12px);margin:6px auto}.dashboard-shell{grid-template-columns:1fr;gap:8px}.feature-sidebar{position:relative;top:auto;max-height:none;padding:8px}.sidebar-nav{display:flex;overflow-x:auto;gap:4px}.sidebar-link{flex:0 0 auto;white-space:nowrap}.dash-card{padding:10px;min-height:unset}.member-workspace{grid-template-columns:1fr}.member-list-panel,.member-detail-panel{min-height:unset;grid-column:auto;grid-row:auto}.member-list-panel #memberContactList{max-height:320px;min-height:140px}.member-chat{grid-column:auto;height:64vh;min-height:430px}.overview-grid{grid-template-columns:1fr}.member-chat-compose{flex-wrap:nowrap}.member-chat-compose button{flex:0 0 76px}.chat-bubble{max-width:90%}}
+    @media(prefers-reduced-motion:reduce){.portal-page-active,.chat-bubble{animation:none!important}}
+
   </style>
 </head>
 <body>
@@ -365,15 +413,15 @@
       <section class="dash-card">
       <section class="portal-page portal-page-active" id="overviewPage">
       <div class="dash-head" id="dashboardOverview">
-        <div><div class="eyebrow" style="color:#a80e27">MSMI MEMBER AREA</div><h2 style="margin-top:8px">Your dashboard</h2></div>
+        <div><div class="eyebrow" style="color:#a80e27">MSMI MEMBER AREA</div><h2 style="margin-top:8px">Welcome to MSMI</h2><p class="sub" style="margin:5px 0 0">Your account, community updates and messages in one place.</p></div>
         <span class="pill">SIGNED IN</span>
       </div>
-      <p class="sub">Welcome to your MSMI workspace. Your profile, official announcements and latest notifications are shown here.</p>
       <div class="overview-grid">
-        <article class="overview-tile overview-profile"><div class="overview-tile-head"><h3>My account</h3><span class="pill">PROFILE</span></div><div class="overview-profile-row"><div class="member-avatar large" id="overviewAvatar">MS</div><div><strong id="overviewDisplayName">Loading profile…</strong><div class="note-meta" id="overviewUsername">@username</div><div class="member-presence" id="overviewPresence">Member account</div></div></div><p class="overview-about" id="overviewAbout">Your About Me details will appear here.</p><button class="tool-btn" type="button" id="overviewEditProfile">Edit profile</button></article>
-        <article class="overview-tile"><div class="overview-tile-head"><h3>MSMI announcement</h3><span class="pill">OFFICIAL</span></div><p id="overviewAnnouncement" class="overview-announcement">Loading latest announcement…</p><button class="tool-btn" type="button" id="overviewOpenAnnouncement">View announcement</button></article>
-        <article class="overview-tile overview-notifications"><div class="overview-tile-head"><h3>Recent notifications</h3><span class="pill" id="overviewUnread">0 unread</span></div><div id="overviewNotificationList" class="overview-notification-list"><p class="note-meta">Loading notifications…</p></div><button class="tool-btn" type="button" id="overviewOpenNotifications">View all notifications</button></article>
+        <article class="overview-card"><h3>MY ACCOUNT</h3><div class="overview-avatar"><div class="member-avatar" id="overviewAvatar">MS</div><div style="min-width:0"><strong id="overviewName">Loading profile…</strong><p id="overviewStatus">MSMI member</p></div></div><p id="overviewBio">Your profile summary appears here.</p><button class="tool-btn" type="button" data-open-page="profileSummary">View profile</button></article>
+        <article class="overview-card"><h3>MSMI ANNOUNCEMENT</h3><p id="overviewAnnouncement">Loading latest announcement…</p><button class="tool-btn" type="button" data-open-page="announcementCard">View announcement</button></article>
+        <article class="overview-card"><h3>NOTIFICATIONS</h3><p id="overviewNotificationCount">Loading notifications…</p><p id="overviewNotificationPreview">Your latest alerts appear here.</p><button class="tool-btn" type="button" data-open-page="v2Notifications">Open notifications</button></article>
       </div>
+      <div class="overview-card" style="margin-top:12px"><h3>QUICK ACCESS</h3><div class="v2-actions"><button class="tool-btn" type="button" data-open-page="memberDirectory">Members & chat</button><button class="tool-btn" type="button" data-open-page="privateEditorBox">Private notepad</button><button class="tool-btn" type="button" data-open-page="v2CloudDrive">Cloud drive</button><button class="tool-btn" type="button" data-open-page="v2Groups">Group chat</button></div></div>
       </section>
       <div class="profile-box portal-page" id="profileSummary">
         <div class="section-title" style="justify-content:flex-start;gap:14px;margin-bottom:14px"><div class="member-avatar large" id="accountProfileAvatar">MS</div><div><h2 id="accountProfileName" style="font-size:21px;margin:0 0 5px">Your profile</h2><span class="member-presence" id="accountProfileStatus">Member account</span></div></div>
@@ -439,10 +487,10 @@
       <section class="v2-panel portal-page" id="memberDirectory">
         <div class="section-title"><div><h2>MSMI Members</h2><p class="sub">Browse confirmed members, view their profile, online status and start a private conversation.</p></div><button class="tool-btn" id="refreshMemberDirectory" type="button">Refresh members</button></div>
         <div class="member-workspace">
-          <div class="member-list-panel"><label for="memberSearchInput">Search members</label><input id="memberSearchInput" type="search" placeholder="Search username or name…"><div id="memberContactList" class="v2-list"><p class="note-meta">Loading members…</p></div></div>
-          <div class="member-detail-panel" id="memberDetailPanel"><p class="note-meta">Select a member to view their profile.</p></div>
+          <div class="member-list-panel"><label for="memberSearchInput">Find MSMI members</label><input id="memberSearchInput" type="search" placeholder="Search name or username…"><div id="memberContactList" class="v2-list"><p class="note-meta">Loading members…</p></div></div>
+          <div class="member-detail-panel" id="memberDetailPanel"><p class="note-meta">Select a member to view their profile, online status and About Me.</p></div>
+          <div class="member-chat" id="memberChatPanel"><div class="member-chat-head" id="memberChatHeader"><strong>Private conversation</strong><span class="chat-live-label offline" id="memberChatInitialStatus">Choose a member</span></div><div class="member-chat-thread" id="memberChatThread"><p class="note-meta">Select a member and press Send message to start chatting.</p></div><div class="member-chat-compose"><textarea id="memberChatInput" rows="2" maxlength="5000" placeholder="Write a message…  (Enter to send, Shift+Enter for new line)"></textarea><button class="primary compact-action" id="memberChatSend" type="button">Send</button></div></div>
         </div>
-        <div class="member-chat" id="memberChatPanel"><div class="member-chat-head" id="memberChatHeader"></div><div class="member-chat-thread" id="memberChatThread"><p class="note-meta">Select a member to start chatting.</p></div><div class="member-chat-compose"><textarea id="memberChatInput" rows="2" maxlength="5000" placeholder="Type a message…"></textarea><button class="primary" id="memberChatSend" type="button">Send</button></div></div>
         <p class="message" id="memberDirectoryStatus" role="status"></p>
       </section>
 
@@ -500,7 +548,7 @@
         <div class="v2-actions"><button class="tool-btn" id="refreshLoginHistory">Refresh login history</button><button class="primary" id="signOutEverywhere">Sign out all devices</button></div>
         <div id="loginHistory" class="v2-list"><p class="note-meta">Loading login history…</p></div><p class="message" id="securityStatus" role="status"></p>
         <p class="note-meta">Login history records successful sign-ins from this portal and the browser user-agent. It does not expose passwords or claim to list every active device.</p>
-        <div class="danger-zone"><h3>Delete my account</h3><p>This permanently deletes your MSMI login and associated account records. This action cannot be undone. Download any files or notes you want to keep first.</p><button class="danger-button" id="deleteMyAccountBtn" type="button">Permanently delete my account</button><p class="message" id="deleteAccountStatus" role="status"></p></div>
+        <div class="danger-zone"><h3>Delete my MSMI account</h3><p>This permanently deletes your MSMI authentication account and linked profile data. This cannot be undone. Re-enter your current password to confirm your identity. The secure account-deletion Edge Function must be deployed first.</p><label for="deleteAccountPassword">Current password</label><input id="deleteAccountPassword" type="password" autocomplete="current-password" placeholder="Enter your password"><label for="deleteAccountConfirm">Type DELETE to confirm</label><input id="deleteAccountConfirm" type="text" autocomplete="off" placeholder="DELETE"><button class="tool-btn danger-btn compact-action" id="deleteAccountBtn" type="button" style="margin-top:10px">Permanently delete my account</button><p class="message" id="deleteAccountStatus" role="status"></p></div>
       </section>
 
       <section class="v2-panel portal-page" id="usernameSettings">
@@ -614,10 +662,7 @@
       if (sideLogout) sideLogout.addEventListener('click', () => document.getElementById('logoutBtn').click());
     }
     document.getElementById('editAccountProfileBtn')?.addEventListener('click',()=>{const link=document.querySelector('#featureSidebarNav a[href="#v2Profile"]');openPortalFeature('v2Profile',link);});
-    document.getElementById('overviewEditProfile')?.addEventListener('click',()=>{const link=document.querySelector('#featureSidebarNav a[href="#v2Profile"]');openPortalFeature('v2Profile',link);});
-    document.getElementById('overviewOpenAnnouncement')?.addEventListener('click',()=>{const link=document.querySelector('#featureSidebarNav a[href="#announcementCard"]');openPortalFeature('announcementCard',link);});
-    document.getElementById('overviewOpenNotifications')?.addEventListener('click',()=>{const link=document.querySelector('#featureSidebarNav a[href="#v2Notifications"]');openPortalFeature('v2Notifications',link);});
-
+    document.getElementById('overviewPage')?.addEventListener('click',event=>{const button=event.target.closest('[data-open-page]');if(!button)return;const id=button.dataset.openPage;const link=document.querySelector(`#featureSidebarNav a[href="#${id}"]`);openPortalFeature(id,link);});
     function ensureConfigured() {
       if (!supabaseClient) {
         alert("Connect Supabase first: edit SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY near the bottom of index.html.");
@@ -976,7 +1021,6 @@
       messageChannel=supabaseClient.channel('msmi-live-'+userId)
         .on('postgres_changes',{event:'*',schema:'public',table:'user_messages'},payload=>{
           loadMessages().catch(console.error);
-          if(selectedMember)loadMemberChat().catch(console.error);
           if(payload.eventType==='INSERT'&&payload.new?.recipient_id===userId){
             showMessage('messageStatus','New message received.','success');
           }
@@ -998,7 +1042,6 @@
     async function renderSession(session) {
       if (!session) { showDashboard(false); return; }
       showDashboard(true);
-      loadAnnouncement().catch(e=>console.warn('Announcement load:',e.message));
       $("profileEmail").textContent = session.user.email || "—";
       $("profileId").textContent = session.user.id;
       $("profileUsername").textContent = "Loading…";
@@ -1172,7 +1215,7 @@
 
     async function loadAnnouncement(){
       const {data,error}=await supabaseClient.from('admin_announcements').select('content,updated_at').eq('id',1).maybeSingle();
-      if(error) throw error; $('announcementText').textContent=data?.content||'No announcement has been published yet.';if($('overviewAnnouncement'))$('overviewAnnouncement').textContent=data?.content||'No announcement has been published yet.';
+      if(error) throw error; $('announcementText').textContent=data?.content||'No announcement has been published yet.';
       if($('adminAnnouncementInput')) $('adminAnnouncementInput').value=data?.content||'';
     }
     async function loadAdminConsole(){
@@ -1232,23 +1275,118 @@
  const node=(tag,cls,txt)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n;};
  const btn=(label,fn)=>{const b=node('button','',label);b.type='button';b.addEventListener('click',fn);return b;};
  async function currentUser(){const {data,error}=await supabaseClient.auth.getUser();if(error)throw error;if(!data.user)throw new Error('Sign in required.');v2User=data.user;return data.user;}
- let selectedMember=null, memberChatChannel=null, presenceTimer=null;
+ let selectedMember=null, memberChatChannel=null, presenceTimer=null, memberChatLoading=false, memberChatNeedsRefresh=false, memberChatRefreshTimer=null;
  const initials=s=>String(s||'MS').trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'MS';
  const isOnline=last=>!!last&&(Date.now()-new Date(last).getTime())<120000;
  async function updatePresence(){if(!v2User)return;const {error}=await supabaseClient.from('portal_presence').upsert({user_id:v2User.id,last_seen:new Date().toISOString()},{onConflict:'user_id'});if(error)console.warn('Presence update:',error.message);}
- function memberAvatar(url,label,large=false){const el=node('div','member-avatar'+(large?' large':''),initials(label));if(url){el.style.backgroundImage=`url("${url.replace(/"/g,'%22')}")`;el.textContent='';}return el;}
- async function loadMemberDirectory(){try{const u=await currentUser();const {data,error}=await supabaseClient.rpc('msmi_member_directory');if(error)throw error;const box=byId('memberContactList');box.replaceChildren();const q=byId('memberSearchInput').value.trim().toLowerCase();const members=(data||[]).filter(m=>m.id!==u.id).filter(m=>!q||`${m.username||''} ${m.display_name||''} ${m.status_message||''}`.toLowerCase().includes(q));members.forEach(m=>{const b=btn('',()=>selectMember(m));b.className='member-contact'+(selectedMember?.id===m.id?' selected':'');b.dataset.memberId=m.id;b.append(memberAvatar(m.avatar_url,m.display_name||m.username));const info=node('span');info.style.minWidth='0';const name=node('strong','',m.display_name||m.username||'MSMI member');const sub=node('small','member-presence'+(isOnline(m.last_seen)?' online':''),isOnline(m.last_seen)?'● Online':'○ Offline');info.append(name,sub,node('small','note-meta','@'+(m.username||'member')));b.append(info);box.append(b);});if(!members.length)box.append(node('p','note-meta',q?'No members match your search.':'No other confirmed members yet.'));}catch(e){status('memberDirectoryStatus',errText(e),'error');}}
- async function selectMember(m){selectedMember=m;const panel=byId('memberDetailPanel');panel.replaceChildren();const head=node('div','section-title');head.style.justifyContent='flex-start';head.append(memberAvatar(m.avatar_url,m.display_name||m.username,true));const identity=node('div');identity.append(node('h3','',m.display_name||m.username||'MSMI member'),node('small','member-presence'+(isOnline(m.last_seen)?' online':''),isOnline(m.last_seen)?'● Online now':'○ Offline'));head.append(identity);panel.append(head);panel.append(node('div','member-profile-about',m.bio||'This member has not added an About Me description yet.'));const statusText=m.status_message||'No status message';panel.append(node('p','note-meta','Status: '+statusText));panel.append(btn('Send message',async()=>{byId('memberChatPanel').classList.add('open');byId('memberChatHeader').replaceChildren(memberAvatar(m.avatar_url,m.display_name||m.username),node('strong','',m.display_name||m.username));await loadMemberChat();byId('memberChatInput').focus();}));byId('memberContactList').querySelectorAll('.member-contact').forEach(b=>b.classList.toggle('selected',b.dataset.memberId===m.id));}
- async function loadMemberChat(){if(!selectedMember)return;const u=await currentUser();const other=selectedMember.id;const filter=`and(sender_id.eq.${u.id},recipient_id.eq.${other}),and(sender_id.eq.${other},recipient_id.eq.${u.id})`;const {data,error}=await supabaseClient.from('user_messages').select('id,sender_id,recipient_id,body,created_at,is_read').or(filter).order('created_at',{ascending:true}).limit(300);if(error)throw error;const thread=byId('memberChatThread');thread.replaceChildren();(data||[]).forEach(m=>{const bubble=node('div','chat-bubble '+(m.sender_id===u.id?'mine':'theirs'));bubble.append(document.createTextNode(m.body));bubble.append(node('small','',new Date(m.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})));thread.append(bubble);if(m.recipient_id===u.id&&!m.is_read)supabaseClient.from('user_messages').update({is_read:true}).eq('id',m.id).then(()=>{});});if(!data?.length)thread.append(node('p','note-meta','No messages yet. Say hello to start this conversation.'));thread.scrollTop=thread.scrollHeight;}
- byId('refreshMemberDirectory').addEventListener('click',()=>loadMemberDirectory());byId('memberSearchInput').addEventListener('input',()=>loadMemberDirectory());
- byId('memberChatSend').addEventListener('click',async()=>{try{const body=byId('memberChatInput').value.trim();if(!selectedMember)throw new Error('Select a member first.');if(!body)throw new Error('Write a message first.');const {error}=await supabaseClient.rpc('send_message_to_member',{p_recipient_id:selectedMember.id,p_body:body});if(error)throw error;byId('memberChatInput').value='';await loadMemberChat();status('memberDirectoryStatus','Message sent.','success');}catch(e){status('memberDirectoryStatus',errText(e),'error');}});
+ function memberAvatar(url,label,large=false){
+   const el=node('div','member-avatar'+(large?' large':''),initials(label));
+   if(url){let src=url;if(!/^https?:\/\//i.test(src))src=supabaseClient.storage.from('msmi-avatars').getPublicUrl(src).data.publicUrl;const img=document.createElement('img');img.alt=(label||'Member')+' profile photo';img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';img.src=src;img.addEventListener('error',async()=>{if(img.dataset.fallbackTried){img.remove();return;}img.dataset.fallbackTried='1';try{const fallback=await supabaseClient.storage.from('msmi-cloud').createSignedUrl(url,1800);if(!fallback.error&&fallback.data?.signedUrl){img.src=fallback.data.signedUrl;return;}}catch(_){}img.remove();});el.append(img);}
+   return el;
+ }
+ function syncOverviewProfile(data,u){
+   const name=data?.display_name||data?.username||u.email||'MSMI Member';
+   byId('overviewName').textContent=name;byId('overviewStatus').textContent=data?.status_message||'MSMI member';byId('overviewBio').textContent=data?.bio||'Complete your About Me in Advanced profile.';
+   const avatar=byId('overviewAvatar');avatar.replaceChildren();avatar.textContent=initials(name);
+   if(data?.avatar_url){const img=document.createElement('img');img.alt='Your profile photo';img.loading='lazy';img.src=data.avatar_url;img.onerror=()=>img.remove();avatar.append(img);}
+ }
+ async function loadMemberDirectory(){
+   try{const u=await currentUser();const {data,error}=await supabaseClient.rpc('msmi_member_directory');if(error)throw error;
+     const box=byId('memberContactList');box.replaceChildren();const q=byId('memberSearchInput').value.trim().toLowerCase();
+     const members=(data||[]).filter(m=>m.id!==u.id).filter(m=>!q||`${m.username||''} ${m.display_name||''} ${m.status_message||''} ${m.bio||''}`.toLowerCase().includes(q));
+     members.forEach(m=>{const b=btn('',()=>selectMember(m));b.className='member-contact'+(selectedMember?.id===m.id?' selected':'');b.dataset.memberId=m.id;
+       b.append(memberAvatar(m.avatar_url,m.display_name||m.username));const info=node('span');info.style.minWidth='0';
+       const name=node('strong','',m.display_name||m.username||'MSMI member');const online=isOnline(m.last_seen);
+       const sub=node('small','member-presence'+(online?' online':''),online?'● Online':'○ Offline');info.append(name,sub,node('small','note-meta','@'+(m.username||'member')));b.append(info);box.append(b);
+     });
+     if(!members.length)box.append(node('p','note-meta',q?'No members match your search.':'No other confirmed members yet.'));
+   }catch(e){status('memberDirectoryStatus',errText(e),'error');}
+ }
+ async function selectMember(m){
+   selectedMember=m;const panel=byId('memberDetailPanel');panel.replaceChildren();
+   const head=node('div','section-title');head.style.justifyContent='flex-start';head.append(memberAvatar(m.avatar_url,m.display_name||m.username,true));
+   const identity=node('div');identity.append(node('h3','',m.display_name||m.username||'MSMI member'));
+   const online=isOnline(m.last_seen);identity.append(node('small','member-presence'+(online?' online':''),online?'● Online now':'○ Offline'));
+   head.append(identity);panel.append(head);panel.append(node('div','member-profile-about',m.bio||'This member has not added an About Me description yet.'));
+   panel.append(node('p','note-meta','Status: '+(m.status_message||'No status message')));
+   panel.append(node('p','note-meta','Username: @'+(m.username||'member')));
+   panel.append(btn('Send message',async()=>{await openMemberConversation(m);}));
+   byId('memberContactList').querySelectorAll('.member-contact').forEach(b=>b.classList.toggle('selected',b.dataset.memberId===m.id));
+ }
+ async function openMemberConversation(m){
+   selectedMember=m;const u=await currentUser();const head=byId('memberChatHeader');head.replaceChildren();
+   const left=node('div');left.style.display='flex';left.style.alignItems='center';left.style.gap='9px';left.append(memberAvatar(m.avatar_url,m.display_name||m.username));
+   const label=node('div');label.append(node('strong','',m.display_name||m.username||'MSMI member'),node('small','chat-live-label'+(isOnline(m.last_seen)?'':' offline'),isOnline(m.last_seen)?'● Online':'○ Offline'));left.append(label);
+   const live=node('span','chat-live-label offline','Connecting…');live.id='memberChatLiveStatus';head.append(left,live);
+   byId('memberChatPanel').classList.add('open');byId('memberChatThread').replaceChildren(node('p','note-meta','Loading conversation…'));
+   if(memberChatChannel){await supabaseClient.removeChannel(memberChatChannel);memberChatChannel=null;}
+   memberChatChannel=supabaseClient.channel('msmi-direct-'+u.id+'-'+m.id)
+     .on('postgres_changes',{event:'*',schema:'public',table:'user_messages'},payload=>{
+       const row=payload.new&&payload.new.id?payload.new:payload.old;
+       if(!row||!((row.sender_id===u.id&&row.recipient_id===m.id)||(row.sender_id===m.id&&row.recipient_id===u.id)))return;
+       const changedBody=payload.eventType==='INSERT'||payload.eventType==='DELETE'||(payload.eventType==='UPDATE'&&payload.old?.body!==payload.new?.body);
+       if(changedBody)scheduleMemberChatRefresh();
+     }).subscribe(state=>{
+       const statusEl=byId('memberChatLiveStatus');if(!statusEl)return;
+       if(state==='SUBSCRIBED'){statusEl.textContent='● Live';statusEl.classList.remove('offline');}
+       else if(state==='CHANNEL_ERROR'||state==='TIMED_OUT'||state==='CLOSED'){statusEl.textContent='Reconnecting…';statusEl.classList.add('offline');}
+       else{statusEl.textContent='Connecting…';statusEl.classList.add('offline');}
+     });
+   try{await loadMemberChat();}catch(e){byId('memberChatThread').replaceChildren(node('p','note-meta','Could not load conversation: '+errText(e)));}byId('memberChatInput').focus();
+ }
+ function scheduleMemberChatRefresh(){if(memberChatRefreshTimer)clearTimeout(memberChatRefreshTimer);memberChatRefreshTimer=setTimeout(()=>loadMemberChat().catch(e=>console.warn('Chat refresh:',e.message)),140);}
+ async function loadMemberChat(){
+   if(!selectedMember)return;if(memberChatLoading){memberChatNeedsRefresh=true;return;}memberChatLoading=true;
+   try{
+     const u=await currentUser(),other=selectedMember.id;
+     const filter=`and(sender_id.eq.${u.id},recipient_id.eq.${other}),and(sender_id.eq.${other},recipient_id.eq.${u.id})`;
+     const {data,error}=await supabaseClient.from('user_messages').select('id,sender_id,recipient_id,body,created_at,is_read,edited_at').or(filter).order('created_at',{ascending:false}).limit(100);
+     if(error)throw error;
+     const thread=byId('memberChatThread');const nearBottom=thread.scrollHeight-thread.scrollTop-thread.clientHeight<110;
+     const rows=(data||[]).reverse();const frag=document.createDocumentFragment();
+     rows.forEach(m=>{
+       const mine=m.sender_id===u.id;const bubble=node('div','chat-bubble '+(mine?'mine':'theirs'));
+       bubble.append(document.createTextNode(m.body));
+       const meta=node('small','chat-meta',new Date(m.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+(m.edited_at?' · edited':''));
+       if(mine&&m.is_read)meta.textContent+=' · ✓✓';else if(mine)meta.textContent+=' · ✓';bubble.append(meta);
+       if(mine){const actions=node('div','chat-actions');
+         actions.append(btn('Edit',async()=>{const next=prompt('Edit your message:',m.body);if(next===null)return;if(!next.trim())return alert('Message cannot be empty.');try{const {error}=await supabaseClient.rpc('edit_own_portal_message',{p_message_id:m.id,p_body:next.trim()});if(error)throw error;await loadMemberChat();}catch(e){status('memberDirectoryStatus',errText(e),'error');}}));
+         actions.append(btn('Delete',async()=>{if(!confirm('Delete this message for both participants?'))return;try{const {error}=await supabaseClient.rpc('delete_own_portal_message',{p_message_id:m.id});if(error)throw error;await loadMemberChat();}catch(e){status('memberDirectoryStatus',errText(e),'error');}}));bubble.append(actions);
+       }
+       frag.append(bubble);
+     });
+     thread.replaceChildren(frag);if(!rows.length)thread.append(node('p','note-meta','No messages yet. Say hello to start this conversation.'));
+     if(nearBottom||rows.length<=1)thread.scrollTop=thread.scrollHeight;
+     const unread=rows.filter(m=>m.recipient_id===u.id&&!m.is_read).map(m=>m.id);
+     if(unread.length){const {error:readError}=await supabaseClient.from('user_messages').update({is_read:true}).in('id',unread).eq('recipient_id',u.id);if(readError)console.warn('Read receipt update:',readError.message);}
+   }finally{memberChatLoading=false;if(memberChatNeedsRefresh){memberChatNeedsRefresh=false;scheduleMemberChatRefresh();}}
+ }
+ byId('refreshMemberDirectory').addEventListener('click',()=>loadMemberDirectory());
+ let memberSearchTimer=null;byId('memberSearchInput').addEventListener('input',()=>{if(memberSearchTimer)clearTimeout(memberSearchTimer);memberSearchTimer=setTimeout(()=>loadMemberDirectory(),180);});
+ byId('memberChatSend').addEventListener('click',async()=>{
+   const button=byId('memberChatSend');try{const body=byId('memberChatInput').value.trim();if(!selectedMember)throw new Error('Select a member first.');if(!body)throw new Error('Write a message first.');
+     button.disabled=true;const {error}=await supabaseClient.rpc('send_message_to_member',{p_recipient_id:selectedMember.id,p_body:body});if(error)throw error;
+     byId('memberChatInput').value='';await loadMemberChat();status('memberDirectoryStatus','Message sent.','success');
+   }catch(e){status('memberDirectoryStatus',errText(e),'error');}finally{button.disabled=false;}
+ });
  byId('memberChatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();byId('memberChatSend').click();}});
  window.MSMI_loadMemberDirectory=loadMemberDirectory;window.MSMI_refreshMessages=()=>loadMessages().catch(console.error);
 
- async function loadNotifications(){const u=await currentUser();const {data,error}=await supabaseClient.from('portal_notifications').select('id,title,body,kind,created_at,read_at').eq('user_id',u.id).order('created_at',{ascending:false}).limit(50);if(error)throw error;const box=byId('notificationList');box.replaceChildren();let unread=0;(data||[]).forEach(r=>{if(!r.read_at)unread++;const item=node('article','v2-item'+(!r.read_at?' unread':''));item.append(node('strong','',r.title||'Notification'),node('p','',r.body||''),node('small','',new Date(r.created_at).toLocaleString()));if(!r.read_at)item.append(btn('Mark read',async()=>{const {error}=await supabaseClient.from('portal_notifications').update({read_at:new Date().toISOString()}).eq('id',r.id);if(error)throw error;await loadNotifications();}));box.append(item);});if(!data?.length)box.append(node('p','note-meta','No notifications yet.'));byId('notificationCount').textContent=unread+' unread';byId('overviewUnread').textContent=unread+' unread';const preview=byId('overviewNotificationList');if(preview){preview.replaceChildren();(data||[]).slice(0,4).forEach(r=>{const n=node('div','overview-notification');n.append(node('strong','',r.title||'Notification'),node('span','',r.body||''),node('small','',new Date(r.created_at).toLocaleString()));preview.append(n);});if(!data?.length)preview.append(node('p','note-meta','No notifications yet.'));}}
+ async function loadNotifications(){const u=await currentUser();const {data,error}=await supabaseClient.from('portal_notifications').select('id,title,body,kind,created_at,read_at').eq('user_id',u.id).order('created_at',{ascending:false}).limit(50);if(error)throw error;const box=byId('notificationList');box.replaceChildren();let unread=0;(data||[]).forEach(r=>{if(!r.read_at)unread++;const item=node('article','v2-item'+(!r.read_at?' unread':''));item.append(node('strong','',r.title||'Notification'),node('p','',r.body||''),node('small','',new Date(r.created_at).toLocaleString()));if(!r.read_at)item.append(btn('Mark read',async()=>{const {error}=await supabaseClient.from('portal_notifications').update({read_at:new Date().toISOString()}).eq('id',r.id);if(error)throw error;await loadNotifications();}));box.append(item);});if(!data?.length)box.append(node('p','note-meta','No notifications yet.'));byId('notificationCount').textContent=unread+' unread';const summary=byId('overviewNotificationCount');if(summary)summary.textContent=unread+' unread notification'+(unread===1?'':'s');const preview=byId('overviewNotificationPreview');if(preview)preview.textContent=data?.[0]?.title||'You are all caught up.';}
  byId('refreshNotifications').addEventListener('click',()=>loadNotifications().then(()=>status('notificationStatus','Notifications refreshed.','success')).catch(e=>status('notificationStatus',errText(e),'error')));
  byId('markAllNotifications').addEventListener('click',async()=>{try{const u=await currentUser();const {error}=await supabaseClient.from('portal_notifications').update({read_at:new Date().toISOString()}).eq('user_id',u.id).is('read_at',null);if(error)throw error;await loadNotifications();status('notificationStatus','All notifications marked as read.','success');}catch(e){status('notificationStatus',errText(e),'error');}});
- async function loadAdvancedProfile(){const u=await currentUser();const {data,error}=await supabaseClient.from('profiles').select('username,display_name,bio,status_message,avatar_url').eq('id',u.id).maybeSingle();if(error)throw error;byId('profileDisplayName').value=data?.display_name||'';byId('profileBio').value=data?.bio||'';byId('profileStatus').value=data?.status_message||'';byId('accountProfileName').textContent=data?.display_name||data?.username||u.email||'MSMI Member';byId('accountProfileStatus').textContent=data?.status_message||'MSMI member';byId('accountProfileAbout').textContent=data?.bio||'Add a short About Me description in Advanced profile.';byId('overviewDisplayName').textContent=data?.display_name||data?.username||u.email||'MSMI Member';byId('overviewUsername').textContent='@'+(data?.username||'member');byId('overviewPresence').textContent=data?.status_message||'Member account';byId('overviewAbout').textContent=data?.bio||'No About Me details added yet.';const accountAvatar=byId('accountProfileAvatar');accountAvatar.textContent=initials(data?.display_name||data?.username||u.email);const avatar=byId('profileAvatarPreview');avatar.textContent=(data?.display_name||u.email||'MS').slice(0,2).toUpperCase();if(data?.avatar_url){let photoUrl=data.avatar_url;if(!/^https?:\/\//i.test(photoUrl)){const {data:signed,error:signedError}=await supabaseClient.storage.from('msmi-cloud').createSignedUrl(photoUrl,3600);photoUrl=!signedError?signed?.signedUrl:null;}if(photoUrl){avatar.style.backgroundImage=`url("${photoUrl}")`;avatar.classList.add('has-photo');accountAvatar.style.backgroundImage=`url("${photoUrl}")`;accountAvatar.textContent='';const ov=byId('overviewAvatar');ov.style.backgroundImage=`url("${photoUrl}")`;ov.textContent='';}else{avatar.style.backgroundImage='';avatar.classList.remove('has-photo');accountAvatar.style.backgroundImage='';byId('overviewAvatar').style.backgroundImage='';byId('overviewAvatar').textContent=initials(data?.display_name||data?.username||u.email);}}else{avatar.style.backgroundImage='';avatar.classList.remove('has-photo');accountAvatar.style.backgroundImage='';byId('overviewAvatar').style.backgroundImage='';byId('overviewAvatar').textContent=initials(data?.display_name||data?.username||u.email);}}
+ async function loadAdvancedProfile(){
+   const u=await currentUser();const {data,error}=await supabaseClient.from('profiles').select('username,display_name,bio,status_message,avatar_url').eq('id',u.id).maybeSingle();if(error)throw error;
+   byId('profileDisplayName').value=data?.display_name||'';byId('profileBio').value=data?.bio||'';byId('profileStatus').value=data?.status_message||'';
+   const display=data?.display_name||data?.username||u.email||'MSMI Member';
+   byId('accountProfileName').textContent=display;byId('accountProfileStatus').textContent=data?.status_message||'MSMI member';byId('accountProfileAbout').textContent=data?.bio||'Add a short About Me description in Advanced profile.';
+   const accountAvatar=byId('accountProfileAvatar');accountAvatar.textContent=initials(display);accountAvatar.style.backgroundImage='';
+   const avatar=byId('profileAvatarPreview');avatar.textContent=initials(display);avatar.style.backgroundImage='';avatar.classList.remove('has-photo');
+   let photoUrl=data?.avatar_url||'';
+   if(photoUrl&&!/^https?:\/\//i.test(photoUrl)){let signedResult=await supabaseClient.storage.from('msmi-avatars').createSignedUrl(photoUrl,3600);if(signedResult.error)signedResult=await supabaseClient.storage.from('msmi-cloud').createSignedUrl(photoUrl,3600);photoUrl=!signedResult.error?signedResult.data?.signedUrl:'';}
+   if(photoUrl){avatar.style.backgroundImage=`url("${photoUrl}")`;avatar.classList.add('has-photo');accountAvatar.style.backgroundImage=`url("${photoUrl}")`;accountAvatar.textContent='';}
+   syncOverviewProfile({...data,avatar_url:photoUrl},u);
+ }
  byId('saveAdvancedProfile').addEventListener('click',async()=>{try{const u=await currentUser();let avatar_url=null;const file=byId('profileAvatarFile').files[0];if(file){if(file.size>5*1024*1024)throw new Error('Profile image must be 5 MB or smaller.');if(!/^image\/(png|jpeg|webp)$/.test(file.type))throw new Error('Choose a PNG, JPG or WEBP image.');const avatarPath=`${u.id}/avatar-${Date.now()}.${file.name.split('.').pop().toLowerCase()}`;const {error:upErr}=await supabaseClient.storage.from('msmi-avatars').upload(avatarPath,file,{upsert:true,contentType:file.type});if(upErr)throw upErr;avatar_url=supabaseClient.storage.from('msmi-avatars').getPublicUrl(avatarPath).data.publicUrl;}
  const payload={display_name:byId('profileDisplayName').value.trim(),bio:byId('profileBio').value.trim(),status_message:byId('profileStatus').value.trim()};if(avatar_url)payload.avatar_url=avatar_url;const {error}=await supabaseClient.from('profiles').update(payload).eq('id',u.id);if(error)throw error;await loadAdvancedProfile();status('advancedProfileStatus','Profile saved.','success');}catch(e){status('advancedProfileStatus',errText(e),'error');}});
  async function loadSmartNotes(){const u=await currentUser();const {data,error}=await supabaseClient.from('user_notes_v2').select('id,title,content,updated_at').eq('user_id',u.id).order('updated_at',{ascending:false});if(error)throw error;const box=byId('smartNoteList');box.replaceChildren();(data||[]).forEach(r=>{const it=node('article','v2-item'+(activeSmartNote===r.id?' selected':''));it.append(node('strong','',r.title),node('small','',new Date(r.updated_at).toLocaleString()),btn('Open',()=>{activeSmartNote=r.id;byId('smartNoteTitle').value=r.title;byId('smartNoteContent').value=r.content||'';loadSmartNotes();}),btn('Download',()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([r.content||''],{type:'text/plain'}));a.download=(r.title||'note')+'.txt';a.click();URL.revokeObjectURL(a.href);}));box.append(it);});if(!data?.length)box.append(node('p','note-meta','No saved notes yet. Create your first note.'));}
@@ -1265,13 +1403,26 @@
  byId('sendGroupMessage').addEventListener('click',async()=>{try{if(!activeGroup)throw new Error('Select a group first.');const body=byId('groupMessageText').value.trim();if(!body)throw new Error('Write a message first.');const u=await currentUser();const {error}=await supabaseClient.from('group_messages').insert({group_id:activeGroup.id,sender_id:u.id,body});if(error)throw error;byId('groupMessageText').value='';await loadGroupMessages();}catch(e){status('groupStatus',errText(e),'error');}});
  async function loadLoginHistory(){const u=await currentUser();const {data,error}=await supabaseClient.from('portal_login_activity').select('id,created_at,user_agent').eq('user_id',u.id).order('created_at',{ascending:false}).limit(20);if(error)throw error;const box=byId('loginHistory');box.replaceChildren();(data||[]).forEach(r=>{const it=node('article','v2-item');it.append(node('strong','',new Date(r.created_at).toLocaleString()),node('p','',r.user_agent||'Browser details not recorded'));box.append(it);});if(!data?.length)box.append(node('p','note-meta','No portal login events recorded yet.'));}
  byId('refreshLoginHistory').addEventListener('click',()=>loadLoginHistory().then(()=>status('securityStatus','Login history refreshed.','success')).catch(e=>status('securityStatus',errText(e),'error')));
- byId('deleteMyAccountBtn').addEventListener('click',async()=>{const first=confirm('PERMANENT ACCOUNT DELETION\n\nThis will permanently delete your MSMI account. This cannot be undone. Continue?');if(!first)return;const typed=prompt('Type DELETE to confirm permanent account deletion:');if(typed!=='DELETE'){status('deleteAccountStatus','Deletion cancelled. Type DELETE exactly to confirm.','');return;}try{byId('deleteMyAccountBtn').disabled=true;status('deleteAccountStatus','Deleting your account…');const {error}=await supabaseClient.rpc('msmi_delete_my_account');if(error)throw error;await supabaseClient.auth.signOut({scope:'local'});alert('Your MSMI account has been deleted.');location.reload();}catch(e){status('deleteAccountStatus','Account deletion failed: '+errText(e)+' Ensure the V3.1 SQL migration has been run.','error');byId('deleteMyAccountBtn').disabled=false;}});
  byId('signOutEverywhere').addEventListener('click',async()=>{if(!confirm('Sign out this account from all devices? You will need to sign in again.'))return;try{const {error}=await supabaseClient.auth.signOut({scope:'global'});if(error)throw error;status('securityStatus','All sessions have been signed out.','success');location.reload();}catch(e){status('securityStatus',errText(e),'error');}});
+ byId('deleteAccountBtn').addEventListener('click',async()=>{
+   const password=byId('deleteAccountPassword').value;const confirmation=byId('deleteAccountConfirm').value.trim();
+   if(confirmation!=='DELETE'){status('deleteAccountStatus','Type DELETE exactly to confirm.','error');return;}
+   if(!password){status('deleteAccountStatus','Enter your current password.','error');return;}
+   if(!confirm('FINAL WARNING: permanently delete your MSMI account and linked data? This cannot be undone.'))return;
+   const button=byId('deleteAccountBtn');button.disabled=true;status('deleteAccountStatus','Verifying account and processing deletion…');
+   try{const u=await currentUser();const {error:reauthError}=await supabaseClient.auth.signInWithPassword({email:u.email,password});if(reauthError)throw new Error('Password verification failed. '+reauthError.message);
+     const {error}=await supabaseClient.functions.invoke('msmi-delete-account');if(error)throw error;
+     await supabaseClient.auth.signOut({scope:'local'});alert('Your MSMI account has been deleted.');location.reload();
+   }catch(e){status('deleteAccountStatus',errText(e)+' Make sure the msmi-delete-account Edge Function is deployed.', 'error');button.disabled=false;}
+ });
  async function loadAdminAnalytics(){const {data,error}=await supabaseClient.rpc('admin_portal_analytics');if(error)throw error;const box=byId('adminAnalytics');box.replaceChildren();const labels=[['Members',data.members],['Private notes',data.private_notes],['Messages',data.messages],['Groups',data.groups],['Group messages',data.group_messages],['Stored files',data.files]];labels.forEach(([k,v])=>{const it=node('div','v2-stat');it.append(node('strong','',String(v??0)),node('small','',k));box.append(it);});const storage=node('div','admin-storage-stat');const bytes=Number(data.storage_bytes||0);storage.append(node('strong','',(bytes/1048576).toFixed(2)+' MB'),node('small','',`Total cloud storage used · ${bytes.toLocaleString()} bytes across ${data.files||0} files (administrator only)`));box.append(storage);}
  byId('refreshAdminAnalytics').addEventListener('click',()=>loadAdminAnalytics().catch(e=>status('adminStatus','Analytics: '+errText(e),'error')));
  // Secure event recorder: the RPC associates this browser event with auth.uid() server-side.
  async function recordLogin(){if(!supabaseClient)return;try{await supabaseClient.rpc('record_portal_login',{p_user_agent:navigator.userAgent.slice(0,500)});}catch(e){console.warn('Login history recorder:',e.message);}}
  async function bootV2(){if(!supabaseClient||v2Booting)return;v2Booting=true;try{const u=await currentUser();if(v2BootedUserId===u.id)return;v2BootedUserId=u.id;if(notificationChannel)supabaseClient.removeChannel(notificationChannel);notificationChannel=supabaseClient.channel('msmi-notifications-'+u.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'portal_notifications',filter:'user_id=eq.'+u.id},()=>loadNotifications().catch(console.error)).on('postgres_changes',{event:'*',schema:'public',table:'portal_presence'},()=>loadMemberDirectory().catch(console.error)).subscribe();await Promise.allSettled([loadNotifications(),loadAdvancedProfile(),loadSmartNotes(),loadCloudFiles(),loadGroups(),loadLoginHistory(),loadMemberDirectory(),recordLogin(),updatePresence()]);if(presenceTimer)clearInterval(presenceTimer);presenceTimer=setInterval(()=>updatePresence(),60000);if((u.email||'').toLowerCase()==='shekmohammedirfan412@gmail.com'){await loadAdminAnalytics().catch(e=>status('adminStatus','Analytics: '+errText(e),'error'));}}catch(e){console.warn('MSMI V2 startup:',e.message);}finally{v2Booting=false;}}
+ // Keep the overview announcement preview synchronized with the existing announcement panel.
+ const announcementPreviewObserver=new MutationObserver(()=>{const source=byId('announcementText'),target=byId('overviewAnnouncement');if(source&&target){const value=source.textContent.trim();target.textContent=value&&value!=='Loading announcement…'?value.slice(0,240):'No announcement has been published yet.';}});
+ if(byId('announcementText'))announcementPreviewObserver.observe(byId('announcementText'),{childList:true,subtree:true,characterData:true});
  // Avoid an initial duplicate login event; only log when the auth state changes to SIGNED_IN.
  supabaseClient?.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'&&session){setTimeout(()=>bootV2(),0);}else if(event==='SIGNED_OUT'){v2User=null;v2BootedUserId=null;activeGroup=null;if(groupChannel)supabaseClient.removeChannel(groupChannel);if(notificationChannel)supabaseClient.removeChannel(notificationChannel);}});
  // Existing renderSession is in the preceding script. Boot once after the page has rendered its dashboard.
