@@ -49,6 +49,7 @@
     </script>
 
     <style>
+        /* Custom animations & fine-grained styling */
         @keyframes pulseGlow {
             0%, 100% { box-shadow: 0 0 15px rgba(220, 38, 38, 0.2); }
             50% { box-shadow: 0 0 30px rgba(220, 38, 38, 0.5); }
@@ -137,6 +138,12 @@
                 <option value="general">🧠 General Reasoning</option>
                 <option value="concise">⚡ Ultra Fast & Concise</option>
             </select>
+
+            <!-- Settings Button -->
+            <button id="settingsBtn" class="flex items-center space-x-1.5 px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white rounded-lg font-medium text-xs sm:text-sm shadow-md hover:shadow-glow-red transition-all duration-200">
+                <i class="fa-solid fa-key"></i>
+                <span class="hidden sm:inline">API Settings</span>
+            </button>
         </div>
     </header>
 
@@ -183,7 +190,7 @@
                     <span class="flex items-center gap-1.5">
                         <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Engine Ready
                     </span>
-                    <span id="keyStatusBadge" class="text-emerald-600 font-medium">Gemini 3 Flash</span>
+                    <span id="keyStatusBadge" class="text-emerald-600 font-medium">Key Active</span>
                 </div>
             </div>
         </aside>
@@ -205,7 +212,7 @@
                     </div>
                     <h2 class="text-2xl font-extrabold text-slate-900 mb-2">Welcome to MSMI AI</h2>
                     <p class="text-sm text-slate-600 mb-6 leading-relaxed">
-                        An ultra-responsive AI agent tailored for complex mathematical calculations, algorithm design, LaTeX rendering, and deep logical analysis. Powered by Gemini 3 Flash capabilities.
+                        An ultra-responsive AI agent tailored for complex mathematical calculations, algorithm design, LaTeX rendering, and deep logical analysis. Powered by Gemini 2.5/3.8 Flash capabilities.
                     </p>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
                         <div class="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
@@ -219,9 +226,9 @@
                             <p class="text-xs text-slate-500">Real-time typing low latency output.</p>
                         </div>
                         <div class="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
-                            <i class="fa-solid fa-microchip text-brand-600 mb-1 text-base"></i>
-                            <h3 class="text-xs font-bold text-slate-800">Gemini 3 Flash</h3>
-                            <p class="text-xs text-slate-500">Next-gen analytical engine.</p>
+                            <i class="fa-solid fa-shield-halved text-brand-600 mb-1 text-base"></i>
+                            <h3 class="text-xs font-bold text-slate-800">Secure API Key</h3>
+                            <p class="text-xs text-slate-500">Key is kept private in local storage.</p>
                         </div>
                     </div>
                 </div>
@@ -235,7 +242,7 @@
                     <!-- Prompt Textarea Wrapper -->
                     <div class="relative flex items-end bg-slate-50 border border-slate-200 rounded-2xl shadow-sm focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-red-100 transition-all">
                         
-                        <textarea id="userInput" rows="1" placeholder="Ask MSMI AI anything (e.g. solve $e^{i\pi} + 1 = 0$, code a sorting algorithm)..." 
+                        <textarea id="userInput" rows="1" placeholder="Ask MSMI AI anything (e.g. solve $e^{i\\pi} + 1 = 0$, code a sorting algorithm)..." 
                             class="w-full pl-4 pr-24 py-3.5 bg-transparent resize-none text-slate-800 text-sm focus:outline-none max-h-48 overflow-y-auto font-sans"></textarea>
                         
                         <div class="absolute right-2 bottom-2 flex items-center space-x-1.5 pb-0.5">
@@ -260,19 +267,72 @@
         </main>
     </div>
 
+    <!-- API Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-red-100 transform scale-95 transition-transform duration-200">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-lg bg-red-100 text-brand-700 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-gear"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900">API Configuration</h3>
+                </div>
+                <button id="closeSettingsBtn" class="text-slate-400 hover:text-slate-600 p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Google Gemini API Key</label>
+                    <div class="relative">
+                        <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-red-100 font-mono">
+                        <button id="toggleKeyVis" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600 text-xs">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">Your API Key is kept in local browser memory and never displayed publicly.</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Model Selection</label>
+                    <select id="modelSelect" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-brand-500 font-medium">
+                        <option value="gemini-2.5-flash">gemini-2.5-flash (Ultra Fast & Precise)</option>
+                        <option value="gemini-3-flash-preview">gemini-3-flash-preview (Latest Engine)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Temperature / Creativity</label>
+                    <div class="flex items-center space-x-3">
+                        <input type="range" id="tempInput" min="0" max="1" step="0.1" value="0.2" class="w-full accent-brand-600">
+                        <span id="tempVal" class="text-xs font-mono font-bold text-brand-700 min-w-[2rem]">0.2</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Lower values (0.1 - 0.3) provide standard deterministic mathematical precision.</p>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end space-x-2 border-t border-slate-100 pt-4">
+                <button id="saveSettingsBtn" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl text-sm shadow-md transition-all">
+                    Save Configuration
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript Application Core Logic -->
     <script>
         /************************************************************************
          * MSMI AI HARDCODED API KEY PLACEHOLDER
-         * Insert your Google Gemini API key here for immediate use:
+         * Insert your Google Gemini API key here if desired for immediate use:
          ************************************************************************/
-        const DEFAULT_API_KEY = "AQ.Ab8RN6JsZ8ETNluENv1O90IrZ1bp6SYdB57lYZA1wevq__VObw"; 
+        const DEFAULT_API_KEY = "PASTE THE MSMI ANNOUCEMENT BOARD KEY"; 
 
-        // State Management - Defaulted model to gemini-3-flash-preview
+        // State Management
         let appState = {
-            apiKey: localStorage.getItem('MSMI_GEMINI_KEY') || (DEFAULT_API_KEY !== "" ? DEFAULT_API_KEY : ''),
-            model: 'gemini-3-flash-preview',
-            temperature: 0.2,
+            apiKey: localStorage.getItem('MSMI_GEMINI_KEY') || (DEFAULT_API_KEY !== "YOUR_GEMINI_API_KEY_HERE" ? DEFAULT_API_KEY : ''),
+            model: localStorage.getItem('MSMI_MODEL') || 'gemini-2.5-flash',
+            temperature: parseFloat(localStorage.getItem('MSMI_TEMP')) || 0.2,
             mode: 'math',
             history: [],
             isGenerating: false
@@ -293,12 +353,10 @@
 - Always express mathematical concepts using LaTeX syntax ($...$ for inline and $$...$$ for block equations).
 - Show step-by-step rigorous proofs, calculations, and explanations.
 - Be precise, clean, structured, and logical.`,
-
             code: `You are MSMI AI, an expert software architect and algorithm engineer.
 - Provide production-grade, highly efficient code.
 - Always wrap code blocks with appropriate markdown language specifiers.
 - Explain time/space complexity using Big-O notation.`,
-
             general: `You are MSMI AI, an advanced AI reasoning system with deep problem-solving skills. Be concise, articulate, and accurate.`,
             concise: `You are MSMI AI. Provide ultra-concise, rapid direct answers with zero filler text.`
         };
@@ -308,19 +366,41 @@
         const userInput = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
         const voiceBtn = document.getElementById('voiceBtn');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsModal = document.getElementById('settingsModal');
+        const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+        const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+        const apiKeyInput = document.getElementById('apiKeyInput');
+        const toggleKeyVis = document.getElementById('toggleKeyVis');
+        const modelSelect = document.getElementById('modelSelect');
+        const tempInput = document.getElementById('tempInput');
+        const tempVal = document.getElementById('tempVal');
         const modePreset = document.getElementById('modePreset');
         const clearChatBtn = document.getElementById('clearChatBtn');
         const welcomeBanner = document.getElementById('welcomeBanner');
+        const keyStatusBadge = document.getElementById('keyStatusBadge');
         const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
         const sidebar = document.getElementById('sidebar');
 
         // Initialize Application
         window.addEventListener('DOMContentLoaded', () => {
+            updateKeyStatusUI();
             setupEventListeners();
             autoResizeTextarea();
         });
 
+        function updateKeyStatusUI() {
+            if (appState.apiKey && appState.apiKey.trim() !== '') {
+                keyStatusBadge.textContent = 'Key Active';
+                keyStatusBadge.className = 'text-emerald-600 font-medium';
+            } else {
+                keyStatusBadge.textContent = 'Key Missing';
+                keyStatusBadge.className = 'text-brand-600 font-medium';
+            }
+        }
+
         function setupEventListeners() {
+            // Send Click & Enter Key
             sendBtn.addEventListener('click', handleSendMessage);
             userInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -329,21 +409,65 @@
                 }
             });
 
+            // Character Counter & Auto Resize Textarea
             userInput.addEventListener('input', () => {
                 document.getElementById('charCount').textContent = `${userInput.value.length} characters`;
                 autoResizeTextarea();
             });
 
+            // Settings Modal Open/Close
+            settingsBtn.addEventListener('click', () => {
+                apiKeyInput.value = appState.apiKey;
+                modelSelect.value = appState.model;
+                tempInput.value = appState.temperature;
+                tempVal.textContent = appState.temperature;
+                settingsModal.classList.remove('hidden');
+                setTimeout(() => {
+                    settingsModal.classList.remove('opacity-0');
+                    settingsModal.firstElementChild.classList.remove('scale-95');
+                }, 10);
+            });
+
+            closeSettingsBtn.addEventListener('click', closeSettings);
+
+            // Toggle Password Visibility for API key input
+            toggleKeyVis.addEventListener('click', () => {
+                const type = apiKeyInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                apiKeyInput.setAttribute('type', type);
+                toggleKeyVis.innerHTML = type === 'password' ? '<i class="fa-solid fa-eye"></i>' : '<i class="fa-solid fa-eye-slash"></i>';
+            });
+
+            // Save Settings
+            saveSettingsBtn.addEventListener('click', () => {
+                appState.apiKey = apiKeyInput.value.trim();
+                appState.model = modelSelect.value;
+                appState.temperature = parseFloat(tempInput.value);
+
+                localStorage.setItem('MSMI_GEMINI_KEY', appState.apiKey);
+                localStorage.setItem('MSMI_MODEL', appState.model);
+                localStorage.setItem('MSMI_TEMP', appState.temperature);
+
+                updateKeyStatusUI();
+                closeSettings();
+            });
+
+            tempInput.addEventListener('input', () => {
+                tempVal.textContent = tempInput.value;
+            });
+
+            // Mode Selector Change
             modePreset.addEventListener('change', (e) => {
                 appState.mode = e.target.value;
             });
 
+            // Clear Chat History
             clearChatBtn.addEventListener('click', () => {
                 appState.history = [];
                 chatMessages.innerHTML = '';
                 if (welcomeBanner) chatMessages.appendChild(welcomeBanner);
             });
 
+            // Preset Prompt Cards
             document.querySelectorAll('.preset-prompt').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const text = btn.innerText.trim();
@@ -353,6 +477,7 @@
                 });
             });
 
+            // Voice Input setup (Web Speech API)
             if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 const recognition = new SpeechRecognition();
@@ -382,9 +507,18 @@
                 voiceBtn.style.display = 'none';
             }
 
+            // Mobile Sidebar Toggle
             mobileSidebarToggle.addEventListener('click', () => {
                 sidebar.classList.toggle('-translate-x-full');
             });
+        }
+
+        function closeSettings() {
+            settingsModal.classList.add('opacity-0');
+            settingsModal.firstElementChild.classList.add('scale-95');
+            setTimeout(() => {
+                settingsModal.classList.add('hidden');
+            }, 200);
         }
 
         function autoResizeTextarea() {
@@ -392,18 +526,28 @@
             userInput.style.height = Math.min(userInput.scrollHeight, 192) + 'px';
         }
 
+        // Main Messaging Logic
         async function handleSendMessage() {
             const text = userInput.value.trim();
             if (!text || appState.isGenerating) return;
 
+            if (!appState.apiKey) {
+                alert("Please click on 'API Settings' to enter your Google Gemini API Key.");
+                settingsBtn.click();
+                return;
+            }
+
+            // Hide Banner
             if (welcomeBanner && welcomeBanner.parentNode) {
                 welcomeBanner.remove();
             }
 
+            // Render User Message
             appendMessage('user', text);
             userInput.value = '';
             autoResizeTextarea();
 
+            // Prepare Assistant Placeholder
             const botMessageEl = appendMessage('assistant', '');
             const contentDiv = botMessageEl.querySelector('.markdown-body');
             contentDiv.classList.add('streaming-cursor');
@@ -412,6 +556,7 @@
             sendBtn.disabled = true;
 
             try {
+                // Build Payload with System Instructions and Chat History
                 const payloadContents = [
                     ...appState.history.map(msg => ({
                         role: msg.role === 'user' ? 'user' : 'model',
@@ -440,6 +585,7 @@
                     throw new Error(errData.error?.message || `API Error: ${response.status}`);
                 }
 
+                // Process Server-Sent Events (SSE) Streaming
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
                 let fullResponseText = '';
@@ -451,7 +597,7 @@
 
                     buffer += decoder.decode(value, { stream: true });
                     const lines = buffer.split('\n');
-                    buffer = lines.pop();
+                    buffer = lines.pop(); // keep partial line in buffer
 
                     for (const line of lines) {
                         if (line.startsWith('data: ')) {
@@ -460,76 +606,105 @@
                             try {
                                 const parsed = JSON.parse(jsonStr);
                                 const chunkText = parsed.candidates?.[0]?.content?.parts?.[0]?.text || '';
-                                if (chunkText) {
-                                    fullResponseText += chunkText;
-                                    contentDiv.innerHTML = marked.parse(fullResponseText);
-                                    
-                                    // Highlight code blocks
-                                    contentDiv.querySelectorAll('pre code').forEach((block) => {
-                                        hljs.highlightElement(block);
-                                    });
+                                fullResponseText += chunkText;
 
-                                    // Render KaTeX Math
-                                    renderMathInElement(contentDiv, {
-                                        delimiters: [
-                                            {left: '$$', right: '$$', display: true},
-                                            {left: '$', right: '$', display: false}
-                                        ],
-                                        throwOnError: false
-                                    });
-
-                                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                                }
+                                // Update UI dynamically
+                                contentDiv.innerHTML = marked.parse(fullResponseText);
+                                renderMathInElement(contentDiv, {
+                                    delimiters: [
+                                        {left: '$$', right: '$$', display: true},
+                                        {left: '$', right: '$', display: false},
+                                        {left: '\\(', right: '\\)', display: false},
+                                        {left: '\\[', right: '\\]', display: true}
+                                    ],
+                                    throwOnError: false
+                                });
+                                scrollToBottom();
                             } catch (e) {
-                                // Ignore JSON parse glitches on incomplete chunks
+                                // Ignore json parse errors for split chunks
                             }
                         }
                     }
                 }
 
                 contentDiv.classList.remove('streaming-cursor');
+                
+                // Add to internal history
                 appState.history.push({ role: 'user', content: text });
                 appState.history.push({ role: 'assistant', content: fullResponseText });
 
-            } catch (error) {
+                // Attach Copy code events
+                attachCopyButtons(botMessageEl);
+
+            } catch (err) {
                 contentDiv.classList.remove('streaming-cursor');
-                contentDiv.innerHTML = `<span class="text-brand-600 font-semibold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Error: ${error.message}</span>`;
+                contentDiv.innerHTML = `<div class="p-3 bg-red-50 border border-red-200 text-brand-700 rounded-lg font-medium text-xs">
+                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> Error: ${err.message}
+                </div>`;
             } finally {
                 appState.isGenerating = false;
                 sendBtn.disabled = false;
-                userInput.focus();
             }
         }
 
-        function appendMessage(role, text) {
-            const messageWrapper = document.createElement('div');
-            messageWrapper.className = `flex items-start space-x-3 ${role === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`;
-
-            const avatar = document.createElement('div');
-            avatar.className = `w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm font-bold flex-shrink-0 ${
-                role === 'user' ? 'bg-slate-800' : 'bg-brand-600 shadow-glow-red'
-            }`;
-            avatar.innerHTML = role === 'user' ? '<i class="fa-solid fa-user text-xs"></i>' : 'M';
-
-            const bubble = document.createElement('div');
-            bubble.className = `max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 text-sm ${
-                role === 'user' 
-                    ? 'bg-slate-900 text-white rounded-tr-none' 
-                    : 'bg-white border border-red-100 text-slate-800 rounded-tl-none shadow-sm markdown-body'
-            }`;
+        // DOM Message Renderer
+        function appendMessage(role, content) {
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex gap-3 max-w-4xl mx-auto ${role === 'user' ? 'justify-end' : 'justify-start'}`;
 
             if (role === 'user') {
-                bubble.textContent = text;
+                wrapper.innerHTML = `
+                    <div class="max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 bg-brand-600 text-white shadow-sm font-sans text-sm">
+                        ${escapeHtml(content).replace(/\n/g, '<br>')}
+                    </div>
+                    <div class="w-8 h-8 rounded-xl bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                        You
+                    </div>
+                `;
             } else {
-                bubble.innerHTML = text ? marked.parse(text) : '';
+                wrapper.innerHTML = `
+                    <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-700 to-brand-500 text-white flex items-center justify-center font-black text-xs shadow-glow-red flex-shrink-0 mt-1">
+                        M
+                    </div>
+                    <div class="max-w-[85%] sm:max-w-[85%] bg-slate-50 border border-red-50 rounded-2xl px-5 py-4 text-slate-800 shadow-sm relative group">
+                        <div class="markdown-body text-sm"></div>
+                    </div>
+                `;
             }
 
-            messageWrapper.appendChild(avatar);
-            messageWrapper.appendChild(bubble);
-            chatMessages.appendChild(messageWrapper);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            chatMessages.appendChild(wrapper);
+            scrollToBottom();
+            return wrapper;
+        }
 
-            return messageWrapper;
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        function attachCopyButtons(container) {
+            const preBlocks = container.querySelectorAll('pre');
+            preBlocks.forEach((pre) => {
+                if (pre.querySelector('.copy-btn')) return;
+                const button = document.createElement('button');
+                button.className = 'copy-btn absolute top-2 right-2 bg-slate-700 text-slate-200 text-xs px-2 py-1 rounded hover:bg-slate-600 transition-colors';
+                button.innerHTML = '<i class="fa-regular fa-copy"></i> Copy';
+                pre.style.position = 'relative';
+                
+                button.addEventListener('click', () => {
+                    const code = pre.querySelector('code')?.innerText || pre.innerText;
+                    navigator.clipboard.writeText(code).then(() => {
+                        button.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> Copied!';
+                        setTimeout(() => {
+                            button.innerHTML = '<i class="fa-regular fa-copy"></i> Copy';
+                        }, 2000);
+                    });
+                });
+                pre.appendChild(button);
+            });
         }
     </script>
 </body>
