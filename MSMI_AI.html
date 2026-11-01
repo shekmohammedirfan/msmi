@@ -1,1498 +1,711 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#b91c1c">
-<title>MSMI AI — Intelligence Studio</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/github-dark.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
-
-<style>
-:root{--red:#b91c1c;--red2:#ef4444}
-*{box-sizing:border-box}
-body{font-family:Inter,sans-serif}
-::-webkit-scrollbar{width:7px;height:7px}
-::-webkit-scrollbar-thumb{background:#fca5a5;border-radius:20px}
-.markdown-body{overflow-wrap:anywhere;line-height:1.7}
-.markdown-body p{margin:.55rem 0}
-.markdown-body h1,.markdown-body h2,.markdown-body h3{
-font-weight:800;color:#991b1b;margin:1rem 0 .45rem}
-.markdown-body h1{font-size:1.4rem}
-.markdown-body h2{font-size:1.2rem}
-.markdown-body h3{font-size:1.05rem}
-.markdown-body ul,.markdown-body ol{padding-left:1.5rem;margin:.6rem 0}
-.markdown-body ul{list-style:disc}
-.markdown-body ol{list-style:decimal}
-.markdown-body blockquote{
-border-left:3px solid #dc2626;background:#fff1f2;
-padding:.6rem .9rem;margin:.8rem 0;color:#475569}
-.markdown-body table{
-border-collapse:collapse;width:100%;display:block;
-overflow-x:auto;margin:.8rem 0}
-.markdown-body td,.markdown-body th{
-border:1px solid #fecaca;padding:.45rem .65rem;text-align:left}
-.markdown-body th{background:#fff1f2}
-.markdown-body pre{
-position:relative;border-radius:12px;padding:1rem;
-overflow:auto;margin:.8rem 0;background:#111827}
-.markdown-body code:not(pre code){
-background:#fee2e2;color:#991b1b;padding:.1rem .3rem;
-border-radius:4px;font-family:"Fira Code",monospace;font-size:.9em}
-.markdown-body pre code{font-family:"Fira Code",monospace;font-size:.83rem}
-.katex-display{overflow-x:auto;overflow-y:hidden;padding:.4rem 0}
-.bubble{animation:rise .18s ease-out}
-@keyframes rise{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-.glow{box-shadow:0 0 28px #ef444433}
-.dot{animation:pulse 1.2s infinite}
-@keyframes pulse{50%{opacity:.25}}
-button:disabled{opacity:.5;cursor:not-allowed}
-</style>
-</head>
-
-<body class="h-screen overflow-hidden bg-slate-50 text-slate-800">
-
-<div class="h-full flex flex-col">
-
-<header class="h-[66px] shrink-0 bg-white border-b border-red-100 px-3 sm:px-6 flex items-center justify-between shadow-sm z-20">
- <div class="flex items-center gap-3 min-w-0">
-  <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-800 to-red-500 text-white grid place-items-center font-black text-xl glow">M</div>
-  <div class="min-w-0">
-   <div class="font-extrabold text-lg sm:text-xl tracking-tight">
-    MSMI <span class="text-red-600">AI</span>
-    <span class="text-[10px] align-middle rounded-full bg-red-50 border border-red-100 text-red-700 px-2 py-1">V4.2</span>
-   </div>
-   <div class="hidden sm:block text-[11px] text-slate-500">
-    Advanced Mathematical & Analytical Intelligence Studio
-   </div>
-  </div>
- </div>
-
- <div class="flex items-center gap-2">
-  <select id="mode" class="max-w-[145px] sm:max-w-none text-xs border border-slate-200 rounded-lg bg-slate-50 px-2 py-2 outline-none focus:border-red-400">
-   <option value="math">🧮 Math & Science</option>
-   <option value="code">💻 Software Architect</option>
-   <option value="general">🧠 General</option>
-   <option value="concise">⚡ Concise</option>
-  </select>
-  <button id="newChat" title="New chat" class="w-9 h-9 rounded-lg hover:bg-red-50 text-slate-500 hover:text-red-700">
-   <i class="fa-solid fa-plus"></i>
-  </button>
-  <button id="logout" title="Sign out" class="hidden w-9 h-9 rounded-lg hover:bg-red-50 text-slate-500 hover:text-red-700">
-   <i class="fa-solid fa-right-from-bracket"></i>
-  </button>
- </div>
-</header>
-
-<div class="flex-1 min-h-0 flex">
-
-<aside id="sidebar" class="hidden md:flex w-64 shrink-0 bg-white border-r border-slate-200 flex-col">
-
- <div class="p-4 border-b border-slate-100">
-  <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3">Quick prompts</div>
-  <div class="space-y-2">
-   <button class="quick w-full text-left rounded-lg p-2.5 bg-slate-50 hover:bg-red-50 text-xs" data-prompt="Explain and solve this problem step by step: ">
-    <i class="fa-solid fa-square-root-variable text-red-500 mr-2"></i>Step-by-step mathematics
-   </button>
-   <button class="quick w-full text-left rounded-lg p-2.5 bg-slate-50 hover:bg-red-50 text-xs" data-prompt="Write an efficient, well-commented program for: ">
-    <i class="fa-solid fa-code text-red-500 mr-2"></i>Generate code
-   </button>
-   <button class="quick w-full text-left rounded-lg p-2.5 bg-slate-50 hover:bg-red-50 text-xs" data-prompt="Explain this electronics concept with a simple circuit-level example: ">
-    <i class="fa-solid fa-microchip text-red-500 mr-2"></i>Electronics tutor
-   </button>
-   <button class="quick w-full text-left rounded-lg p-2.5 bg-slate-50 hover:bg-red-50 text-xs" data-prompt="Summarize this topic with definitions, key points and examples: ">
-    <i class="fa-solid fa-book-open text-red-500 mr-2"></i>Study notes
-   </button>
-  </div>
- </div>
-
- <div class="p-4 flex-1 overflow-y-auto">
-  <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Recent chats</div>
-  <div id="historyList" class="space-y-1"></div>
- </div>
-
- <div class="p-3 border-t border-slate-100 text-[11px] text-slate-500 flex items-center justify-between">
-  <span><i class="fa-solid fa-shield-halved text-emerald-600 mr-1"></i>Secure connection</span>
-  <span id="status">Connecting</span>
- </div>
-</aside>
-
-<main class="flex-1 min-w-0 flex flex-col bg-white">
-
-<section id="authPanel" class="flex-1 overflow-y-auto grid place-items-center p-5">
- <div class="w-full max-w-sm bg-white border border-red-100 rounded-2xl p-6 shadow-xl shadow-red-100/40">
-  <div class="w-12 h-12 rounded-xl bg-red-600 text-white grid place-items-center text-xl font-black mx-auto mb-3">M</div>
-  <h1 class="text-center text-xl font-extrabold">Welcome to MSMI AI</h1>
-  <p class="text-center text-xs text-slate-500 mt-1 mb-5">Sign in to start your AI workspace</p>
-
-  <label class="block text-xs font-semibold mb-1">Email</label>
-  <input id="email" type="email" autocomplete="username" class="w-full border rounded-lg px-3 py-2.5 text-sm mb-3 outline-none focus:border-red-400" placeholder="you@example.com">
-
-  <label class="block text-xs font-semibold mb-1">Password</label>
-  <input id="password" type="password" autocomplete="current-password" class="w-full border rounded-lg px-3 py-2.5 text-sm mb-4 outline-none focus:border-red-400" placeholder="Your password">
-
-  <button id="signIn" class="w-full rounded-lg bg-red-600 hover:bg-red-700 text-white py-2.5 text-sm font-semibold">Sign in</button>
-  <button id="signUp" class="w-full rounded-lg border border-red-200 text-red-700 hover:bg-red-50 py-2.5 text-sm font-semibold mt-2">Create account</button>
-
-  <p id="authMessage" class="text-xs text-center text-slate-500 mt-4">
-   Sign in using your MSMI account.
-  </p>
- </div>
-</section>
-
-<section id="chatPanel" class="hidden flex-1 min-h-0 flex-col">
-
- <div id="messages" class="flex-1 overflow-y-auto p-3 sm:p-6 space-y-5">
-  <div id="welcome" class="max-w-2xl mx-auto text-center py-10 sm:py-16">
-   <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-800 to-red-500 text-white grid place-items-center text-2xl font-black mx-auto mb-4 glow">M</div>
-   <h2 class="text-2xl font-extrabold text-slate-900">What can I help you solve?</h2>
-   <p class="text-sm text-slate-500 mt-2">Ask questions, solve equations, learn engineering or analyze an image.</p>
-   <div class="grid sm:grid-cols-3 gap-2 mt-7 text-left">
-    <div class="p-3 rounded-xl border bg-red-50/50">
-     <i class="fa-solid fa-square-root-variable text-red-600"></i>
-     <b class="block text-xs mt-2">Mathematics</b>
-     <span class="text-[11px] text-slate-500">Stepwise solutions & LaTeX</span>
-    </div>
-    <div class="p-3 rounded-xl border bg-red-50/50">
-     <i class="fa-solid fa-code text-red-600"></i>
-     <b class="block text-xs mt-2">Programming</b>
-     <span class="text-[11px] text-slate-500">Code, debug & explain</span>
-    </div>
-    <div class="p-3 rounded-xl border bg-red-50/50">
-     <i class="fa-solid fa-image text-red-600"></i>
-     <b class="block text-xs mt-2">Image analysis</b>
-     <span class="text-[11px] text-slate-500">Upload diagrams or questions</span>
-    </div>
-   </div>
-  </div>
- </div>
-
- <div class="border-t border-slate-100 p-3 sm:p-4">
-  <div class="max-w-4xl mx-auto">
-   <div id="imagePreview" class="hidden mb-2 relative w-fit">
-    <img id="previewImg" class="max-h-24 rounded-lg border">
-    <button id="removeImage" class="absolute -top-2 -right-2 bg-slate-800 text-white w-6 h-6 rounded-full text-xs">×</button>
-   </div>
-
-   <div class="rounded-2xl border border-slate-200 bg-slate-50 focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 p-2 flex items-end gap-1">
-    <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp" class="hidden">
-    <button id="attach" title="Attach image" class="w-9 h-9 shrink-0 rounded-xl text-slate-400 hover:text-red-600 hover:bg-white">
-     <i class="fa-solid fa-paperclip"></i>
-    </button>
-    <button id="voice" title="Voice input" class="w-9 h-9 shrink-0 rounded-xl text-slate-400 hover:text-red-600 hover:bg-white">
-     <i class="fa-solid fa-microphone"></i>
-    </button>
-    <textarea id="prompt" rows="1" placeholder="Message MSMI AI…" class="flex-1 min-w-0 bg-transparent resize-none outline-none text-sm py-2 max-h-36"></textarea>
-    <button id="stop" class="hidden w-9 h-9 shrink-0 rounded-xl bg-slate-700 text-white">
-     <i class="fa-solid fa-stop"></i>
-    </button>
-    <button id="send" class="w-10 h-10 shrink-0 rounded-xl bg-red-600 hover:bg-red-700 text-white shadow-md">
-     <i class="fa-solid fa-arrow-up"></i>
-    </button>
-   </div>
-   <div class="flex justify-between text-[10px] text-slate-400 px-2 pt-2">
-    <span>Enter to send · Shift+Enter for a new line</span>
-    <span id="count">0</span>
-   </div>
-  </div>
- </div>
-</section>
-
-</main>
-</div>
-</div>
-<script>
-/* ==========================================
-   MSMI AI V4.2 — CONFIGURATION
-========================================== */
-
-// Use the same Supabase project URL and publishable key
-// from your existing MSMI AI V4.1 configuration.
-const SUPABASE_URL = "https://cffibglxemgwhxlrwxwp.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_RUEclwul1uUV4GcABFBmXg_PSpEJGeE";
-
-const MODEL_LABEL = "Gemini AI";
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
-
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-);
-
-/* ==========================================
-   APPLICATION STATE
-========================================== */
-
-let currentUser = null;
-let messages = [];
-let selectedImage = null;
-let selectedImageMime = null;
-let currentChatId = null;
-let isGenerating = false;
-let abortController = null;
-
-let chatHistory = [];
-
-const $ = id => document.getElementById(id);
-
-/* ==========================================
-   STATUS AND NOTIFICATIONS
-========================================== */
-
-function setStatus(message) {
-    $("status").textContent = message;
-}
-
-function showAuthMessage(message, error = false) {
-    $("authMessage").textContent = message;
-    $("authMessage").className =
-        "text-xs text-center mt-4 " +
-        (error ? "text-red-600" : "text-slate-500");
-}
-
-function notify(message) {
-    const old = document.getElementById("msmiToast");
-    if (old) old.remove();
-
-    const toast = document.createElement("div");
-    toast.id = "msmiToast";
-    toast.textContent = message;
-
-    toast.className =
-        "fixed bottom-5 left-1/2 -translate-x-1/2 z-50 " +
-        "bg-slate-900 text-white text-xs px-4 py-3 rounded-xl shadow-xl";
-
-    document.body.appendChild(toast);
-
-    setTimeout(() => toast.remove(), 3000);
-}
-
-/* ==========================================
-   AUTHENTICATION
-========================================== */
-
-async function signIn() {
-    const email = $("email").value.trim();
-    const password = $("password").value;
-
-    if (!email || !password) {
-        showAuthMessage("Enter your email and password.", true);
-        return;
-    }
-
-    $("signIn").disabled = true;
-    showAuthMessage("Signing in...");
-
-    try {
-        const { data, error } =
-            await supabaseClient.auth.signInWithPassword({
-                email,
-                password
-            });
-
-        if (error) throw error;
-
-        currentUser = data.user;
-        await openApplication();
-
-    } catch (error) {
-        showAuthMessage(error.message, true);
-    } finally {
-        $("signIn").disabled = false;
-    }
-}
-
-async function signUp() {
-    const email = $("email").value.trim();
-    const password = $("password").value;
-
-    if (!email || !password) {
-        showAuthMessage("Enter your email and password.", true);
-        return;
-    }
-
-    if (password.length < 6) {
-        showAuthMessage("Password must contain at least 6 characters.", true);
-        return;
-    }
-
-    $("signUp").disabled = true;
-    showAuthMessage("Creating your account...");
-
-    try {
-        const { data, error } =
-            await supabaseClient.auth.signUp({
-                email,
-                password
-            });
-
-        if (error) throw error;
-
-        if (data.session) {
-            currentUser = data.user;
-            await openApplication();
-        } else {
-            showAuthMessage(
-                "Account created. Check your email if confirmation is enabled."
-            );
-        }
-
-    } catch (error) {
-        showAuthMessage(error.message, true);
-    } finally {
-        $("signUp").disabled = false;
-    }
-}
-
-async function logout() {
-    if (isGenerating) {
-        abortGeneration();
-    }
-
-    const { error } = await supabaseClient.auth.signOut();
-
-    if (error) {
-        notify("Sign out failed: " + error.message);
-        return;
-    }
-
-    currentUser = null;
-    messages = [];
-    currentChatId = null;
-
-    $("chatPanel").classList.add("hidden");
-    $("chatPanel").classList.remove("flex");
-    $("authPanel").classList.remove("hidden");
-    $("logout").classList.add("hidden");
-
-    showAuthMessage("You have signed out.");
-}
-
-/* ==========================================
-   APPLICATION OPENING
-========================================== */
-
-async function openApplication() {
-    if (!currentUser) return;
-
-    $("authPanel").classList.add("hidden");
-
-    $("chatPanel").classList.remove("hidden");
-    $("chatPanel").classList.add("flex");
-
-    $("logout").classList.remove("hidden");
-
-    setStatus("Online");
-
-    loadChatHistory();
-
-    if (chatHistory.length > 0) {
-        openChat(chatHistory[0].id);
-    } else {
-        createNewChat();
-    }
-}
-
-/* ==========================================
-   LOCAL CHAT STORAGE
-========================================== */
-
-// This version stores chat history in this browser only.
-// It does not synchronize chats between different devices.
-
-function storageKey() {
-    return "msmi_ai_chats_" + currentUser.id;
-}
-
-function loadChatHistory() {
-    try {
-        chatHistory = JSON.parse(
-            localStorage.getItem(storageKey()) || "[]"
-        );
-
-        if (!Array.isArray(chatHistory)) {
-            chatHistory = [];
-        }
-
-    } catch (error) {
-        chatHistory = [];
-    }
-
-    renderHistory();
-}
-
-function saveChatHistory() {
-    if (!currentUser) return;
-
-    try {
-        localStorage.setItem(
-            storageKey(),
-            JSON.stringify(chatHistory)
-        );
-
-        renderHistory();
-
-    } catch (error) {
-        notify("Unable to save chat history.");
-    }
-}
-
-function createNewChat() {
-    if (isGenerating) {
-        abortGeneration();
-    }
-
-    currentChatId = crypto.randomUUID();
-    messages = [];
-
-    const chat = {
-        id: currentChatId,
-        title: "New conversation",
-        messages: [],
-        updatedAt: Date.now()
-    };
-
-    chatHistory.unshift(chat);
-
-    saveChatHistory();
-    drawMessages();
-
-    $("prompt").focus();
-}
-
-function saveCurrentChat() {
-    if (!currentUser || !currentChatId) return;
-
-    let chat = chatHistory.find(
-        item => item.id === currentChatId
-    );
-
-    if (!chat) {
-        chat = {
-            id: currentChatId,
-            title: "New conversation",
-            messages: [],
-            updatedAt: Date.now()
-        };
-
-        chatHistory.unshift(chat);
-    }
-
-    chat.messages = messages;
-    chat.updatedAt = Date.now();
-
-    const firstUserMessage = messages.find(
-        item => item.role === "user"
-    );
-
-    if (firstUserMessage) {
-        chat.title = firstUserMessage.text
-            .slice(0, 35)
-            .replace(/\s+/g, " ")
-            || "New conversation";
-    }
-
-    chatHistory.sort(
-        (a, b) => b.updatedAt - a.updatedAt
-    );
-
-    saveChatHistory();
-}
-
-function openChat(id) {
-    if (isGenerating) {
-        abortGeneration();
-    }
-
-    const chat = chatHistory.find(
-        item => item.id === id
-    );
-
-    if (!chat) return;
-
-    currentChatId = id;
-
-    messages = Array.isArray(chat.messages)
-        ? chat.messages
-        : [];
-
-    selectedImage = null;
-    selectedImageMime = null;
-
-    $("imagePreview").classList.add("hidden");
-
-    drawMessages();
-    renderHistory();
-}
-
-function deleteChat(id) {
-    const confirmed = confirm(
-        "Delete this conversation permanently from this browser?"
-    );
-
-    if (!confirmed) return;
-
-    chatHistory = chatHistory.filter(
-        item => item.id !== id
-    );
-
-    if (currentChatId === id) {
-        currentChatId = null;
-        messages = [];
-
-        if (chatHistory.length > 0) {
-            openChat(chatHistory[0].id);
-        } else {
-            createNewChat();
-        }
-    }
-
-    saveChatHistory();
-}
-
-/* ==========================================
-   CHAT HISTORY DISPLAY
-========================================== */
-
-function renderHistory() {
-    const container = $("historyList");
-    container.innerHTML = "";
-
-    chatHistory.forEach(chat => {
-        const row = document.createElement("div");
-
-        row.className =
-            "group flex items-center gap-1 rounded-lg " +
-            (chat.id === currentChatId
-                ? "bg-red-50 text-red-700"
-                : "hover:bg-slate-50 text-slate-600");
-
-        const openButton = document.createElement("button");
-
-        openButton.className =
-            "flex-1 min-w-0 text-left px-3 py-2 text-xs truncate";
-
-        openButton.textContent = chat.title || "New conversation";
-
-        openButton.onclick = () => openChat(chat.id);
-
-        const deleteButton = document.createElement("button");
-
-        deleteButton.className =
-            "w-8 h-8 shrink-0 rounded-lg opacity-0 " +
-            "group-hover:opacity-100 hover:bg-red-100 text-red-500";
-
-        deleteButton.innerHTML =
-            '<i class="fa-solid fa-trash-can text-[11px]"></i>';
-
-        deleteButton.title = "Delete conversation";
-
-        deleteButton.onclick = event => {
-            event.stopPropagation();
-            deleteChat(chat.id);
-        };
-
-        row.appendChild(openButton);
-        row.appendChild(deleteButton);
-
-        container.appendChild(row);
-    });
-}
-
-/* ==========================================
-   IMAGE CONVERSION — GEMINI FORMAT
-========================================== */
-
-function imageToPart(base64, mimeType) {
-    return {
-        inlineData: {
-            mimeType: mimeType,
-            data: base64
-        }
-    };
-}
-
-function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-
-        reader.onload = () => {
-            const result = reader.result;
-
-            if (typeof result !== "string") {
-                reject(new Error("Image conversion failed."));
-                return;
-            }
-
-            resolve(result.split(",")[1]);
-        };
-
-        reader.onerror = () => {
-            reject(new Error("Unable to read image."));
-        };
-
-        reader.readAsDataURL(file);
-    });
-}
-
-/* ==========================================
-   MESSAGE RENDERING
-========================================== */
-
-function escapeHTML(value) {
-    return String(value).replace(/[&<>"']/g, char => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#039;"
-    })[char]);
-}
-
-function renderMarkdown(text) {
-    marked.setOptions({
-        gfm: true,
-        breaks: true
-    });
-
-    const rawHTML = marked.parse(text || "");
-
-    return DOMPurify.sanitize(rawHTML);
-}
-
-function drawMessages() {
-    const container = $("messages");
-    container.innerHTML = "";
-
-    if (messages.length === 0) {
-        container.innerHTML = `
-          <div class="max-w-2xl mx-auto text-center py-10">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br
-            from-red-800 to-red-500 text-white grid place-items-center
-            text-2xl font-black mx-auto mb-4">M</div>
-            <h2 class="text-2xl font-extrabold text-slate-900">
-              What can I help you solve?
-            </h2>
-            <p class="text-sm text-slate-500 mt-2">
-              Ask questions, solve equations or analyze an image.
-            </p>
-          </div>
-        `;
-
-        return;
-    }
-
-    messages.forEach((message, index) => {
-        const wrapper = document.createElement("div");
-
-        wrapper.className =
-            "bubble flex gap-3 max-w-4xl mx-auto w-full " +
-            (message.role === "user"
-                ? "justify-end"
-                : "justify-start");
-
-        if (message.role === "user") {
-            const content = document.createElement("div");
-
-            content.className =
-                "max-w-[88%] sm:max-w-[80%] rounded-2xl " +
-                "rounded-tr-sm bg-red-600 text-white px-4 py-3 shadow-sm";
-
-            content.innerHTML = `
-                <div class="text-sm whitespace-pre-wrap break-words">
-                    ${escapeHTML(message.text)}
-                </div>
-            `;
-
-            if (message.image) {
-                const image = document.createElement("img");
-
-                image.src = message.image;
-                image.className =
-                    "mt-2 max-h-56 rounded-lg border border-white/30";
-
-                content.appendChild(image);
-            }
-
-            wrapper.appendChild(content);
-
-        } else {
-            const avatar = document.createElement("div");
-
-            avatar.className =
-                "w-8 h-8 shrink-0 rounded-lg bg-red-600 " +
-                "text-white grid place-items-center font-bold text-sm";
-
-            avatar.textContent = "M";
-
-            const content = document.createElement("div");
-
-            content.className =
-                "min-w-0 flex-1 max-w-[90%] text-sm text-slate-800";
-
-            const body = document.createElement("div");
-
-            body.className = "markdown-body";
-            body.innerHTML = renderMarkdown(message.text);
-
-            content.appendChild(body);
-
-            if (message.error) {
-                content.classList.add("text-red-600");
-            }
-
-            const actions = document.createElement("div");
-
-            actions.className =
-                "flex flex-wrap gap-3 mt-3 text-[11px] text-slate-400";
-
-            const copyButton = document.createElement("button");
-
-            copyButton.innerHTML =
-                '<i class="fa-regular fa-copy mr-1"></i>Copy';
-
-            copyButton.onclick = () => {
-                navigator.clipboard.writeText(message.text || "");
-                notify("Copied to clipboard.");
-            };
-
-            actions.appendChild(copyButton);
-
-            if (index === messages.length - 1 &&
-                !isGenerating &&
-                !message.error) {
-
-                const regenerateButton =
-                    document.createElement("button");
-
-                regenerateButton.innerHTML =
-                    '<i class="fa-solid fa-rotate-right mr-1"></i>Regenerate';
-
-                regenerateButton.onclick = regenerate;
-
-                actions.appendChild(regenerateButton);
-            }
-
-            content.appendChild(actions);
-
-            wrapper.appendChild(avatar);
-            wrapper.appendChild(content);
-        }
-
-        container.appendChild(wrapper);
-    });
-
-    if (window.renderMathInElement) {
-        renderMathInElement(container, {
-            delimiters: [
-                {left: "$$", right: "$$", display: true},
-                {left: "$", right: "$", display: false},
-                {left: "\\(", right: "\\)", display: false},
-                {left: "\\[", right: "\\]", display: true}
-            ],
-            throwOnError: false
-        });
-    }
-
-    container.scrollTop = container.scrollHeight;
-
-    if (window.hljs) {
-        container.querySelectorAll("pre code").forEach(block => {
-            hljs.highlightElement(block);
-        });
-    }
-}
-
-/* ==========================================
-   LOADING MESSAGE
-========================================== */
-
-function showTyping() {
-    const container = $("messages");
-
-    const typing = document.createElement("div");
-    typing.id = "typingIndicator";
-
-    typing.className =
-        "max-w-4xl mx-auto flex items-center gap-3 text-xs text-slate-400";
-
-    typing.innerHTML = `
-        <div class="w-8 h-8 rounded-lg bg-red-600 text-white
-        grid place-items-center font-bold">M</div>
-        <span>MSMI AI is thinking
-        <span class="dot"> ●</span>
-        <span class="dot"> ●</span>
-        <span class="dot"> ●</span>
-        </span>
-    `;
-
-    container.appendChild(typing);
-    container.scrollTop = container.scrollHeight;
-}
-
-function removeTyping() {
-    const typing = $("typingIndicator");
-    if (typing) typing.remove();
-}
-
-/* ==========================================
-   GEMINI REQUEST THROUGH SUPABASE SQL RPC
-========================================== */
-
-async function callGemini(contents, systemInstruction) {
-
-    // First RPC: start the Gemini request.
-    const { data: jobId, error: startError } =
-        await supabaseClient.rpc("msmi_start", {
-            p_contents: contents,
-            p_system_instruction: systemInstruction
-        });
-
-    if (startError) {
-        throw new Error(
-            "Could not start AI request: " + startError.message
-        );
-    }
-
-    if (!jobId) {
-        throw new Error("The server did not return a job ID.");
-    }
-
-    // Second RPC: poll for completion.
-    const maxAttempts = 60;
-
-    for (let attempt = 0; attempt < maxAttempts; attempt++) {
-
-        if (abortController?.signal.aborted) {
-            throw new DOMException(
-                "Request cancelled.",
-                "AbortError"
-            );
-        }
-
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        const { data, error } =
-            await supabaseClient.rpc("msmi_poll", {
-                p_job_id: jobId
-            });
-
-        if (error) {
-            throw new Error(
-                "AI response check failed: " + error.message
-            );
-        }
-
-        if (!data) continue;
-
-        if (data.status === "done") {
-            if (data.error) {
-                throw new Error(data.error);
-            }
-
-            const text =
-                data.text ||
-                data.response ||
-                data.output;
-
-            if (!text) {
-                throw new Error(
-                    "The AI server returned an empty response."
-                );
-            }
-
-            return text;
-        }
-
-        if (data.status === "error") {
-            throw new Error(
-                data.error || "Gemini request failed."
-            );
-        }
-    }
-
-    throw new Error(
-        "AI request timed out. Please try again."
-    );
-}
-</script>
-<script>
-/* ==========================================
-   SYSTEM INSTRUCTIONS
-========================================== */
-
-function getSystemInstruction() {
-    const mode = $("mode").value;
-
-    const base = `
-You are MSMI AI, an intelligent assistant.
-
-Give accurate, helpful and clearly structured answers.
-Use Markdown for formatting.
-Use LaTeX for mathematical equations.
-Explain calculations step by step when appropriate.
-Use examples for difficult concepts.
-For programming, provide complete working code and explanations.
-Never invent facts or claim to have performed actions you did not perform.
-`;
-
-    const instructions = {
-        math: `
-You are an expert mathematics, physics, chemistry and electronics tutor.
-Explain formulas, derivations and numerical problems step by step.
-Show units and intermediate calculations.
-Use LaTeX for equations.
-`,
-        code: `
-You are an expert software developer.
-Write complete, efficient, readable and properly commented code.
-Explain how to run the code.
-Identify and fix programming errors carefully.
-`,
-        general: `
-You are a knowledgeable general-purpose assistant.
-Answer questions clearly with useful examples.
-`,
-        concise: `
-Give direct, accurate and concise answers.
-Avoid unnecessary explanations.
-`
-    };
-
-    return base + (instructions[mode] || instructions.general);
-}
-
-/* ==========================================
-   SEND MESSAGE
-========================================== */
-
-async function sendMessage() {
-    if (!currentUser) {
-        notify("Please sign in first.");
-        return;
-    }
-
-    if (isGenerating) return;
-
-    const text = $("prompt").value.trim();
-
-    if (!text && !selectedImage) {
-        notify("Enter a message or attach an image.");
-        return;
-    }
-
-    if (!currentChatId) {
-        createNewChat();
-    }
-
-    const imageData = selectedImage;
-    const imageMime = selectedImageMime;
-
-    const userMessage = {
-        role: "user",
-        text: text || "Please analyze this image.",
-        image: imageData
-            ? `data:${imageMime};base64,${imageData}`
-            : null
-    };
-
-    messages.push(userMessage);
-
-    $("prompt").value = "";
-    $("prompt").style.height = "auto";
-    $("count").textContent = "0";
-
-    selectedImage = null;
-    selectedImageMime = null;
-
-    $("imagePreview").classList.add("hidden");
-
-    saveCurrentChat();
-    drawMessages();
-
-    await generateResponse(
-        imageData,
-        imageMime
-    );
-}
-
-/* ==========================================
-   GENERATE AI RESPONSE
-========================================== */
-
-async function generateResponse(imageData = null, imageMime = null) {
-
-    if (isGenerating) return;
-
-    isGenerating = true;
-    abortController = new AbortController();
-
-    $("send").disabled = true;
-    $("send").classList.add("hidden");
-    $("stop").classList.remove("hidden");
-
-    showTyping();
-
-    try {
-        // Build conversation contents from previous messages.
-        const contents = [];
-
-        const historyMessages = messages.slice(0, -1);
-
-        historyMessages.forEach(message => {
-            if (message.role !== "user" &&
-                message.role !== "assistant") {
-                return;
-            }
-
-            const parts = [];
-
-            if (message.text) {
-                parts.push({
-                    text: message.text
-                });
-            }
-
-            if (message.image) {
-                // Previous image data is included only when available.
-                const match = message.image.match(
-                    /^data:(image\/[^;]+);base64,(.+)$/
-                );
-
-                if (match) {
-                    parts.push(
-                        imageToPart(match[2], match[1])
-                    );
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSMI AI - Advanced Intelligence Studio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Fira Code -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Highlight.js for Code Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <!-- KaTeX for High-Speed Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                            800: '#991b1b',
+                            900: '#7f1d1d',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    boxShadow: {
+                        'glow-red': '0 0 20px rgba(220, 38, 38, 0.25)',
+                        'glow-red-lg': '0 0 35px rgba(220, 38, 38, 0.4)',
+                    }
                 }
             }
+        }
+    </script>
 
-            if (parts.length) {
-                contents.push({
-                    role: message.role === "assistant"
-                        ? "model"
-                        : "user",
-                    parts
-                });
-            }
-        });
-
-        // Add the latest user message.
-        const latest = messages[messages.length - 1];
-
-        const latestParts = [];
-
-        latestParts.push({
-            text: latest.text
-        });
-
-        if (imageData && imageMime) {
-            latestParts.push(
-                imageToPart(imageData, imageMime)
-            );
+    <style>
+        /* Custom animations & fine-grained styling */
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(220, 38, 38, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(220, 38, 38, 0.5); }
         }
 
-        contents.push({
-            role: "user",
-            parts: latestParts
+        .animate-glow {
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fca5a5;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #dc2626;
+        }
+
+        /* Markdown rendered content fine-tuning */
+        .markdown-body p { margin-bottom: 0.85rem; line-height: 1.65; }
+        .markdown-body h1, .markdown-body h2, .markdown-body h3 { 
+            font-weight: 700; 
+            margin-top: 1.2rem; 
+            margin-bottom: 0.6rem; 
+            color: #991b1b; 
+        }
+        .markdown-body h1 { font-size: 1.5rem; border-bottom: 2px solid #fee2e2; padding-bottom: 0.3rem; }
+        .markdown-body h2 { font-size: 1.25rem; }
+        .markdown-body h3 { font-size: 1.1rem; }
+        .markdown-body ul, .markdown-body ol { margin-left: 1.5rem; margin-bottom: 0.85rem; list-style-type: disc; }
+        .markdown-body ol { list-style-type: decimal; }
+        .markdown-body table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; border: 1px solid #fee2e2; }
+        .markdown-body th, .markdown-body td { border: 1px solid #fecdd3; padding: 0.5rem 0.8rem; text-align: left; }
+        .markdown-body th { background-color: #fff1f2; font-weight: 600; color: #991b1b; }
+        .markdown-body blockquote { border-left: 4px solid #dc2626; padding-left: 1rem; color: #4b5563; font-style: italic; background: #fff1f2; margin: 0.8rem 0; padding-top: 0.4rem; padding-bottom: 0.4rem; border-radius: 0 0.375rem 0.375rem 0; }
+
+        /* KaTeX rendering adjustments */
+        .katex-display { margin: 0.8em 0; overflow-x: auto; overflow-y: hidden; padding: 0.4rem 0; }
+        
+        /* Cursor animation for streaming */
+        .streaming-cursor::after {
+            content: '❚';
+            display: inline-block;
+            margin-left: 2px;
+            color: #dc2626;
+            animation: blink 0.8s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans h-screen flex flex-col overflow-hidden">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-white border-b border-red-100 shadow-sm px-4 lg:px-8 py-3 flex items-center justify-between z-20">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 to-brand-500 flex items-center justify-center text-white font-black text-xl shadow-glow-red tracking-wider">
+                M
+            </div>
+            <div>
+                <div class="flex items-center space-x-2">
+                    <h1 class="font-extrabold text-xl tracking-tight text-slate-900">MSMI <span class="text-brand-600">AI</span></h1>
+                    <span class="px-2 py-0.5 text-xs font-semibold bg-red-100 text-brand-700 rounded-full border border-red-200">v3.8 Ultra</span>
+                </div>
+                <p class="text-xs text-slate-500 hidden sm:block">Advanced Mathematical & Analytical Intelligence Studio</p>
+            </div>
+        </div>
+
+        <!-- Action Controls -->
+        <div class="flex items-center space-x-2 sm:space-x-3">
+            <!-- Clear Chat Button -->
+            <button id="clearChatBtn" title="Clear Conversation" class="p-2 text-slate-500 hover:text-brand-600 hover:bg-red-50 rounded-lg transition-colors duration-200">
+                <i class="fa-solid fa-trash-can text-lg"></i>
+            </button>
+
+            <!-- System Prompt / Reasoning Presets -->
+            <select id="modePreset" class="text-xs sm:text-sm bg-slate-100 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all">
+                <option value="math">🧮 Math & Science Expert</option>
+                <option value="code">💻 Software Architect</option>
+                <option value="general">🧠 General Reasoning</option>
+                <option value="concise">⚡ Ultra Fast & Concise</option>
+            </select>
+
+            <!-- Settings Button -->
+            <button id="settingsBtn" class="flex items-center space-x-1.5 px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white rounded-lg font-medium text-xs sm:text-sm shadow-md hover:shadow-glow-red transition-all duration-200">
+                <i class="fa-solid fa-key"></i>
+                <span class="hidden sm:inline">API Settings</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace Area -->
+    <div class="flex-1 flex overflow-hidden relative">
+
+        <!-- Sidebar (History & Quick Prompts) -->
+        <aside id="sidebar" class="w-72 bg-white border-r border-slate-200 flex flex-col transition-all duration-300 transform -translate-x-full md:translate-x-0 absolute md:relative z-10 h-full">
+            <div class="p-4 border-b border-slate-100 flex justify-between items-center">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Quick Templates</span>
+                <button id="newChatBtn" class="text-xs font-semibold text-brand-600 hover:text-brand-800 flex items-center gap-1">
+                    <i class="fa-solid fa-plus"></i> New Prompt
+                </button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-3 space-y-2">
+                <div class="text-xs font-semibold text-slate-500 px-2 py-1">Mathematics & Logic</div>
+                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-square-root-variable text-brand-500"></i>
+                    Solve & Step Matrix Eigenvalues
+                </button>
+                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-calculator text-brand-500"></i>
+                    Evaluate Integral $\int x^2 \sin(x) dx$
+                </button>
+                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-atom text-brand-500"></i>
+                    Schrödinger Equation Proof
+                </button>
+
+                <div class="text-xs font-semibold text-slate-500 px-2 py-1 mt-4">Code & Engineering</div>
+                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
+                    <i class="fa-code text-brand-500"></i>
+                    Fast Python FFT Algorithm
+                </button>
+                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-microchip text-brand-500"></i>
+                    Optimize C++ Memory Allocation
+                </button>
+            </div>
+
+            <div class="p-3 border-t border-slate-100 bg-slate-50">
+                <div class="flex items-center justify-between text-xs text-slate-500">
+                    <span class="flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Engine Ready
+                    </span>
+                    <span id="keyStatusBadge" class="text-emerald-600 font-medium">Key Active</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Sidebar Toggle Overlay (Mobile) -->
+        <button id="mobileSidebarToggle" class="md:hidden absolute bottom-20 right-4 z-30 w-12 h-12 bg-brand-600 text-white rounded-full shadow-lg flex items-center justify-center focus:outline-none">
+            <i class="fa-solid fa-bars text-lg"></i>
+        </button>
+
+        <!-- Main Chat Canvas -->
+        <main class="flex-1 flex flex-col bg-white h-full overflow-hidden">
+            <!-- Messages Container -->
+            <div id="chatMessages" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
+
+                <!-- Welcome Card -->
+                <div id="welcomeBanner" class="max-w-2xl mx-auto my-8 p-6 rounded-2xl bg-gradient-to-b from-red-50 to-white border border-red-100 text-center shadow-sm">
+                    <div class="w-16 h-16 bg-brand-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-black shadow-glow-red animate-glow">
+                        MSMI
+                    </div>
+                    <h2 class="text-2xl font-extrabold text-slate-900 mb-2">Welcome to MSMI AI</h2>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        An ultra-responsive AI agent tailored for complex mathematical calculations, algorithm design, LaTeX rendering, and deep logical analysis. Powered by Gemini 2.5/3.8 Flash capabilities.
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
+                        <div class="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
+                            <i class="fa-solid fa-square-root-variable text-brand-600 mb-1 text-base"></i>
+                            <h3 class="text-xs font-bold text-slate-800">LaTeX Rendering</h3>
+                            <p class="text-xs text-slate-500">Instant formulas with KaTeX engine.</p>
+                        </div>
+                        <div class="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
+                            <i class="fa-solid fa-bolt text-brand-600 mb-1 text-base"></i>
+                            <h3 class="text-xs font-bold text-slate-800">High-Speed Stream</h3>
+                            <p class="text-xs text-slate-500">Real-time typing low latency output.</p>
+                        </div>
+                        <div class="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
+                            <i class="fa-solid fa-shield-halved text-brand-600 mb-1 text-base"></i>
+                            <h3 class="text-xs font-bold text-slate-800">Secure API Key</h3>
+                            <p class="text-xs text-slate-500">Key is kept private in local storage.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Input Controls Area -->
+            <div class="border-t border-slate-100 p-3 sm:p-4 bg-white">
+                <div class="max-w-4xl mx-auto relative">
+
+                    <!-- Prompt Textarea Wrapper -->
+                    <div class="relative flex items-end bg-slate-50 border border-slate-200 rounded-2xl shadow-sm focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-red-100 transition-all">
+                        
+                        <textarea id="userInput" rows="1" placeholder="Ask MSMI AI anything (e.g. solve $e^{i\\pi} + 1 = 0$, code a sorting algorithm)..." 
+                            class="w-full pl-4 pr-24 py-3.5 bg-transparent resize-none text-slate-800 text-sm focus:outline-none max-h-48 overflow-y-auto font-sans"></textarea>
+                        
+                        <div class="absolute right-2 bottom-2 flex items-center space-x-1.5 pb-0.5">
+                            <!-- Voice Input Button -->
+                            <button id="voiceBtn" title="Voice Input" class="p-2 text-slate-400 hover:text-brand-600 hover:bg-white rounded-xl transition-all">
+                                <i class="fa-solid fa-microphone text-base"></i>
+                            </button>
+
+                            <!-- Send Button -->
+                            <button id="sendBtn" class="p-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-medium shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fa-solid fa-paper-plane text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center px-2 mt-2 text-[11px] text-slate-400">
+                        <span>Press <kbd class="px-1 py-0.5 bg-slate-100 rounded border text-slate-600 font-mono">Shift + Enter</kbd> for new line</span>
+                        <span id="charCount">0 characters</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- API Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-red-100 transform scale-95 transition-transform duration-200">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-lg bg-red-100 text-brand-700 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-gear"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900">API Configuration</h3>
+                </div>
+                <button id="closeSettingsBtn" class="text-slate-400 hover:text-slate-600 p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Google Gemini API Key</label>
+                    <div class="relative">
+                        <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-red-100 font-mono">
+                        <button id="toggleKeyVis" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600 text-xs">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">Your API Key is kept in local browser memory and never displayed publicly.</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Model Selection</label>
+                    <select id="modelSelect" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-brand-500 font-medium">
+                        <option value="gemini-2.5-flash">gemini-2.5-flash (Ultra Fast & Precise)</option>
+                        <option value="gemini-3-flash-preview">gemini-3-flash-preview (Latest Engine)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Temperature / Creativity</label>
+                    <div class="flex items-center space-x-3">
+                        <input type="range" id="tempInput" min="0" max="1" step="0.1" value="0.2" class="w-full accent-brand-600">
+                        <span id="tempVal" class="text-xs font-mono font-bold text-brand-700 min-w-[2rem]">0.2</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Lower values (0.1 - 0.3) provide standard deterministic mathematical precision.</p>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end space-x-2 border-t border-slate-100 pt-4">
+                <button id="saveSettingsBtn" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl text-sm shadow-md transition-all">
+                    Save Configuration
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Core Logic -->
+    <script>
+        /************************************************************************
+         * MSMI AI HARDCODED API KEY PLACEHOLDER
+         * Insert your Google Gemini API key here if desired for immediate use:
+         ************************************************************************/
+        const DEFAULT_API_KEY = "AQ.Ab8RN6K-KyMXWYzq1hmx7oC0kMDvWSW4RtzAVC2Apm6IzvLncg"; 
+
+        // State Management
+        let appState = {
+            apiKey: localStorage.getItem('MSMI_GEMINI_KEY') || (DEFAULT_API_KEY !== "YOUR_GEMINI_API_KEY_HERE" ? DEFAULT_API_KEY : ''),
+            model: localStorage.getItem('MSMI_MODEL') || 'gemini-2.5-flash',
+            temperature: parseFloat(localStorage.getItem('MSMI_TEMP')) || 0.2,
+            mode: 'math',
+            history: [],
+            isGenerating: false
+        };
+
+        // Initialize Marked.js Options
+        marked.setOptions({
+            highlight: function(code, lang) {
+                const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+                return hljs.highlight(code, { language }).value;
+            },
+            breaks: true
         });
 
-        const answer = await callGemini(
-            contents,
-            getSystemInstruction()
-        );
+        // System Prompt Presets
+        const SYSTEM_PROMPTS = {
+            math: `You are MSMI AI, a premier mathematical and analytical computing engine. 
+- Always express mathematical concepts using LaTeX syntax ($...$ for inline and $$...$$ for block equations).
+- Show step-by-step rigorous proofs, calculations, and explanations.
+- Be precise, clean, structured, and logical.`,
+            code: `You are MSMI AI, an expert software architect and algorithm engineer.
+- Provide production-grade, highly efficient code.
+- Always wrap code blocks with appropriate markdown language specifiers.
+- Explain time/space complexity using Big-O notation.`,
+            general: `You are MSMI AI, an advanced AI reasoning system with deep problem-solving skills. Be concise, articulate, and accurate.`,
+            concise: `You are MSMI AI. Provide ultra-concise, rapid direct answers with zero filler text.`
+        };
 
-        removeTyping();
+        // DOM Elements
+        const chatMessages = document.getElementById('chatMessages');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const voiceBtn = document.getElementById('voiceBtn');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsModal = document.getElementById('settingsModal');
+        const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+        const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+        const apiKeyInput = document.getElementById('apiKeyInput');
+        const toggleKeyVis = document.getElementById('toggleKeyVis');
+        const modelSelect = document.getElementById('modelSelect');
+        const tempInput = document.getElementById('tempInput');
+        const tempVal = document.getElementById('tempVal');
+        const modePreset = document.getElementById('modePreset');
+        const clearChatBtn = document.getElementById('clearChatBtn');
+        const welcomeBanner = document.getElementById('welcomeBanner');
+        const keyStatusBadge = document.getElementById('keyStatusBadge');
+        const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+        const sidebar = document.getElementById('sidebar');
 
-        messages.push({
-            role: "assistant",
-            text: answer
+        // Initialize Application
+        window.addEventListener('DOMContentLoaded', () => {
+            updateKeyStatusUI();
+            setupEventListeners();
+            autoResizeTextarea();
         });
 
-        saveCurrentChat();
-        drawMessages();
+        function updateKeyStatusUI() {
+            if (appState.apiKey && appState.apiKey.trim() !== '') {
+                keyStatusBadge.textContent = 'Key Active';
+                keyStatusBadge.className = 'text-emerald-600 font-medium';
+            } else {
+                keyStatusBadge.textContent = 'Key Missing';
+                keyStatusBadge.className = 'text-brand-600 font-medium';
+            }
+        }
 
-    } catch (error) {
-        removeTyping();
-
-        const message =
-            error.name === "AbortError"
-                ? "Generation stopped."
-                : error.message || "An unexpected error occurred.";
-
-        if (error.name !== "AbortError") {
-            messages.push({
-                role: "assistant",
-                text: "⚠️ " + message,
-                error: true
+        function setupEventListeners() {
+            // Send Click & Enter Key
+            sendBtn.addEventListener('click', handleSendMessage);
+            userInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage();
+                }
             });
 
-            notify(message);
+            // Character Counter & Auto Resize Textarea
+            userInput.addEventListener('input', () => {
+                document.getElementById('charCount').textContent = `${userInput.value.length} characters`;
+                autoResizeTextarea();
+            });
+
+            // Settings Modal Open/Close
+            settingsBtn.addEventListener('click', () => {
+                apiKeyInput.value = appState.apiKey;
+                modelSelect.value = appState.model;
+                tempInput.value = appState.temperature;
+                tempVal.textContent = appState.temperature;
+                settingsModal.classList.remove('hidden');
+                setTimeout(() => {
+                    settingsModal.classList.remove('opacity-0');
+                    settingsModal.firstElementChild.classList.remove('scale-95');
+                }, 10);
+            });
+
+            closeSettingsBtn.addEventListener('click', closeSettings);
+
+            // Toggle Password Visibility for API key input
+            toggleKeyVis.addEventListener('click', () => {
+                const type = apiKeyInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                apiKeyInput.setAttribute('type', type);
+                toggleKeyVis.innerHTML = type === 'password' ? '<i class="fa-solid fa-eye"></i>' : '<i class="fa-solid fa-eye-slash"></i>';
+            });
+
+            // Save Settings
+            saveSettingsBtn.addEventListener('click', () => {
+                appState.apiKey = apiKeyInput.value.trim();
+                appState.model = modelSelect.value;
+                appState.temperature = parseFloat(tempInput.value);
+
+                localStorage.setItem('MSMI_GEMINI_KEY', appState.apiKey);
+                localStorage.setItem('MSMI_MODEL', appState.model);
+                localStorage.setItem('MSMI_TEMP', appState.temperature);
+
+                updateKeyStatusUI();
+                closeSettings();
+            });
+
+            tempInput.addEventListener('input', () => {
+                tempVal.textContent = tempInput.value;
+            });
+
+            // Mode Selector Change
+            modePreset.addEventListener('change', (e) => {
+                appState.mode = e.target.value;
+            });
+
+            // Clear Chat History
+            clearChatBtn.addEventListener('click', () => {
+                appState.history = [];
+                chatMessages.innerHTML = '';
+                if (welcomeBanner) chatMessages.appendChild(welcomeBanner);
+            });
+
+            // Preset Prompt Cards
+            document.querySelectorAll('.preset-prompt').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const text = btn.innerText.trim();
+                    userInput.value = text;
+                    autoResizeTextarea();
+                    handleSendMessage();
+                });
+            });
+
+            // Voice Input setup (Web Speech API)
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+
+                recognition.onresult = (e) => {
+                    const transcript = e.results[0][0].transcript;
+                    userInput.value += (userInput.value ? ' ' : '') + transcript;
+                    autoResizeTextarea();
+                    voiceBtn.classList.remove('text-brand-600', 'animate-pulse');
+                };
+
+                recognition.onerror = () => {
+                    voiceBtn.classList.remove('text-brand-600', 'animate-pulse');
+                };
+
+                recognition.onend = () => {
+                    voiceBtn.classList.remove('text-brand-600', 'animate-pulse');
+                };
+
+                voiceBtn.addEventListener('click', () => {
+                    voiceBtn.classList.add('text-brand-600', 'animate-pulse');
+                    recognition.start();
+                });
+            } else {
+                voiceBtn.style.display = 'none';
+            }
+
+            // Mobile Sidebar Toggle
+            mobileSidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
         }
 
-        saveCurrentChat();
-        drawMessages();
-
-    } finally {
-        isGenerating = false;
-        abortController = null;
-
-        $("send").disabled = false;
-        $("send").classList.remove("hidden");
-        $("stop").classList.add("hidden");
-
-        $("prompt").focus();
-    }
-}
-
-/* ==========================================
-   STOP GENERATION
-========================================== */
-
-function abortGeneration() {
-    if (!isGenerating || !abortController) return;
-
-    abortController.abort();
-    abortController = null;
-}
-
-/* ==========================================
-   REGENERATE RESPONSE
-========================================== */
-
-async function regenerate() {
-    if (isGenerating) return;
-
-    if (messages.length < 2) {
-        notify("There is no response to regenerate.");
-        return;
-    }
-
-    // Find the latest user message.
-    let lastUserIndex = -1;
-
-    for (let i = messages.length - 1; i >= 0; i--) {
-        if (messages[i].role === "user") {
-            lastUserIndex = i;
-            break;
+        function closeSettings() {
+            settingsModal.classList.add('opacity-0');
+            settingsModal.firstElementChild.classList.add('scale-95');
+            setTimeout(() => {
+                settingsModal.classList.add('hidden');
+            }, 200);
         }
-    }
 
-    if (lastUserIndex === -1) return;
-
-    const lastUser = messages[lastUserIndex];
-
-    let imageData = null;
-    let imageMime = null;
-
-    if (lastUser.image) {
-        const match = lastUser.image.match(
-            /^data:(image\/[^;]+);base64,(.+)$/
-        );
-
-        if (match) {
-            imageMime = match[1];
-            imageData = match[2];
+        function autoResizeTextarea() {
+            userInput.style.height = 'auto';
+            userInput.style.height = Math.min(userInput.scrollHeight, 192) + 'px';
         }
-    }
 
-    // Keep the last user message and remove later responses.
-    messages = messages.slice(0, lastUserIndex + 1);
+        // Main Messaging Logic
+        async function handleSendMessage() {
+            const text = userInput.value.trim();
+            if (!text || appState.isGenerating) return;
 
-    saveCurrentChat();
-    drawMessages();
+            if (!appState.apiKey) {
+                alert("Please click on 'API Settings' to enter your Google Gemini API Key.");
+                settingsBtn.click();
+                return;
+            }
 
-    await generateResponse(imageData, imageMime);
-}
+            // Hide Banner
+            if (welcomeBanner && welcomeBanner.parentNode) {
+                welcomeBanner.remove();
+            }
 
-/* ==========================================
-   IMAGE UPLOAD
-========================================== */
+            // Render User Message
+            appendMessage('user', text);
+            userInput.value = '';
+            autoResizeTextarea();
 
-async function handleImageUpload(file) {
-    if (!file) return;
+            // Prepare Assistant Placeholder
+            const botMessageEl = appendMessage('assistant', '');
+            const contentDiv = botMessageEl.querySelector('.markdown-body');
+            contentDiv.classList.add('streaming-cursor');
 
-    if (![
-        "image/jpeg",
-        "image/png",
-        "image/webp"
-    ].includes(file.type)) {
-        notify("Only JPG, PNG and WEBP images are supported.");
-        return;
-    }
+            appState.isGenerating = true;
+            sendBtn.disabled = true;
 
-    if (file.size > MAX_IMAGE_SIZE) {
-        notify("Image size must be below 5 MB.");
-        return;
-    }
+            try {
+                // Build Payload with System Instructions and Chat History
+                const payloadContents = [
+                    ...appState.history.map(msg => ({
+                        role: msg.role === 'user' ? 'user' : 'model',
+                        parts: [{ text: msg.content }]
+                    })),
+                    { role: 'user', parts: [{ text: text }] }
+                ];
 
-    try {
-        selectedImage = await fileToBase64(file);
-        selectedImageMime = file.type;
+                const systemInstructionText = SYSTEM_PROMPTS[appState.mode] || SYSTEM_PROMPTS.math;
+                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${appState.model}:streamGenerateContent?alt=sse&key=${appState.apiKey}`;
 
-        $("previewImg").src =
-            `data:${file.type};base64,${selectedImage}`;
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: payloadContents,
+                        systemInstruction: { parts: [{ text: systemInstructionText }] },
+                        generationConfig: {
+                            temperature: appState.temperature,
+                        }
+                    })
+                });
 
-        $("imagePreview").classList.remove("hidden");
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(errData.error?.message || `API Error: ${response.status}`);
+                }
 
-        notify("Image attached successfully.");
+                // Process Server-Sent Events (SSE) Streaming
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let fullResponseText = '';
+                let buffer = '';
 
-    } catch (error) {
-        notify(error.message);
-    }
-}
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
 
-function removeSelectedImage() {
-    selectedImage = null;
-    selectedImageMime = null;
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop(); // keep partial line in buffer
 
-    $("imageInput").value = "";
-    $("imagePreview").classList.add("hidden");
-}
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const jsonStr = line.replace('data: ', '').trim();
+                            if (jsonStr === '[DONE]') continue;
+                            try {
+                                const parsed = JSON.parse(jsonStr);
+                                const chunkText = parsed.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                                fullResponseText += chunkText;
 
-/* ==========================================
-   VOICE INPUT
-========================================== */
+                                // Update UI dynamically
+                                contentDiv.innerHTML = marked.parse(fullResponseText);
+                                renderMathInElement(contentDiv, {
+                                    delimiters: [
+                                        {left: '$$', right: '$$', display: true},
+                                        {left: '$', right: '$', display: false},
+                                        {left: '\\(', right: '\\)', display: false},
+                                        {left: '\\[', right: '\\]', display: true}
+                                    ],
+                                    throwOnError: false
+                                });
+                                scrollToBottom();
+                            } catch (e) {
+                                // Ignore json parse errors for split chunks
+                            }
+                        }
+                    }
+                }
 
-let recognition = null;
-let isListening = false;
+                contentDiv.classList.remove('streaming-cursor');
+                
+                // Add to internal history
+                appState.history.push({ role: 'user', content: text });
+                appState.history.push({ role: 'assistant', content: fullResponseText });
 
-function setupVoiceInput() {
-    const SpeechRecognition =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
+                // Attach Copy code events
+                attachCopyButtons(botMessageEl);
 
-    if (!SpeechRecognition) {
-        $("voice").disabled = true;
-        $("voice").title = "Voice input is not supported in this browser.";
-        return;
-    }
-
-    recognition = new SpeechRecognition();
-
-    recognition.lang = "en-IN";
-    recognition.continuous = true;
-    recognition.interimResults = true;
-
-    recognition.onstart = () => {
-        isListening = true;
-        $("voice").classList.add("bg-red-100", "text-red-600");
-        notify("Listening...");
-    };
-
-    recognition.onresult = event => {
-        let finalText = "";
-
-        for (
-            let i = event.resultIndex;
-            i < event.results.length;
-            i++
-        ) {
-            const transcript = event.results[i][0].transcript;
-
-            if (event.results[i].isFinal) {
-                finalText += transcript + " ";
+            } catch (err) {
+                contentDiv.classList.remove('streaming-cursor');
+                contentDiv.innerHTML = `<div class="p-3 bg-red-50 border border-red-200 text-brand-700 rounded-lg font-medium text-xs">
+                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> Error: ${err.message}
+                </div>`;
+            } finally {
+                appState.isGenerating = false;
+                sendBtn.disabled = false;
             }
         }
 
-        if (finalText) {
-            $("prompt").value += finalText;
-            updateCharacterCount();
-            resizePrompt();
-        }
-    };
+        // DOM Message Renderer
+        function appendMessage(role, content) {
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex gap-3 max-w-4xl mx-auto ${role === 'user' ? 'justify-end' : 'justify-start'}`;
 
-    recognition.onerror = event => {
-        notify("Voice input error: " + event.error);
-    };
-
-    recognition.onend = () => {
-        isListening = false;
-
-        $("voice").classList.remove(
-            "bg-red-100",
-            "text-red-600"
-        );
-    };
-}
-
-function toggleVoice() {
-    if (!recognition) {
-        notify("Voice input is unavailable.");
-        return;
-    }
-
-    if (isListening) {
-        recognition.stop();
-    } else {
-        recognition.start();
-    }
-}
-
-/* ==========================================
-   PROMPT BOX
-========================================== */
-
-function resizePrompt() {
-    const textarea = $("prompt");
-
-    textarea.style.height = "auto";
-
-    textarea.style.height =
-        Math.min(textarea.scrollHeight, 144) + "px";
-}
-
-function updateCharacterCount() {
-    $("count").textContent =
-        $("prompt").value.length;
-}
-
-/* ==========================================
-   EVENT LISTENERS
-========================================== */
-
-$("signIn").addEventListener("click", signIn);
-$("signUp").addEventListener("click", signUp);
-$("logout").addEventListener("click", logout);
-
-$("newChat").addEventListener("click", createNewChat);
-
-$("send").addEventListener("click", sendMessage);
-
-$("stop").addEventListener("click", abortGeneration);
-
-$("attach").addEventListener("click", () => {
-    $("imageInput").click();
-});
-
-$("imageInput").addEventListener("change", event => {
-    const file = event.target.files[0];
-
-    if (file) {
-        handleImageUpload(file);
-    }
-});
-
-$("removeImage").addEventListener(
-    "click",
-    removeSelectedImage
-);
-
-$("voice").addEventListener(
-    "click",
-    toggleVoice
-);
-
-$("prompt").addEventListener("input", () => {
-    resizePrompt();
-    updateCharacterCount();
-});
-
-$("prompt").addEventListener("keydown", event => {
-    if (
-        event.key === "Enter" &&
-        !event.shiftKey &&
-        !event.isComposing
-    ) {
-        event.preventDefault();
-        sendMessage();
-    }
-});
-
-$("password").addEventListener("keydown", event => {
-    if (event.key === "Enter") {
-        signIn();
-    }
-});
-
-document.querySelectorAll(".quick").forEach(button => {
-    button.addEventListener("click", () => {
-        $("prompt").value = button.dataset.prompt || "";
-        $("prompt").focus();
-        resizePrompt();
-        updateCharacterCount();
-    });
-});
-
-/* ==========================================
-   AUTHENTICATION SESSION RESTORE
-========================================== */
-
-async function initializeMSMI() {
-    try {
-        setStatus("Connecting");
-
-        const { data, error } =
-            await supabaseClient.auth.getSession();
-
-        if (error) throw error;
-
-        if (data.session?.user) {
-            currentUser = data.session.user;
-            await openApplication();
-        } else {
-            $("authPanel").classList.remove("hidden");
-            setStatus("Offline");
-        }
-
-    } catch (error) {
-        console.error(error);
-
-        setStatus("Connection error");
-
-        showAuthMessage(
-            "Unable to connect to Supabase: " + error.message,
-            true
-        );
-    }
-}
-
-/* ==========================================
-   AUTH STATE CHANGE
-========================================== */
-
-supabaseClient.auth.onAuthStateChange(
-    async (event, session) => {
-
-        if (event === "SIGNED_OUT") {
-            currentUser = null;
-
-            $("chatPanel").classList.add("hidden");
-            $("chatPanel").classList.remove("flex");
-
-            $("authPanel").classList.remove("hidden");
-            $("logout").classList.add("hidden");
-        }
-
-        if (event === "SIGNED_IN" && session?.user) {
-            currentUser = session.user;
-
-            if ($("authPanel").classList.contains("hidden") === false) {
-                await openApplication();
+            if (role === 'user') {
+                wrapper.innerHTML = `
+                    <div class="max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 bg-brand-600 text-white shadow-sm font-sans text-sm">
+                        ${escapeHtml(content).replace(/\n/g, '<br>')}
+                    </div>
+                    <div class="w-8 h-8 rounded-xl bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                        You
+                    </div>
+                `;
+            } else {
+                wrapper.innerHTML = `
+                    <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-700 to-brand-500 text-white flex items-center justify-center font-black text-xs shadow-glow-red flex-shrink-0 mt-1">
+                        M
+                    </div>
+                    <div class="max-w-[85%] sm:max-w-[85%] bg-slate-50 border border-red-50 rounded-2xl px-5 py-4 text-slate-800 shadow-sm relative group">
+                        <div class="markdown-body text-sm"></div>
+                    </div>
+                `;
             }
+
+            chatMessages.appendChild(wrapper);
+            scrollToBottom();
+            return wrapper;
         }
-    }
-);
 
-/* ==========================================
-   START MSMI AI
-========================================== */
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
 
-setupVoiceInput();
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
 
-initializeMSMI();
-
-</script>
-
+        function attachCopyButtons(container) {
+            const preBlocks = container.querySelectorAll('pre');
+            preBlocks.forEach((pre) => {
+                if (pre.querySelector('.copy-btn')) return;
+                const button = document.createElement('button');
+                button.className = 'copy-btn absolute top-2 right-2 bg-slate-700 text-slate-200 text-xs px-2 py-1 rounded hover:bg-slate-600 transition-colors';
+                button.innerHTML = '<i class="fa-regular fa-copy"></i> Copy';
+                pre.style.position = 'relative';
+                
+                button.addEventListener('click', () => {
+                    const code = pre.querySelector('code')?.innerText || pre.innerText;
+                    navigator.clipboard.writeText(code).then(() => {
+                        button.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> Copied!';
+                        setTimeout(() => {
+                            button.innerHTML = '<i class="fa-regular fa-copy"></i> Copy';
+                        }, 2000);
+                    });
+                });
+                pre.appendChild(button);
+            });
+        }
+    </script>
 </body>
 </html>
