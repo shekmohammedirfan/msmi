@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#c8102e" />
-  <title>MSMI Account Portal V12 — Stability Fix</title>
+  <title>MSMI Account Portal V10 — Ultimate Edition</title>
   <style>
     :root {
       --red: #c8102e; --red-dark: #9f0d24; --ink: #171717;
@@ -416,21 +416,12 @@ button.primary,button.primary *,a.primary{color:#fff!important}button.primary sv
 
 
     .msmi-attachment-gallery{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 2px}.msmi-announcement-image{flex:0 0 min(240px,75vw);scroll-snap-align:start;display:inline-flex;flex-direction:column;gap:6px;margin:6px;max-width:min(240px,100%);vertical-align:top}.msmi-announcement-image img{max-width:100%;max-height:190px;object-fit:cover;border-radius:12px;cursor:zoom-in}.msmi-announcement-image figcaption{font-size:12px;font-weight:700;color:#7b1a2a;overflow-wrap:anywhere}.msmi-group-member{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.msmi-group-member .member-avatar{flex:0 0 34px}.msmi-group-members{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-/* V12 safety fix: never force every button to white text. Keep contrast by button role. */
-button{color:var(--ink)}
-.tool-btn{color:var(--red-dark);background:#fff;border:1px solid #e7c4ca}
-.primary,button.primary{color:#fff!important}
-.danger-btn{color:#b42318;background:#fff;border:1px solid #efb5bd}
-.tab{color:#777}.tab.active{color:var(--red)}
-.sidebar-link{color:var(--ink)}
+/* V13: accessible button contrast. Only filled primary/danger controls use white text. */
+button,.tool-btn{color:var(--red)!important;background:#fff;border-color:#e6c5cc}
+button.primary,.primary,button.danger-btn,.danger-btn{color:#fff!important;background:var(--red);border-color:var(--red)}
 button:disabled{opacity:.55;cursor:not-allowed}
-
-/* V12 contrast and avatar visibility safeguards */
-button:not(.primary):not(.danger-btn):not(.tab){color:var(--red-dark)}
-button.primary, .primary{color:#fff!important}
-.member-avatar,.v2-avatar{position:relative;overflow:hidden;background-color:#c8102e;background-size:cover;background-position:center;color:#fff}
-.member-avatar img{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit;z-index:2}
-.member-avatar:not(:has(img)){color:#fff}
+button:not(.primary):not(.danger-btn):not(.v11-slide-dot):not(.msmi-icon-btn){background:#fff;color:var(--red)!important}
+.v11-slide-controls button,.v11-slide-dot{background:#ffffff1c!important;color:#fff!important;border-color:#ffffff66!important}
 </style>
 <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
 </head>
@@ -602,7 +593,7 @@ button.primary, .primary{color:#fff!important}
         <div class="admin-grid" style="margin-top:16px"><div><h3>Registered members</h3><div id="adminUsers" class="admin-data">Loading…</div></div><div><h3>Private notes & messages</h3><div id="adminPrivateData" class="admin-data">Loading…</div></div></div><div class="v2-panel" id="adminAnalyticsPanel"><div class="section-title"><h3>Portal analytics</h3><button class="tool-btn" id="refreshAdminAnalytics" type="button">Refresh analytics</button></div><div class="v2-stats" id="adminAnalytics"><p class="note-meta">Loading analytics…</p></div></div>
         <div class="v2-panel" id="v11AdminTools" style="margin-top:18px">
           <div class="section-title"><div><h3>Portal management centre</h3><p class="sub">Manage public drive, member access and login slideshow.</p></div><button class="tool-btn" id="v11AdminRefresh" type="button">↻ Refresh all</button></div>
-          <h4>Public drive link</h4><label for="v11DriveTitle">Drive title</label><input id="v11DriveTitle" maxlength="90" placeholder="MSMI Public Drive"><label for="v11DriveUrl">Shared drive URL</label><input id="v11DriveUrl" type="url" maxlength="1000" placeholder="https://drive.google.com/drive/folders/…"><label for="v11DriveDescription">Description</label><textarea id="v11DriveDescription" rows="2" maxlength="500"></textarea><button class="primary" id="v11SaveDrive" type="button">Save public drive</button><p class="message" id="v11DriveStatus" role="status"></p>
+          <h4>Public drive links</h4><p class="sub">Add multiple shared folders or files. Each link is shown to members as a separate Open / Download item.</p><label for="v11DriveTitle">Drive / file title</label><input id="v11DriveTitle" maxlength="90" placeholder="e.g. Study Materials"><label for="v11DriveUrl">Shared file or folder URL</label><input id="v11DriveUrl" type="url" maxlength="2000" placeholder="Paste the complete https:// shared link here"><label for="v11DriveDescription">Description (optional)</label><textarea id="v11DriveDescription" rows="2" maxlength="500" placeholder="What members will find in this drive"></textarea><div class="v2-actions"><button class="primary" id="v11SaveDrive" type="button">＋ Add public drive link</button><button class="tool-btn" id="v13ClearDriveForm" type="button">Clear fields</button></div><div id="v13DriveAdminList" class="v2-list"></div><p class="message" id="v11DriveStatus" role="status"></p>
           <hr><h4>Login slideshow · Website features</h4><label for="v11SlideTitle">Slide title</label><input id="v11SlideTitle" maxlength="100" placeholder="Welcome to MSMI"><label for="v11SlideText">Slide description</label><textarea id="v11SlideText" rows="2" maxlength="500"></textarea><label for="v11SlideImage">Image URL (public image URL)</label><input id="v11SlideImage" type="url" maxlength="1000" placeholder="https://…"><label for="v11SlideImageFile">Or upload a slideshow image</label><input id="v11SlideImageFile" type="file" accept="image/png,image/jpeg,image/webp"><div class="msmi-progress-wrap hidden" id="v11SlideUploadWrap"><div class="msmi-progress-label"><span id="v11SlideUploadLabel">Uploading slide image…</span><strong id="v11SlideUploadValue">0%</strong></div><progress id="v11SlideUploadProgress" max="100" value="0"></progress></div><div class="v2-actions"><button class="primary" id="v11AddSlide" type="button">Add feature slide</button><button class="tool-btn" id="v11ClearSlides" type="button">Remove all slides</button></div><div id="v11SlideAdminList" class="v2-list"></div><p class="message" id="v11SlideStatus" role="status"></p>
           <hr><h4>Announcement media slideshow</h4><p class="sub">Existing announcement attachments appear in the member announcement gallery. Add images/files in the announcement editor above; remove them from the attachment manager below.</p><div id="v11AnnouncementFiles" class="v2-list"></div>
           <hr><h4>Member access management</h4><p class="sub">Denying access blocks portal sign-in after authentication. It does not delete the member's account or data.</p><div id="v11MemberManager" class="admin-data">Loading member access…</div><p class="message" id="v11MemberStatus" role="status"></p>
@@ -688,8 +679,7 @@ button.primary, .primary{color:#fff!important}
 
       <section class="v2-panel portal-page" id="v2CloudDrive">
         <div class="section-title"><div><h2>MSMI Public Drive</h2><p class="sub">Admin-managed shared drive link. Open it to browse or download shared files.</p></div><span class="pill">PUBLIC DRIVE</span></div>
-        <div id="publicDriveStatus" class="od-status">Loading public drive link…</div>
-        <div id="publicDriveLaunch" class="v2-panel" style="text-align:center;padding:28px"><div style="font-size:42px">☁</div><h3 id="publicDriveTitle">MSMI Shared Drive</h3><p id="publicDriveDescription" class="sub">Shared files and resources provided by the MSMI administrator.</p><a id="publicDriveOpen" class="primary" href="#" target="_blank" rel="noopener" style="display:inline-flex;text-decoration:none;padding:12px 22px;justify-content:center">Open public drive ↗</a></div>
+        <div id="publicDriveStatus" class="od-status">Loading public drive links…</div><div id="publicDriveLinks" class="v2-list"><p class="note-meta">Loading shared resources…</p></div>
       </section>
 
       <section class="v2-panel portal-page" id="v2Groups">
@@ -1453,34 +1443,34 @@ button.primary, .primary{color:#fff!important}
  async function updatePresence(){if(!v2User)return;const {error}=await supabaseClient.from('portal_presence').upsert({user_id:v2User.id,last_seen:new Date().toISOString()},{onConflict:'user_id'});if(error)console.warn('Presence update:',error.message);}
  async function resolveAvatarSources(raw){
    const value=String(raw||'').trim();if(!value||!supabaseClient)return [];
-   const urls=[];const addUrl=u=>{if(u&&!urls.includes(u))urls.push(u);};
-   // Existing records may contain a public URL, a signed URL, or a bucket-relative path.
+   const entries=[];const add=(bucket,path)=>{path=String(path||'').replace(/^\/+/, '');if(bucket&&path&&!entries.some(x=>x.bucket===bucket&&x.path===path))entries.push({bucket,path});};
+   let direct='';
    if(/^https?:\/\//i.test(value)){
-     addUrl(value);
-     try{
-       const u=new URL(value);
-       const match=u.pathname.match(/\/storage\/v1\/object\/(?:public|sign|authenticated)\/([^/]+)\/(.+)$/i);
-       if(match){const bucket=decodeURIComponent(match[1]);const path=decodeURIComponent(match[2]);
-         try{if(bucket==='msmi-avatars'){addUrl(supabaseClient.storage.from(bucket).getPublicUrl(path).data.publicUrl);}
-           const signed=await supabaseClient.storage.from(bucket).createSignedUrl(path,3600);if(!signed.error)addUrl(signed.data?.signedUrl);
-         }catch(_){}
-       }
-     }catch(_){}
+     direct=value;
+     try{const u=new URL(value);const match=u.pathname.match(/\/storage\/v1\/object\/(?:public|sign|authenticated)\/([^/]+)\/(.+)$/i);if(match)add(match[1],decodeURIComponent(match[2]));}catch(_){}
    }else{
-     let path=value.replace(/^\/+/, '');let bucket='msmi-avatars';
-     const slash=path.indexOf('/');const first=slash>0?path.slice(0,slash):'';
-     if(first==='msmi-avatars'||first==='avatars'||first==='profile-photos'){bucket=first==='avatars'?'msmi-avatars':first;path=path.slice(slash+1);}
-     try{addUrl(supabaseClient.storage.from(bucket).getPublicUrl(path).data.publicUrl);}catch(_){}
-     try{const signed=await supabaseClient.storage.from(bucket).createSignedUrl(path,3600);if(!signed.error)addUrl(signed.data?.signedUrl);}catch(_){}
+     let path=value.replace(/^\/+/, '');
+     if(path.startsWith('msmi-avatars/'))add('msmi-avatars',path.slice('msmi-avatars/'.length));
+     else if(path.startsWith('msmi-cloud/'))add('msmi-cloud',path.slice('msmi-cloud/'.length));
+     else {add('msmi-avatars',path);add('msmi-cloud',path);}
    }
-   return urls.filter(Boolean);
+   const urls=[];
+   if(direct)urls.push(direct);
+   for(const entry of entries){
+     try{
+       if(entry.bucket==='msmi-avatars')urls.push(supabaseClient.storage.from('msmi-avatars').getPublicUrl(entry.path).data.publicUrl);
+       else {const signed=await supabaseClient.storage.from(entry.bucket).createSignedUrl(entry.path,3600);if(!signed.error&&signed.data?.signedUrl)urls.push(signed.data.signedUrl);}
+     }catch(_){}
+   }
+   if(direct)urls.push(direct);
+   if(!entries.length&&!direct){try{urls.push(supabaseClient.storage.from('msmi-avatars').getPublicUrl(value).data.publicUrl);}catch(_){}}
+   return [...new Set(urls.filter(Boolean))];
  }
  async function resolveAvatarUrl(raw){const sources=await resolveAvatarSources(raw);return sources[0]||'';}
  function attachAvatarImage(el,raw,label){
-   if(!raw)return;const img=document.createElement('img');img.alt=(label||'Member')+' profile photo';img.loading='eager';img.decoding='async';
-   let sources=[],index=0,done=false;img.onerror=()=>{index++;if(sources[index])img.src=sources[index];else{img.remove();done=true;}};
-   img.onload=()=>{done=true;};el.append(img);
-   resolveAvatarSources(raw).then(list=>{sources=list;if(sources.length){img.src=sources[0];}else if(!done)img.remove();}).catch(()=>img.remove());
+   if(!raw)return;const img=document.createElement('img');img.alt=(label||'Member')+' profile photo';img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
+   let sources=[],index=0;img.onerror=()=>{index++;if(sources[index])img.src=sources[index];else{img.remove();el.classList.remove('has-photo');}};
+   el.append(img);resolveAvatarSources(raw).then(list=>{sources=list;if(sources.length)img.src=sources[0];else img.remove();}).catch(()=>img.remove());
  }
  function memberAvatar(url,label,large=false){
    const el=node('div','member-avatar'+(large?' large':''),initials(label));attachAvatarImage(el,url,label);return el;
@@ -1800,8 +1790,41 @@ button.primary, .primary{color:#fff!important}
  const $=id=>document.getElementById(id), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const isAdmin=()=>((window.MSMI_currentUser?.email||window.MSMI_user?.email||'').toLowerCase()==='shekmohammedirfan412@gmail.com');
  const client=()=>window.supabaseClient;
- async function loadPublicDrive(){const c=client();if(!c)return;const {data,error}=await c.from('portal_public_drive').select('title,url,description').eq('id',1).maybeSingle();const box=$('publicDriveStatus'),link=$('publicDriveOpen');if(error){box.textContent='Public drive is not configured yet. Ask the administrator to add the shared drive link.';link?.classList.add('hidden');return;}if($('v11DriveTitle'))$('v11DriveTitle').value=data?.title||'MSMI Public Drive';if($('v11DriveUrl'))$('v11DriveUrl').value=data?.url||'';if($('v11DriveDescription'))$('v11DriveDescription').value=data?.description||'';if(!data?.url){box.textContent='The administrator has not configured the public drive link yet.';link?.classList.add('hidden');return;}try{const u=new URL(data.url);if(!['https:'].includes(u.protocol))throw new Error();link.href=u.href;link.classList.remove('hidden');$('publicDriveTitle').textContent=data.title||'MSMI Public Drive';$('publicDriveDescription').textContent=data.description||'Shared files and resources provided by the MSMI administrator.';box.textContent='Public drive link is ready.';}catch{box.textContent='The configured public drive URL is invalid. Contact the administrator.';link?.classList.add('hidden');}}
- async function saveDrive(){const c=client();const url=$('v11DriveUrl').value.trim();if(url&&new URL(url).protocol!=='https:')throw Error('Use a secure HTTPS shared-drive link.');const {error}=await c.rpc('admin_set_public_drive',{p_title:$('v11DriveTitle').value.trim()||'MSMI Public Drive',p_url:url,p_description:$('v11DriveDescription').value.trim()});if(error)throw error;await loadPublicDrive();$('v11DriveStatus').textContent='Public drive settings saved.';}
+ async function loadPublicDrive(){
+   const c=client();if(!c)return;
+   const box=$('publicDriveStatus'),list=$('publicDriveLinks');
+   const {data,error}=await c.from('portal_public_drive_links').select('id,title,url,description,created_at').eq('enabled',true).order('created_at',{ascending:false});
+   if(error){box.textContent='Public drive links could not load. Check that the V13 SQL migration has been run.';list.replaceChildren();return;}
+   list.replaceChildren();
+   (data||[]).forEach(item=>{let u;try{u=new URL(item.url);if(u.protocol!=='https:')return;}catch{return;}
+     const card=document.createElement('article');card.className='v2-item';
+     const title=document.createElement('strong');title.textContent=item.title||'MSMI Public Drive';
+     const desc=document.createElement('p');desc.textContent=item.description||'Shared files and resources.';
+     const a=document.createElement('a');a.className='primary';a.href=u.href;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Open / Download ↗';a.style.cssText='display:inline-flex;text-decoration:none;padding:9px 14px;border-radius:9px;margin-top:5px;color:#fff!important';
+     card.append(title,desc,a);list.append(card);
+   });
+   if(!(data||[]).length)list.append(node('p','note-meta','No public drive links have been added by the administrator yet.'));
+   box.textContent=(data||[]).length?`${data.length} public drive link(s) available.`:'The administrator has not added any public drive links yet.';
+   await loadDriveAdminList();
+ }
+ async function loadDriveAdminList(){
+   const c=client(),box=$('v13DriveAdminList');if(!box||!c)return;
+   const {data,error}=await c.from('portal_public_drive_links').select('id,title,url,description').order('created_at',{ascending:false});
+   box.replaceChildren();if(error){box.textContent='Drive manager unavailable: '+error.message;return;}
+   (data||[]).forEach(item=>{const row=document.createElement('div');row.className='v11-file-row';const info=document.createElement('div');info.style.minWidth='0';const title=document.createElement('strong');title.textContent=item.title;const url=document.createElement('small');url.textContent=item.url;url.style.cssText='display:block;overflow-wrap:anywhere;color:var(--muted)';info.append(title,url);const del=document.createElement('button');del.type='button';del.className='danger-btn';del.textContent='Remove';del.onclick=async()=>{if(!confirm('Remove this public drive link?'))return;const {error}=await c.from('portal_public_drive_links').delete().eq('id',item.id);if(error){$('v11DriveStatus').textContent=error.message;return;}await loadPublicDrive();};row.append(info,del);box.append(row);});
+ }
+ async function saveDrive(){
+   const c=client(),title=$('v11DriveTitle').value.trim(),url=$('v11DriveUrl').value.trim(),description=$('v11DriveDescription').value.trim();
+   if(!title)throw Error('Enter a title for this drive link.');if(!url)throw Error('Paste a shared file or folder link.');
+   let parsed;try{parsed=new URL(url);}catch{throw Error('The shared link is incomplete. Paste the full URL.');}
+   if(parsed.protocol!=='https:')throw Error('Use a secure HTTPS shared link.');
+   const {data:authData,error:authError}=await c.auth.getUser();if(authError)throw authError;if(!authData?.user)throw Error('Please sign in again.');
+   const {error}=await c.from('portal_public_drive_links').insert({title,url:parsed.href,description,enabled:true,created_by:authData.user.id});
+   if(error)throw error;
+   $('v11DriveTitle').value='';$('v11DriveUrl').value='';$('v11DriveDescription').value='';
+   $('v11DriveStatus').textContent='Public drive link added successfully.';await loadPublicDrive();
+ }
+
  function annAttachments(){return window.MSMI_announcementAttachments||[];}
  function renderAnnouncementAdmin(){const box=$('v11AnnouncementFiles');if(!box)return;box.replaceChildren();annAttachments().forEach((a,i)=>{const row=document.createElement('div');row.className='v11-announce-item';if((a.mime||'').startsWith('image/')&&a.url){const img=document.createElement('img');img.src=a.url;img.alt=a.name||'Announcement image';row.append(img);}const name=document.createElement('span');name.className='v11-file-name';name.textContent=a.name||'Attachment';const type=document.createElement('small');type.textContent=(a.mime||'file')+' · '+(a.size?Math.round(a.size/1024)+' KB':'');const del=document.createElement('button');del.className='tool-btn danger-btn';del.type='button';del.textContent='Remove';del.addEventListener('click',async()=>{if(!confirm('Remove this attachment from the announcement?'))return;const next=annAttachments().filter((_,j)=>j!==i);try{if(a.path){const {error:storageError}=await client().storage.from('msmi-announcement-assets').remove([a.path]);if(storageError)throw storageError;}const {data:{user}}=await client().auth.getUser();const {error}=await client().from('admin_announcements').upsert({id:1,content:$('adminAnnouncementInput')?.value||'',attachments:next,updated_by:user.id,updated_at:new Date().toISOString()},{onConflict:'id'});if(error)throw error;window.MSMI_announcementAttachments=next;renderAnnouncementAdmin();$('v11SlideStatus').textContent='Attachment removed from announcement.';}catch(e){$('v11SlideStatus').textContent=e.message;}});row.append(name,type,del);box.append(row);});if(!box.childElementCount)box.textContent='No published attachments.';}
  async function loadAdminMembers(){const c=client();const box=$('v11MemberManager');if(!box)return;const {data,error}=await c.rpc('admin_list_member_access');if(error){box.textContent='Member management unavailable: '+error.message;return;}box.replaceChildren();(data||[]).forEach(m=>{const row=document.createElement('div');row.className='v11-member-row';const info=document.createElement('div');info.innerHTML='<strong>'+esc(m.display_name||m.username||m.email||'Member')+'</strong><small>'+esc(m.email||'')+'</small>';const meta=document.createElement('div');meta.className='v11-member-meta';meta.innerHTML='<small>Joined: '+esc(m.created_at?new Date(m.created_at).toLocaleString():'—')+'</small><small>Last login: '+esc(m.last_sign_in_at?new Date(m.last_sign_in_at).toLocaleString():'Never')+'</small><small>Email: '+(m.email_confirmed?'Confirmed':'Not confirmed')+' · Access: '+esc(m.access_status||'allowed')+'</small>';const b=document.createElement('button');b.className='tool-btn '+(m.access_status==='denied'?'':'danger-btn');b.textContent=m.access_status==='denied'?'Allow access':'Deny access';b.addEventListener('click',async()=>{const deny=m.access_status!=='denied';const reason=deny?(prompt('Reason shown to this member (optional):')||'Access denied by administrator.'):'';try{const {error}=await c.rpc('admin_set_member_access',{p_user_id:m.id,p_status:deny?'denied':'allowed',p_reason:reason});if(error)throw error;await loadAdminMembers();$('v11MemberStatus').textContent=deny?'Member access denied.':'Member access restored.';}catch(e){$('v11MemberStatus').textContent=e.message;}});row.append(info,meta,b);box.append(row);});if(!data?.length)box.textContent='No member records returned.';const confirmed=(data||[]).filter(x=>x.email_confirmed).length, denied=(data||[]).filter(x=>x.access_status==='denied').length;const stats=$('v11AuthStats');stats.innerHTML=[['Registered',data?.length||0],['Email confirmed',confirmed],['Not confirmed',(data?.length||0)-confirmed],['Access denied',denied],['Logged in before',(data||[]).filter(x=>x.last_sign_in_at).length]].map(([k,v])=>'<div class="v11-admin-kpi"><small>'+k+'</small><strong>'+v+'</strong></div>').join('');}
@@ -1811,7 +1834,7 @@ button.primary, .primary{color:#fff!important}
  function addGroupActions(){const area=$('v2Groups');if(!area||$('v11LeaveGroup'))return;const target=$('deleteGroupBtn')?.parentElement;if(!target)return;const leave=document.createElement('button');leave.id='v11LeaveGroup';leave.type='button';leave.className='tool-btn danger-btn';leave.textContent='Leave group';target.append(leave);leave.addEventListener('click',async()=>{if(!window.MSMI_activeGroupId){alert('Select a group first.');return;}if(!confirm('Leave this group? You will no longer see its messages.'))return;try{const {error}=await client().rpc('leave_portal_group',{p_group_id:window.MSMI_activeGroupId});if(error)throw error;location.hash='#v2Groups';$('activeGroupTitle').textContent='Select a group';$('groupMessages').textContent='You left the group.';$('groupMemberList').replaceChildren();$('groupMemberCount').textContent='0 members';$('groupStatus').textContent='You left the group.';document.dispatchEvent(new CustomEvent('msmi:group-left'));}catch(e){$('groupStatus').textContent=e.message;}});}
  // Use capture phase so the legacy image click handler cannot open a new tab. Show filename and full-size viewer instead.
  function setupAnnouncementMedia(){const box=$('announcementText');if(!box||box.dataset.v11Media)return;box.dataset.v11Media='1';box.addEventListener('click',e=>{const img=e.target.closest('img');if(!img)return;e.preventDefault();e.stopImmediatePropagation();const viewer=$('v10Viewer'),stage=$('v10ViewerStage');if(!viewer||!stage)return;stage.replaceChildren();const full=document.createElement('img');full.src=img.currentSrc||img.src;full.alt=img.alt||'Announcement image';full.style.cssText='max-width:96vw;max-height:calc(100vh - 100px);object-fit:contain';stage.append(full);$('v10ViewerTitle').textContent=img.alt||'Announcement image';viewer.classList.add('open');document.body.style.overflow='hidden';},true);const obs=new MutationObserver(()=>{box.querySelectorAll('.msmi-attachment-gallery img').forEach(img=>{if(img.dataset.v11Name)return;img.dataset.v11Name='1';const wrap=document.createElement('div');wrap.style.cssText='display:inline-flex;flex-direction:column;gap:5px;max-width:220px';img.parentNode.insertBefore(wrap,img);wrap.append(img);const label=document.createElement('small');label.textContent=img.alt||'Image attachment';label.style.cssText='font-weight:700;overflow-wrap:anywhere';wrap.append(label);});});obs.observe(box,{childList:true,subtree:true});}
- document.addEventListener('DOMContentLoaded',()=>{setupAnnouncementMedia();addGroupActions();loadSlides().catch(()=>{});$('v11SaveDrive')?.addEventListener('click',()=>saveDrive().catch(e=>$('v11DriveStatus').textContent=e.message));$('v11AddSlide')?.addEventListener('click',async()=>{try{const title=$('v11SlideTitle').value.trim();if(!title)throw Error('Enter a slide title.');let imageUrl=$('v11SlideImage').value.trim();const imageFile=$('v11SlideImageFile')?.files?.[0];if(imageFile){if(imageFile.size>8*1024*1024)throw Error('Slideshow image must be 8 MB or smaller.');if(!/^image\/(png|jpeg|webp)$/.test(imageFile.type))throw Error('Choose PNG, JPG or WEBP.');const wrap=$('v11SlideUploadWrap');wrap.classList.remove('hidden');$('v11SlideUploadProgress').value=0;$('v11SlideUploadValue').textContent='0%';$('v11SlideUploadLabel').textContent='Uploading slide image…';const path='login-slides/'+Date.now()+'-'+imageFile.name.replace(/[^a-zA-Z0-9._-]/g,'_');if(window.MSMI_uploadStorage){await window.MSMI_uploadStorage('msmi-announcement-assets',path,imageFile,p=>{$('v11SlideUploadProgress').value=p;$('v11SlideUploadValue').textContent=p+'%';});}else{const {error:uploadError}=await client().storage.from('msmi-announcement-assets').upload(path,imageFile,{upsert:false,contentType:imageFile.type});if(uploadError)throw uploadError;$('v11SlideUploadProgress').value=100;$('v11SlideUploadValue').textContent='100%';} $('v11SlideUploadLabel').textContent='Upload complete';imageUrl=client().storage.from('msmi-announcement-assets').getPublicUrl(path).data.publicUrl;}if(!imageUrl)throw Error('Add an image URL or upload an image.');const {error}=await client().from('portal_login_slides').insert({title,description:$('v11SlideText').value.trim(),image_url:imageUrl,sort_order:Date.now(),enabled:true});if(error)throw error;$('v11SlideTitle').value=$('v11SlideText').value=$('v11SlideImage').value='';if($('v11SlideImageFile'))$('v11SlideImageFile').value='';$('v11SlideStatus').textContent='Slide added.';await loadSlideAdmin();await loadSlides();}catch(e){$('v11SlideStatus').textContent=e.message;}});$('v11ClearSlides')?.addEventListener('click',async()=>{if(!confirm('Remove every login slideshow slide?'))return;const {error}=await client().from('portal_login_slides').delete().neq('id','00000000-0000-0000-0000-000000000000');if(error)$('v11SlideStatus').textContent=error.message;else{await loadSlideAdmin();await loadSlides();}});$('v11AdminRefresh')?.addEventListener('click',()=>refreshAdmin().catch(console.error));});
+ document.addEventListener('DOMContentLoaded',()=>{setupAnnouncementMedia();addGroupActions();loadSlides().catch(()=>{});$('v11SaveDrive')?.addEventListener('click',()=>saveDrive().catch(e=>$('v11DriveStatus').textContent=e.message));$('v13ClearDriveForm')?.addEventListener('click',()=>{$('v11DriveTitle').value='';$('v11DriveUrl').value='';$('v11DriveDescription').value='';$('v11DriveStatus').textContent='Fields cleared.';});$('v11AddSlide')?.addEventListener('click',async()=>{try{const title=$('v11SlideTitle').value.trim();if(!title)throw Error('Enter a slide title.');let imageUrl=$('v11SlideImage').value.trim();const imageFile=$('v11SlideImageFile')?.files?.[0];if(imageFile){if(imageFile.size>8*1024*1024)throw Error('Slideshow image must be 8 MB or smaller.');if(!/^image\/(png|jpeg|webp)$/.test(imageFile.type))throw Error('Choose PNG, JPG or WEBP.');const wrap=$('v11SlideUploadWrap');wrap.classList.remove('hidden');$('v11SlideUploadProgress').value=0;$('v11SlideUploadValue').textContent='0%';$('v11SlideUploadLabel').textContent='Uploading slide image…';const path='login-slides/'+Date.now()+'-'+imageFile.name.replace(/[^a-zA-Z0-9._-]/g,'_');if(window.MSMI_uploadStorage){await window.MSMI_uploadStorage('msmi-announcement-assets',path,imageFile,p=>{$('v11SlideUploadProgress').value=p;$('v11SlideUploadValue').textContent=p+'%';});}else{const {error:uploadError}=await client().storage.from('msmi-announcement-assets').upload(path,imageFile,{upsert:false,contentType:imageFile.type});if(uploadError)throw uploadError;$('v11SlideUploadProgress').value=100;$('v11SlideUploadValue').textContent='100%';} $('v11SlideUploadLabel').textContent='Upload complete';imageUrl=client().storage.from('msmi-announcement-assets').getPublicUrl(path).data.publicUrl;}if(!imageUrl)throw Error('Add an image URL or upload an image.');const {error}=await client().from('portal_login_slides').insert({title,description:$('v11SlideText').value.trim(),image_url:imageUrl,sort_order:Date.now(),enabled:true});if(error)throw error;$('v11SlideTitle').value=$('v11SlideText').value=$('v11SlideImage').value='';if($('v11SlideImageFile'))$('v11SlideImageFile').value='';$('v11SlideStatus').textContent='Slide added.';await loadSlideAdmin();await loadSlides();}catch(e){$('v11SlideStatus').textContent=e.message;}});$('v11ClearSlides')?.addEventListener('click',async()=>{if(!confirm('Remove every login slideshow slide?'))return;const {error}=await client().from('portal_login_slides').delete().neq('id','00000000-0000-0000-0000-000000000000');if(error)$('v11SlideStatus').textContent=error.message;else{await loadSlideAdmin();await loadSlides();}});$('v11AdminRefresh')?.addEventListener('click',()=>refreshAdmin().catch(console.error));});
  // Supabase auth state callback occurs after the existing app initializes; run on visible app transitions.
  document.addEventListener('msmi:group-selected',addGroupActions);let adminLoaded=false;const observer=new MutationObserver(()=>{if($('dashboardView')&&!$('dashboardView').classList.contains('hidden')){loadPublicDrive().catch(()=>{});const panel=$('adminPanel');if(panel&&!panel.classList.contains('hidden')&&!adminLoaded){adminLoaded=true;refreshAdmin().catch(e=>{adminLoaded=false;console.error(e);});}}});observer.observe(document.body,{attributes:true,subtree:true,attributeFilter:['class']});
  // Refresh public drive when its navigation link is selected.
