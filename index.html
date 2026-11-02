@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#c8102e" />
-  <title>MSMI Account Portal V10 — Ultimate Edition</title>
+  <title>MSMI Account Portal V12 — Stability Fix</title>
   <style>
     :root {
       --red: #c8102e; --red-dark: #9f0d24; --ink: #171717;
@@ -416,7 +416,21 @@ button.primary,button.primary *,a.primary{color:#fff!important}button.primary sv
 
 
     .msmi-attachment-gallery{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 2px}.msmi-announcement-image{flex:0 0 min(240px,75vw);scroll-snap-align:start;display:inline-flex;flex-direction:column;gap:6px;margin:6px;max-width:min(240px,100%);vertical-align:top}.msmi-announcement-image img{max-width:100%;max-height:190px;object-fit:cover;border-radius:12px;cursor:zoom-in}.msmi-announcement-image figcaption{font-size:12px;font-weight:700;color:#7b1a2a;overflow-wrap:anywhere}.msmi-group-member{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.msmi-group-member .member-avatar{flex:0 0 34px}.msmi-group-members{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-button,.tool-btn,.primary,.danger-btn{color:#fff!important}button:disabled{opacity:.55;cursor:not-allowed}
+/* V12 safety fix: never force every button to white text. Keep contrast by button role. */
+button{color:var(--ink)}
+.tool-btn{color:var(--red-dark);background:#fff;border:1px solid #e7c4ca}
+.primary,button.primary{color:#fff!important}
+.danger-btn{color:#b42318;background:#fff;border:1px solid #efb5bd}
+.tab{color:#777}.tab.active{color:var(--red)}
+.sidebar-link{color:var(--ink)}
+button:disabled{opacity:.55;cursor:not-allowed}
+
+/* V12 contrast and avatar visibility safeguards */
+button:not(.primary):not(.danger-btn):not(.tab){color:var(--red-dark)}
+button.primary, .primary{color:#fff!important}
+.member-avatar,.v2-avatar{position:relative;overflow:hidden;background-color:#c8102e;background-size:cover;background-position:center;color:#fff}
+.member-avatar img{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit;z-index:2}
+.member-avatar:not(:has(img)){color:#fff}
 </style>
 <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
 </head>
@@ -1439,33 +1453,34 @@ button,.tool-btn,.primary,.danger-btn{color:#fff!important}button:disabled{opaci
  async function updatePresence(){if(!v2User)return;const {error}=await supabaseClient.from('portal_presence').upsert({user_id:v2User.id,last_seen:new Date().toISOString()},{onConflict:'user_id'});if(error)console.warn('Presence update:',error.message);}
  async function resolveAvatarSources(raw){
    const value=String(raw||'').trim();if(!value||!supabaseClient)return [];
-   const entries=[];const add=(bucket,path)=>{path=String(path||'').replace(/^\/+/, '');if(bucket&&path&&!entries.some(x=>x.bucket===bucket&&x.path===path))entries.push({bucket,path});};
-   let direct='';
+   const urls=[];const addUrl=u=>{if(u&&!urls.includes(u))urls.push(u);};
+   // Existing records may contain a public URL, a signed URL, or a bucket-relative path.
    if(/^https?:\/\//i.test(value)){
-     direct=value;
-     try{const u=new URL(value);const match=u.pathname.match(/\/storage\/v1\/object\/(?:public|sign|authenticated)\/([^/]+)\/(.+)$/i);if(match)add(match[1],decodeURIComponent(match[2]));}catch(_){}
-   }else{
-     let path=value.replace(/^\/+/, '');
-     if(path.startsWith('msmi-avatars/'))add('msmi-avatars',path.slice('msmi-avatars/'.length));
-     else if(path.startsWith('msmi-cloud/'))add('msmi-cloud',path.slice('msmi-cloud/'.length));
-     else {add('msmi-avatars',path);add('msmi-cloud',path);}
-   }
-   const urls=[];
-   for(const entry of entries){
+     addUrl(value);
      try{
-       if(entry.bucket==='msmi-avatars')urls.push(supabaseClient.storage.from('msmi-avatars').getPublicUrl(entry.path).data.publicUrl);
-       else {const signed=await supabaseClient.storage.from(entry.bucket).createSignedUrl(entry.path,3600);if(!signed.error&&signed.data?.signedUrl)urls.push(signed.data.signedUrl);}
+       const u=new URL(value);
+       const match=u.pathname.match(/\/storage\/v1\/object\/(?:public|sign|authenticated)\/([^/]+)\/(.+)$/i);
+       if(match){const bucket=decodeURIComponent(match[1]);const path=decodeURIComponent(match[2]);
+         try{if(bucket==='msmi-avatars'){addUrl(supabaseClient.storage.from(bucket).getPublicUrl(path).data.publicUrl);}
+           const signed=await supabaseClient.storage.from(bucket).createSignedUrl(path,3600);if(!signed.error)addUrl(signed.data?.signedUrl);
+         }catch(_){}
+       }
      }catch(_){}
+   }else{
+     let path=value.replace(/^\/+/, '');let bucket='msmi-avatars';
+     const slash=path.indexOf('/');const first=slash>0?path.slice(0,slash):'';
+     if(first==='msmi-avatars'||first==='avatars'||first==='profile-photos'){bucket=first==='avatars'?'msmi-avatars':first;path=path.slice(slash+1);}
+     try{addUrl(supabaseClient.storage.from(bucket).getPublicUrl(path).data.publicUrl);}catch(_){}
+     try{const signed=await supabaseClient.storage.from(bucket).createSignedUrl(path,3600);if(!signed.error)addUrl(signed.data?.signedUrl);}catch(_){}
    }
-   if(direct)urls.push(direct);
-   if(!entries.length&&!direct){try{urls.push(supabaseClient.storage.from('msmi-avatars').getPublicUrl(value).data.publicUrl);}catch(_){}}
-   return [...new Set(urls.filter(Boolean))];
+   return urls.filter(Boolean);
  }
  async function resolveAvatarUrl(raw){const sources=await resolveAvatarSources(raw);return sources[0]||'';}
  function attachAvatarImage(el,raw,label){
-   if(!raw)return;const img=document.createElement('img');img.alt=(label||'Member')+' profile photo';img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
-   let sources=[],index=0;img.onerror=()=>{index++;if(sources[index])img.src=sources[index];else img.remove();};
-   el.append(img);resolveAvatarSources(raw).then(list=>{sources=list;if(sources.length)img.src=sources[0];else img.remove();}).catch(()=>img.remove());
+   if(!raw)return;const img=document.createElement('img');img.alt=(label||'Member')+' profile photo';img.loading='eager';img.decoding='async';
+   let sources=[],index=0,done=false;img.onerror=()=>{index++;if(sources[index])img.src=sources[index];else{img.remove();done=true;}};
+   img.onload=()=>{done=true;};el.append(img);
+   resolveAvatarSources(raw).then(list=>{sources=list;if(sources.length){img.src=sources[0];}else if(!done)img.remove();}).catch(()=>img.remove());
  }
  function memberAvatar(url,label,large=false){
    const el=node('div','member-avatar'+(large?' large':''),initials(label));attachAvatarImage(el,url,label);return el;
