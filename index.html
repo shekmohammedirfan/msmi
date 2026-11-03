@@ -237,6 +237,7 @@
     .member-chat-compose textarea{flex:1;min-width:0;resize:vertical;min-height:42px;max-height:110px;padding:10px;border:1px solid #ddd;border-radius:10px;font:13px inherit}
     .member-chat-compose button{width:auto;min-width:84px}
     .member-profile-about{padding:12px;background:#fff8f9;border-radius:12px;margin-top:14px;line-height:1.6;font-size:13px;white-space:pre-wrap}
+    .member-profile-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 12px;margin:10px 0;min-width:0}.member-profile-details p{margin:3px 0;overflow-wrap:anywhere}.member-profile-details a{color:#b10f2c;text-decoration:underline;overflow-wrap:anywhere}.member-avatar.has-photo{color:transparent!important}.member-avatar img{display:block;object-fit:cover;}
     .admin-storage-stat{grid-column:1/-1;border:1px solid #edc5cc;border-radius:12px;padding:14px;background:#fff7f8}
     .admin-storage-stat strong{font-size:23px;color:#a80e27;display:block}
     .auth-summary{display:grid;gap:10px;margin-top:24px}.auth-summary-item{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:#fff}
@@ -315,7 +316,7 @@
     .member-contact{min-height:58px}
     .member-contact .member-avatar{width:46px;height:46px;flex-basis:46px}
     @media(max-width:1000px){.member-workspace{grid-template-columns:minmax(230px,280px) minmax(0,1fr)!important}.member-list-panel{height:calc(100vh - 170px)}.member-detail-panel{flex-wrap:wrap}.member-detail-panel .member-profile-about{flex-basis:100%;max-height:60px}.member-chat{height:560px;min-height:430px}}
-    @media(max-width:760px){.member-workspace{grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto!important}.member-list-panel,.member-detail-panel,.member-chat{grid-column:1!important;grid-row:auto!important}.member-list-panel{height:auto;min-height:0}.member-list-panel #memberContactList{max-height:340px!important;min-height:150px!important}.member-detail-panel{display:flex;flex-direction:column;align-items:stretch}.member-detail-panel .member-profile-about{max-height:100px}.member-chat{height:64vh;min-height:430px}.member-chat.open{display:flex!important}}
+    @media(max-width:760px){.member-workspace{grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto!important}.member-list-panel,.member-detail-panel,.member-chat{grid-column:1!important;grid-row:auto!important}.member-list-panel{height:auto;min-height:0}.member-list-panel #memberContactList{max-height:340px!important;min-height:150px!important}.member-detail-panel{display:flex;flex-direction:column;align-items:stretch}.member-detail-panel .member-profile-about{max-height:100px}.member-profile-details{grid-template-columns:1fr}.member-chat{height:64vh;min-height:430px}.member-chat.open{display:flex!important}}
 
 
     /* MSMI central OneDrive cloud drive */
@@ -1500,26 +1501,29 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
  const isOnline=last=>!!last&&(Date.now()-new Date(last).getTime())<120000;
  async function updatePresence(){if(!v2User)return;const {error}=await supabaseClient.from('portal_presence').upsert({user_id:v2User.id,last_seen:new Date().toISOString()},{onConflict:'user_id'});if(error)console.warn('Presence update:',error.message);}
  async function resolveAvatarSources(raw){
-   if(Array.isArray(raw)){const all=[];for(const item of raw){const list=await resolveAvatarSources(item);for(const url of list)if(!all.includes(url))all.push(url);}return all;}
+   if(Array.isArray(raw)){const all=[];for(const item of raw){const list=await resolveAvatarSources(item);for(const url of list)if(url&&!all.includes(url))all.push(url);}return all;}
    const value=String(raw||'').trim();if(!value)return [];
    if(/^(data:image\/|blob:)/i.test(value))return [value];
-   if(!supabaseClient)return /^https?:\/\//i.test(value)?[value]:[];
-   const entries=[];const add=(bucket,path)=>{try{path=decodeURIComponent(String(path||'').replace(/^\/+/,''));}catch(_){path=String(path||'').replace(/^\/+/, '');}if(bucket&&path&&!entries.some(x=>x.bucket===bucket&&x.path===path))entries.push({bucket,path});};
-   let direct='';
    if(/^https?:\/\//i.test(value)){
-     direct=value;
-     try{const u=new URL(value);const m=u.pathname.match(/\/storage\/v1\/object\/(?:public|sign|authenticated)\/([^/]+)\/(.+)$/i);if(m)add(m[1],m[2]);}catch(_){}
-   }else{
-     const path=value.replace(/^\/+/, '');
-     if(path.startsWith('msmi-avatars/'))add('msmi-avatars',path.slice(13));
-     else if(path.startsWith('msmi-cloud/'))add('msmi-cloud',path.slice(11));
-     else {add('msmi-avatars',path);add('msmi-cloud',path);}
+     const urls=[value];
+     try{
+       const u=new URL(value);const m=u.pathname.match(/\/storage\/v1\/object\/(?:public|sign|authenticated)\/([^/]+)\/(.+)$/i);
+       if(m&&supabaseClient){let path=m[2];try{path=decodeURIComponent(path);}catch(_){}const bucket=supabaseClient.storage.from(m[1]);
+         try{const pub=bucket.getPublicUrl(path)?.data?.publicUrl;if(pub&&!urls.includes(pub))urls.push(pub);}catch(_){}
+         try{const signed=await bucket.createSignedUrl(path,60*60*24*3);if(!signed.error&&signed.data?.signedUrl&&!urls.includes(signed.data.signedUrl))urls.push(signed.data.signedUrl);}catch(_){}
+       }
+     }catch(_){}
+     return urls;
    }
-   const urls=[];
-   for(const entry of entries){
-     try{const bucket=supabaseClient.storage.from(entry.bucket);const signed=await bucket.createSignedUrl(entry.path,60*60*24*3);if(!signed.error&&signed.data?.signedUrl)urls.push(signed.data.signedUrl);const pub=bucket.getPublicUrl(entry.path)?.data?.publicUrl;if(pub)urls.push(pub);}catch(_){}
-   }
-   if(direct)urls.push(direct);
+   if(!supabaseClient)return [];
+   let bucketName='msmi-avatars',path=value.replace(/^\/+/, '');
+   if(path.startsWith('msmi-avatars/'))path=path.slice('msmi-avatars/'.length);
+   else if(path.startsWith('msmi-cloud/')){bucketName='msmi-cloud';path=path.slice('msmi-cloud/'.length);}
+   try{path=decodeURIComponent(path);}catch(_){}
+   const bucket=supabaseClient.storage.from(bucketName),urls=[];
+   // Public URL first: it avoids unnecessary signed-URL/RLS failures for the public avatar bucket.
+   try{const pub=bucket.getPublicUrl(path)?.data?.publicUrl;if(pub)urls.push(pub);}catch(_){}
+   try{const signed=await bucket.createSignedUrl(path,60*60*24*3);if(!signed.error&&signed.data?.signedUrl)urls.push(signed.data.signedUrl);}catch(_){}
    return [...new Set(urls.filter(Boolean))];
  }
 
@@ -1541,15 +1545,15 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
  function syncOverviewProfile(data,u){
    const name=data?.display_name||data?.username||u.email||'MSMI Member';
    byId('overviewName').textContent=name;byId('overviewStatus').textContent=data?.status_message||'MSMI member';byId('overviewBio').textContent=data?.bio||'Complete your About Me in Advanced profile.';
-   const avatar=byId('overviewAvatar');avatar.replaceChildren();avatar.textContent=initials(name);attachAvatarImage(avatar,data?.avatar_url,'Your profile');
+   const avatar=byId('overviewAvatar');avatar.replaceChildren();avatar.textContent=initials(name);attachAvatarImage(avatar,[data?.avatar_url,data?.avatar_storage_path],name);
  }
  async function loadMemberDirectory(){
-   try{const u=await currentUser();const {data,error}=await supabaseClient.rpc('msmi_member_directory');if(error)throw error;
+   try{const u=await currentUser();const {data,error}=await supabaseClient.rpc('msmi_member_directory_v20');if(error)throw error;
      const box=byId('memberContactList');box.replaceChildren();const q=byId('memberSearchInput').value.trim().toLowerCase();
      const members=(data||[]).filter(m=>m.id!==u.id).filter(m=>!q||`${m.username||''} ${m.display_name||''} ${m.status_message||''} ${m.bio||''}`.toLowerCase().includes(q));
      members.forEach(m=>{const b=btn('',async()=>{await selectMember(m);await openMemberConversation(m);});b.className='member-contact'+(selectedMember?.id===m.id?' selected':'');b.dataset.memberId=m.id;
        const displayName=m.display_name||m.username||m.email?.split('@')[0]||'MSMI member';
-       b.append(memberAvatar(m.avatar_url||m.avatar_storage_path,displayName));const info=node('span');info.style.minWidth='0';
+       b.append(memberAvatar([m.avatar_url,m.avatar_storage_path],displayName));const info=node('span');info.style.minWidth='0';
        const name=node('strong','',displayName);const online=isOnline(m.last_seen);
        const sub=node('small','member-presence'+(online?' online':''),online?'● Online':(m.last_seen?'○ Offline · '+new Date(m.last_seen).toLocaleString():'○ Offline'));info.append(name,sub,node('small','note-meta','@'+(m.username||'member')));b.append(info);box.append(b);
      });
@@ -1562,18 +1566,21 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
    if(memberChatChannel){await supabaseClient.removeChannel(memberChatChannel);memberChatChannel=null;}
    memberChatLastRenderSignature='';byId('memberChatPanel').classList.remove('open');
    selectedMember=m;const panel=byId('memberDetailPanel');panel.replaceChildren();
-   const head=node('div','section-title');head.style.justifyContent='flex-start';head.append(memberAvatar(m.avatar_url,m.display_name||m.username||m.email?.split('@')[0]||'MSMI member',true));
+   const head=node('div','section-title');head.style.justifyContent='flex-start';head.append(memberAvatar([m.avatar_url,m.avatar_storage_path],m.display_name||m.username||'MSMI member',true));
    const identity=node('div');identity.append(node('h3','',m.display_name||m.username||m.email?.split('@')[0]||'MSMI member'));
    const online=isOnline(m.last_seen);identity.append(node('small','member-presence'+(online?' online':''),online?'● Online now':(m.last_seen?'○ Offline · Last seen '+new Date(m.last_seen).toLocaleString():'○ Offline · Last seen unavailable')));
-   head.append(identity);panel.append(head);panel.append(node('div','member-profile-about',m.bio||'This member has not added an About Me description yet.'));
-   panel.append(node('p','note-meta','Status: '+(m.status_message||'No status message')));
-   panel.append(node('p','note-meta','Username: @'+(m.username||'member')));
-   panel.append(btn('Open chat',async()=>{await openMemberConversation(m);}));
+   head.append(identity);panel.append(head);
+   const about=node('div','member-profile-about',m.bio||'This member has not added an About Me description yet.');panel.append(about);
+   const details=node('div','member-profile-details');
+   const addDetail=(label,value)=>{if(value===null||value===undefined||String(value).trim()==='')return;const line=node('p','note-meta');const strong=node('strong','',label+': ');line.append(strong,document.createTextNode(Array.isArray(value)?value.join(', '):String(value)));details.append(line);};
+   addDetail('Status',m.status_message||'No status message');addDetail('Username','@'+(m.username||'member'));addDetail('Headline',m.headline);addDetail('Location',m.location);addDetail('Organization',m.organization);addDetail('Skills',m.skills);addDetail('Interests',m.interests);
+   if(m.website_url){const line=node('p','note-meta');line.append(node('strong','','Website: '));try{const url=new URL(m.website_url);if(['http:','https:'].includes(url.protocol)){const a=node('a','',url.hostname);a.href=url.href;a.target='_blank';a.rel='noopener noreferrer';line.append(a);}else line.append(document.createTextNode(m.website_url));}catch(_){line.append(document.createTextNode(m.website_url));}details.append(line);}
+   panel.append(details);panel.append(btn('Open chat',async()=>{await openMemberConversation(m);}));
    byId('memberContactList').querySelectorAll('.member-contact').forEach(b=>b.classList.toggle('selected',b.dataset.memberId===m.id));
  }
  async function openMemberConversation(m){
    selectedMember=m;document.dispatchEvent(new CustomEvent('msmi:member-selected',{detail:{id:m.id}}));const copyChatButton=byId('copyMemberChatBtn'),clearChatButton=byId('clearMemberChatBtn');const u=await fastCurrentUser();if(memberChatPollTimer){clearInterval(memberChatPollTimer);memberChatPollTimer=null;}memberChatLastRenderSignature='';const head=byId('memberChatHeader');head.replaceChildren();
-   const left=node('div');left.style.display='flex';left.style.alignItems='center';left.style.gap='9px';left.append(memberAvatar(m.avatar_url,m.display_name||m.username||m.email?.split('@')[0]||'MSMI member'));
+   const left=node('div');left.style.display='flex';left.style.alignItems='center';left.style.gap='9px';left.append(memberAvatar([m.avatar_url,m.avatar_storage_path],m.display_name||m.username||'MSMI member'));
    const label=node('div');label.append(node('strong','',m.display_name||m.username||m.email?.split('@')[0]||'MSMI member'),node('small','chat-live-label'+(isOnline(m.last_seen)?'':' offline'),isOnline(m.last_seen)?'● Online':(m.last_seen?'○ Offline · Last seen '+new Date(m.last_seen).toLocaleString():'○ Offline')));left.append(label);
    const live=node('span','chat-live-label offline','Connecting…');live.id='memberChatLiveStatus';head.append(left,live);if(copyChatButton&&clearChatButton){const actions=node('div','msmi-chat-head-actions');actions.append(copyChatButton,clearChatButton);head.append(actions);}
    byId('memberChatPanel').classList.add('open');byId('memberChatThread').replaceChildren(node('p','note-meta','Loading conversation…'));
