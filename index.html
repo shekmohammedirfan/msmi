@@ -272,7 +272,7 @@
     .member-contact strong{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .member-contact small{display:block;font-size:10px}
     .member-avatar{position:relative;isolation:isolate}
-    .member-avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit;z-index:1}.v2-avatar{position:relative}.v2-avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit;z-index:1}
+    .member-avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit;z-index:1}
     .member-avatar.large img{width:100%;height:100%}
     .member-chat{display:flex;flex-direction:column;min-width:0;min-height:500px;height:calc(100vh - 160px);max-height:850px;margin:0;border-radius:13px}.member-chat.open{display:flex}
     .member-chat-head{min-height:58px;justify-content:space-between;gap:8px;padding:9px 12px}
@@ -406,79 +406,8 @@ body[data-msmi-glow="on"] .dash-card,body[data-msmi-glow="on"] .feature-sidebar,
 @media(max-width:760px){.msmi-workspace-toolbar{border-radius:14px}.msmi-toolbar-right{gap:4px}.v10-group-fullscreen .v2-note-grid{grid-template-columns:1fr}.v10-group-fullscreen #groupMessages{height:48vh}.msmi-attachment-gallery{grid-template-columns:1fr}.v10-lightbox-stage{padding:4px}.v10-editor-toolbar{gap:7px}}
 @media(prefers-reduced-motion:reduce){.portal-page-active{animation:none!important}.msmi-attachment-gallery img{transition:none}}
 
-
-/* V11 portal refinement */
-.v11-login-showcase{width:100%;min-height:260px;border-radius:22px;overflow:hidden;background:linear-gradient(135deg,#250711,#8d102b 60%,#d32b4c);color:white;padding:20px;box-shadow:0 18px 55px #7b10252c}.v11-showcase-head,.v11-slide-controls{display:flex;justify-content:space-between;align-items:center;gap:10px}.v11-login-slides{min-height:170px;position:relative}.v11-login-slide{display:none;min-height:170px;background-size:cover;background-position:center;border-radius:16px;padding:24px;margin-top:14px;position:relative;isolation:isolate}.v11-login-slide:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#16040de8,#16040d88 70%,#16040d22);z-index:-1;border-radius:16px}.v11-login-slide.active{display:flex;align-items:center;animation:v11fade .45s ease}.v11-slide-copy{max-width:520px}.v11-slide-copy h2{font-size:clamp(22px,3vw,34px);margin:0 0 8px}.v11-slide-copy p{line-height:1.6;margin:0;color:#fff}.v11-slide-controls{justify-content:center;margin-top:10px}.v11-slide-controls button{border:1px solid #ffffff66;color:white;background:#ffffff1c;border-radius:50%;width:34px;height:34px;font-size:22px}.v11-slide-dot{width:8px;height:8px;border-radius:50%;background:#ffffff66;border:0;margin:0 3px;padding:0}.v11-slide-dot.active{background:#fff;width:22px;border-radius:8px}.v11-file-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px;border:1px solid var(--line);border-radius:10px;margin:6px 0}.v11-file-row img{width:54px;height:48px;object-fit:cover;border-radius:7px}.v11-announce-item{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}.v11-announce-item .v11-file-name{flex:1;min-width:150px;overflow-wrap:anywhere;font-weight:700}.v11-announce-item img{width:64px;height:54px;object-fit:cover;border-radius:8px}.v11-member-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;padding:9px;border-bottom:1px solid var(--line)}.v11-member-row small{display:block;color:var(--muted)}.v11-member-row button{white-space:nowrap}.v11-group-top-actions{display:flex;gap:8px;flex-wrap:wrap}.v11-chat-image{max-width:min(420px,100%);max-height:420px;object-fit:contain;border-radius:12px;display:block}.v11-admin-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px}.v11-admin-kpi{padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}.v11-admin-kpi strong{font-size:24px;display:block;color:var(--red)}
-@keyframes v11fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-button.primary,button.primary *,a.primary{color:#fff!important}button.primary svg,button.primary i{color:#fff!important;stroke:currentColor}
-@media(max-width:650px){.v11-member-row{grid-template-columns:1fr auto}.v11-member-row .v11-member-meta{grid-column:1/-1}.v11-login-showcase{padding:13px}.v11-login-slide{padding:16px}}
-@media(prefers-reduced-motion:reduce){.v11-login-slide.active{animation:none}}
-
-
-    .msmi-attachment-gallery{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 2px}.msmi-announcement-image{flex:0 0 min(240px,75vw);scroll-snap-align:start;display:inline-flex;flex-direction:column;gap:6px;margin:6px;max-width:min(240px,100%);vertical-align:top}.msmi-announcement-image img{max-width:100%;max-height:190px;object-fit:cover;border-radius:12px;cursor:zoom-in}.msmi-announcement-image figcaption{font-size:12px;font-weight:700;color:#7b1a2a;overflow-wrap:anywhere}.msmi-group-member{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.msmi-group-member .member-avatar{flex:0 0 34px}.msmi-group-members{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-/* V13: accessible button contrast. Only filled primary/danger controls use white text. */
-button,.tool-btn{color:var(--red)!important;background:#fff;border-color:#e6c5cc}
-button.primary,.primary,button.danger-btn,.danger-btn{color:#fff!important;background:var(--red);border-color:var(--red)}
-button:disabled{opacity:.55;cursor:not-allowed}
-button:not(.primary):not(.danger-btn):not(.v11-slide-dot):not(.msmi-icon-btn){background:#fff;color:var(--red)!important}
-.v11-slide-controls button,.v11-slide-dot{background:#ffffff1c!important;color:#fff!important;border-color:#ffffff66!important}
-
-/* V15 BUTTON CONTRAST: all ordinary actions use a red surface and white label. */
-button:not(.v11-slide-dot):not(.msmi-icon-btn):not(.chat-actions button):not(.v10-lightbox button),
-.tool-btn:not(.v11-slide-dot),
-.v2-item button,.message-item button,.od-item-actions button,.msmi-group-member button{
-  background:linear-gradient(110deg,#c8102e,#970d25)!important;color:#fff!important;
-  border:1px solid #970d25!important;text-shadow:none!important;opacity:1;
-}
-button:not(.v11-slide-dot):not(.msmi-icon-btn):not(.chat-actions button):not(.v10-lightbox button) *,
-.tool-btn *{color:#fff!important}
-button:not(.v11-slide-dot):not(.msmi-icon-btn):not(.chat-actions button):not(.v10-lightbox button):hover,
-.tool-btn:hover{background:linear-gradient(110deg,#a90d27,#79091c)!important;color:#fff!important}
-button:disabled{background:#777!important;color:#fff!important;border-color:#777!important;opacity:.65!important}
-button.danger-btn,.danger-btn{background:linear-gradient(110deg,#9f1230,#72091f)!important;color:#fff!important;border-color:#72091f!important}
-button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!important;color:#fff!important;border-color:#8e0920!important}
-.chat-bubble .chat-actions button{background:transparent!important;color:#9f0d24!important;border:0!important}
-.v11-slide-controls button,.v11-slide-dot,.msmi-icon-btn,.v10-lightbox button{color:#fff!important}
-
-
-/* MSMI V16: consistent contrast for buttons generated by every feature module. */
-#dashboardView button:not(.msmi-icon-btn):not(.v11-slide-dot):not(.chat-actions button):not(.msmi-chat-fullscreen-btn),
-#authView button:not(.msmi-icon-btn){color:#8f1027!important;background:#fff!important;border:1px solid #d9aab4!important;}
-#dashboardView button.primary,#dashboardView button.danger-btn,#dashboardView .primary button,
-#dashboardView a.primary,#dashboardView button[id*="Save"],#dashboardView button[id*="save"],
-#dashboardView button[id*="send"],#dashboardView button[id*="Send"],#dashboardView button[id*="create"],#dashboardView button[id*="Create"],
-#dashboardView button[id*="invite"],#dashboardView button[id*="Invite"],#dashboardView button[id*="refresh"],#dashboardView button[id*="Refresh"],
-#dashboardView button[id*="publish"],#dashboardView button[id*="Publish"],#dashboardView button[id*="delete"],#dashboardView button[id*="Delete"],
-#dashboardView button[id*="logout"],#dashboardView button[id*="Logout"],#dashboardView button[id*="confirm"],#dashboardView button[id*="Confirm"]{
- color:#fff!important;background:linear-gradient(110deg,#c8102e,#8f1027)!important;border:1px solid #9f0c25!important;
-}
-#dashboardView button.primary *,#dashboardView button.danger-btn *,#dashboardView a.primary *{color:#fff!important;}
-#dashboardView button:disabled{color:#777!important;background:#ececec!important;border-color:#d5d5d5!important;}
-#dashboardView .tool-btn:not(.primary):not(.danger-btn){color:#8f1027!important;background:#fff!important;}
-#dashboardView .chat-bubble .chat-actions button{color:#8f1027!important;background:transparent!important;border:0!important;}
-#dashboardView .msmi-chat-fullscreen-btn{color:#8f1027!important;background:#fff!important;}
-
 </style>
 <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
-
-/* MSMI V17: consistent contrast, avatar rendering and navigation safety */
-<style id="msmi-v17-overrides">
-#dashboardView button.primary,#dashboardView button.tool-btn.primary,#dashboardView .primary,#dashboardView button.danger-btn,#dashboardView button[class*="primary"],#dashboardView button[class*="danger"]{background:#c8102e!important;background-image:linear-gradient(135deg,#d7193f,#a80724)!important;color:#fff!important;border:1px solid #a80724!important;text-shadow:none!important;opacity:1!important}
-#dashboardView button.tool-btn:not(.secondary):not([aria-pressed="false"]),#dashboardView button.v2-btn:not(.secondary){color:#fff!important}
-#dashboardView button.tool-btn:not(.secondary){background-color:#c8102e!important;color:#fff!important;border-color:#b20d29!important}
-#dashboardView button:not(.secondary):not(.sidebar-link):not(.icon-only){color:#fff!important}
-#dashboardView button:not(.secondary):not(.sidebar-link):not(.icon-only){background-color:#c8102e!important;border-color:#b20d29!important}
-#dashboardView button.tool-btn:hover,#dashboardView button.primary:hover,#dashboardView button.danger-btn:hover{background:#99091f!important;color:#fff!important}
-#dashboardView button:disabled{opacity:.58!important;color:#fff!important}
-.member-avatar img[data-msmi-avatar],.v2-avatar img[data-msmi-avatar],#overviewAvatar img[data-msmi-avatar],#accountProfileAvatar img[data-msmi-avatar],#profileAvatarPreview img[data-msmi-avatar]{width:100%!important;height:100%!important;display:block!important;object-fit:cover!important;border-radius:inherit!important;position:absolute!important;inset:0!important}
-.member-avatar,.v2-avatar,#overviewAvatar,#accountProfileAvatar,#profileAvatarPreview{position:relative!important;overflow:hidden!important}
-#overviewAvatar.has-photo,#accountProfileAvatar.has-photo,#profileAvatarPreview.has-photo{color:transparent!important}
-#overviewName{min-width:0;overflow-wrap:anywhere}
-#v11DriveUrl{min-height:42px!important;user-select:text!important;-webkit-user-select:text!important}
-#v13DriveAdminList .v11-file-row{min-width:0}
-#adminAnalytics .v2-stat{min-height:78px}
-</style>
-
 </head>
 <body>
   <header class="topbar">
@@ -583,7 +512,7 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
           <a class="sidebar-link" href="#v2Notifications"><span class="nav-icon">♢</span>Notifications</a>
           <a class="sidebar-link" href="#v2Profile"><span class="nav-icon">◎</span>Advanced profile</a>
           <a class="sidebar-link" href="#v2SmartNotes"><span class="nav-icon">▧</span>Smart notepad</a>
-          <a class="sidebar-link" href="#v2CloudDrive"><span class="nav-icon">☁</span>Public drive</a>
+          <a class="sidebar-link" href="#v2CloudDrive"><span class="nav-icon">☁</span>Cloud drive</a>
           <a class="sidebar-link" href="#v2Groups"><span class="nav-icon">♧</span>Group chat</a>
           <a class="sidebar-link" href="#v2Security"><span class="nav-icon">♜</span>Account security</a>
           <a class="sidebar-link" href="#pdfGeneratorPage"><span class="nav-icon">▤</span>PDF Generator</a>
@@ -606,7 +535,7 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
         <article class="overview-card"><h3>MSMI ANNOUNCEMENT</h3><p id="overviewAnnouncement">Loading latest announcement…</p><button class="tool-btn" type="button" data-open-page="announcementCard">View announcement</button></article>
         <article class="overview-card"><h3>NOTIFICATIONS</h3><p id="overviewNotificationCount">Loading notifications…</p><p id="overviewNotificationPreview">Your latest alerts appear here.</p><button class="tool-btn" type="button" data-open-page="v2Notifications">Open notifications</button></article>
       </div>
-      <div class="overview-card" style="margin-top:12px"><h3>QUICK ACCESS</h3><div class="v2-actions"><button class="tool-btn" type="button" data-open-page="memberDirectory">Members & chat</button><button class="tool-btn" type="button" data-open-page="privateEditorBox">Private notepad</button><button class="tool-btn" type="button" data-open-page="v2CloudDrive">Public drive</button><button class="tool-btn" type="button" data-open-page="v2Groups">Group chat</button></div></div>
+      <div class="overview-card" style="margin-top:12px"><h3>QUICK ACCESS</h3><div class="v2-actions"><button class="tool-btn" type="button" data-open-page="memberDirectory">Members & chat</button><button class="tool-btn" type="button" data-open-page="privateEditorBox">Private notepad</button><button class="tool-btn" type="button" data-open-page="v2CloudDrive">Cloud drive</button><button class="tool-btn" type="button" data-open-page="v2Groups">Group chat</button></div></div>
       </section>
       <div class="profile-box portal-page" id="profileSummary">
         <div class="section-title" style="justify-content:flex-start;gap:14px;margin-bottom:14px"><div class="member-avatar large" id="accountProfileAvatar">MS</div><div><h2 id="accountProfileName" style="font-size:21px;margin:0 0 5px">Your profile</h2><span class="member-presence" id="accountProfileStatus">Member account</span></div></div>
@@ -645,15 +574,7 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
         <p class="note-meta">Formatting is applied to the published announcement preview. Message content remains plain text.</p>
         <div class="msmi-upload-tools"><label for="adminAnnouncementFiles" class="tool-btn">＋ Attach files / images</label><input id="adminAnnouncementFiles" type="file" multiple hidden><label for="adminAnnouncementFolder" class="tool-btn">＋ Attach folder</label><input id="adminAnnouncementFolder" type="file" webkitdirectory directory multiple hidden><span id="adminAnnouncementSelection" class="note-meta">No attachments selected</span></div><div class="msmi-progress-wrap hidden" id="adminAnnouncementProgressWrap"><div class="msmi-progress-label"><span id="adminAnnouncementProgressLabel">Uploading…</span><strong id="adminAnnouncementProgressValue">0%</strong></div><progress id="adminAnnouncementProgress" max="100" value="0"></progress></div><div id="adminAnnouncementPreview" class="msmi-attachment-preview"></div>
         <button class="primary" id="saveAnnouncementBtn" type="button" style="margin-top:10px">Publish announcement</button><p class="message" id="adminStatus" role="status"></p>
-        <div class="admin-grid" style="margin-top:16px"><div><h3>Registered members</h3><div id="adminUsers" class="admin-data">Loading…</div></div><div><h3>Private notes & messages</h3><div id="adminPrivateData" class="admin-data">Loading…</div></div></div><div class="v2-panel" id="adminAnalyticsPanel"><div class="section-title"><h3>Portal analytics</h3><button class="tool-btn" id="refreshAdminAnalytics" type="button">Refresh analytics</button></div><div class="v2-stats" id="adminAnalytics"><p class="note-meta">Loading analytics…</p></div></div>
-        <div class="v2-panel" id="v11AdminTools" style="margin-top:18px">
-          <div class="section-title"><div><h3>Portal management centre</h3><p class="sub">Manage public drive, member access and login slideshow.</p></div><button class="tool-btn" id="v11AdminRefresh" type="button">↻ Refresh all</button></div>
-          <h4>Public drive links</h4><p class="sub">Add multiple shared folders or files. Each link is shown to members as a separate Open / Download item.</p><label for="v11DriveTitle">Drive / file title</label><input id="v11DriveTitle" maxlength="90" placeholder="e.g. Study Materials"><label for="v11DriveUrl">Shared file or folder URL</label><input id="v11DriveUrl" type="url" inputmode="url" autocomplete="off" spellcheck="false" maxlength="2000" placeholder="Paste the complete https:// shared link here"><label for="v11DriveDescription">Description (optional)</label><textarea id="v11DriveDescription" rows="2" maxlength="500" placeholder="What members will find in this drive"></textarea><div class="v2-actions"><button class="primary" id="v11SaveDrive" type="button">＋ Add public drive link</button><button class="tool-btn" id="v13ClearDriveForm" type="button">Clear fields</button></div><div id="v13DriveAdminList" class="v2-list"></div><p class="message" id="v11DriveStatus" role="status"></p>
-          <hr><h4>Login slideshow · Website features</h4><label for="v11SlideTitle">Slide title</label><input id="v11SlideTitle" maxlength="100" placeholder="Welcome to MSMI"><label for="v11SlideText">Slide description</label><textarea id="v11SlideText" rows="2" maxlength="500"></textarea><label for="v11SlideImage">Image URL (public image URL)</label><input id="v11SlideImage" type="url" maxlength="1000" placeholder="https://…"><label for="v11SlideImageFile">Or upload a slideshow image</label><input id="v11SlideImageFile" type="file" accept="image/png,image/jpeg,image/webp"><div class="msmi-progress-wrap hidden" id="v11SlideUploadWrap"><div class="msmi-progress-label"><span id="v11SlideUploadLabel">Uploading slide image…</span><strong id="v11SlideUploadValue">0%</strong></div><progress id="v11SlideUploadProgress" max="100" value="0"></progress></div><div class="v2-actions"><button class="primary" id="v11AddSlide" type="button">Add feature slide</button><button class="tool-btn" id="v11ClearSlides" type="button">Remove all slides</button></div><div id="v11SlideAdminList" class="v2-list"></div><p class="message" id="v11SlideStatus" role="status"></p>
-          <hr><h4>Announcement media slideshow</h4><p class="sub">Existing announcement attachments appear in the member announcement gallery. Add images/files in the announcement editor above; remove them from the attachment manager below.</p><div id="v11AnnouncementFiles" class="v2-list"></div>
-          <hr><h4>Member access management</h4><p class="sub">Denying access blocks portal sign-in after authentication. It does not delete the member's account or data.</p><div id="v11MemberManager" class="admin-data">Loading member access…</div><p class="message" id="v11MemberStatus" role="status"></p>
-          <hr><h4>Member and authentication analytics</h4><div id="v11AuthStats" class="v2-stats"></div>
-        </div>
+        <div class="admin-grid" style="margin-top:16px"><div><h3>Registered members</h3><div id="adminUsers" class="admin-data">Loading…</div></div><div><h3>Private notes & messages</h3><div id="adminPrivateData" class="admin-data">Loading…</div></div></div><div class="v2-panel" id="oneDriveAdminQuotaPanel"><div class="section-title"><h3>Central OneDrive storage · Admin only</h3><button class="tool-btn" id="refreshOneDriveQuotaBtn" type="button">Refresh OneDrive usage</button></div><div id="oneDriveQuotaStats" class="od-status">Connect OneDrive to view storage usage.</div></div><div class="v2-panel" id="adminAnalyticsPanel"><div class="section-title"><h3>Portal analytics</h3><button class="tool-btn" id="refreshAdminAnalytics" type="button">Refresh analytics</button></div><div class="v2-stats" id="adminAnalytics"><p class="note-meta">Loading analytics…</p></div></div>
         <label for="adminResetEmail">Send a password reset link to a member</label><input id="adminResetEmail" type="email" placeholder="member@example.com"><button class="primary secondary" id="adminResetPasswordBtn" type="button" style="margin-top:10px">Send reset link</button>
       </section>
 
@@ -733,8 +654,13 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
       </section>
 
       <section class="v2-panel portal-page" id="v2CloudDrive">
-        <div class="section-title"><div><h2>MSMI Public Drive</h2><p class="sub">Admin-managed shared drive link. Open it to browse or download shared files.</p></div><span class="pill">PUBLIC DRIVE</span></div>
-        <div id="publicDriveStatus" class="od-status">Loading public drive links…</div><div id="publicDriveLinks" class="v2-list"><p class="note-meta">Loading shared resources…</p></div>
+        <div class="section-title"><div><h2>MSMI Cloud Drive</h2><p class="sub">Central MSMI file storage powered by the administrator’s OneDrive. Members use this page without Microsoft accounts.</p></div><span class="pill">ONEDRIVE STORAGE</span></div>
+        <div id="oneDriveConnectionStatus" class="od-status">Checking central OneDrive connection…</div>
+        <div id="oneDriveAdminTools" class="od-admin-tools hidden"><strong>Administrator connection</strong><p class="note-meta" style="margin:5px 0 10px">Connect your own Microsoft account once. The connection is stored securely on the server; do not share your Microsoft password.</p><div class="od-toolbar"><button class="primary" style="width:auto" id="connectOneDriveBtn" type="button">Connect my OneDrive</button><button class="tool-btn" id="disconnectOneDriveBtn" type="button">Disconnect</button><button class="tool-btn" id="refreshOneDriveStatusBtn" type="button">Check connection</button></div><p class="message" id="oneDriveAdminStatus" role="status"></p></div>
+        <div class="od-toolbar"><label class="od-upload-label" for="cloudFiles">＋ Choose files</label><input id="cloudFiles" type="file" multiple hidden><label class="tool-btn" for="cloudFolders">＋ Choose folder</label><input id="cloudFolders" type="file" webkitdirectory directory multiple hidden><button class="primary" style="width:auto" id="uploadCloudFiles" type="button">Upload selected</button><button class="tool-btn" id="createOneDriveFolderBtn" type="button">＋ New folder</button><button class="tool-btn" id="refreshCloudFiles" type="button">Refresh</button></div>
+        <div id="oneDriveBreadcrumb" class="od-breadcrumb"><span>MSMI-CLOUD</span></div>
+        <div class="v2-actions"><span class="note-meta" id="cloudUsage">Files are saved in the central MSMI OneDrive.</span><span class="note-meta" id="cloudFileCount"></span></div>
+        <div class="msmi-progress-wrap hidden" id="cloudUploadProgressWrap"><div class="msmi-progress-label"><span id="cloudUploadProgressLabel">Uploading…</span><strong id="cloudUploadProgressValue">0%</strong></div><progress id="cloudUploadProgress" max="100" value="0"></progress></div><div id="cloudFileList" class="od-list"><p class="note-meta">Loading files…</p></div><p class="message" id="cloudStatus" role="status"></p>
       </section>
 
       <section class="v2-panel portal-page" id="v2Groups">
@@ -801,7 +727,6 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
     let supabaseClient = null;
     if (configured && window.supabase) {
       supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-      window.supabaseClient = supabaseClient;
     }
 
     const $ = (id) => document.getElementById(id);
@@ -940,9 +865,6 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
           password: $("loginPassword").value
         });
         if (error) throw error;
-        const gate = await supabaseClient.from('profiles').select('access_status,access_reason').eq('id',data.user.id).maybeSingle();
-        if (gate.error) throw gate.error;
-        if (gate.data?.access_status === 'denied') { await supabaseClient.auth.signOut({scope:'local'}); throw new Error('Access denied by MSMI administrator.'+(gate.data.access_reason?' Reason: '+gate.data.access_reason:'')); }
         await renderSession(data.session);
       } catch (error) {
         showMessage("loginMessage", error.message || "Sign-in failed.", "error");
@@ -1429,10 +1351,9 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
     async function loadAnnouncement(){
       const {data,error}=await supabaseClient.from('admin_announcements').select('content,updated_at,attachments,display_font_size,display_text_color,display_bold,display_italic').eq('id',1).maybeSingle();
       if(error) throw error; const box=$('announcementText');box.replaceChildren();const text=document.createElement('div');text.className='announcement-text-body';text.textContent=data?.content||'No announcement has been published yet.';text.style.fontSize=(data?.display_font_size||16)+'px';text.style.color=data?.display_text_color||'var(--ink)';text.style.fontWeight=data?.display_bold?'800':'400';text.style.fontStyle=data?.display_italic?'italic':'normal';box.append(text);
-      const overview=$('overviewAnnouncement');if(overview)overview.textContent=(data?.content||'No announcement has been published yet.').slice(0,260);
-      const gallery=document.createElement('div');gallery.className='msmi-attachment-gallery';(data?.attachments||[]).forEach(a=>{const url=a.url||'';if(!url)return;if((a.mime||'').startsWith('image/')){const wrap=document.createElement('figure');wrap.className='msmi-announcement-image';const img=document.createElement('img');img.src=url;img.alt=a.name||'Announcement image';img.loading='lazy';img.tabIndex=0;img.addEventListener('click',()=>{const viewer=$('v10Viewer'),stage=$('v10ViewerStage');if(!viewer||!stage)return;stage.replaceChildren();const full=document.createElement('img');full.src=url;full.alt=img.alt;full.style.cssText='max-width:96vw;max-height:calc(100vh - 100px);object-fit:contain';stage.append(full);$('v10ViewerTitle').textContent=img.alt;viewer.classList.add('open');document.body.style.overflow='hidden';});const cap=document.createElement('figcaption');cap.textContent=a.name||'Image attachment';wrap.append(img,cap);gallery.append(wrap);}else{const link=document.createElement('a');link.className='msmi-attachment-link';link.href=url;link.target='_blank';link.rel='noopener';link.download=a.name||'';link.textContent='⬇ '+(a.name||'Download attachment');gallery.append(link);}});if(gallery.childElementCount)box.append(gallery);
+      const gallery=document.createElement('div');gallery.className='msmi-attachment-gallery';(data?.attachments||[]).forEach(a=>{const url=a.url||'';if(!url)return;if((a.mime||'').startsWith('image/')){const img=document.createElement('img');img.src=url;img.alt=a.name||'Announcement image';img.loading='lazy';img.addEventListener('click',()=>window.open(url,'_blank','noopener'));gallery.append(img);}else{const link=document.createElement('a');link.className='msmi-attachment-link';link.href=url;link.target='_blank';link.rel='noopener';link.download=a.name||'';link.textContent='⬇ '+(a.name||'Download attachment');gallery.append(link);}});if(gallery.childElementCount)box.append(gallery);
       if($('adminAnnouncementInput')) $('adminAnnouncementInput').value=data?.content||'';if($('v10AnnouncementSize'))$('v10AnnouncementSize').value=String(data?.display_font_size||16);if($('v10AnnouncementColor'))$('v10AnnouncementColor').value=data?.display_text_color||'#252525';window.MSMI_announcementBold=!!data?.display_bold;window.MSMI_announcementItalic=!!data?.display_italic;
-      window.MSMI_announcementAttachments=data?.attachments||[];if(typeof renderAnnouncementAdmin==='function')renderAnnouncementAdmin();
+      window.MSMI_announcementAttachments=data?.attachments||[];
     }
     async function loadAdminConsole(){
       const {data,error}=await supabaseClient.rpc('admin_get_portal_data'); if(error) throw error;
@@ -1498,37 +1419,34 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
  async function updatePresence(){if(!v2User)return;const {error}=await supabaseClient.from('portal_presence').upsert({user_id:v2User.id,last_seen:new Date().toISOString()},{onConflict:'user_id'});if(error)console.warn('Presence update:',error.message);}
  async function resolveAvatarSources(raw){
    const value=String(raw||'').trim();if(!value||!supabaseClient)return [];
-   const entries=[];const add=(bucket,path)=>{try{path=decodeURIComponent(String(path||'').replace(/^\/+/,''));}catch(_){path=String(path||'').replace(/^\/+/, '');}if(bucket&&path&&!entries.some(x=>x.bucket===bucket&&x.path===path))entries.push({bucket,path});};
+   const entries=[];const add=(bucket,path)=>{path=String(path||'').replace(/^\/+/, '');if(bucket&&path&&!entries.some(x=>x.bucket===bucket&&x.path===path))entries.push({bucket,path});};
    let direct='';
    if(/^https?:\/\//i.test(value)){
      direct=value;
-     try{const u=new URL(value);const m=u.pathname.match(/\/storage\/v1\/object\/(?:public|sign|authenticated)\/([^/]+)\/(.+)$/i);if(m)add(m[1],m[2]);}catch(_){}
+     try{const u=new URL(value);const match=u.pathname.match(/\/storage\/v1\/object\/(?:public|sign|authenticated)\/([^/]+)\/(.+)$/i);if(match)add(match[1],decodeURIComponent(match[2]));}catch(_){}
    }else{
-     const path=value.replace(/^\/+/, '');
-     if(path.startsWith('msmi-avatars/'))add('msmi-avatars',path.slice(13));
-     else if(path.startsWith('msmi-cloud/'))add('msmi-cloud',path.slice(11));
+     let path=value.replace(/^\/+/, '');
+     if(path.startsWith('msmi-avatars/'))add('msmi-avatars',path.slice('msmi-avatars/'.length));
+     else if(path.startsWith('msmi-cloud/'))add('msmi-cloud',path.slice('msmi-cloud/'.length));
      else {add('msmi-avatars',path);add('msmi-cloud',path);}
    }
    const urls=[];
    for(const entry of entries){
-     try{const bucket=supabaseClient.storage.from(entry.bucket);const signed=await bucket.createSignedUrl(entry.path,60*60*24*3);if(!signed.error&&signed.data?.signedUrl)urls.push(signed.data.signedUrl);const pub=bucket.getPublicUrl(entry.path)?.data?.publicUrl;if(pub)urls.push(pub);}catch(_){}
+     try{
+       if(entry.bucket==='msmi-avatars')urls.push(supabaseClient.storage.from('msmi-avatars').getPublicUrl(entry.path).data.publicUrl);
+       else {const signed=await supabaseClient.storage.from(entry.bucket).createSignedUrl(entry.path,3600);if(!signed.error&&signed.data?.signedUrl)urls.push(signed.data.signedUrl);}
+     }catch(_){}
    }
    if(direct)urls.push(direct);
+   if(!entries.length&&!direct){try{urls.push(supabaseClient.storage.from('msmi-avatars').getPublicUrl(value).data.publicUrl);}catch(_){}}
    return [...new Set(urls.filter(Boolean))];
  }
-
  async function resolveAvatarUrl(raw){const sources=await resolveAvatarSources(raw);return sources[0]||'';}
  function attachAvatarImage(el,raw,label){
-   if(!el)return;el.querySelectorAll('img[data-msmi-avatar]').forEach(x=>x.remove());el.classList.remove('has-photo');
-   if(!raw)return;
-   const img=document.createElement('img');img.dataset.msmiAvatar='1';img.alt=(label||'Member')+' profile photo';img.loading='eager';img.decoding='async';img.referrerPolicy='no-referrer';
-   let sources=[],index=0,finished=false;
-   img.onload=()=>{finished=true;el.classList.add('has-photo');};
-   img.onerror=()=>{index++;if(sources[index])img.src=sources[index];else{img.remove();el.classList.remove('has-photo');}};
-   el.append(img);
-   resolveAvatarSources(raw).then(list=>{if(!el.isConnected)return;sources=list;if(sources.length)img.src=sources[0];else img.remove();}).catch(()=>{if(!finished)img.remove();});
+   if(!raw)return;const img=document.createElement('img');img.alt=(label||'Member')+' profile photo';img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
+   let sources=[],index=0;img.onerror=()=>{index++;if(sources[index])img.src=sources[index];else img.remove();};
+   el.append(img);resolveAvatarSources(raw).then(list=>{sources=list;if(sources.length)img.src=sources[0];else img.remove();}).catch(()=>img.remove());
  }
-
  function memberAvatar(url,label,large=false){
    const el=node('div','member-avatar'+(large?' large':''),initials(label));attachAvatarImage(el,url,label);return el;
  }
@@ -1630,47 +1548,22 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
  byId('memberChatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();byId('memberChatSend').click();}});
  window.MSMI_loadMemberDirectory=loadMemberDirectory;window.MSMI_refreshMessages=()=>loadMessages().catch(console.error);window.MSMI_refreshMemberChat=()=>loadMemberChat(true).catch(console.error);window.MSMI_showMemberProfile=m=>selectMember(m);
 
- async function loadNotifications(){
-   const box=byId('notificationList'),count=byId('notificationCount'),summary=byId('overviewNotificationCount'),preview=byId('overviewNotificationPreview');
-   if(box)box.replaceChildren(node('p','note-meta','Loading notifications…'));
-   try{
-     const u=await Promise.race([currentUser(),new Promise((_,reject)=>setTimeout(()=>reject(new Error('Could not verify your session. Please refresh and sign in again.')),10000))]);
-     const request=supabaseClient.from('portal_notifications').select('id,title,body,kind,created_at,read_at').eq('user_id',u.id).order('created_at',{ascending:false}).limit(50);
-     const result=await Promise.race([request,new Promise((_,reject)=>setTimeout(()=>reject(new Error('The notification request timed out. Check your connection and Supabase policies.')),15000))]);
-     if(result.error)throw result.error;
-     const rows=result.data||[];let unread=0;if(box)box.replaceChildren();
-     rows.forEach(r=>{if(!r.read_at)unread++;const item=node('article','v2-item'+(!r.read_at?' unread':''));item.append(node('strong','',r.title||'Notification'),node('p','',r.body||''),node('small','',r.created_at?new Date(r.created_at).toLocaleString():'Date unavailable'));
-       if(!r.read_at)item.append(btn('Mark read',async()=>{try{const {error}=await supabaseClient.from('portal_notifications').update({read_at:new Date().toISOString()}).eq('id',r.id).eq('user_id',u.id);if(error)throw error;await loadNotifications();}catch(e){status('notificationStatus',errText(e),'error');}}));box?.append(item);
-     });
-     if(!rows.length)box?.append(node('p','note-meta','No notifications yet.'));
-     if(count)count.textContent=unread+' unread';if(summary)summary.textContent=unread+' unread notification'+(unread===1?'':'s');if(preview)preview.textContent=rows[0]?.title||'You are all caught up.';
-     return rows;
-   }catch(e){const message=errText(e);if(box){box.replaceChildren(node('p','message error','Notifications could not load: '+message));const retry=btn('Retry',()=>loadNotifications().catch(()=>{}));retry.className='primary';box.append(retry);}if(count)count.textContent='Unavailable';if(summary)summary.textContent='Notifications unavailable';if(preview)preview.textContent=message;throw e;}
- }
-
+ async function loadNotifications(){const u=await currentUser();const {data,error}=await supabaseClient.from('portal_notifications').select('id,title,body,kind,created_at,read_at').eq('user_id',u.id).order('created_at',{ascending:false}).limit(50);if(error)throw error;const box=byId('notificationList');box.replaceChildren();let unread=0;(data||[]).forEach(r=>{if(!r.read_at)unread++;const item=node('article','v2-item'+(!r.read_at?' unread':''));item.append(node('strong','',r.title||'Notification'),node('p','',r.body||''),node('small','',new Date(r.created_at).toLocaleString()));if(!r.read_at)item.append(btn('Mark read',async()=>{const {error}=await supabaseClient.from('portal_notifications').update({read_at:new Date().toISOString()}).eq('id',r.id);if(error)throw error;await loadNotifications();}));box.append(item);});if(!data?.length)box.append(node('p','note-meta','No notifications yet.'));byId('notificationCount').textContent=unread+' unread';const summary=byId('overviewNotificationCount');if(summary)summary.textContent=unread+' unread notification'+(unread===1?'':'s');const preview=byId('overviewNotificationPreview');if(preview)preview.textContent=data?.[0]?.title||'You are all caught up.';}
  byId('removeAllNotifications').addEventListener('click',async()=>{if(!confirm('Remove all notifications from your account?'))return;try{const {error}=await supabaseClient.rpc('clear_my_portal_notifications');if(error)throw error;await loadNotifications();status('notificationStatus','All notifications removed.','success');}catch(e){status('notificationStatus',errText(e),'error');}});
  byId('refreshNotifications').addEventListener('click',()=>loadNotifications().then(()=>status('notificationStatus','Notifications refreshed.','success')).catch(e=>status('notificationStatus',errText(e),'error')));
  byId('markAllNotifications').addEventListener('click',async()=>{try{const u=await currentUser();const {error}=await supabaseClient.from('portal_notifications').update({read_at:new Date().toISOString()}).eq('user_id',u.id).is('read_at',null);if(error)throw error;await loadNotifications();status('notificationStatus','All notifications marked as read.','success');}catch(e){status('notificationStatus',errText(e),'error');}});
  async function loadAdvancedProfile(){
-   const u=await Promise.race([currentUser(),new Promise((_,reject)=>setTimeout(()=>reject(new Error('Sign-in/profile request timed out. Refresh and sign in again.')),12000))]);
-   const query=supabaseClient.from('profiles').select('username,display_name,bio,status_message,avatar_url,headline,location,phone_number,organization,website_url,skills,interests,timezone,profile_visibility').eq('id',u.id).maybeSingle();
-   const {data,error}=await Promise.race([query,new Promise((_,reject)=>setTimeout(()=>reject(new Error('Profile database request timed out. Check profiles table access and connection.')),12000))]);
-   if(error)throw error;
-   const p=data||{};
-   const fields={profileDisplayName:p.display_name||'',profileBio:p.bio||'',profileStatus:p.status_message||'',profileHeadline:p.headline||'',profileLocation:p.location||'',profilePhone:p.phone_number||'',profileOrganization:p.organization||'',profileWebsite:p.website_url||'',profileSkills:p.skills||'',profileInterests:p.interests||'',profileTimezone:p.timezone||'Asia/Kolkata',profileVisibility:p.profile_visibility||'members'};
-   Object.entries(fields).forEach(([id,value])=>{const el=byId(id);if(el)el.value=value;});
-   const display=p.display_name||p.username||u.email||'MSMI Member';
-   const name=byId('accountProfileName');if(name)name.textContent=display;
-   const st=byId('accountProfileStatus');if(st)st.textContent=p.status_message||'MSMI member';
-   const about=byId('accountProfileAbout');if(about)about.textContent=p.bio||'Add a short About Me description in Advanced profile.';
-   for(const id of ['accountProfileAvatar','profileAvatarPreview','overviewAvatar']){const el=byId(id);if(!el)continue;el.replaceChildren();el.textContent=initials(display);el.classList.remove('has-photo');attachAvatarImage(el,p.avatar_url,display);}
-   const ovName=byId('overviewName');if(ovName)ovName.textContent=display;
-   const ovStatus=byId('overviewStatus');if(ovStatus)ovStatus.textContent=p.status_message||'MSMI member';
-   const ovBio=byId('overviewBio');if(ovBio)ovBio.textContent=p.bio||'Complete your About Me in Advanced profile.';
-   return p;
+   const u=await currentUser();const {data,error}=await supabaseClient.from('profiles').select('username,display_name,bio,status_message,avatar_url,headline,location,phone_number,organization,website_url,skills,interests,timezone,profile_visibility').eq('id',u.id).maybeSingle();if(error)throw error;
+   byId('profileDisplayName').value=data?.display_name||'';byId('profileBio').value=data?.bio||'';byId('profileStatus').value=data?.status_message||'';byId('profileHeadline').value=data?.headline||'';byId('profileLocation').value=data?.location||'';byId('profilePhone').value=data?.phone_number||'';byId('profileOrganization').value=data?.organization||'';byId('profileWebsite').value=data?.website_url||'';byId('profileSkills').value=data?.skills||'';byId('profileInterests').value=data?.interests||'';byId('profileTimezone').value=data?.timezone||'Asia/Kolkata';byId('profileVisibility').value=data?.profile_visibility||'members';
+   const display=data?.display_name||data?.username||u.email||'MSMI Member';
+   byId('accountProfileName').textContent=display;byId('accountProfileStatus').textContent=data?.status_message||'MSMI member';byId('accountProfileAbout').textContent=data?.bio||'Add a short About Me description in Advanced profile.';
+   const accountAvatar=byId('accountProfileAvatar');accountAvatar.textContent=initials(display);accountAvatar.style.backgroundImage='';
+   const avatar=byId('profileAvatarPreview');avatar.textContent=initials(display);avatar.style.backgroundImage='';avatar.classList.remove('has-photo');
+   const photoUrl=await resolveAvatarUrl(data?.avatar_url||'');
+   if(photoUrl){avatar.style.backgroundImage=`url("${photoUrl}")`;avatar.classList.add('has-photo');accountAvatar.style.backgroundImage=`url("${photoUrl}")`;accountAvatar.textContent='';}
+   syncOverviewProfile({...data,avatar_url:data?.avatar_url||photoUrl},u);
  }
-
- byId('saveAdvancedProfile').addEventListener('click',async()=>{try{const u=await currentUser();let avatar_url=null;const file=byId('profileAvatarFile').files[0];if(file){byId('profileAvatarProgressWrap')?.classList.remove('hidden');byId('profileAvatarProgress').value=0;byId('profileAvatarProgressValue').textContent='0%';byId('profileAvatarProgressLabel').textContent='Preparing profile photo…';if(file.size>5*1024*1024)throw new Error('Profile image must be 5 MB or smaller.');if(!/^image\/(png|jpeg|webp)$/.test(file.type))throw new Error('Choose a PNG, JPG or WEBP image.');const avatarPath=`${u.id}/avatar-${Date.now()}.${file.name.split('.').pop().toLowerCase()}`;if(window.MSMI_uploadStorage){await window.MSMI_uploadStorage('msmi-avatars',avatarPath,file,p=>{const w=byId('profileAvatarProgressWrap');w?.classList.remove('hidden');byId('profileAvatarProgress').value=p;byId('profileAvatarProgressValue').textContent=p+'%';});}else{const {error:upErr}=await supabaseClient.storage.from('msmi-avatars').upload(avatarPath,file,{upsert:true,contentType:file.type});if(upErr)throw upErr;}avatar_url=avatarPath;byId('profileAvatarProgress').value=100;byId('profileAvatarProgressValue').textContent='100%';byId('profileAvatarProgressLabel').textContent='Upload complete';}
+ byId('saveAdvancedProfile').addEventListener('click',async()=>{try{const u=await currentUser();let avatar_url=null;const file=byId('profileAvatarFile').files[0];if(file){byId('profileAvatarProgressWrap')?.classList.remove('hidden');byId('profileAvatarProgress').value=0;byId('profileAvatarProgressValue').textContent='0%';if(file.size>5*1024*1024)throw new Error('Profile image must be 5 MB or smaller.');if(!/^image\/(png|jpeg|webp)$/.test(file.type))throw new Error('Choose a PNG, JPG or WEBP image.');const avatarPath=`${u.id}/avatar-${Date.now()}.${file.name.split('.').pop().toLowerCase()}`;if(window.MSMI_uploadStorage){await window.MSMI_uploadStorage('msmi-avatars',avatarPath,file,p=>{const w=byId('profileAvatarProgressWrap');w?.classList.remove('hidden');byId('profileAvatarProgress').value=p;byId('profileAvatarProgressValue').textContent=p+'%';});}else{const {error:upErr}=await supabaseClient.storage.from('msmi-avatars').upload(avatarPath,file,{upsert:true,contentType:file.type});if(upErr)throw upErr;}avatar_url=supabaseClient.storage.from('msmi-avatars').getPublicUrl(avatarPath).data.publicUrl;}
  const payload={display_name:byId('profileDisplayName').value.trim(),bio:byId('profileBio').value.trim(),status_message:byId('profileStatus').value.trim(),headline:byId('profileHeadline').value.trim(),location:byId('profileLocation').value.trim(),phone_number:byId('profilePhone').value.trim(),organization:byId('profileOrganization').value.trim(),website_url:byId('profileWebsite').value.trim(),skills:byId('profileSkills').value.trim(),interests:byId('profileInterests').value.trim(),timezone:byId('profileTimezone').value.trim(),profile_visibility:byId('profileVisibility').value};if(avatar_url)payload.avatar_url=avatar_url;const {error}=await supabaseClient.from('profiles').update(payload).eq('id',u.id);if(error)throw error;await loadAdvancedProfile();byId('profileAvatarProgress').value=100;byId('profileAvatarProgressValue').textContent='100%';status('advancedProfileStatus','Profile saved.','success');}catch(e){status('advancedProfileStatus',errText(e),'error');}finally{setTimeout(()=>byId('profileAvatarProgressWrap')?.classList.add('hidden'),1400);}});
  async function loadSmartNotes(){const u=await currentUser();const {data,error}=await supabaseClient.from('user_notes_v2').select('id,title,content,updated_at').eq('user_id',u.id).order('updated_at',{ascending:false});if(error)throw error;const box=byId('smartNoteList');box.replaceChildren();(data||[]).forEach(r=>{const it=node('article','v2-item'+(activeSmartNote===r.id?' selected':''));it.append(node('strong','',r.title),node('small','',new Date(r.updated_at).toLocaleString()),btn('Open',()=>{activeSmartNote=r.id;byId('smartNoteTitle').value=r.title;byId('smartNoteContent').value=r.content||'';loadSmartNotes();}),btn('Download',()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([r.content||''],{type:'text/plain'}));a.download=(r.title||'note')+'.txt';a.click();URL.revokeObjectURL(a.href);}));box.append(it);});if(!data?.length)box.append(node('p','note-meta','No saved notes yet. Create your first note.'));}
  byId('createSmartNote').addEventListener('click',()=>{activeSmartNote=null;byId('smartNoteTitle').value='';byId('smartNoteContent').value='';status('smartNoteStatus','New note draft.','');byId('smartNoteTitle').focus();});byId('refreshSmartNotes').addEventListener('click',()=>loadSmartNotes().catch(e=>status('smartNoteStatus',errText(e),'error')));
@@ -1728,13 +1621,13 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
  const oneDriveReturn=new URLSearchParams(location.search).get('onedrive');if(oneDriveReturn){history.replaceState({},document.title,location.pathname+location.hash);if(oneDriveReturn==='connected')setTimeout(()=>{status('cloudStatus','Microsoft OneDrive connected successfully.','success');loadCloudFiles().catch(e=>status('cloudStatus',e.message,'error'));},500);else if(oneDriveReturn==='error')setTimeout(()=>status('cloudStatus','Microsoft sign-in was cancelled or failed. Please try connecting again.','error'),500);}
 
  async function loadGroups(){const u=await currentUser();const {data,error}=await supabaseClient.from('chat_group_members').select('group_id,chat_groups(id,name,created_at,created_by)').eq('user_id',u.id);if(error)throw error;const box=byId('groupList');box.replaceChildren();(data||[]).forEach(m=>{const g=m.chat_groups;if(!g)return;const b=btn(g.name,()=>selectGroup(g));b.className='v2-item'+(activeGroup?.id===g.id?' selected':'');box.append(b);});if(!data?.length)box.append(node('p','note-meta','No groups yet. Create one to begin.'));}
- async function selectGroup(g){activeGroup=g;window.MSMI_activeGroupId=g.id;document.dispatchEvent(new CustomEvent('msmi:group-selected',{detail:{id:g.id}}));byId('activeGroupTitle').textContent=g.name;await loadGroups();await loadGroupMessages();await loadGroupMembers();const {data:memberCount,error}=await supabaseClient.rpc('portal_group_member_count',{p_group_id:g.id});if(!error)byId('groupMemberCount').textContent=memberCount+' members';if(groupChannel)supabaseClient.removeChannel(groupChannel);groupChannel=supabaseClient.channel('msmi-group-'+g.id).on('postgres_changes',{event:'*',schema:'public',table:'group_messages',filter:'group_id=eq.'+g.id},()=>loadGroupMessages().catch(e=>status('groupStatus',errText(e),'error'))).subscribe();v2Channels.push(groupChannel);}
- async function loadGroupMessages(){if(!activeGroup)return;const {data,error}=await supabaseClient.from('group_messages').select('id,sender_id,body,created_at,attachments').eq('group_id',activeGroup.id).order('created_at',{ascending:true}).limit(150);if(error)throw error;const senderIds=[...new Set((data||[]).map(m=>m.sender_id).filter(Boolean))];const profileMap={};if(senderIds.length){const {data:people}=await supabaseClient.from('profiles').select('id,username,display_name,avatar_url').in('id',senderIds);(people||[]).forEach(p=>profileMap[p.id]=p);}const box=byId('groupMessages');const nearBottom=box.scrollHeight-box.scrollTop-box.clientHeight<100;const frag=document.createDocumentFragment();(data||[]).forEach(m=>{const it=node('article','v2-item');const sender=profileMap[m.sender_id];it.append(node('strong','',m.sender_id===v2User?.id?'You':(sender?.display_name||sender?.username||'Member')),node('small','',new Date(m.created_at).toLocaleString()),node('p','',m.body||''));if(Array.isArray(m.attachments)&&m.attachments.length){const links=node('div','msmi-chat-attachment');m.attachments.forEach(a=>{const link=node('a','msmi-attachment-link','⬇ '+(a.name||'Attachment'));link.href='#';link.addEventListener('click',async ev=>{ev.preventDefault();try{const {data,error}=await supabaseClient.storage.from('msmi-chat-attachments').createSignedUrl(a.path,3600);if(error)throw error;if((a.mime||'').startsWith('image/')){const view=document.getElementById('v10Viewer');if(view){document.getElementById('v10ViewerTitle').textContent=a.name||'Group image';const stage=document.getElementById('v10ViewerStage');stage.replaceChildren();const image=document.createElement('img');image.src=data.signedUrl;image.alt=a.name||'Group image';stage.append(image);view.classList.add('open');document.body.style.overflow='hidden';}else window.open(data.signedUrl,'_blank','noopener');}else window.open(data.signedUrl,'_blank','noopener');}catch(e){status('groupStatus',errText(e),'error');}});links.append(link);});it.append(links);}frag.append(it);});box.replaceChildren(frag);if(!data?.length)box.append(node('p','note-meta','No group messages yet.'));if(nearBottom||!box.dataset.loaded)box.scrollTop=box.scrollHeight;box.dataset.loaded='1';}
+ async function selectGroup(g){activeGroup=g;document.dispatchEvent(new CustomEvent('msmi:group-selected',{detail:{id:g.id}}));byId('activeGroupTitle').textContent=g.name;await loadGroups();await loadGroupMessages();await loadGroupMembers();const {data:memberCount,error}=await supabaseClient.rpc('portal_group_member_count',{p_group_id:g.id});if(!error)byId('groupMemberCount').textContent=memberCount+' members';if(groupChannel)supabaseClient.removeChannel(groupChannel);groupChannel=supabaseClient.channel('msmi-group-'+g.id).on('postgres_changes',{event:'*',schema:'public',table:'group_messages',filter:'group_id=eq.'+g.id},()=>loadGroupMessages().catch(e=>status('groupStatus',errText(e),'error'))).subscribe();v2Channels.push(groupChannel);}
+ async function loadGroupMessages(){if(!activeGroup)return;const {data,error}=await supabaseClient.from('group_messages').select('id,sender_id,body,created_at,attachments').eq('group_id',activeGroup.id).order('created_at',{ascending:true}).limit(150);if(error)throw error;const box=byId('groupMessages');const nearBottom=box.scrollHeight-box.scrollTop-box.clientHeight<100;const frag=document.createDocumentFragment();(data||[]).forEach(m=>{const it=node('article','v2-item');it.append(node('strong','',m.sender_id===v2User?.id?'You':'Group member'),node('small','',new Date(m.created_at).toLocaleString()),node('p','',m.body||''));if(Array.isArray(m.attachments)&&m.attachments.length){const links=node('div','msmi-chat-attachment');m.attachments.forEach(a=>{const link=node('a','msmi-attachment-link','⬇ '+(a.name||'Attachment'));link.href='#';link.addEventListener('click',async ev=>{ev.preventDefault();try{const {data,error}=await supabaseClient.storage.from('msmi-chat-attachments').createSignedUrl(a.path,3600);if(error)throw error;if((a.mime||'').startsWith('image/')){const view=document.getElementById('v10Viewer');if(view){document.getElementById('v10ViewerTitle').textContent=a.name||'Group image';const stage=document.getElementById('v10ViewerStage');stage.replaceChildren();const image=document.createElement('img');image.src=data.signedUrl;image.alt=a.name||'Group image';stage.append(image);view.classList.add('open');document.body.style.overflow='hidden';}else window.open(data.signedUrl,'_blank','noopener');}else window.open(data.signedUrl,'_blank','noopener');}catch(e){status('groupStatus',errText(e),'error');}});links.append(link);});it.append(links);}frag.append(it);});box.replaceChildren(frag);if(!data?.length)box.append(node('p','note-meta','No group messages yet.'));if(nearBottom||!box.dataset.loaded)box.scrollTop=box.scrollHeight;box.dataset.loaded='1';}
  window.MSMI_refreshGroupMessages=()=>loadGroupMessages().catch(e=>status('groupStatus',errText(e),'error'));
  async function loadGroupMembers(){if(!activeGroup)return;const {data,error}=await supabaseClient.rpc('portal_group_members_details',{p_group_id:activeGroup.id});if(error)throw error;const box=byId('groupMemberList');box.replaceChildren();const owner=activeGroup.created_by===v2User?.id;for(const m of (data||[])){const chip=node('div','msmi-group-member');chip.append(memberAvatar(m.avatar_url,m.display_name||m.username),node('span','',m.display_name||m.username||'Member'));chip.append(btn('Profile',()=>{document.querySelector('#featureSidebarNav a[href="#memberDirectory"]')?.click();setTimeout(()=>window.MSMI_showMemberProfile?.({id:m.user_id,username:m.username,display_name:m.display_name,avatar_url:m.avatar_url,bio:m.bio,status_message:m.status_message,last_seen:m.last_seen}),80);}));if(owner&&m.user_id!==v2User?.id)chip.append(btn('Remove',async()=>{if(!confirm('Remove this member from the group?'))return;try{const {error}=await supabaseClient.rpc('remove_portal_group_member',{p_group_id:activeGroup.id,p_member_id:m.user_id});if(error)throw error;await loadGroupMembers();await loadGroups();status('groupStatus','Member removed.','success');}catch(e){status('groupStatus',errText(e),'error');}}));box.append(chip);}if(!data?.length)box.append(node('small','note-meta','No group members found.'));byId('deleteGroupBtn').classList.toggle('hidden',!owner);}
- byId('deleteGroupBtn').addEventListener('click',async()=>{try{if(!activeGroup)throw new Error('Select a group first.');if(!confirm('Delete this group and all its messages for every member? This cannot be undone.'))return;const {error}=await supabaseClient.rpc('delete_portal_group',{p_group_id:activeGroup.id});if(error)throw error;activeGroup=null;window.MSMI_activeGroupId=null;byId('activeGroupTitle').textContent='Select a group';byId('groupMessages').replaceChildren(node('p','note-meta','Choose a group to view messages.'));byId('groupMemberList').replaceChildren();await loadGroups();status('groupStatus','Group and its messages deleted.','success');}catch(e){status('groupStatus',errText(e),'error');}});
+ byId('deleteGroupBtn').addEventListener('click',async()=>{try{if(!activeGroup)throw new Error('Select a group first.');if(!confirm('Delete this group and all its messages for every member? This cannot be undone.'))return;const {error}=await supabaseClient.rpc('delete_portal_group',{p_group_id:activeGroup.id});if(error)throw error;activeGroup=null;byId('activeGroupTitle').textContent='Select a group';byId('groupMessages').replaceChildren(node('p','note-meta','Choose a group to view messages.'));byId('groupMemberList').replaceChildren();await loadGroups();status('groupStatus','Group and its messages deleted.','success');}catch(e){status('groupStatus',errText(e),'error');}});
  byId('createGroup').addEventListener('click',async()=>{try{const name=byId('newGroupName').value.trim();if(!name)throw new Error('Enter a group name.');const {data,error}=await supabaseClient.rpc('create_portal_group',{p_name:name});if(error)throw error;byId('newGroupName').value='';await loadGroups();const {data:g,error:ge}=await supabaseClient.from('chat_groups').select('id,name,created_at,created_by').eq('id',data.group_id).single();if(ge)throw ge;await selectGroup(g);status('groupStatus','Group created. Invite members by email.','success');}catch(e){status('groupStatus',errText(e),'error');}});
- byId('inviteGroupMember').addEventListener('click',async()=>{try{if(!activeGroup)throw new Error('Select a group first.');const email=byId('groupInviteEmail').value.trim();if(!email)throw new Error('Enter the member email.');const {error}=await supabaseClient.rpc('invite_portal_group_member',{p_group_id:activeGroup.id,p_email:email});if(error)throw error;byId('groupInviteEmail').value='';const {data:memberCount}=await supabaseClient.rpc('portal_group_member_count',{p_group_id:activeGroup.id});byId('groupMemberCount').textContent=(memberCount??'')+' members';await loadGroupMembers();await loadGroups();status('groupStatus','Member added to the group.','success');}catch(e){status('groupStatus',errText(e),'error');}});
+ byId('inviteGroupMember').addEventListener('click',async()=>{try{if(!activeGroup)throw new Error('Select a group first.');const email=byId('groupInviteEmail').value.trim();if(!email)throw new Error('Enter the member email.');const {error}=await supabaseClient.rpc('invite_portal_group_member',{p_group_id:activeGroup.id,p_email:email});if(error)throw error;byId('groupInviteEmail').value='';const {data:memberCount}=await supabaseClient.rpc('portal_group_member_count',{p_group_id:activeGroup.id});byId('groupMemberCount').textContent=(memberCount??'')+' members';status('groupStatus','Member added to the group.','success');}catch(e){status('groupStatus',errText(e),'error');}});
  byId('sendGroupMessage').addEventListener('click',async()=>{try{if(!activeGroup)throw new Error('Select a group first.');const body=byId('groupMessageText').value.trim();if(!body)throw new Error('Write a message first.');const u=await currentUser();const {error}=await supabaseClient.from('group_messages').insert({group_id:activeGroup.id,sender_id:u.id,body});if(error)throw error;byId('groupMessageText').value='';await loadGroupMessages();}catch(e){status('groupStatus',errText(e),'error');}});
  async function loadLoginHistory(){const u=await currentUser();const {data,error}=await supabaseClient.from('portal_login_activity').select('id,created_at,user_agent').eq('user_id',u.id).order('created_at',{ascending:false}).limit(20);if(error)throw error;const box=byId('loginHistory');box.replaceChildren();(data||[]).forEach(r=>{const it=node('article','v2-item');it.append(node('strong','',new Date(r.created_at).toLocaleString()),node('p','',r.user_agent||'Browser details not recorded'));box.append(it);});if(!data?.length)box.append(node('p','note-meta','No portal login events recorded yet.'));}
  byId('refreshLoginHistory').addEventListener('click',()=>loadLoginHistory().then(()=>status('securityStatus','Login history refreshed.','success')).catch(e=>status('securityStatus',errText(e),'error')));
@@ -1750,69 +1643,18 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
      try{await supabaseClient.auth.signOut({scope:'local'});}catch(_){}alert('Your MSMI account has been permanently deleted.');location.reload();
    }catch(e){status('deleteAccountStatus',errText(e)+' Run the V7 SQL migration and try again.', 'error');button.disabled=false;}
  });
- async function loadAdminAnalytics(){
-   const box=byId('adminAnalytics');if(!box)return;box.replaceChildren(node('p','note-meta','Loading portal analytics…'));
-   try{
-     const request=supabaseClient.rpc('admin_portal_analytics');
-     const result=await Promise.race([request,new Promise((_,reject)=>setTimeout(()=>reject(new Error('Analytics request timed out.')),15000))]);
-     if(result.error)throw result.error;const data=result.data||{};box.replaceChildren();
-     const labels=[['Registered members',data.members],['Email confirmed',data.email_confirmed],['Not confirmed',data.email_unconfirmed],['Members logged in',data.logged_in_members],['Private notes',data.private_notes],['Private messages',data.messages],['Groups',data.groups],['Group messages',data.group_messages],['Stored files',data.files]];
-     labels.forEach(([k,v])=>{const it=node('div','v2-stat');it.append(node('strong','',String(Number(v??0))),node('small','',k));box.append(it);});
-     const bytes=Number(data.storage_bytes||0),storage=node('div','admin-storage-stat');storage.append(node('strong','',(bytes/1048576).toFixed(2)+' MB'),node('small','',`Storage used · ${bytes.toLocaleString()} bytes across ${Number(data.files||0)} files`));box.append(storage);
-     const updated=node('small','note-meta','Updated '+new Date().toLocaleString());box.append(updated);return data;
-   }catch(e){box.replaceChildren(node('p','message error','Analytics could not load: '+errText(e)));const retry=btn('Retry analytics',()=>loadAdminAnalytics().catch(()=>{}));retry.className='primary';box.append(retry);throw e;}
- }
-
- byId('refreshAdminAnalytics').addEventListener('click',()=>loadAdminAnalytics().then(()=>status('adminStatus','Portal analytics refreshed.','success')).catch(e=>status('adminStatus','Analytics: '+errText(e),'error')));
+ async function loadAdminAnalytics(){const {data,error}=await supabaseClient.rpc('admin_portal_analytics');if(error)throw error;const box=byId('adminAnalytics');box.replaceChildren();const labels=[['Members',data.members],['Private notes',data.private_notes],['Messages',data.messages],['Groups',data.groups],['Group messages',data.group_messages],['Stored files',data.files]];labels.forEach(([k,v])=>{const it=node('div','v2-stat');it.append(node('strong','',String(v??0)),node('small','',k));box.append(it);});const storage=node('div','admin-storage-stat');const bytes=Number(data.storage_bytes||0);storage.append(node('strong','',(bytes/1048576).toFixed(2)+' MB'),node('small','',`Total cloud storage used · ${bytes.toLocaleString()} bytes across ${data.files||0} files (administrator only)`));box.append(storage);}
+ byId('refreshAdminAnalytics').addEventListener('click',()=>loadAdminAnalytics().catch(e=>status('adminStatus','Analytics: '+errText(e),'error')));
  // Secure event recorder: the RPC associates this browser event with auth.uid() server-side.
  async function recordLogin(){if(!supabaseClient)return;try{await supabaseClient.rpc('record_portal_login',{p_user_agent:navigator.userAgent.slice(0,500)});}catch(e){console.warn('Login history recorder:',e.message);}}
- async function bootV2(forceRefresh=false){
-   if(!supabaseClient||v2Booting)return;
-   v2Booting=true;
-   try{
-     const u=await currentUser();
-     const sameUser=v2BootedUserId===u.id;
-     if(!sameUser){
-       if(notificationChannel)supabaseClient.removeChannel(notificationChannel);
-       notificationChannel=supabaseClient.channel('msmi-notifications-'+u.id)
-         .on('postgres_changes',{event:'INSERT',schema:'public',table:'portal_notifications',filter:'user_id=eq.'+u.id},()=>loadNotifications().catch(console.error))
-         .on('postgres_changes',{event:'*',schema:'public',table:'portal_presence'},()=>loadMemberDirectory().catch(console.error)).subscribe();
-     }
-     // Profile and notification loaders are always retried on a fresh dashboard entry.
-     const tasks=await Promise.allSettled([
-       loadAdvancedProfile(),loadNotifications(),loadAnnouncement(),loadSmartNotes(),
-       window.MSMI_V11?.loadPublicDrive?.(),loadGroups(),loadLoginHistory(),loadMemberDirectory(),recordLogin(),updatePresence()
-     ]);
-     if(tasks[0].status==='rejected'){
-       const msg='Profile could not load: '+errText(tasks[0].reason);
-       if(byId('overviewName'))byId('overviewName').textContent='Profile unavailable';
-       if(byId('overviewBio'))byId('overviewBio').textContent=msg;
-       if(byId('accountProfileName'))byId('accountProfileName').textContent='Profile unavailable';
-       console.error(msg);
-     }
-     if(tasks[1].status==='rejected'&&byId('overviewNotificationPreview'))byId('overviewNotificationPreview').textContent='Notifications could not load: '+errText(tasks[1].reason);
-     if(tasks[2].status==='rejected'&&byId('overviewAnnouncement'))byId('overviewAnnouncement').textContent='Announcement could not load: '+errText(tasks[2].reason);
-     // Mark initialized only after tasks settle; future explicit re-entry still refreshes the data.
-     v2BootedUserId=u.id;
-     if(presenceTimer)clearInterval(presenceTimer);presenceTimer=setInterval(()=>updatePresence(),60000);
-     if(directoryRefreshTimer)clearInterval(directoryRefreshTimer);directoryRefreshTimer=setInterval(()=>{if(document.visibilityState==='visible')loadMemberDirectory().catch(()=>{});},30000);
-     if((u.email||'').toLowerCase()==='shekmohammedirfan412@gmail.com'){
-       await Promise.allSettled([loadAdminConsole(),loadAdminAnalytics()]);
-     }
-   }catch(e){console.warn('MSMI V2 startup:',e.message);}
-   finally{v2Booting=false;}
- }
- window.MSMI_retryDashboard=()=>bootV2(true);
-
+ async function bootV2(){if(!supabaseClient||v2Booting)return;v2Booting=true;try{const u=await currentUser();if(v2BootedUserId===u.id)return;v2BootedUserId=u.id;if(notificationChannel)supabaseClient.removeChannel(notificationChannel);notificationChannel=supabaseClient.channel('msmi-notifications-'+u.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'portal_notifications',filter:'user_id=eq.'+u.id},()=>loadNotifications().catch(console.error)).on('postgres_changes',{event:'*',schema:'public',table:'portal_presence'},()=>loadMemberDirectory().catch(console.error)).subscribe();await Promise.allSettled([loadNotifications(),loadAdvancedProfile(),loadSmartNotes(),loadCloudFiles(),loadGroups(),loadLoginHistory(),loadMemberDirectory(),recordLogin(),updatePresence()]);if(presenceTimer)clearInterval(presenceTimer);presenceTimer=setInterval(()=>updatePresence(),60000);if(directoryRefreshTimer)clearInterval(directoryRefreshTimer);directoryRefreshTimer=setInterval(()=>{if(document.visibilityState==='visible')loadMemberDirectory().catch(()=>{});},30000);if((u.email||'').toLowerCase()==='shekmohammedirfan412@gmail.com'){await loadAdminAnalytics().catch(e=>status('adminStatus','Analytics: '+errText(e),'error'));await refreshOneDriveQuota().catch(()=>{});}}catch(e){console.warn('MSMI V2 startup:',e.message);}finally{v2Booting=false;}}
  // Keep the overview announcement preview synchronized with the existing announcement panel.
  const announcementPreviewObserver=new MutationObserver(()=>{const source=byId('announcementText'),target=byId('overviewAnnouncement');if(source&&target){const value=source.textContent.trim();target.textContent=value&&value!=='Loading announcement…'?value.slice(0,240):'No announcement has been published yet.';}});
  if(byId('announcementText'))announcementPreviewObserver.observe(byId('announcementText'),{childList:true,subtree:true,characterData:true});
  // Avoid an initial duplicate login event; only log when the auth state changes to SIGNED_IN.
  supabaseClient?.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'&&session){setTimeout(()=>bootV2(),0);}else if(event==='SIGNED_OUT'){v2User=null;v2BootedUserId=null;activeGroup=null;if(memberChatPollTimer){clearInterval(memberChatPollTimer);memberChatPollTimer=null;}if(memberChatChannel)supabaseClient.removeChannel(memberChatChannel);if(groupChannel)supabaseClient.removeChannel(groupChannel);if(notificationChannel)supabaseClient.removeChannel(notificationChannel);}});
  // Existing renderSession is in the preceding script. Boot once after the page has rendered its dashboard.
- const watch=new MutationObserver(()=>{if(!byId('dashboardView').classList.contains('hidden'))bootV2(true);});watch.observe(byId('dashboardView'),{attributes:true,attributeFilter:['class']});
- if(!byId('dashboardView').classList.contains('hidden'))setTimeout(()=>bootV2(true),0);
- document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!byId('dashboardView').classList.contains('hidden')){loadNotifications().catch(()=>{});loadAdvancedProfile().catch(()=>{});}});
+ const watch=new MutationObserver(()=>{if(!byId('dashboardView').classList.contains('hidden')&&v2User?.id!==undefined)return;if(!byId('dashboardView').classList.contains('hidden'))bootV2();});watch.observe(byId('dashboardView'),{attributes:true,attributeFilter:['class']});
 })();
 </script>
 
@@ -1916,109 +1758,5 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
 })();
 </script>
 
-
-<script>
-/* MSMI V11 compatibility layer: public shared drive, media filenames/viewer, admin controls, slideshow and group leave. */
-(()=>{
- const $=id=>document.getElementById(id), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const isAdmin=()=>((window.MSMI_currentUser?.email||window.MSMI_user?.email||'').toLowerCase()==='shekmohammedirfan412@gmail.com');
- const client=()=>window.supabaseClient;
- async function loadPublicDrive(){
-   const c=client();if(!c)return;
-   const box=$('publicDriveStatus'),list=$('publicDriveLinks');
-   const {data,error}=await c.from('portal_public_drive_links').select('id,title,url,description,created_at').eq('enabled',true).order('created_at',{ascending:false});
-   if(error){box.textContent='Public drive links could not load. Check that the V13 SQL migration has been run.';list.replaceChildren();return;}
-   list.replaceChildren();
-   (data||[]).forEach(item=>{let u;try{u=new URL(item.url);if(u.protocol!=='https:')return;}catch{return;}
-     const card=document.createElement('article');card.className='v2-item';
-     const title=document.createElement('strong');title.textContent=item.title||'MSMI Public Drive';
-     const desc=document.createElement('p');desc.textContent=item.description||'Shared files and resources.';
-     const a=document.createElement('a');a.className='primary';a.href=u.href;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Open / Download ↗';a.style.cssText='display:inline-flex;text-decoration:none;padding:9px 14px;border-radius:9px;margin-top:5px;color:#fff!important';
-     card.append(title,desc,a);list.append(card);
-   });
-   if(!(data||[]).length)list.append(node('p','note-meta','No public drive links have been added by the administrator yet.'));
-   box.textContent=(data||[]).length?`${data.length} public drive link(s) available.`:'The administrator has not added any public drive links yet.';
-   await loadDriveAdminList();
- }
- async function loadDriveAdminList(){
-   const c=client(),box=$('v13DriveAdminList');if(!box||!c)return;
-   const {data,error}=await c.from('portal_public_drive_links').select('id,title,url,description').order('created_at',{ascending:false});
-   box.replaceChildren();if(error){box.textContent='Drive manager unavailable: '+error.message;return;}
-   (data||[]).forEach(item=>{const row=document.createElement('div');row.className='v11-file-row';const info=document.createElement('div');info.style.minWidth='0';const title=document.createElement('strong');title.textContent=item.title;const url=document.createElement('small');url.textContent=item.url;url.style.cssText='display:block;overflow-wrap:anywhere;color:var(--muted)';info.append(title,url);const del=document.createElement('button');del.type='button';del.className='danger-btn';del.textContent='Remove';del.onclick=async()=>{if(!confirm('Remove this public drive link?'))return;const {error}=await c.from('portal_public_drive_links').delete().eq('id',item.id);if(error){$('v11DriveStatus').textContent=error.message;return;}await loadPublicDrive();};row.append(info,del);box.append(row);});
- }
- async function saveDrive(){
-   const c=client(),titleEl=$('v11DriveTitle'),urlEl=$('v11DriveUrl'),descEl=$('v11DriveDescription'),button=$('v11SaveDrive');
-   const title=titleEl.value.trim(),url=urlEl.value.trim(),description=descEl.value.trim();
-   if(!title)throw Error('Enter a title for this drive link.');if(!url)throw Error('Paste a shared file or folder link.');
-   let parsed;try{parsed=new URL(url);}catch{throw Error('The shared link is incomplete. Paste the full URL.');}
-   if(parsed.protocol!=='https:')throw Error('Use a secure HTTPS shared link.');
-   if(button?.dataset.saving==='1')return;
-   if(button){button.dataset.saving='1';button.disabled=true;button.textContent='Saving link…';}
-   try{
-     const {data:authData,error:authError}=await c.auth.getUser();if(authError)throw authError;if(!authData?.user)throw Error('Please sign in again.');
-     const {error}=await c.from('portal_public_drive_links').insert({title,url:parsed.href,description,enabled:true,created_by:authData.user.id});
-     if(error)throw error;
-     // Do not clear or rewrite any input field after a successful insert.
-     $('v11DriveStatus').textContent='Link saved successfully. Your pasted link is still in the field. Add another link or use Clear fields.';
-     await loadDriveAdminList();
-     await loadPublicDrive();
-   }finally{if(button){button.dataset.saving='0';button.disabled=false;button.textContent='＋ Add public drive link';}}
- }
-
-
- function annAttachments(){return window.MSMI_announcementAttachments||[];}
- function renderAnnouncementAdmin(){const box=$('v11AnnouncementFiles');if(!box)return;box.replaceChildren();annAttachments().forEach((a,i)=>{const row=document.createElement('div');row.className='v11-announce-item';if((a.mime||'').startsWith('image/')&&a.url){const img=document.createElement('img');img.src=a.url;img.alt=a.name||'Announcement image';row.append(img);}const name=document.createElement('span');name.className='v11-file-name';name.textContent=a.name||'Attachment';const type=document.createElement('small');type.textContent=(a.mime||'file')+' · '+(a.size?Math.round(a.size/1024)+' KB':'');const del=document.createElement('button');del.className='tool-btn danger-btn';del.type='button';del.textContent='Remove';del.addEventListener('click',async()=>{if(!confirm('Remove this attachment from the announcement?'))return;const next=annAttachments().filter((_,j)=>j!==i);try{if(a.path){const {error:storageError}=await client().storage.from('msmi-announcement-assets').remove([a.path]);if(storageError)throw storageError;}const {data:{user}}=await client().auth.getUser();const {error}=await client().from('admin_announcements').upsert({id:1,content:$('adminAnnouncementInput')?.value||'',attachments:next,updated_by:user.id,updated_at:new Date().toISOString()},{onConflict:'id'});if(error)throw error;window.MSMI_announcementAttachments=next;renderAnnouncementAdmin();$('v11SlideStatus').textContent='Attachment removed from announcement.';}catch(e){$('v11SlideStatus').textContent=e.message;}});row.append(name,type,del);box.append(row);});if(!box.childElementCount)box.textContent='No published attachments.';}
- async function loadAdminMembers(){const c=client();const box=$('v11MemberManager');if(!box)return;const {data,error}=await c.rpc('admin_list_member_access');if(error){box.textContent='Member management unavailable: '+error.message;return;}box.replaceChildren();(data||[]).forEach(m=>{const row=document.createElement('div');row.className='v11-member-row';const info=document.createElement('div');info.innerHTML='<strong>'+esc(m.display_name||m.username||m.email||'Member')+'</strong><small>'+esc(m.email||'')+'</small>';const meta=document.createElement('div');meta.className='v11-member-meta';meta.innerHTML='<small>Joined: '+esc(m.created_at?new Date(m.created_at).toLocaleString():'—')+'</small><small>Last login: '+esc(m.last_sign_in_at?new Date(m.last_sign_in_at).toLocaleString():'Never')+'</small><small>Email: '+(m.email_confirmed?'Confirmed':'Not confirmed')+' · Access: '+esc(m.access_status||'allowed')+'</small>';const b=document.createElement('button');b.className='tool-btn '+(m.access_status==='denied'?'':'danger-btn');b.textContent=m.access_status==='denied'?'Allow access':'Deny access';b.addEventListener('click',async()=>{const deny=m.access_status!=='denied';const reason=deny?(prompt('Reason shown to this member (optional):')||'Access denied by administrator.'):'';try{const {error}=await c.rpc('admin_set_member_access',{p_user_id:m.id,p_status:deny?'denied':'allowed',p_reason:reason});if(error)throw error;await loadAdminMembers();$('v11MemberStatus').textContent=deny?'Member access denied.':'Member access restored.';}catch(e){$('v11MemberStatus').textContent=e.message;}});row.append(info,meta,b);box.append(row);});if(!data?.length)box.textContent='No member records returned.';const confirmed=(data||[]).filter(x=>x.email_confirmed).length, denied=(data||[]).filter(x=>x.access_status==='denied').length;const stats=$('v11AuthStats');stats.innerHTML=[['Registered',data?.length||0],['Email confirmed',confirmed],['Not confirmed',(data?.length||0)-confirmed],['Access denied',denied],['Logged in before',(data||[]).filter(x=>x.last_sign_in_at).length]].map(([k,v])=>'<div class="v11-admin-kpi"><small>'+k+'</small><strong>'+v+'</strong></div>').join('');}
- async function loadSlides(){const c=client();const {data,error}=await c.from('portal_login_slides').select('id,title,description,image_url,sort_order,enabled').eq('enabled',true).order('sort_order');if(error)throw error;const wrap=$('v11LoginSlides');if(!wrap)return;wrap.replaceChildren();(data||[]).forEach((x,i)=>{const a=document.createElement('article');a.className='v11-login-slide'+(i===0?' active':'');if(x.image_url)a.style.backgroundImage='url("'+x.image_url.replace(/["\\]/g,'')+'")';const copy=document.createElement('div');copy.className='v11-slide-copy';const h=document.createElement('h2');h.textContent=x.title||'MSMI Portal';const p=document.createElement('p');p.textContent=x.description||'';copy.append(h,p);a.append(copy);wrap.append(a);});if(!wrap.childElementCount){const a=document.createElement('article');a.className='v11-login-slide active';a.innerHTML='<div class="v11-slide-copy"><h2>Welcome to MSMI</h2><p>Connect, communicate and collaborate.</p></div>';wrap.append(a);}let index=0;const slides=[...wrap.children],dots=$('v11SlideDots');dots.replaceChildren();slides.forEach((_,i)=>{const b=document.createElement('button');b.className='v11-slide-dot'+(!i?' active':'');b.type='button';b.setAttribute('aria-label','Show slide '+(i+1));b.onclick=()=>show(i);dots.append(b);});function show(n){index=(n+slides.length)%slides.length;slides.forEach((el,i)=>el.classList.toggle('active',i===index));[...dots.children].forEach((el,i)=>el.classList.toggle('active',i===index));$('v11SlideCounter').textContent=(index+1)+' / '+slides.length;} $('v11SlidePrev').onclick=()=>show(index-1);$('v11SlideNext').onclick=()=>show(index+1);clearInterval(window.__msmiSlideTimer);window.__msmiSlideTimer=setInterval(()=>{if(!document.hidden)show(index+1)},6500);}
- async function loadSlideAdmin(){const c=client(),box=$('v11SlideAdminList');if(!box)return;const {data,error}=await c.from('portal_login_slides').select('*').order('sort_order');if(error){box.textContent=error.message;return;}box.replaceChildren();(data||[]).forEach(x=>{const row=document.createElement('div');row.className='v11-file-row';const t=document.createElement('strong');t.textContent=x.title;const b=document.createElement('button');b.className='tool-btn danger-btn';b.textContent='Remove';b.onclick=async()=>{if(!confirm('Remove this slideshow item?'))return;const {error}=await c.from('portal_login_slides').delete().eq('id',x.id);if(error)alert(error.message);else{await loadSlideAdmin();await loadSlides();}};row.append(t,b);box.append(row);});}
- async function refreshAdmin(){await Promise.allSettled([loadAdminMembers(),loadSlideAdmin(),loadPublicDrive(),loadAnnouncement()]);renderAnnouncementAdmin();}
- function addGroupActions(){const area=$('v2Groups');if(!area||$('v11LeaveGroup'))return;const target=$('deleteGroupBtn')?.parentElement;if(!target)return;const leave=document.createElement('button');leave.id='v11LeaveGroup';leave.type='button';leave.className='tool-btn danger-btn';leave.textContent='Leave group';target.append(leave);leave.addEventListener('click',async()=>{if(!window.MSMI_activeGroupId){alert('Select a group first.');return;}if(!confirm('Leave this group? You will no longer see its messages.'))return;try{const {error}=await client().rpc('leave_portal_group',{p_group_id:window.MSMI_activeGroupId});if(error)throw error;location.hash='#v2Groups';$('activeGroupTitle').textContent='Select a group';$('groupMessages').textContent='You left the group.';$('groupMemberList').replaceChildren();$('groupMemberCount').textContent='0 members';$('groupStatus').textContent='You left the group.';document.dispatchEvent(new CustomEvent('msmi:group-left'));}catch(e){$('groupStatus').textContent=e.message;}});}
- // Use capture phase so the legacy image click handler cannot open a new tab. Show filename and full-size viewer instead.
- function setupAnnouncementMedia(){const box=$('announcementText');if(!box||box.dataset.v11Media)return;box.dataset.v11Media='1';box.addEventListener('click',e=>{const img=e.target.closest('img');if(!img)return;e.preventDefault();e.stopImmediatePropagation();const viewer=$('v10Viewer'),stage=$('v10ViewerStage');if(!viewer||!stage)return;stage.replaceChildren();const full=document.createElement('img');full.src=img.currentSrc||img.src;full.alt=img.alt||'Announcement image';full.style.cssText='max-width:96vw;max-height:calc(100vh - 100px);object-fit:contain';stage.append(full);$('v10ViewerTitle').textContent=img.alt||'Announcement image';viewer.classList.add('open');document.body.style.overflow='hidden';},true);const obs=new MutationObserver(()=>{box.querySelectorAll('.msmi-attachment-gallery img').forEach(img=>{if(img.dataset.v11Name)return;img.dataset.v11Name='1';const wrap=document.createElement('div');wrap.style.cssText='display:inline-flex;flex-direction:column;gap:5px;max-width:220px';img.parentNode.insertBefore(wrap,img);wrap.append(img);const label=document.createElement('small');label.textContent=img.alt||'Image attachment';label.style.cssText='font-weight:700;overflow-wrap:anywhere';wrap.append(label);});});obs.observe(box,{childList:true,subtree:true});}
- document.addEventListener('DOMContentLoaded',()=>{setupAnnouncementMedia();addGroupActions();loadSlides().catch(()=>{});$('v11SaveDrive')?.addEventListener('click',e=>{e.preventDefault();saveDrive().catch(e=>$('v11DriveStatus').textContent=e.message);});$('v13ClearDriveForm')?.addEventListener('click',()=>{$('v11DriveTitle').value='';$('v11DriveUrl').value='';$('v11DriveDescription').value='';$('v11DriveStatus').textContent='Fields cleared.';});$('v11AddSlide')?.addEventListener('click',async()=>{try{const title=$('v11SlideTitle').value.trim();if(!title)throw Error('Enter a slide title.');let imageUrl=$('v11SlideImage').value.trim();const imageFile=$('v11SlideImageFile')?.files?.[0];if(imageFile){if(imageFile.size>8*1024*1024)throw Error('Slideshow image must be 8 MB or smaller.');if(!/^image\/(png|jpeg|webp)$/.test(imageFile.type))throw Error('Choose PNG, JPG or WEBP.');const wrap=$('v11SlideUploadWrap');wrap.classList.remove('hidden');$('v11SlideUploadProgress').value=0;$('v11SlideUploadValue').textContent='0%';$('v11SlideUploadLabel').textContent='Uploading slide image…';const path='login-slides/'+Date.now()+'-'+imageFile.name.replace(/[^a-zA-Z0-9._-]/g,'_');if(window.MSMI_uploadStorage){await window.MSMI_uploadStorage('msmi-announcement-assets',path,imageFile,p=>{$('v11SlideUploadProgress').value=p;$('v11SlideUploadValue').textContent=p+'%';});}else{const {error:uploadError}=await client().storage.from('msmi-announcement-assets').upload(path,imageFile,{upsert:false,contentType:imageFile.type});if(uploadError)throw uploadError;$('v11SlideUploadProgress').value=100;$('v11SlideUploadValue').textContent='100%';} $('v11SlideUploadLabel').textContent='Upload complete';imageUrl=client().storage.from('msmi-announcement-assets').getPublicUrl(path).data.publicUrl;}if(!imageUrl)throw Error('Add an image URL or upload an image.');const {error}=await client().from('portal_login_slides').insert({title,description:$('v11SlideText').value.trim(),image_url:imageUrl,sort_order:Date.now(),enabled:true});if(error)throw error;$('v11SlideTitle').value=$('v11SlideText').value=$('v11SlideImage').value='';if($('v11SlideImageFile'))$('v11SlideImageFile').value='';$('v11SlideStatus').textContent='Slide added.';await loadSlideAdmin();await loadSlides();}catch(e){$('v11SlideStatus').textContent=e.message;}});$('v11ClearSlides')?.addEventListener('click',async()=>{if(!confirm('Remove every login slideshow slide?'))return;const {error}=await client().from('portal_login_slides').delete().neq('id','00000000-0000-0000-0000-000000000000');if(error)$('v11SlideStatus').textContent=error.message;else{await loadSlideAdmin();await loadSlides();}});$('v11AdminRefresh')?.addEventListener('click',()=>refreshAdmin().catch(console.error));});
- // Supabase auth state callback occurs after the existing app initializes; run on visible app transitions.
- document.addEventListener('msmi:group-selected',addGroupActions);let adminLoaded=false;const observer=new MutationObserver(()=>{if($('dashboardView')&&!$('dashboardView').classList.contains('hidden')){loadPublicDrive().catch(()=>{});const panel=$('adminPanel');if(panel&&!panel.classList.contains('hidden')&&!adminLoaded){adminLoaded=true;refreshAdmin().catch(e=>{adminLoaded=false;console.error(e);});}}});observer.observe(document.body,{attributes:true,subtree:true,attributeFilter:['class']});
- // Refresh public drive when its navigation link is selected.
- document.querySelector('a[href="#v2CloudDrive"]')?.addEventListener('click',()=>loadPublicDrive().catch(()=>{}));
- window.MSMI_V11={loadPublicDrive,refreshAdmin};
-})();
-</script>
-
-<script>
-/* MSMI V16 navigation and control reliability */
-(function(){
- const nav=document.getElementById('featureSidebarNav');
- if(!nav)return;
- const go=id=>{const target=document.getElementById(id);if(!target)return false;document.querySelectorAll('#dashboardView .portal-page').forEach(p=>p.classList.toggle('portal-page-active',p===target));nav.querySelectorAll('a.sidebar-link').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+id));target.scrollIntoView({behavior:document.body.classList.contains('msmi-reduce-motion')?'auto':'smooth',block:'start'});if(id==='v2Notifications')document.getElementById('refreshNotifications')?.click();if(id==='adminPanel'){window.MSMI_V11?.refreshAdmin?.();document.getElementById('refreshAdminAnalytics')?.click();}return true;};
- document.addEventListener('click',e=>{const b=e.target.closest('[data-open-page]');if(b){const id=b.getAttribute('data-open-page');if(go(id)){e.preventDefault();e.stopImmediatePropagation();}}},true);
- window.addEventListener('hashchange',()=>{const id=(location.hash||'#overviewPage').slice(1);if(document.getElementById(id))go(id);});
-})();
-</script>
-<script id="msmi-v17-runtime">
-(()=>{
- const $=id=>document.getElementById(id);
- const wait=(p,ms,label)=>Promise.race([p,new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+' timed out')),ms))]);
- // Reconcile navigation targets after all feature modules have registered.
- function navigate(id,link){const target=$(id);if(!target)return;document.querySelectorAll('#dashboardView .portal-page').forEach(p=>p.classList.toggle('portal-page-active',p===target));document.querySelectorAll('#featureSidebarNav a.sidebar-link').forEach(a=>a.classList.toggle('active',a===link));target.scrollIntoView({behavior:'auto',block:'start'});if(id==='v2Notifications')$('refreshNotifications')?.click();if(id==='memberDirectory')window.MSMI_loadMemberDirectory?.();if(id==='v2CloudDrive')$('v11DriveStatus')?.dispatchEvent(new Event('msmi:refresh'));if(id==='adminPanel'){ $('refreshAdminAnalytics')?.click(); }}
- document.addEventListener('click',e=>{const quick=e.target.closest('[data-open-page]');if(quick){e.preventDefault();navigate(quick.dataset.openPage,document.querySelector(`#featureSidebarNav a[href="#${quick.dataset.openPage}"]`));return;}const a=e.target.closest('#featureSidebarNav a.sidebar-link');if(a){const h=a.getAttribute('href')||'';if(h.startsWith('#')){e.preventDefault();navigate(h.slice(1),a);}}});
- // Make all dashboard action buttons legible regardless of legacy class names.
- document.querySelectorAll('#dashboardView button.primary,#dashboardView button.danger-btn,#dashboardView button.tool-btn').forEach(b=>{if(!b.classList.contains('secondary')){b.style.color='#fff';if(!b.style.backgroundColor)b.style.backgroundColor='#c8102e';}});
- // The original profile loader is used, but a watchdog ensures the overview never remains in an endless loading state.
- const originalProfile=window.loadAdvancedProfile;
- // Profile loader is scoped inside its original script; the startup watchdog only replaces stale labels on timeout.
- setTimeout(()=>{const n=$('overviewName');if(n&&/loading profile/i.test(n.textContent)){n.textContent='Profile not loaded';$('overviewBio').textContent='The profile request did not finish. Use Refresh dashboard or sign out and sign in again.';}},18000);
- // Notifications have an explicit timeout/error/retry state rather than a permanent spinner.
- setTimeout(()=>{const box=$('notificationList');if(box&&box.textContent.includes('Loading notifications')){box.textContent='Notifications are taking too long. Check your connection, then use Refresh.';const c=$('overviewNotificationCount');if(c)c.textContent='Notifications delayed';}},20000);
- // Repaint the analytics panel with a simple visual bar chart after the analytics RPC populates it.
- const analytics=$('adminAnalytics');if(analytics){const obs=new MutationObserver(()=>{const stats=[...analytics.querySelectorAll('.v2-stat')];if(!stats.length)return;stats.forEach((card,i)=>{if(card.dataset.v17Chart)return;card.dataset.v17Chart='1';const val=Number(card.querySelector('strong')?.textContent||0);const max=Math.max(1,...stats.map(x=>Number(x.querySelector('strong')?.textContent||0)));const bar=document.createElement('div');bar.style.cssText='height:6px;border-radius:9px;background:#f2d6dc;margin-top:9px;overflow:hidden';const fill=document.createElement('div');fill.style.cssText='height:100%;width:'+Math.max(2,Math.round(val/max*100))+'%;background:linear-gradient(90deg,#e11d48,#9f0d24);border-radius:9px';bar.append(fill);card.append(bar);});});obs.observe(analytics,{childList:true,subtree:true});}
- // Drive form guard: never clear pasted URL/title/description on failed requests or after an insert.
- const driveForm=$('v11DriveUrl')?.closest('form');driveForm?.addEventListener('submit',e=>e.preventDefault());
- $('v11DriveUrl')?.addEventListener('input',()=>{const status=$('v11DriveStatus');if(status&&/error|incomplete|paste/i.test(status.textContent))status.textContent='Link entered. Click Add public drive link to save it.';});
- // Refresh public drive on navigation and provide an explicit refresh event.
- $('v2CloudDrive')?.addEventListener('msmi:refresh',()=>{const refresh=$('v11AdminRefresh');if(refresh)refresh.click();});
- // Re-run overview data loaders when dashboard becomes visible; avoids stale first-render labels.
- const dash=$('dashboardView');if(dash){const mo=new MutationObserver(()=>{if(!dash.classList.contains('hidden')){window.MSMI_retryDashboard?.();mo.disconnect();}});mo.observe(dash,{attributes:true,attributeFilter:['class']});}
-})();
-</script>
 </body>
 </html>
