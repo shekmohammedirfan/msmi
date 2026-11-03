@@ -460,6 +460,25 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
 
 </style>
 <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+
+/* MSMI V17: consistent contrast, avatar rendering and navigation safety */
+<style id="msmi-v17-overrides">
+#dashboardView button.primary,#dashboardView button.tool-btn.primary,#dashboardView .primary,#dashboardView button.danger-btn,#dashboardView button[class*="primary"],#dashboardView button[class*="danger"]{background:#c8102e!important;background-image:linear-gradient(135deg,#d7193f,#a80724)!important;color:#fff!important;border:1px solid #a80724!important;text-shadow:none!important;opacity:1!important}
+#dashboardView button.tool-btn:not(.secondary):not([aria-pressed="false"]),#dashboardView button.v2-btn:not(.secondary){color:#fff!important}
+#dashboardView button.tool-btn:not(.secondary){background-color:#c8102e!important;color:#fff!important;border-color:#b20d29!important}
+#dashboardView button:not(.secondary):not(.sidebar-link):not(.icon-only){color:#fff!important}
+#dashboardView button:not(.secondary):not(.sidebar-link):not(.icon-only){background-color:#c8102e!important;border-color:#b20d29!important}
+#dashboardView button.tool-btn:hover,#dashboardView button.primary:hover,#dashboardView button.danger-btn:hover{background:#99091f!important;color:#fff!important}
+#dashboardView button:disabled{opacity:.58!important;color:#fff!important}
+.member-avatar img[data-msmi-avatar],.v2-avatar img[data-msmi-avatar],#overviewAvatar img[data-msmi-avatar],#accountProfileAvatar img[data-msmi-avatar],#profileAvatarPreview img[data-msmi-avatar]{width:100%!important;height:100%!important;display:block!important;object-fit:cover!important;border-radius:inherit!important;position:absolute!important;inset:0!important}
+.member-avatar,.v2-avatar,#overviewAvatar,#accountProfileAvatar,#profileAvatarPreview{position:relative!important;overflow:hidden!important}
+#overviewAvatar.has-photo,#accountProfileAvatar.has-photo,#profileAvatarPreview.has-photo{color:transparent!important}
+#overviewName{min-width:0;overflow-wrap:anywhere}
+#v11DriveUrl{min-height:42px!important;user-select:text!important;-webkit-user-select:text!important}
+#v13DriveAdminList .v11-file-row{min-width:0}
+#adminAnalytics .v2-stat{min-height:78px}
+</style>
+
 </head>
 <body>
   <header class="topbar">
@@ -1483,21 +1502,17 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
    let direct='';
    if(/^https?:\/\//i.test(value)){
      direct=value;
-     try{const u=new URL(value);const match=u.pathname.match(/\/storage\/v1\/object\/(?:public|sign|authenticated)\/([^/]+)\/(.+)$/i);if(match)add(match[1],match[2]);}catch(_){}
+     try{const u=new URL(value);const m=u.pathname.match(/\/storage\/v1\/object\/(?:public|sign|authenticated)\/([^/]+)\/(.+)$/i);if(m)add(m[1],m[2]);}catch(_){}
    }else{
      const path=value.replace(/^\/+/, '');
-     if(path.startsWith('msmi-avatars/'))add('msmi-avatars',path.slice('msmi-avatars/'.length));
-     else if(path.startsWith('msmi-cloud/'))add('msmi-cloud',path.slice('msmi-cloud/'.length));
+     if(path.startsWith('msmi-avatars/'))add('msmi-avatars',path.slice(13));
+     else if(path.startsWith('msmi-cloud/'))add('msmi-cloud',path.slice(11));
      else {add('msmi-avatars',path);add('msmi-cloud',path);}
    }
    const urls=[];
    for(const entry of entries){
-     try{const bucket=supabaseClient.storage.from(entry.bucket);
-       const signed=await bucket.createSignedUrl(entry.path,3600);if(!signed.error&&signed.data?.signedUrl)urls.push(signed.data.signedUrl);
-       const pub=bucket.getPublicUrl(entry.path)?.data?.publicUrl;if(pub)urls.push(pub);
-     }catch(_){}
+     try{const bucket=supabaseClient.storage.from(entry.bucket);const signed=await bucket.createSignedUrl(entry.path,60*60*24*3);if(!signed.error&&signed.data?.signedUrl)urls.push(signed.data.signedUrl);const pub=bucket.getPublicUrl(entry.path)?.data?.publicUrl;if(pub)urls.push(pub);}catch(_){}
    }
-   // Legacy absolute URLs (including older signed links) are fallback candidates only.
    if(direct)urls.push(direct);
    return [...new Set(urls.filter(Boolean))];
  }
@@ -1619,7 +1634,7 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
    const box=byId('notificationList'),count=byId('notificationCount'),summary=byId('overviewNotificationCount'),preview=byId('overviewNotificationPreview');
    if(box)box.replaceChildren(node('p','note-meta','Loading notifications…'));
    try{
-     const u=await currentUser();
+     const u=await Promise.race([currentUser(),new Promise((_,reject)=>setTimeout(()=>reject(new Error('Could not verify your session. Please refresh and sign in again.')),10000))]);
      const request=supabaseClient.from('portal_notifications').select('id,title,body,kind,created_at,read_at').eq('user_id',u.id).order('created_at',{ascending:false}).limit(50);
      const result=await Promise.race([request,new Promise((_,reject)=>setTimeout(()=>reject(new Error('The notification request timed out. Check your connection and Supabase policies.')),15000))]);
      if(result.error)throw result.error;
@@ -1637,8 +1652,9 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
  byId('refreshNotifications').addEventListener('click',()=>loadNotifications().then(()=>status('notificationStatus','Notifications refreshed.','success')).catch(e=>status('notificationStatus',errText(e),'error')));
  byId('markAllNotifications').addEventListener('click',async()=>{try{const u=await currentUser();const {error}=await supabaseClient.from('portal_notifications').update({read_at:new Date().toISOString()}).eq('user_id',u.id).is('read_at',null);if(error)throw error;await loadNotifications();status('notificationStatus','All notifications marked as read.','success');}catch(e){status('notificationStatus',errText(e),'error');}});
  async function loadAdvancedProfile(){
-   const u=await currentUser();
-   const {data,error}=await supabaseClient.from('profiles').select('username,display_name,bio,status_message,avatar_url,headline,location,phone_number,organization,website_url,skills,interests,timezone,profile_visibility').eq('id',u.id).maybeSingle();
+   const u=await Promise.race([currentUser(),new Promise((_,reject)=>setTimeout(()=>reject(new Error('Sign-in/profile request timed out. Refresh and sign in again.')),12000))]);
+   const query=supabaseClient.from('profiles').select('username,display_name,bio,status_message,avatar_url,headline,location,phone_number,organization,website_url,skills,interests,timezone,profile_visibility').eq('id',u.id).maybeSingle();
+   const {data,error}=await Promise.race([query,new Promise((_,reject)=>setTimeout(()=>reject(new Error('Profile database request timed out. Check profiles table access and connection.')),12000))]);
    if(error)throw error;
    const p=data||{};
    const fields={profileDisplayName:p.display_name||'',profileBio:p.bio||'',profileStatus:p.status_message||'',profileHeadline:p.headline||'',profileLocation:p.location||'',profilePhone:p.phone_number||'',profileOrganization:p.organization||'',profileWebsite:p.website_url||'',profileSkills:p.skills||'',profileInterests:p.interests||'',profileTimezone:p.timezone||'Asia/Kolkata',profileVisibility:p.profile_visibility||'members'};
@@ -1959,7 +1975,7 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
  function addGroupActions(){const area=$('v2Groups');if(!area||$('v11LeaveGroup'))return;const target=$('deleteGroupBtn')?.parentElement;if(!target)return;const leave=document.createElement('button');leave.id='v11LeaveGroup';leave.type='button';leave.className='tool-btn danger-btn';leave.textContent='Leave group';target.append(leave);leave.addEventListener('click',async()=>{if(!window.MSMI_activeGroupId){alert('Select a group first.');return;}if(!confirm('Leave this group? You will no longer see its messages.'))return;try{const {error}=await client().rpc('leave_portal_group',{p_group_id:window.MSMI_activeGroupId});if(error)throw error;location.hash='#v2Groups';$('activeGroupTitle').textContent='Select a group';$('groupMessages').textContent='You left the group.';$('groupMemberList').replaceChildren();$('groupMemberCount').textContent='0 members';$('groupStatus').textContent='You left the group.';document.dispatchEvent(new CustomEvent('msmi:group-left'));}catch(e){$('groupStatus').textContent=e.message;}});}
  // Use capture phase so the legacy image click handler cannot open a new tab. Show filename and full-size viewer instead.
  function setupAnnouncementMedia(){const box=$('announcementText');if(!box||box.dataset.v11Media)return;box.dataset.v11Media='1';box.addEventListener('click',e=>{const img=e.target.closest('img');if(!img)return;e.preventDefault();e.stopImmediatePropagation();const viewer=$('v10Viewer'),stage=$('v10ViewerStage');if(!viewer||!stage)return;stage.replaceChildren();const full=document.createElement('img');full.src=img.currentSrc||img.src;full.alt=img.alt||'Announcement image';full.style.cssText='max-width:96vw;max-height:calc(100vh - 100px);object-fit:contain';stage.append(full);$('v10ViewerTitle').textContent=img.alt||'Announcement image';viewer.classList.add('open');document.body.style.overflow='hidden';},true);const obs=new MutationObserver(()=>{box.querySelectorAll('.msmi-attachment-gallery img').forEach(img=>{if(img.dataset.v11Name)return;img.dataset.v11Name='1';const wrap=document.createElement('div');wrap.style.cssText='display:inline-flex;flex-direction:column;gap:5px;max-width:220px';img.parentNode.insertBefore(wrap,img);wrap.append(img);const label=document.createElement('small');label.textContent=img.alt||'Image attachment';label.style.cssText='font-weight:700;overflow-wrap:anywhere';wrap.append(label);});});obs.observe(box,{childList:true,subtree:true});}
- document.addEventListener('DOMContentLoaded',()=>{setupAnnouncementMedia();addGroupActions();loadSlides().catch(()=>{});$('v11SaveDrive')?.addEventListener('click',()=>saveDrive().catch(e=>$('v11DriveStatus').textContent=e.message));$('v13ClearDriveForm')?.addEventListener('click',()=>{$('v11DriveTitle').value='';$('v11DriveUrl').value='';$('v11DriveDescription').value='';$('v11DriveStatus').textContent='Fields cleared.';});$('v11AddSlide')?.addEventListener('click',async()=>{try{const title=$('v11SlideTitle').value.trim();if(!title)throw Error('Enter a slide title.');let imageUrl=$('v11SlideImage').value.trim();const imageFile=$('v11SlideImageFile')?.files?.[0];if(imageFile){if(imageFile.size>8*1024*1024)throw Error('Slideshow image must be 8 MB or smaller.');if(!/^image\/(png|jpeg|webp)$/.test(imageFile.type))throw Error('Choose PNG, JPG or WEBP.');const wrap=$('v11SlideUploadWrap');wrap.classList.remove('hidden');$('v11SlideUploadProgress').value=0;$('v11SlideUploadValue').textContent='0%';$('v11SlideUploadLabel').textContent='Uploading slide image…';const path='login-slides/'+Date.now()+'-'+imageFile.name.replace(/[^a-zA-Z0-9._-]/g,'_');if(window.MSMI_uploadStorage){await window.MSMI_uploadStorage('msmi-announcement-assets',path,imageFile,p=>{$('v11SlideUploadProgress').value=p;$('v11SlideUploadValue').textContent=p+'%';});}else{const {error:uploadError}=await client().storage.from('msmi-announcement-assets').upload(path,imageFile,{upsert:false,contentType:imageFile.type});if(uploadError)throw uploadError;$('v11SlideUploadProgress').value=100;$('v11SlideUploadValue').textContent='100%';} $('v11SlideUploadLabel').textContent='Upload complete';imageUrl=client().storage.from('msmi-announcement-assets').getPublicUrl(path).data.publicUrl;}if(!imageUrl)throw Error('Add an image URL or upload an image.');const {error}=await client().from('portal_login_slides').insert({title,description:$('v11SlideText').value.trim(),image_url:imageUrl,sort_order:Date.now(),enabled:true});if(error)throw error;$('v11SlideTitle').value=$('v11SlideText').value=$('v11SlideImage').value='';if($('v11SlideImageFile'))$('v11SlideImageFile').value='';$('v11SlideStatus').textContent='Slide added.';await loadSlideAdmin();await loadSlides();}catch(e){$('v11SlideStatus').textContent=e.message;}});$('v11ClearSlides')?.addEventListener('click',async()=>{if(!confirm('Remove every login slideshow slide?'))return;const {error}=await client().from('portal_login_slides').delete().neq('id','00000000-0000-0000-0000-000000000000');if(error)$('v11SlideStatus').textContent=error.message;else{await loadSlideAdmin();await loadSlides();}});$('v11AdminRefresh')?.addEventListener('click',()=>refreshAdmin().catch(console.error));});
+ document.addEventListener('DOMContentLoaded',()=>{setupAnnouncementMedia();addGroupActions();loadSlides().catch(()=>{});$('v11SaveDrive')?.addEventListener('click',e=>{e.preventDefault();saveDrive().catch(e=>$('v11DriveStatus').textContent=e.message);});$('v13ClearDriveForm')?.addEventListener('click',()=>{$('v11DriveTitle').value='';$('v11DriveUrl').value='';$('v11DriveDescription').value='';$('v11DriveStatus').textContent='Fields cleared.';});$('v11AddSlide')?.addEventListener('click',async()=>{try{const title=$('v11SlideTitle').value.trim();if(!title)throw Error('Enter a slide title.');let imageUrl=$('v11SlideImage').value.trim();const imageFile=$('v11SlideImageFile')?.files?.[0];if(imageFile){if(imageFile.size>8*1024*1024)throw Error('Slideshow image must be 8 MB or smaller.');if(!/^image\/(png|jpeg|webp)$/.test(imageFile.type))throw Error('Choose PNG, JPG or WEBP.');const wrap=$('v11SlideUploadWrap');wrap.classList.remove('hidden');$('v11SlideUploadProgress').value=0;$('v11SlideUploadValue').textContent='0%';$('v11SlideUploadLabel').textContent='Uploading slide image…';const path='login-slides/'+Date.now()+'-'+imageFile.name.replace(/[^a-zA-Z0-9._-]/g,'_');if(window.MSMI_uploadStorage){await window.MSMI_uploadStorage('msmi-announcement-assets',path,imageFile,p=>{$('v11SlideUploadProgress').value=p;$('v11SlideUploadValue').textContent=p+'%';});}else{const {error:uploadError}=await client().storage.from('msmi-announcement-assets').upload(path,imageFile,{upsert:false,contentType:imageFile.type});if(uploadError)throw uploadError;$('v11SlideUploadProgress').value=100;$('v11SlideUploadValue').textContent='100%';} $('v11SlideUploadLabel').textContent='Upload complete';imageUrl=client().storage.from('msmi-announcement-assets').getPublicUrl(path).data.publicUrl;}if(!imageUrl)throw Error('Add an image URL or upload an image.');const {error}=await client().from('portal_login_slides').insert({title,description:$('v11SlideText').value.trim(),image_url:imageUrl,sort_order:Date.now(),enabled:true});if(error)throw error;$('v11SlideTitle').value=$('v11SlideText').value=$('v11SlideImage').value='';if($('v11SlideImageFile'))$('v11SlideImageFile').value='';$('v11SlideStatus').textContent='Slide added.';await loadSlideAdmin();await loadSlides();}catch(e){$('v11SlideStatus').textContent=e.message;}});$('v11ClearSlides')?.addEventListener('click',async()=>{if(!confirm('Remove every login slideshow slide?'))return;const {error}=await client().from('portal_login_slides').delete().neq('id','00000000-0000-0000-0000-000000000000');if(error)$('v11SlideStatus').textContent=error.message;else{await loadSlideAdmin();await loadSlides();}});$('v11AdminRefresh')?.addEventListener('click',()=>refreshAdmin().catch(console.error));});
  // Supabase auth state callback occurs after the existing app initializes; run on visible app transitions.
  document.addEventListener('msmi:group-selected',addGroupActions);let adminLoaded=false;const observer=new MutationObserver(()=>{if($('dashboardView')&&!$('dashboardView').classList.contains('hidden')){loadPublicDrive().catch(()=>{});const panel=$('adminPanel');if(panel&&!panel.classList.contains('hidden')&&!adminLoaded){adminLoaded=true;refreshAdmin().catch(e=>{adminLoaded=false;console.error(e);});}}});observer.observe(document.body,{attributes:true,subtree:true,attributeFilter:['class']});
  // Refresh public drive when its navigation link is selected.
@@ -1976,6 +1992,32 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
  const go=id=>{const target=document.getElementById(id);if(!target)return false;document.querySelectorAll('#dashboardView .portal-page').forEach(p=>p.classList.toggle('portal-page-active',p===target));nav.querySelectorAll('a.sidebar-link').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+id));target.scrollIntoView({behavior:document.body.classList.contains('msmi-reduce-motion')?'auto':'smooth',block:'start'});if(id==='v2Notifications')document.getElementById('refreshNotifications')?.click();if(id==='adminPanel'){window.MSMI_V11?.refreshAdmin?.();document.getElementById('refreshAdminAnalytics')?.click();}return true;};
  document.addEventListener('click',e=>{const b=e.target.closest('[data-open-page]');if(b){const id=b.getAttribute('data-open-page');if(go(id)){e.preventDefault();e.stopImmediatePropagation();}}},true);
  window.addEventListener('hashchange',()=>{const id=(location.hash||'#overviewPage').slice(1);if(document.getElementById(id))go(id);});
+})();
+</script>
+<script id="msmi-v17-runtime">
+(()=>{
+ const $=id=>document.getElementById(id);
+ const wait=(p,ms,label)=>Promise.race([p,new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+' timed out')),ms))]);
+ // Reconcile navigation targets after all feature modules have registered.
+ function navigate(id,link){const target=$(id);if(!target)return;document.querySelectorAll('#dashboardView .portal-page').forEach(p=>p.classList.toggle('portal-page-active',p===target));document.querySelectorAll('#featureSidebarNav a.sidebar-link').forEach(a=>a.classList.toggle('active',a===link));target.scrollIntoView({behavior:'auto',block:'start'});if(id==='v2Notifications')$('refreshNotifications')?.click();if(id==='memberDirectory')window.MSMI_loadMemberDirectory?.();if(id==='v2CloudDrive')$('v11DriveStatus')?.dispatchEvent(new Event('msmi:refresh'));if(id==='adminPanel'){ $('refreshAdminAnalytics')?.click(); }}
+ document.addEventListener('click',e=>{const quick=e.target.closest('[data-open-page]');if(quick){e.preventDefault();navigate(quick.dataset.openPage,document.querySelector(`#featureSidebarNav a[href="#${quick.dataset.openPage}"]`));return;}const a=e.target.closest('#featureSidebarNav a.sidebar-link');if(a){const h=a.getAttribute('href')||'';if(h.startsWith('#')){e.preventDefault();navigate(h.slice(1),a);}}});
+ // Make all dashboard action buttons legible regardless of legacy class names.
+ document.querySelectorAll('#dashboardView button.primary,#dashboardView button.danger-btn,#dashboardView button.tool-btn').forEach(b=>{if(!b.classList.contains('secondary')){b.style.color='#fff';if(!b.style.backgroundColor)b.style.backgroundColor='#c8102e';}});
+ // The original profile loader is used, but a watchdog ensures the overview never remains in an endless loading state.
+ const originalProfile=window.loadAdvancedProfile;
+ // Profile loader is scoped inside its original script; the startup watchdog only replaces stale labels on timeout.
+ setTimeout(()=>{const n=$('overviewName');if(n&&/loading profile/i.test(n.textContent)){n.textContent='Profile not loaded';$('overviewBio').textContent='The profile request did not finish. Use Refresh dashboard or sign out and sign in again.';}},18000);
+ // Notifications have an explicit timeout/error/retry state rather than a permanent spinner.
+ setTimeout(()=>{const box=$('notificationList');if(box&&box.textContent.includes('Loading notifications')){box.textContent='Notifications are taking too long. Check your connection, then use Refresh.';const c=$('overviewNotificationCount');if(c)c.textContent='Notifications delayed';}},20000);
+ // Repaint the analytics panel with a simple visual bar chart after the analytics RPC populates it.
+ const analytics=$('adminAnalytics');if(analytics){const obs=new MutationObserver(()=>{const stats=[...analytics.querySelectorAll('.v2-stat')];if(!stats.length)return;stats.forEach((card,i)=>{if(card.dataset.v17Chart)return;card.dataset.v17Chart='1';const val=Number(card.querySelector('strong')?.textContent||0);const max=Math.max(1,...stats.map(x=>Number(x.querySelector('strong')?.textContent||0)));const bar=document.createElement('div');bar.style.cssText='height:6px;border-radius:9px;background:#f2d6dc;margin-top:9px;overflow:hidden';const fill=document.createElement('div');fill.style.cssText='height:100%;width:'+Math.max(2,Math.round(val/max*100))+'%;background:linear-gradient(90deg,#e11d48,#9f0d24);border-radius:9px';bar.append(fill);card.append(bar);});});obs.observe(analytics,{childList:true,subtree:true});}
+ // Drive form guard: never clear pasted URL/title/description on failed requests or after an insert.
+ const driveForm=$('v11DriveUrl')?.closest('form');driveForm?.addEventListener('submit',e=>e.preventDefault());
+ $('v11DriveUrl')?.addEventListener('input',()=>{const status=$('v11DriveStatus');if(status&&/error|incomplete|paste/i.test(status.textContent))status.textContent='Link entered. Click Add public drive link to save it.';});
+ // Refresh public drive on navigation and provide an explicit refresh event.
+ $('v2CloudDrive')?.addEventListener('msmi:refresh',()=>{const refresh=$('v11AdminRefresh');if(refresh)refresh.click();});
+ // Re-run overview data loaders when dashboard becomes visible; avoids stale first-render labels.
+ const dash=$('dashboardView');if(dash){const mo=new MutationObserver(()=>{if(!dash.classList.contains('hidden')){window.MSMI_retryDashboard?.();mo.disconnect();}});mo.observe(dash,{attributes:true,attributeFilter:['class']});}
 })();
 </script>
 </body>
