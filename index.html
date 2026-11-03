@@ -785,7 +785,7 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
     // Optional: set this to your deployed HTTPS site URL. Leave blank when hosted
     // on Vercel/Netlify/custom HTTPS domain; the current domain is used automatically.
     // Never send password-reset links to localhost: a recipient's computer cannot reach your PC.
-    const PUBLIC_APP_URL = "https://msmiworld.vercel.app/";
+    const PUBLIC_APP_URL = "https://msmiworld.vercel.app";
 
     function getPasswordRecoveryRedirectUrl() {
       const host = window.location.hostname;
@@ -1500,7 +1500,10 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
  const isOnline=last=>!!last&&(Date.now()-new Date(last).getTime())<120000;
  async function updatePresence(){if(!v2User)return;const {error}=await supabaseClient.from('portal_presence').upsert({user_id:v2User.id,last_seen:new Date().toISOString()},{onConflict:'user_id'});if(error)console.warn('Presence update:',error.message);}
  async function resolveAvatarSources(raw){
-   const value=String(raw||'').trim();if(!value||!supabaseClient)return [];
+   if(Array.isArray(raw)){const all=[];for(const item of raw){const list=await resolveAvatarSources(item);for(const url of list)if(!all.includes(url))all.push(url);}return all;}
+   const value=String(raw||'').trim();if(!value)return [];
+   if(/^(data:image\/|blob:)/i.test(value))return [value];
+   if(!supabaseClient)return /^https?:\/\//i.test(value)?[value]:[];
    const entries=[];const add=(bucket,path)=>{try{path=decodeURIComponent(String(path||'').replace(/^\/+/,''));}catch(_){path=String(path||'').replace(/^\/+/, '');}if(bucket&&path&&!entries.some(x=>x.bucket===bucket&&x.path===path))entries.push({bucket,path});};
    let direct='';
    if(/^https?:\/\//i.test(value)){
@@ -1545,8 +1548,9 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
      const box=byId('memberContactList');box.replaceChildren();const q=byId('memberSearchInput').value.trim().toLowerCase();
      const members=(data||[]).filter(m=>m.id!==u.id).filter(m=>!q||`${m.username||''} ${m.display_name||''} ${m.status_message||''} ${m.bio||''}`.toLowerCase().includes(q));
      members.forEach(m=>{const b=btn('',async()=>{await selectMember(m);await openMemberConversation(m);});b.className='member-contact'+(selectedMember?.id===m.id?' selected':'');b.dataset.memberId=m.id;
-       b.append(memberAvatar(m.avatar_url,displayName));const info=node('span');info.style.minWidth='0';
-       const displayName=m.display_name||m.username||m.email?.split('@')[0]||'MSMI member';const name=node('strong','',displayName);const online=isOnline(m.last_seen);
+       const displayName=m.display_name||m.username||m.email?.split('@')[0]||'MSMI member';
+       b.append(memberAvatar(m.avatar_url||m.avatar_storage_path,displayName));const info=node('span');info.style.minWidth='0';
+       const name=node('strong','',displayName);const online=isOnline(m.last_seen);
        const sub=node('small','member-presence'+(online?' online':''),online?'● Online':(m.last_seen?'○ Offline · '+new Date(m.last_seen).toLocaleString():'○ Offline'));info.append(name,sub,node('small','note-meta','@'+(m.username||'member')));b.append(info);box.append(b);
      });
      if(!members.length)box.append(node('p','note-meta',q?'No members match your search.':'No other confirmed members yet.'));
@@ -1667,7 +1671,7 @@ button.primary,.primary{background:linear-gradient(110deg,#c8102e,#8e0920)!impor
    const name=byId('accountProfileName');if(name)name.textContent=display;
    const st=byId('accountProfileStatus');if(st)st.textContent=p.status_message||'MSMI member';
    const about=byId('accountProfileAbout');if(about)about.textContent=p.bio||'Add a short About Me description in Advanced profile.';
-   const avatarRef=p.avatar_storage_path||p.avatar_url||'';
+   const avatarRef=[p.avatar_url,p.avatar_storage_path].filter(Boolean);
    for(const id of ['accountProfileAvatar','profileAvatarPreview','overviewAvatar']){const el=byId(id);if(!el)continue;el.replaceChildren();el.textContent=initials(display);el.classList.remove('has-photo');attachAvatarImage(el,avatarRef,display);}
    const ovName=byId('overviewName');if(ovName)ovName.textContent=display;
    const ovStatus=byId('overviewStatus');if(ovStatus)ovStatus.textContent=p.status_message||'MSMI member';
