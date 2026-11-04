@@ -49,7 +49,6 @@
     </script>
 
     <style>
-        /* Custom animations & fine-grained styling */
         @keyframes pulseGlow {
             0%, 100% { box-shadow: 0 0 15px rgba(220, 38, 38, 0.2); }
             50% { box-shadow: 0 0 30px rgba(220, 38, 38, 0.5); }
@@ -59,7 +58,6 @@
             animation: pulseGlow 3s infinite ease-in-out;
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -75,7 +73,6 @@
             background: #dc2626;
         }
 
-        /* Markdown rendered content fine-tuning */
         .markdown-body p { margin-bottom: 0.85rem; line-height: 1.65; }
         .markdown-body h1, .markdown-body h2, .markdown-body h3 { 
             font-weight: 700; 
@@ -93,10 +90,8 @@
         .markdown-body th { background-color: #fff1f2; font-weight: 600; color: #991b1b; }
         .markdown-body blockquote { border-left: 4px solid #dc2626; padding-left: 1rem; color: #4b5563; font-style: italic; background: #fff1f2; margin: 0.8rem 0; padding-top: 0.4rem; padding-bottom: 0.4rem; border-radius: 0 0.375rem 0.375rem 0; }
 
-        /* KaTeX rendering adjustments */
         .katex-display { margin: 0.8em 0; overflow-x: auto; overflow-y: hidden; padding: 0.4rem 0; }
         
-        /* Cursor animation for streaming */
         .streaming-cursor::after {
             content: '❚';
             display: inline-block;
@@ -120,7 +115,7 @@
                     <h1 class="font-extrabold text-xl tracking-tight text-slate-900">MSMI <span class="text-brand-600">AI</span></h1>
                     <span class="px-2 py-0.5 text-xs font-semibold bg-red-100 text-brand-700 rounded-full border border-red-200">v3.8 Ultra</span>
                 </div>
-                <p class="text-xs text-slate-500 hidden sm:block">Advanced Mathematical & Analytical Intelligence Studio</p>
+                <p class="text-xs text-slate-500 hidden sm:block">Smart Programming & General Reasoning Studio</p>
             </div>
         </div>
 
@@ -133,9 +128,9 @@
 
             <!-- System Prompt / Reasoning Presets -->
             <select id="modePreset" class="text-xs sm:text-sm bg-slate-100 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all">
+                <option value="programming">💻 Smart Programming</option>
+                <option value="general">🧠 General Questions</option>
                 <option value="math">🧮 Math & Science Expert</option>
-                <option value="code">💻 Software Architect</option>
-                <option value="general">🧠 General Reasoning</option>
                 <option value="concise">⚡ Ultra Fast & Concise</option>
             </select>
 
@@ -160,28 +155,30 @@
             </div>
             
             <div class="flex-1 overflow-y-auto p-3 space-y-2">
-                <div class="text-xs font-semibold text-slate-500 px-2 py-1">Mathematics & Logic</div>
-                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
-                    <i class="fa-solid fa-square-root-variable text-brand-500"></i>
-                    Solve & Step Matrix Eigenvalues
-                </button>
-                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
-                    <i class="fa-solid fa-calculator text-brand-500"></i>
-                    Evaluate Integral $\int x^2 \sin(x) dx$
-                </button>
-                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
-                    <i class="fa-solid fa-atom text-brand-500"></i>
-                    Schrödinger Equation Proof
-                </button>
-
-                <div class="text-xs font-semibold text-slate-500 px-2 py-1 mt-4">Code & Engineering</div>
+                <div class="text-xs font-semibold text-slate-500 px-2 py-1">Smart Programming</div>
                 <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
                     <i class="fa-code text-brand-500"></i>
-                    Fast Python FFT Algorithm
+                    Write Clean Asynchronous API in Node.js
                 </button>
                 <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
                     <i class="fa-solid fa-microchip text-brand-500"></i>
-                    Optimize C++ Memory Allocation
+                    Optimize C++ Memory & Data Structures
+                </button>
+
+                <div class="text-xs font-semibold text-slate-500 px-2 py-1 mt-4">General Questions & Reasoning</div>
+                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-brain text-brand-500"></i>
+                    Explain Quantum Computing Principles
+                </button>
+                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line text-brand-500"></i>
+                    Analyze System Architecture Scalability
+                </button>
+
+                <div class="text-xs font-semibold text-slate-500 px-2 py-1 mt-4">Mathematics & Logic</div>
+                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-square-root-variable text-brand-500"></i>
+                    Solve Matrix Eigenvalues & Eigenvectors
                 </button>
             </div>
 
@@ -212,23 +209,23 @@
                     </div>
                     <h2 class="text-2xl font-extrabold text-slate-900 mb-2">Welcome to MSMI AI</h2>
                     <p class="text-sm text-slate-600 mb-6 leading-relaxed">
-                        An ultra-responsive AI agent tailored for complex mathematical calculations, algorithm design, LaTeX rendering, and deep logical analysis. Powered by Gemini 2.5/3.8 Flash capabilities.
+                        An ultra-responsive AI agent tailored for smart programming, general questions, complex mathematical calculations, and deep logical analysis. Powered by Gemini 3 Flash Preview.
                     </p>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
                         <div class="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
-                            <i class="fa-solid fa-square-root-variable text-brand-600 mb-1 text-base"></i>
-                            <h3 class="text-xs font-bold text-slate-800">LaTeX Rendering</h3>
-                            <p class="text-xs text-slate-500">Instant formulas with KaTeX engine.</p>
+                            <i class="fa-solid fa-code text-brand-600 mb-1 text-base"></i>
+                            <h3 class="text-xs font-bold text-slate-800">Smart Programming</h3>
+                            <p class="text-xs text-slate-500">Production-grade code & architecture.</p>
+                        </div>
+                        <div class="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
+                            <i class="fa-solid fa-brain text-brand-600 mb-1 text-base"></i>
+                            <h3 class="text-xs font-bold text-slate-800">General Questions</h3>
+                            <p class="text-xs text-slate-500">Comprehensive answers & insights.</p>
                         </div>
                         <div class="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
                             <i class="fa-solid fa-bolt text-brand-600 mb-1 text-base"></i>
-                            <h3 class="text-xs font-bold text-slate-800">High-Speed Stream</h3>
-                            <p class="text-xs text-slate-500">Real-time typing low latency output.</p>
-                        </div>
-                        <div class="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
-                            <i class="fa-solid fa-shield-halved text-brand-600 mb-1 text-base"></i>
-                            <h3 class="text-xs font-bold text-slate-800">Secure API Key</h3>
-                            <p class="text-xs text-slate-500">Key is kept private in local storage.</p>
+                            <h3 class="text-xs font-bold text-slate-800">Gemini 3 Flash</h3>
+                            <p class="text-xs text-slate-500">Ultra-fast low latency inference.</p>
                         </div>
                     </div>
                 </div>
@@ -242,7 +239,7 @@
                     <!-- Prompt Textarea Wrapper -->
                     <div class="relative flex items-end bg-slate-50 border border-slate-200 rounded-2xl shadow-sm focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-red-100 transition-all">
                         
-                        <textarea id="userInput" rows="1" placeholder="Ask MSMI AI anything (e.g. solve $e^{i\\pi} + 1 = 0$, code a sorting algorithm)..." 
+                        <textarea id="userInput" rows="1" placeholder="Ask MSMI AI anything (e.g. general questions, write smart programming code)..." 
                             class="w-full pl-4 pr-24 py-3.5 bg-transparent resize-none text-slate-800 text-sm focus:outline-none max-h-48 overflow-y-auto font-sans"></textarea>
                         
                         <div class="absolute right-2 bottom-2 flex items-center space-x-1.5 pb-0.5">
@@ -297,18 +294,18 @@
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Model Selection</label>
                     <select id="modelSelect" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-brand-500 font-medium">
-                        <option value="gemini-2.5-flash">gemini-2.5-flash (Ultra Fast & Precise)</option>
                         <option value="gemini-3-flash-preview">gemini-3-flash-preview (Latest Engine)</option>
+                        <option value="gemini-2.5-flash">gemini-2.5-flash (Ultra Fast & Precise)</option>
                     </select>
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Temperature / Creativity</label>
                     <div class="flex items-center space-x-3">
-                        <input type="range" id="tempInput" min="0" max="1" step="0.1" value="0.2" class="w-full accent-brand-600">
-                        <span id="tempVal" class="text-xs font-mono font-bold text-brand-700 min-w-[2rem]">0.2</span>
+                        <input type="range" id="tempInput" min="0" max="1" step="0.1" value="0.3" class="w-full accent-brand-600">
+                        <span id="tempVal" class="text-xs font-mono font-bold text-brand-700 min-w-[2rem]">0.3</span>
                     </div>
-                    <p class="text-xs text-slate-400">Lower values (0.1 - 0.3) provide standard deterministic mathematical precision.</p>
+                    <p class="text-xs text-slate-400">Balanced values provide optimal reasoning and programming assistance.</p>
                 </div>
             </div>
 
@@ -324,16 +321,20 @@
     <script>
         /************************************************************************
          * MSMI AI HARDCODED API KEY PLACEHOLDER
-         * Insert your Google Gemini API key here if desired for immediate use:
+         * Note: Automatically truncates the last 8 characters as configured.
          ************************************************************************/
-        const DEFAULT_API_KEY = "PASTE THE MSMI ANNOUCEMENT BOARD KEY"; 
+        const DEFAULT_API_KEY = "AQ.Ab8RN6KMTp-rYD1JSwNs2ODJ-w2Jg0h-28Nz_VA4L4DHBuFmBQABCDEFGH"; 
 
-        // State Management
+        // State Management with Gemini 3 Flash Preview default and stripping last 8 characters of default key if present
+        const resolvedDefaultKey = (DEFAULT_API_KEY && DEFAULT_API_KEY !== "PASTE THE MSMI ANNOUCEMENT BOARD KEY") 
+            ? DEFAULT_API_KEY.slice(0, -8) 
+            : '';
+
         let appState = {
-            apiKey: localStorage.getItem('MSMI_GEMINI_KEY') || (DEFAULT_API_KEY !== "YOUR_GEMINI_API_KEY_HERE" ? DEFAULT_API_KEY : ''),
-            model: localStorage.getItem('MSMI_MODEL') || 'gemini-2.5-flash',
-            temperature: parseFloat(localStorage.getItem('MSMI_TEMP')) || 0.2,
-            mode: 'math',
+            apiKey: localStorage.getItem('MSMI_GEMINI_KEY') || resolvedDefaultKey,
+            model: localStorage.getItem('MSMI_MODEL') || 'gemini-3-flash-preview',
+            temperature: parseFloat(localStorage.getItem('MSMI_TEMP')) || 0.3,
+            mode: 'programming',
             history: [],
             isGenerating: false
         };
@@ -347,17 +348,18 @@
             breaks: true
         });
 
-        // System Prompt Presets
+        // System Prompt Presets (Smart Programming & General Questions focused)
         const SYSTEM_PROMPTS = {
+            programming: `You are MSMI AI, an elite Smart Programming and Software Architecture assistant.
+- Provide clean, robust, highly optimized, and production-grade code across all languages and frameworks.
+- Explain algorithms clearly with comments and time/space complexity analysis (Big-O notation).
+- Format code blocks properly with language specifiers.`,
+            general: `You are MSMI AI, an advanced general intelligence and reasoning system.
+- Answer all general questions accurately, articulately, and comprehensively.
+- Structure information with clear headings and bullet points for maximum clarity.`,
             math: `You are MSMI AI, a premier mathematical and analytical computing engine. 
 - Always express mathematical concepts using LaTeX syntax ($...$ for inline and $$...$$ for block equations).
-- Show step-by-step rigorous proofs, calculations, and explanations.
-- Be precise, clean, structured, and logical.`,
-            code: `You are MSMI AI, an expert software architect and algorithm engineer.
-- Provide production-grade, highly efficient code.
-- Always wrap code blocks with appropriate markdown language specifiers.
-- Explain time/space complexity using Big-O notation.`,
-            general: `You are MSMI AI, an advanced AI reasoning system with deep problem-solving skills. Be concise, articulate, and accurate.`,
+- Show step-by-step rigorous proofs, calculations, and explanations.`,
             concise: `You are MSMI AI. Provide ultra-concise, rapid direct answers with zero filler text.`
         };
 
@@ -400,7 +402,6 @@
         }
 
         function setupEventListeners() {
-            // Send Click & Enter Key
             sendBtn.addEventListener('click', handleSendMessage);
             userInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -409,15 +410,14 @@
                 }
             });
 
-            // Character Counter & Auto Resize Textarea
             userInput.addEventListener('input', () => {
                 document.getElementById('charCount').textContent = `${userInput.value.length} characters`;
                 autoResizeTextarea();
             });
 
-            // Settings Modal Open/Close
+            // Settings Modal Open/Close - Do NOT show the hardcoded API key in settings
             settingsBtn.addEventListener('click', () => {
-                apiKeyInput.value = appState.apiKey;
+                apiKeyInput.value = localStorage.getItem('MSMI_GEMINI_KEY') || '';
                 modelSelect.value = appState.model;
                 tempInput.value = appState.temperature;
                 tempVal.textContent = appState.temperature;
@@ -430,20 +430,23 @@
 
             closeSettingsBtn.addEventListener('click', closeSettings);
 
-            // Toggle Password Visibility for API key input
             toggleKeyVis.addEventListener('click', () => {
                 const type = apiKeyInput.getAttribute('type') === 'password' ? 'text' : 'password';
                 apiKeyInput.setAttribute('type', type);
                 toggleKeyVis.innerHTML = type === 'password' ? '<i class="fa-solid fa-eye"></i>' : '<i class="fa-solid fa-eye-slash"></i>';
             });
 
-            // Save Settings
             saveSettingsBtn.addEventListener('click', () => {
-                appState.apiKey = apiKeyInput.value.trim();
+                const enteredKey = apiKeyInput.value.trim();
+                appState.apiKey = enteredKey;
                 appState.model = modelSelect.value;
                 appState.temperature = parseFloat(tempInput.value);
 
-                localStorage.setItem('MSMI_GEMINI_KEY', appState.apiKey);
+                if (enteredKey) {
+                    localStorage.setItem('MSMI_GEMINI_KEY', enteredKey);
+                } else {
+                    localStorage.removeItem('MSMI_GEMINI_KEY');
+                }
                 localStorage.setItem('MSMI_MODEL', appState.model);
                 localStorage.setItem('MSMI_TEMP', appState.temperature);
 
@@ -455,19 +458,16 @@
                 tempVal.textContent = tempInput.value;
             });
 
-            // Mode Selector Change
             modePreset.addEventListener('change', (e) => {
                 appState.mode = e.target.value;
             });
 
-            // Clear Chat History
             clearChatBtn.addEventListener('click', () => {
                 appState.history = [];
                 chatMessages.innerHTML = '';
                 if (welcomeBanner) chatMessages.appendChild(welcomeBanner);
             });
 
-            // Preset Prompt Cards
             document.querySelectorAll('.preset-prompt').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const text = btn.innerText.trim();
@@ -477,7 +477,6 @@
                 });
             });
 
-            // Voice Input setup (Web Speech API)
             if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 const recognition = new SpeechRecognition();
@@ -507,7 +506,6 @@
                 voiceBtn.style.display = 'none';
             }
 
-            // Mobile Sidebar Toggle
             mobileSidebarToggle.addEventListener('click', () => {
                 sidebar.classList.toggle('-translate-x-full');
             });
@@ -526,7 +524,6 @@
             userInput.style.height = Math.min(userInput.scrollHeight, 192) + 'px';
         }
 
-        // Main Messaging Logic
         async function handleSendMessage() {
             const text = userInput.value.trim();
             if (!text || appState.isGenerating) return;
@@ -537,17 +534,14 @@
                 return;
             }
 
-            // Hide Banner
             if (welcomeBanner && welcomeBanner.parentNode) {
                 welcomeBanner.remove();
             }
 
-            // Render User Message
             appendMessage('user', text);
             userInput.value = '';
             autoResizeTextarea();
 
-            // Prepare Assistant Placeholder
             const botMessageEl = appendMessage('assistant', '');
             const contentDiv = botMessageEl.querySelector('.markdown-body');
             contentDiv.classList.add('streaming-cursor');
@@ -556,7 +550,6 @@
             sendBtn.disabled = true;
 
             try {
-                // Build Payload with System Instructions and Chat History
                 const payloadContents = [
                     ...appState.history.map(msg => ({
                         role: msg.role === 'user' ? 'user' : 'model',
@@ -565,7 +558,7 @@
                     { role: 'user', parts: [{ text: text }] }
                 ];
 
-                const systemInstructionText = SYSTEM_PROMPTS[appState.mode] || SYSTEM_PROMPTS.math;
+                const systemInstructionText = SYSTEM_PROMPTS[appState.mode] || SYSTEM_PROMPTS.programming;
                 const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${appState.model}:streamGenerateContent?alt=sse&key=${appState.apiKey}`;
 
                 const response = await fetch(endpoint, {
@@ -585,7 +578,6 @@
                     throw new Error(errData.error?.message || `API Error: ${response.status}`);
                 }
 
-                // Process Server-Sent Events (SSE) Streaming
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
                 let fullResponseText = '';
@@ -597,7 +589,7 @@
 
                     buffer += decoder.decode(value, { stream: true });
                     const lines = buffer.split('\n');
-                    buffer = lines.pop(); // keep partial line in buffer
+                    buffer = lines.pop();
 
                     for (const line of lines) {
                         if (line.startsWith('data: ')) {
@@ -608,7 +600,6 @@
                                 const chunkText = parsed.candidates?.[0]?.content?.parts?.[0]?.text || '';
                                 fullResponseText += chunkText;
 
-                                // Update UI dynamically
                                 contentDiv.innerHTML = marked.parse(fullResponseText);
                                 renderMathInElement(contentDiv, {
                                     delimiters: [
@@ -620,20 +611,16 @@
                                     throwOnError: false
                                 });
                                 scrollToBottom();
-                            } catch (e) {
-                                // Ignore json parse errors for split chunks
-                            }
+                            } catch (e) {}
                         }
                     }
                 }
 
                 contentDiv.classList.remove('streaming-cursor');
                 
-                // Add to internal history
                 appState.history.push({ role: 'user', content: text });
                 appState.history.push({ role: 'assistant', content: fullResponseText });
 
-                // Attach Copy code events
                 attachCopyButtons(botMessageEl);
 
             } catch (err) {
@@ -647,7 +634,6 @@
             }
         }
 
-        // DOM Message Renderer
         function appendMessage(role, content) {
             const wrapper = document.createElement('div');
             wrapper.className = `flex gap-3 max-w-4xl mx-auto ${role === 'user' ? 'justify-end' : 'justify-start'}`;
