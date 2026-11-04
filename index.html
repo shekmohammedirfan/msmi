@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#c8102e" />
-  <title>MSMI Account Portal V10 — Ultimate Edition</title>
+  <title>MSMI Account Portal V11 — Discover & Reliability Edition</title>
   <style>
     :root {
       --red: #c8102e; --red-dark: #9f0d24; --ink: #171717;
@@ -513,6 +513,7 @@ body[data-msmi-glow="on"] .dash-card,body[data-msmi-glow="on"] .feature-sidebar,
         <div class="sidebar-brand">MSMI PORTAL<small>FEATURE NAVIGATION</small></div>
         <nav class="sidebar-nav" id="featureSidebarNav">
           <a class="sidebar-link active" href="#overviewPage"><span class="nav-icon">⌂</span>Overview</a>
+          <a class="sidebar-link" href="#discoverUpdatesPage"><span class="nav-icon">✦</span>Discover MSMI Updates</a>
           <a class="sidebar-link" href="#profileSummary"><span class="nav-icon">◉</span>Account profile</a>
           <a class="sidebar-link" href="#announcementCard"><span class="nav-icon">▣</span>Announcements</a>
           <a class="sidebar-link" href="#passwordChangeCard"><span class="nav-icon">♙</span>Password settings</a>
@@ -547,7 +548,23 @@ body[data-msmi-glow="on"] .dash-card,body[data-msmi-glow="on"] .feature-sidebar,
         <article class="overview-card"><h3>NOTIFICATIONS</h3><p id="overviewNotificationCount">Loading notifications…</p><p id="overviewNotificationPreview">Your latest alerts appear here.</p><button class="tool-btn" type="button" data-open-page="v2Notifications">Open notifications</button></article>
       </div>
       <div class="overview-card" style="margin-top:12px"><h3>QUICK ACCESS</h3><div class="v2-actions"><button class="tool-btn" type="button" data-open-page="memberDirectory">Members & chat</button><button class="tool-btn" type="button" data-open-page="privateEditorBox">Private notepad</button><button class="tool-btn" type="button" data-open-page="v2PublicDrive">Public Drive</button><button class="tool-btn" type="button" data-open-page="v2Groups">Group chat</button></div></div>
+       <section class="msmi-discover-hero" aria-label="Discover MSMI updates">
+         <div class="msmi-discover-heading"><div><span class="eyebrow">DISCOVER MSMI</span><h2>Updates, ideas & announcements</h2><p>Explore the latest news and highlights from the MSMI community.</p></div><button class="tool-btn" type="button" data-open-page="discoverUpdatesPage">View all updates</button></div>
+         <div id="msmiOverviewSlideshow" class="msmi-overview-slideshow"><div class="msmi-slide-placeholder"><strong>Discover MSMI</strong><span>Latest updates will appear here.</span></div></div>
+         <div class="msmi-slide-controls"><button type="button" id="msmiSlidePrev" aria-label="Previous slide">‹</button><div id="msmiSlideDots" aria-label="Slideshow pages"></div><button type="button" id="msmiSlideNext" aria-label="Next slide">›</button></div>
+       </section>
+       <div class="msmi-feature-showcase">
+         <article><span>✉</span><strong>Private Chat</strong><small>Connect and share files</small></article>
+         <article><span>👥</span><strong>Group Chat</strong><small>Collaborate together</small></article>
+         <article><span>☁</span><strong>MSMI Drive</strong><small>Access shared resources</small></article>
+         <article><span>📝</span><strong>Smart Notepad</strong><small>Save your ideas</small></article>
+       </div>
       </section>
+       <section class="v2-panel portal-page" id="discoverUpdatesPage">
+         <div class="section-title"><div><span class="eyebrow" style="color:var(--red)">MSMI COMMUNITY</span><h2>Discover MSMI Updates</h2><p class="sub">A store-style gallery of announcements, launches and community highlights.</p></div><span class="pill">DISCOVER</span></div>
+         <div id="msmiDiscoverGallery" class="msmi-discover-gallery"><p class="note-meta">Loading MSMI updates…</p></div>
+         <p id="msmiDiscoverStatus" class="message" role="status" aria-live="polite"></p>
+       </section>
       <div class="profile-box portal-page" id="profileSummary">
         <div class="section-title" style="justify-content:flex-start;gap:14px;margin-bottom:14px"><div class="member-avatar large" id="accountProfileAvatar">MS</div><div><h2 id="accountProfileName" style="font-size:21px;margin:0 0 5px">Your profile</h2><span class="member-presence" id="accountProfileStatus">Member account</span></div></div>
         <div class="member-profile-about" id="accountProfileAbout">Add a short About Me description in Advanced profile.</div>
@@ -585,7 +602,9 @@ body[data-msmi-glow="on"] .dash-card,body[data-msmi-glow="on"] .feature-sidebar,
         <p class="note-meta">Formatting is applied to the published announcement preview. Message content remains plain text.</p>
         <div class="msmi-upload-tools"><label for="adminAnnouncementFiles" class="tool-btn">＋ Attach files / images</label><input id="adminAnnouncementFiles" type="file" multiple hidden><label for="adminAnnouncementFolder" class="tool-btn">＋ Attach folder</label><input id="adminAnnouncementFolder" type="file" webkitdirectory directory multiple hidden><span id="adminAnnouncementSelection" class="note-meta">No attachments selected</span></div><div class="msmi-progress-wrap hidden" id="adminAnnouncementProgressWrap"><div class="msmi-progress-label"><span id="adminAnnouncementProgressLabel">Uploading…</span><strong id="adminAnnouncementProgressValue">0%</strong></div><progress id="adminAnnouncementProgress" max="100" value="0"></progress></div><div id="adminAnnouncementPreview" class="msmi-attachment-preview"></div><div class="v10-existing-assets"><strong>Published attachments</strong><div id="v10ExistingAnnouncementAssets" class="v2-list"><small class="note-meta">Loading attachments…</small></div></div>
         <button class="primary" id="saveAnnouncementBtn" type="button" style="margin-top:10px">Publish announcement</button><p class="message" id="adminStatus" role="status"></p>
-        <div class="admin-grid" style="margin-top:16px"><div><h3>Registered members</h3><div id="adminUsers" class="admin-data">Loading…</div></div><div><h3>Private notes & messages</h3><div id="adminPrivateData" class="admin-data">Loading…</div></div></div><div class="v2-panel" id="publicDriveAdminSettings"><div class="section-title"><h3>Public Drive link</h3><span class="pill">ADMIN CONTROL</span></div><p class="note-meta">Set the HTTPS drive URL that members can open from the Public Drive page. This is a link launcher; files at the destination remain governed by that provider.</p><label for="adminPublicDriveUrl">Public drive URL</label><input id="adminPublicDriveUrl" type="url" maxlength="1000" placeholder="https://drive.google.com/... or your public storage URL"><label for="adminPublicDriveLabel">Button label</label><input id="adminPublicDriveLabel" maxlength="80" value="Open MSMI Public Drive"><button class="primary" id="savePublicDriveSettings" type="button">Save public drive settings</button><p class="message" id="publicDriveAdminStatus" role="status"></p></div><div class="v2-panel" id="adminAnalyticsPanel"><div class="section-title"><h3>Portal analytics</h3><button class="tool-btn" id="refreshAdminAnalytics" type="button">Refresh analytics</button></div><div class="v2-stats" id="adminAnalytics"><p class="note-meta">Loading analytics…</p></div></div>
+        <div class="admin-grid" style="margin-top:16px"><div><h3>Registered members</h3><div id="adminUsers" class="admin-data">Loading…</div></div><div><h3>Private notes & messages</h3><div id="adminPrivateData" class="admin-data">Loading…</div></div></div><div class="v2-panel" id="publicDriveAdminSettings"><div class="section-title"><h3>Public Drive link</h3><span class="pill">ADMIN CONTROL</span></div><p class="note-meta">Set the HTTPS drive URL that members can open from the Public Drive page. This is a link launcher; files at the destination remain governed by that provider.</p><label for="adminPublicDriveUrl">Public drive URL</label><input id="adminPublicDriveUrl" type="url" maxlength="1000" placeholder="https://drive.google.com/... or your public storage URL"><label for="adminPublicDriveLabel">Button label</label><input id="adminPublicDriveLabel" maxlength="80" value="Open MSMI Public Drive"><button class="primary" id="savePublicDriveSettings" type="button">Save public drive settings</button><p class="message" id="publicDriveAdminStatus" role="status"></p></div><div class="v2-panel" id="msmiAdminDriveManager"><div class="section-title"><h3>MSMI Drive Links</h3><span class="pill">ADMIN CONTROL</span></div><p class="note-meta">Add multiple HTTPS destinations. Members can open each saved link from the Public Drive page.</p><label for="msmiDriveLinkTitle">Link name</label><input id="msmiDriveLinkTitle" maxlength="80" placeholder="Example: ECE Notes / Project Files"><label for="msmiDriveLinkUrl">Drive URL</label><input id="msmiDriveLinkUrl" type="url" maxlength="1200" placeholder="https://..."><button class="primary compact-action" id="msmiSaveDriveLink" type="button">Save drive link</button><div id="msmiAdminDriveList" class="v2-list"><p class="note-meta">Loading drive links…</p></div><p id="msmiDriveAdminStatus" class="message" role="status"></p></div>
+         <div class="v2-panel" id="msmiAdminSlideshow"><div class="section-title"><h3>Discover MSMI Slideshow</h3><span class="pill">ADMIN CONTROL</span></div><p class="note-meta">Upload multiple images. They will appear in the Overview slideshow and Discover MSMI Updates page. Admins can remove any slide.</p><label for="msmiSlideTitle">Slide title</label><input id="msmiSlideTitle" maxlength="100" placeholder="MSMI project showcase"><label for="msmiSlideDescription">Description</label><textarea id="msmiSlideDescription" rows="2" maxlength="500" placeholder="Describe this update…"></textarea><label for="msmiSlideFiles">Choose images</label><input id="msmiSlideFiles" type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple><div class="msmi-progress-wrap hidden" id="msmiSlideProgressWrap"><div class="msmi-progress-label"><span id="msmiSlideProgressLabel">Uploading slideshow images…</span><strong id="msmiSlideProgressValue">0%</strong></div><progress id="msmiSlideProgress" max="100" value="0"></progress></div><button class="primary compact-action" id="msmiUploadSlides" type="button">Upload & publish slides</button><div id="msmiAdminSlideList" class="v2-list"><p class="note-meta">Loading slides…</p></div><p id="msmiSlideAdminStatus" class="message" role="status"></p></div>
+         <div class="v2-panel" id="adminAnalyticsPanel"><div class="section-title"><h3>Portal analytics</h3><button class="tool-btn" id="refreshAdminAnalytics" type="button">Refresh analytics</button></div><div class="v2-stats" id="adminAnalytics"><p class="note-meta">Loading analytics…</p></div></div>
         <label for="adminResetEmail">Send a password reset link to a member</label><input id="adminResetEmail" type="email" placeholder="member@example.com"><button class="primary secondary" id="adminResetPasswordBtn" type="button" style="margin-top:10px">Send reset link</button>
       </section>
 
@@ -666,8 +685,10 @@ body[data-msmi-glow="on"] .dash-card,body[data-msmi-glow="on"] .feature-sidebar,
 
       <section class="v2-panel portal-page" id="v2PublicDrive">
         <div class="section-title"><div><h2>MSMI Public Drive</h2><p class="sub">Shared drive destination configured by the MSMI administrator.</p></div><span class="pill">PUBLIC DRIVE</span></div>
-        <div class="public-drive-card"><div class="public-drive-icon">☁</div><div><strong id="publicDriveTitle">MSMI Public Drive</strong><p id="publicDriveDescription" class="note-meta">The administrator has not configured a public drive link yet.</p></div><a id="publicDriveOpen" class="primary public-drive-open hidden" href="#" target="_blank" rel="noopener noreferrer">Open drive</a></div>
-        <p class="note-meta">Uploads and downloads in the shared destination are controlled by the external drive provider. Private MSMI chat and announcement attachments continue to use Supabase Storage.</p><p class="message" id="publicDriveStatus" role="status"></p>
+        <div class="public-drive-card"><div class="public-drive-icon">☁</div><div><strong>MSMI Shared Resources</strong><p class="note-meta">Admin-published links to shared drives, folders and learning resources.</p></div></div>
+         <div id="msmiMemberDriveLinks" class="msmi-drive-grid"><p class="note-meta">Loading shared drive links…</p></div>
+         <p class="message" id="msmiMemberDriveStatus" role="status" aria-live="polite"></p>
+         <p class="note-meta">External drive permissions remain controlled by the provider. Do not publish private or confidential links here.</p>
       </section>
 
       <section class="v2-panel portal-page" id="v2Groups">
@@ -1785,6 +1806,272 @@ body[data-msmi-glow="on"] .dash-card,body[data-msmi-glow="on"] .feature-sidebar,
  const ann=$('announcementText');if(ann)new MutationObserver(()=>renderAssets()).observe(ann,{childList:true,subtree:true});const originalSet=Object.getOwnPropertyDescriptor(window,'MSMI_announcementAttachments');try{let current=window.MSMI_announcementAttachments||[];Object.defineProperty(window,'MSMI_announcementAttachments',{configurable:true,get(){return current;},set(v){current=v||[];renderAssets();}});}catch(e){};setTimeout(renderAssets,500);
  $('refreshAdminAllBtn')?.addEventListener('click',()=>setTimeout(renderAssets,600));
  document.addEventListener('DOMContentLoaded',()=>loadDrive().catch(()=>{}));setTimeout(()=>loadDrive().catch(()=>{}),1200);
+})();
+</script>
+
+
+<style id="msmi-v11-polish">
+/* V11 visual system inspired by the supplied V7 showcase */
+.msmi-discover-hero{margin-top:14px;padding:18px;border-radius:18px;color:#fff;background:linear-gradient(115deg,#780817,#c8102e 58%,#f22c4d);box-shadow:0 14px 34px #9f0d2430;overflow:hidden}
+.msmi-discover-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.msmi-discover-heading .eyebrow{color:#ffdbe1}.msmi-discover-heading h2{margin:5px 0;font-size:clamp(19px,2.3vw,27px)}.msmi-discover-heading p{margin:0;color:#ffe8ec;font-size:12px}
+.msmi-discover-heading .tool-btn{background:#fff;color:#a20d28;border-color:#fff}
+.msmi-overview-slideshow{margin-top:14px;min-height:210px;border-radius:14px;overflow:hidden;background:#4a0711;position:relative}
+.msmi-overview-slide{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(220px,.85fr);min-height:230px;background:linear-gradient(110deg,#73091b,#c8102e)}
+.msmi-overview-slide img{width:100%;height:230px;object-fit:cover;background:#30040b}
+.msmi-overview-slide-copy{padding:22px;display:flex;flex-direction:column;justify-content:center;gap:8px}
+.msmi-overview-slide-copy h3{font-size:clamp(18px,2vw,26px);margin:0}.msmi-overview-slide-copy p{font-size:13px;line-height:1.55;color:#ffe8ec;margin:0}
+.msmi-slide-placeholder{min-height:210px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#fff;background:linear-gradient(120deg,#76091a,#c8102e)}
+.msmi-slide-controls{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:10px}.msmi-slide-controls button{width:32px;height:30px;border:1px solid #ffffff70;border-radius:9px;background:#ffffff18;color:#fff;font-size:22px;cursor:pointer}
+#msmiSlideDots{display:flex;gap:6px}#msmiSlideDots button{width:8px;height:8px;min-height:8px;padding:0;border:0;border-radius:50%;background:#ffffff70}#msmiSlideDots button.active{background:#fff;transform:scale(1.25)}
+.msmi-feature-showcase{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
+.msmi-feature-showcase article{display:flex;flex-direction:column;gap:5px;padding:14px;border:1px solid #f0cbd1;border-radius:14px;background:linear-gradient(145deg,#fff,#fff4f6);box-shadow:0 6px 20px #9f0d240d;min-width:0}
+.msmi-feature-showcase article span{font-size:23px;color:#c8102e}.msmi-feature-showcase strong{font-size:12px}.msmi-feature-showcase small{font-size:10px;color:#69707d}
+.msmi-discover-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:14px}
+.msmi-discover-card{overflow:hidden;border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:0 8px 24px #2208110d}
+.msmi-discover-card img{width:100%;height:190px;object-fit:cover;display:block;background:#eee}
+.msmi-discover-card-copy{padding:14px}.msmi-discover-card-copy h3{font-size:15px;margin:0 0 7px}.msmi-discover-card-copy p{font-size:12px;line-height:1.55;color:var(--muted);margin:0}.msmi-discover-card-copy small{display:block;margin-top:10px;color:var(--muted);font-size:10px}
+.msmi-drive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:12px;margin-top:14px}
+.msmi-drive-link-card{border:1px solid var(--line);border-radius:15px;background:var(--surface);padding:15px;display:flex;gap:12px;align-items:center;min-width:0;box-shadow:0 7px 20px #250a1008}
+.msmi-drive-link-card .drive-icon{width:42px;height:42px;border-radius:12px;background:#fff0f3;color:#b20e2c;display:grid;place-items:center;font-size:20px;flex:0 0 auto}
+.msmi-drive-link-card strong{display:block;font-size:13px;overflow-wrap:anywhere}.msmi-drive-link-card small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
+.msmi-drive-link-card a{display:inline-flex;margin-top:8px;padding:7px 10px;border-radius:8px;background:#c8102e;color:#fff;text-decoration:none;font-size:11px;font-weight:800}
+.msmi-admin-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px;border:1px solid var(--line);border-radius:11px;background:var(--surface)}
+.msmi-admin-row span{min-width:0;overflow-wrap:anywhere;font-size:12px}.msmi-admin-row button{border:1px solid #e8aeb8;background:#fff5f6;color:#a10f29;border-radius:8px;padding:7px 10px;cursor:pointer}
+#msmiSlideFiles{max-width:100%}
+@media(max-width:760px){.msmi-feature-showcase{grid-template-columns:repeat(2,minmax(0,1fr))}.msmi-overview-slide{grid-template-columns:1fr}.msmi-overview-slide img{height:180px}.msmi-overview-slide-copy{padding:16px}.msmi-discover-heading{align-items:flex-start}}
+/* Never let a saved collapsed state hide the entire mobile navigation. */
+@media(max-width:760px){
+ body.msmi-sidebar-collapsed .feature-sidebar{display:block!important;padding:8px!important}
+ body.msmi-sidebar-collapsed .sidebar-brand{font-size:14px!important;text-align:left!important;padding:6px 8px 10px!important}
+ body.msmi-sidebar-collapsed .sidebar-brand:before{content:none!important}
+ body.msmi-sidebar-collapsed .sidebar-brand small{display:block!important}
+ body.msmi-sidebar-collapsed .sidebar-link{font-size:11px!important;justify-content:flex-start!important;padding:8px 10px!important}
+ body.msmi-sidebar-collapsed .sidebar-link .nav-icon{width:20px!important}
+ body.msmi-sidebar-collapsed .sidebar-divider{display:none!important}
+}
+#featureSidebarNav{visibility:visible!important;opacity:1!important}
+/* V11 replaces the legacy single-link form with the multiple-link manager. */
+#publicDriveAdminSettings{display:none!important}
+.feature-sidebar{z-index:35}
+</style>
+
+
+<script>
+/* MSMI V11 reliability layer: avatar uploads, navigation, multi-drive links and Discover carousel. */
+(()=>{
+ 'use strict';
+ const $=id=>document.getElementById(id);
+ const ADMIN='shekmohammedirfan412@gmail.com';
+ const client=()=>supabaseClient;
+ const say=(id,msg,kind='')=>{const el=$(id);if(el){el.textContent=msg;el.className='message'+(kind?' '+kind:'');}};
+ const isAdmin=async()=>{const {data,error}=await client().auth.getUser();if(error)throw error;return (data.user?.email||'').toLowerCase()===ADMIN;};
+ const safeUrl=value=>{try{const u=new URL(value);return u.protocol==='https:'?u.href:'';}catch{return '';}};
+ const safeText=value=>String(value??'').trim();
+
+ // Robust Storage upload with a real XHR progress event. Paths are encoded per segment.
+ window.MSMI_uploadStorage=async(bucket,path,file,onProgress=()=>{})=>{
+   if(!client())throw new Error('Supabase client is not ready. Refresh and sign in again.');
+   const {data,error}=await client().auth.getSession();if(error)throw error;
+   const token=data.session?.access_token;if(!token)throw new Error('Your session expired. Sign in again.');
+   const cleanPath=String(path).split('/').filter(Boolean).map(encodeURIComponent).join('/');
+   const url=String(SUPABASE_URL||'').replace(/\/+$/,'')+'/storage/v1/object/'+encodeURIComponent(bucket)+'/'+cleanPath;
+   return await new Promise((resolve,reject)=>{
+     const xhr=new XMLHttpRequest();xhr.open('POST',url,true);xhr.timeout=120000;
+     xhr.setRequestHeader('Authorization','Bearer '+token);
+     xhr.setRequestHeader('apikey',SUPABASE_PUBLISHABLE_KEY||'');
+     xhr.setRequestHeader('Content-Type',file.type||'application/octet-stream');
+     xhr.setRequestHeader('x-upsert','true');xhr.setRequestHeader('cache-control','3600');
+     xhr.upload.onprogress=e=>{if(e.lengthComputable)onProgress(Math.min(99,Math.round(e.loaded/e.total*100)));};
+     xhr.onload=()=>{let body={};try{body=JSON.parse(xhr.responseText||'{}')}catch(_){}
+       if(xhr.status>=200&&xhr.status<300){onProgress(100);resolve({path,name:file.name,mime:file.type||'application/octet-stream',size:file.size});}
+       else reject(new Error(body.message||body.error||body.error_description||('Storage upload failed ('+xhr.status+'). Check bucket and Storage policies.')));
+     };
+     xhr.onerror=()=>reject(new Error('Network error during upload. Check your connection and Supabase Storage.'));
+     xhr.ontimeout=()=>reject(new Error('Upload timed out. Try a smaller file or a stable connection.'));
+     xhr.send(file);
+   });
+ };
+
+ // Profile photo save: capture the button before the old handler so there is one reliable upload path.
+ const saveProfile=$('saveAdvancedProfile');
+ if(saveProfile){
+   saveProfile.addEventListener('click',async ev=>{
+     ev.preventDefault();ev.stopImmediatePropagation();
+     const button=saveProfile,file=$('profileAvatarFile')?.files?.[0];
+     button.disabled=true;
+     const wrap=$('profileAvatarProgressWrap'),bar=$('profileAvatarProgress'),pct=$('profileAvatarProgressValue'),label=$('profileAvatarProgressLabel');
+     const progress=p=>{wrap?.classList.remove('hidden');if(bar)bar.value=p;if(pct)pct.textContent=p+'%';};
+     try{
+       const {data,error}=await client().auth.getUser();if(error)throw error;const user=data.user;if(!user)throw new Error('Please sign in again.');
+       let avatarUrl=null;
+       if(file){
+         if(file.size>5*1024*1024)throw new Error('Profile image must be 5 MB or smaller.');
+         const ext=(file.name.split('.').pop()||'').toLowerCase();
+         const allowed=['png','jpg','jpeg','webp'];
+         if(!['image/png','image/jpeg','image/webp'].includes(file.type)&&!allowed.includes(ext))throw new Error('Choose a PNG, JPG or WEBP image.');
+         const suffix=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';
+         const path=user.id+'/avatar-'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.'+suffix;
+         if(label)label.textContent='Uploading profile picture…';
+         await window.MSMI_uploadStorage('msmi-avatars',path,file,progress);
+         avatarUrl=client().storage.from('msmi-avatars').getPublicUrl(path).data.publicUrl+'?v='+Date.now();
+         if(!avatarUrl)throw new Error('Upload completed but the public image URL could not be created.');
+       }
+       const payload={
+         display_name:$('profileDisplayName').value.trim(),bio:$('profileBio').value.trim(),
+         status_message:$('profileStatus').value.trim(),headline:$('profileHeadline').value.trim(),
+         location:$('profileLocation').value.trim(),phone_number:$('profilePhone').value.trim(),
+         organization:$('profileOrganization').value.trim(),website_url:$('profileWebsite').value.trim(),
+         skills:$('profileSkills').value.trim(),interests:$('profileInterests').value.trim(),
+         timezone:$('profileTimezone').value.trim(),profile_visibility:$('profileVisibility').value
+       };
+       if(avatarUrl)payload.avatar_url=avatarUrl;
+       const {error:updateError}=await client().from('profiles').update(payload).eq('id',user.id);
+       if(updateError)throw updateError;
+       progress(100);
+       const displayName=payload.display_name||user.email||'MSMI Member';
+       const preview=$('profileAvatarPreview'),account=$('accountProfileAvatar'),overview=$('overviewAvatar');
+       if(avatarUrl){[preview,account,overview].filter(Boolean).forEach(el=>{el.style.backgroundImage='url("'+avatarUrl.replace(/"/g,'%22')+'")';el.classList.add('has-photo');el.textContent='';});}
+       if($('accountProfileName'))$('accountProfileName').textContent=displayName;
+       if($('overviewName'))$('overviewName').textContent=displayName;
+       if($('overviewBio'))$('overviewBio').textContent=payload.bio||'Complete your About Me in your profile.';
+       if($('overviewStatus'))$('overviewStatus').textContent=payload.status_message||'MSMI member';
+       if(file)$('profileAvatarFile').value='';
+       say('advancedProfileStatus',file?'Profile and picture uploaded successfully.':'Profile saved successfully.','success');
+     }catch(err){say('advancedProfileStatus',err.message||'Profile upload failed.','error');}
+     finally{button.disabled=false;setTimeout(()=>wrap?.classList.add('hidden'),2500);}
+   },true);
+ }
+
+ // Navigation: force the sidebar open on small screens and persist desktop preference safely.
+ const body=document.body, nav=$('featureSidebarNav'), sidebar=document.querySelector('.feature-sidebar');
+ const toggle=$('msmiSidebarToggle');
+ const applyNav=()=>{
+   const mobile=window.matchMedia('(max-width:760px)').matches;
+   if(mobile){body.classList.remove('msmi-sidebar-collapsed');try{localStorage.setItem('msmi-sidebar-collapsed','0')}catch(_){}}
+   if(sidebar){sidebar.style.display='block';sidebar.style.visibility='visible';}
+   if(nav){nav.style.visibility='visible';nav.querySelectorAll('.sidebar-link').forEach(a=>a.style.display='flex');}
+ };
+ applyNav();window.addEventListener('resize',applyNav,{passive:true});
+ toggle?.addEventListener('click',()=>{
+   if(window.matchMedia('(max-width:760px)').matches){applyNav();return;}
+   body.classList.toggle('msmi-sidebar-collapsed');
+   try{localStorage.setItem('msmi-sidebar-collapsed',body.classList.contains('msmi-sidebar-collapsed')?'1':'0')}catch(_){}
+ });
+ // When a nav target is opened, make sure it is active and not hidden behind a collapsed menu.
+ nav?.addEventListener('click',ev=>{
+   const link=ev.target.closest('a.sidebar-link[href^="#"]');if(!link)return;
+   const id=link.getAttribute('href').slice(1),target=$(id);if(!target)return;
+   ev.preventDefault();
+   document.querySelectorAll('#dashboardView .portal-page').forEach(p=>p.classList.toggle('portal-page-active',p===target));
+   nav.querySelectorAll('a.sidebar-link').forEach(a=>a.classList.toggle('active',a===link));
+   target.scrollIntoView({behavior:'smooth',block:'start'});
+   if(id==='discoverUpdatesPage')loadSlides();
+   if(id==='v2PublicDrive')loadDriveLinks();
+ },true);
+
+ let slides=[],slideIndex=0,slideTimer=null;
+ const publicImage=path=>client().storage.from('msmi-discover-assets').getPublicUrl(path).data.publicUrl;
+ const renderSlides=()=>{
+   const hero=$('msmiOverviewSlideshow'),gallery=$('msmiDiscoverGallery'),dots=$('msmiSlideDots');
+   if(hero){
+     hero.replaceChildren();
+     if(!slides.length){const empty=document.createElement('div');empty.className='msmi-slide-placeholder';empty.innerHTML='<strong>Discover MSMI</strong><span>No updates have been published yet. Check back soon.</span>';hero.append(empty);}
+     else{
+       slideIndex=(slideIndex+slides.length)%slides.length;const s=slides[slideIndex];
+       const frame=document.createElement('article');frame.className='msmi-overview-slide';
+       const img=document.createElement('img');img.src=s.image_url||publicImage(s.image_path);img.alt=s.title||'MSMI update';img.loading='lazy';
+       const copy=document.createElement('div');copy.className='msmi-overview-slide-copy';
+       const h=document.createElement('h3');h.textContent=s.title||'MSMI Update';
+       const p=document.createElement('p');p.textContent=s.description||'Discover the latest from MSMI.';
+       const date=document.createElement('small');date.textContent=s.created_at?new Date(s.created_at).toLocaleDateString():'';
+       copy.append(h,p,date);frame.append(img,copy);hero.append(frame);
+     }
+   }
+   if(dots){dots.replaceChildren();slides.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.className=i===slideIndex?'active':'';b.setAttribute('aria-label','Show slide '+(i+1));b.addEventListener('click',()=>{slideIndex=i;renderSlides();restartSlideTimer();});dots.append(b);});}
+   if(gallery){
+     gallery.replaceChildren();
+     if(!slides.length){const empty=document.createElement('div');empty.className='message-empty';empty.textContent='No MSMI updates are available yet. The administrator can publish updates from Admin Console.';gallery.append(empty);}
+     slides.forEach(s=>{
+       const card=document.createElement('article');card.className='msmi-discover-card';
+       const img=document.createElement('img');img.src=s.image_url||publicImage(s.image_path);img.alt=s.title||'MSMI update';img.loading='lazy';
+       const copy=document.createElement('div');copy.className='msmi-discover-card-copy';
+       const h=document.createElement('h3');h.textContent=s.title||'MSMI Update';
+       const p=document.createElement('p');p.textContent=s.description||'Discover the latest from MSMI.';
+       const d=document.createElement('small');d.textContent=s.created_at?new Date(s.created_at).toLocaleString():'';
+       copy.append(h,p,d);card.append(img,copy);gallery.append(card);
+     });
+   }
+ };
+ async function loadSlides(){
+   const gallery=$('msmiDiscoverGallery');if(gallery)gallery.innerHTML='<p class="note-meta">Loading MSMI updates…</p>';
+   try{
+     const {data,error}=await client().from('msmi_discover_slides').select('id,title,description,image_path,image_url,created_at,sort_order').eq('is_active',true).order('sort_order',{ascending:true}).order('created_at',{ascending:false});
+     if(error)throw error;slides=data||[];slideIndex=0;renderSlides();
+     say('msmiDiscoverStatus',slides.length?slides.length+' MSMI update(s) loaded.':'No updates have been published yet.',slides.length?'success':'');
+   }catch(err){
+     slides=[];renderSlides();say('msmiDiscoverStatus','Could not load MSMI updates: '+(err.message||'Database or permission error')+'. Run the V11 SQL migration and check table permissions.','error');
+   }
+   restartSlideTimer();
+ }
+ function restartSlideTimer(){if(slideTimer)clearInterval(slideTimer);if(slides.length>1)slideTimer=setInterval(()=>{slideIndex=(slideIndex+1)%slides.length;renderSlides();},6000);}
+ $('msmiSlidePrev')?.addEventListener('click',()=>{if(!slides.length)return;slideIndex=(slideIndex-1+slides.length)%slides.length;renderSlides();restartSlideTimer();});
+ $('msmiSlideNext')?.addEventListener('click',()=>{if(!slides.length)return;slideIndex=(slideIndex+1)%slides.length;renderSlides();restartSlideTimer();});
+
+ // Multiple public drive URLs, each independently manageable by the admin.
+ async function loadDriveLinks(){
+   const member=$('msmiMemberDriveLinks'),admin=$('msmiAdminDriveList');
+   if(member)member.innerHTML='<p class="note-meta">Loading shared drive links…</p>';
+   try{
+     const {data,error}=await client().from('msmi_public_drive_links').select('id,title,url,created_at').eq('is_active',true).order('created_at',{ascending:false});
+     if(error)throw error;
+     if(member){member.replaceChildren();if(!data?.length){member.textContent='No shared drive links have been published yet.';}
+       (data||[]).forEach(r=>{const card=document.createElement('article');card.className='msmi-drive-link-card';const icon=document.createElement('div');icon.className='drive-icon';icon.textContent='☁';const info=document.createElement('div');info.style.minWidth='0';const title=document.createElement('strong');title.textContent=r.title;const small=document.createElement('small');small.textContent='MSMI shared resource';const a=document.createElement('a');a.href=safeUrl(r.url)||'#';a.target='_blank';a.rel='noopener noreferrer';a.textContent='Open drive';if(a.href==='#')a.setAttribute('aria-disabled','true');info.append(title,small,a);card.append(icon,info);member.append(card);});
+     }
+     if(admin){admin.replaceChildren();if(!data?.length)admin.textContent='No drive links saved yet.';(data||[]).forEach(r=>{const row=document.createElement('div');row.className='msmi-admin-row';const span=document.createElement('span');span.textContent=r.title+' — '+r.url;const del=document.createElement('button');del.type='button';del.textContent='Delete';del.addEventListener('click',async()=>{if(!confirm('Delete this drive link?'))return;del.disabled=true;try{if(!(await isAdmin()))throw new Error('Administrator access required.');const {error}=await client().from('msmi_public_drive_links').delete().eq('id',r.id);if(error)throw error;await loadDriveLinks();say('msmiDriveAdminStatus','Drive link deleted.','success');}catch(e){say('msmiDriveAdminStatus',e.message,'error');del.disabled=false;}});row.append(span,del);admin.append(row);});}
+     say('msmiMemberDriveStatus','', '');
+   }catch(err){if(member)member.textContent='Drive links could not be loaded. '+(err.message||'');if(admin)admin.textContent='Drive links could not be loaded.';say('msmiMemberDriveStatus','Run the V11 SQL migration and check the table policies.','error');}
+ }
+ $('msmiSaveDriveLink')?.addEventListener('click',async()=>{
+   const b=$('msmiSaveDriveLink');b.disabled=true;
+   try{if(!(await isAdmin()))throw new Error('Administrator access required.');
+     const title=safeText($('msmiDriveLinkTitle').value),url=safeUrl($('msmiDriveLinkUrl').value);
+     if(!title)throw new Error('Enter a link name.');if(!url)throw new Error('Enter a valid HTTPS URL.');
+     const {error}=await client().from('msmi_public_drive_links').insert({title,url,created_by:(await client().auth.getUser()).data.user.id});
+     if(error)throw error;$('msmiDriveLinkTitle').value='';$('msmiDriveLinkUrl').value='';await loadDriveLinks();say('msmiDriveAdminStatus','Drive link saved successfully.','success');
+   }catch(e){say('msmiDriveAdminStatus',e.message,'error');}finally{b.disabled=false;}
+ });
+
+ // Admin upload and removal of overview/Discover slideshow images.
+ async function loadAdminSlides(){
+   const box=$('msmiAdminSlideList');if(!box)return;
+   try{const {data,error}=await client().from('msmi_discover_slides').select('id,title,image_path,created_at').order('sort_order').order('created_at',{ascending:false});if(error)throw error;
+     box.replaceChildren();if(!data?.length)box.textContent='No slideshow images published yet.';
+     (data||[]).forEach(s=>{const row=document.createElement('div');row.className='msmi-admin-row';const name=document.createElement('span');name.textContent=s.title||s.image_path;const del=document.createElement('button');del.type='button';del.textContent='Delete slide';del.addEventListener('click',async()=>{if(!confirm('Remove this slideshow image?'))return;del.disabled=true;try{if(!(await isAdmin()))throw new Error('Administrator access required.');const {error:dbErr}=await client().from('msmi_discover_slides').delete().eq('id',s.id);if(dbErr)throw dbErr;if(s.image_path){const {error:storageErr}=await client().storage.from('msmi-discover-assets').remove([s.image_path]);if(storageErr)console.warn('Slide removed from database; storage cleanup failed:',storageErr.message);}await loadAdminSlides();await loadSlides();say('msmiSlideAdminStatus','Slide deleted.','success');}catch(e){say('msmiSlideAdminStatus',e.message,'error');del.disabled=false;}});row.append(name,del);box.append(row);});
+   }catch(e){box.textContent='Slides unavailable: '+e.message;}
+ }
+ $('msmiUploadSlides')?.addEventListener('click',async()=>{
+   const b=$('msmiUploadSlides'),files=[...($('msmiSlideFiles')?.files||[])];b.disabled=true;
+   const wrap=$('msmiSlideProgressWrap'),bar=$('msmiSlideProgress'),pct=$('msmiSlideProgressValue'),lab=$('msmiSlideProgressLabel');
+   const progress=(p,t)=>{wrap.classList.remove('hidden');bar.value=p;pct.textContent=p+'%';lab.textContent=t;};
+   try{if(!(await isAdmin()))throw new Error('Administrator access required.');if(!files.length)throw new Error('Choose at least one image.');if(files.length>20)throw new Error('Choose up to 20 images at a time.');
+     for(const f of files){if(f.size>12*1024*1024)throw new Error(f.name+' is larger than 12 MB.');if(!/^image\/(png|jpeg|webp|gif)$/.test(f.type))throw new Error(f.name+' is not a supported image.');}
+     const user=(await client().auth.getUser()).data.user;const title=safeText($('msmiSlideTitle').value)||'MSMI Update',description=safeText($('msmiSlideDescription').value);let done=0;
+     for(const f of files){const ext=f.name.split('.').pop().toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';const path=user.id+'/'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.'+ext;
+       await window.MSMI_uploadStorage('msmi-discover-assets',path,f,p=>progress(Math.round((done+p/100)/files.length*100),'Uploading '+f.name));
+       const imageUrl=client().storage.from('msmi-discover-assets').getPublicUrl(path).data.publicUrl;
+       const {error}=await client().from('msmi_discover_slides').insert({title:files.length>1?title+' · '+f.name.replace(/\.[^.]+$/,''):title,description,image_path:path,image_url:imageUrl,created_by:user.id,sort_order:Date.now()+done});
+       if(error){await client().storage.from('msmi-discover-assets').remove([path]);throw error;}done++;
+     }
+     $('msmiSlideFiles').value='';progress(100,'All images published.');await loadAdminSlides();await loadSlides();say('msmiSlideAdminStatus','Slideshow updated successfully.','success');
+   }catch(e){say('msmiSlideAdminStatus',e.message,'error');}finally{b.disabled=false;setTimeout(()=>wrap.classList.add('hidden'),3000);}
+ });
+ // Refresh all new content after authentication, and after existing dashboard appears.
+ const boot=()=>{if(!client())return;client().auth.getSession().then(({data})=>{if(data.session){loadSlides();loadDriveLinks();loadAdminSlides();}}).catch(()=>{});};
+ window.addEventListener('load',()=>setTimeout(boot,900));
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden){/* avoid unnecessary polling; refresh only if a feature is open */}});
+ $('refreshAdminAllBtn')?.addEventListener('click',()=>{setTimeout(()=>{loadDriveLinks();loadAdminSlides();loadSlides();},500);});
+ window.MSMI_loadDiscoverUpdates=loadSlides;window.MSMI_loadDriveLinks=loadDriveLinks;
 })();
 </script>
 
