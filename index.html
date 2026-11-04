@@ -2075,5 +2075,98 @@ body[data-msmi-glow="on"] .dash-card,body[data-msmi-glow="on"] .feature-sidebar,
 })();
 </script>
 
+
+<style id="msmi-v12-visual-refresh">
+/* V12: consistent white-label buttons, reference-inspired workspace, tall carousel and slow ambient background. */
+html{scroll-behavior:smooth}
+body{background-color:#fff7f8!important;background-image:linear-gradient(120deg,#fff7f8,#fff,#fff0f3,#fff8f0,#f3f8ff,#fff7f8)!important;background-size:500% 500%!important;animation:msmiAmbientShift 48s ease-in-out infinite!important}
+@keyframes msmiAmbientShift{0%,100%{background-position:0% 50%}25%{background-position:45% 0%}50%{background-position:100% 50%}75%{background-position:55% 100%}}
+@media(prefers-reduced-motion:reduce){body{animation:none!important;background-position:50% 50%!important}}
+/* All actual buttons use white text for consistent contrast. */
+button,.tool-btn,.primary,input[type=button],input[type=submit]{color:#fff!important;background:linear-gradient(110deg,#d7193f,#9e0b27)!important;border:1px solid #a80e27!important;text-shadow:0 1px 1px #65081755}
+button:hover,.tool-btn:hover,.primary:hover{filter:brightness(1.08) saturate(1.08);box-shadow:0 8px 22px #c8102e30}
+button:disabled,.tool-btn:disabled,.primary:disabled{color:#fff!important;opacity:.62}
+.msmi-icon-btn{background:linear-gradient(145deg,#d7193f,#8f0921)!important;color:#fff!important;border-color:#a80e27!important}
+.msmi-icon-btn svg,.msmi-icon-btn i{color:#fff!important;stroke:currentColor!important}
+#msmiSlideDots button{background:#ffffff80!important;border:1px solid #ffffff!important;color:#fff!important;text-shadow:none!important}
+#msmiSlideDots button.active{background:#fff!important;color:#c8102e!important}
+/* Keep navigation labels visible next to meaningful icons, including narrow screens. */
+.feature-sidebar{display:block!important;visibility:visible!important;opacity:1!important;min-width:0}
+#featureSidebarNav{display:grid!important;visibility:visible!important;opacity:1!important;gap:5px}
+#featureSidebarNav .sidebar-link{display:flex!important;align-items:center!important;gap:11px!important;min-height:42px!important;width:100%!important;white-space:normal!important;font-size:12px!important;color:var(--ink,#222)!important}
+#featureSidebarNav .sidebar-link .nav-icon{display:grid!important;place-items:center!important;flex:0 0 24px!important;width:24px!important;height:24px!important;color:#c8102e!important}
+#featureSidebarNav .sidebar-link .nav-icon svg{width:18px!important;height:18px!important;stroke:currentColor!important}
+#featureSidebarNav .sidebar-link.active{background:linear-gradient(100deg,#c8102e,#8f0921)!important;color:#fff!important;box-shadow:0 5px 16px #c8102e25}
+#featureSidebarNav .sidebar-link.active .nav-icon{color:#fff!important}
+body.msmi-sidebar-collapsed #featureSidebarNav .sidebar-link{font-size:12px!important;justify-content:flex-start!important}
+body.msmi-sidebar-collapsed .feature-sidebar{display:block!important}
+@media(max-width:760px){
+ .dashboard-shell{grid-template-columns:minmax(0,1fr)!important}
+ .feature-sidebar{position:relative!important;top:auto!important;max-height:none!important;padding:10px!important}
+ #featureSidebarNav{display:flex!important;overflow-x:auto!important;overflow-y:hidden!important;gap:7px!important;padding:4px 2px 9px!important;scrollbar-width:thin}
+ #featureSidebarNav .sidebar-link{flex:0 0 auto!important;width:auto!important;min-height:42px!important;white-space:nowrap!important;padding:8px 11px!important}
+ body.msmi-sidebar-collapsed .feature-sidebar{display:block!important}
+}
+/* Taller Microsoft-Store-inspired Discover carousel. */
+.msmi-discover-hero{padding:clamp(16px,2vw,26px)!important;border-radius:22px!important;background:linear-gradient(115deg,#690719,#c8102e 55%,#ef3655)!important}
+.msmi-overview-slideshow{min-height:390px!important;border-radius:18px!important;box-shadow:0 12px 35px #47051145!important}
+.msmi-overview-slide{grid-template-columns:minmax(0,1.25fr) minmax(250px,.75fr)!important;min-height:390px!important}
+.msmi-overview-slide img{height:390px!important;min-height:390px!important;object-fit:cover!important;cursor:zoom-in!important;transition:filter .2s,transform .25s!important}
+.msmi-overview-slide img:hover{filter:brightness(1.06);transform:scale(1.012)}
+.msmi-overview-slide-copy{padding:clamp(18px,3vw,34px)!important}
+.msmi-overview-slide-copy h3{font-size:clamp(22px,2.7vw,34px)!important}
+.msmi-slide-placeholder{min-height:390px!important}
+.msmi-discover-card img{height:240px!important;cursor:zoom-in!important}
+@media(max-width:760px){.msmi-overview-slide{grid-template-columns:1fr!important}.msmi-overview-slide img{height:300px!important;min-height:300px!important}.msmi-overview-slide{min-height:0!important}.msmi-slide-placeholder{min-height:300px!important}.msmi-overview-slideshow{min-height:300px!important}}
+/* Full-screen slideshow image viewer with a clear exit control. */
+#msmiSlideLightbox{position:fixed;inset:0;z-index:10050;display:none;background:rgba(5,7,12,.96);grid-template-rows:auto 1fr;}
+#msmiSlideLightbox.open{display:grid}
+#msmiSlideLightbox .msmi-slide-lightbox-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px;color:#fff;background:#18050a}
+#msmiSlideLightbox .msmi-slide-lightbox-bar strong{font-size:14px;overflow-wrap:anywhere}
+#msmiSlideLightbox .msmi-slide-lightbox-stage{min-height:0;display:grid;place-items:center;padding:12px 22px 24px}
+#msmiSlideLightbox img{max-width:96vw;max-height:calc(100vh - 92px);width:auto;height:auto;object-fit:contain;border-radius:10px;box-shadow:0 15px 60px #0008}
+#msmiSlideLightbox button{min-width:92px;padding:10px 15px;border-radius:10px}
+</style>
+<script id="msmi-v12-visual-behaviour">
+(()=>{
+ 'use strict';
+ const $=id=>document.getElementById(id);
+ // Ensure each navigation icon is semantically matched to its visible label.
+ const iconByHref={
+  '#overviewPage':'house','#discoverUpdatesPage':'compass','#profileSummary':'user-round',
+  '#announcementCard':'megaphone','#passwordChangeCard':'key-round','#privateEditorBox':'notebook-pen',
+  '#publicEditorBox':'book-open','#memberDirectory':'users','#messagesBox':'messages-square',
+  '#v2Notifications':'bell','#v2Profile':'contact-round','#v2SmartNotes':'notebook-tabs',
+  '#v2PublicDrive':'cloud','#v2Groups':'users-round','#v2Security':'shield-check',
+  '#pdfGeneratorPage':'file-text','#usernameSettings':'settings','#adminPanel':'shield'
+ };
+ const paintNav=()=>{
+  document.querySelectorAll('#featureSidebarNav .sidebar-link').forEach(link=>{
+   const href=link.getAttribute('href')||'';let name=iconByHref[href];
+   if(link.id==='msmiAiNavLink')name='sparkles';
+   if(link.id==='adminNavItem')name='shield-check';
+   if(link.id==='sidebarLogout')name='log-out';
+   if(link.id==='msmiDisplayModeBtn')name='monitor-smartphone';
+   const icon=link.querySelector('.nav-icon');
+   if(icon&&name){icon.innerHTML='<i data-lucide="'+name+'"></i>';}
+   const label=(link.textContent||'').trim();if(label){link.setAttribute('aria-label',label);link.title=label;}
+  });
+  window.lucide?.createIcons?.();
+ };
+ window.addEventListener('load',()=>{paintNav();setTimeout(paintNav,450);setTimeout(paintNav,1200);});
+ // Full-screen image viewer for overview carousel and Discover gallery pictures.
+ let box=$('msmiSlideLightbox');
+ if(!box){box=document.createElement('div');box.id='msmiSlideLightbox';box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label','Full-screen MSMI slideshow image');box.innerHTML='<div class="msmi-slide-lightbox-bar"><strong id="msmiSlideLightboxTitle">MSMI update</strong><button type="button" id="msmiSlideLightboxExit"><i data-lucide="x"></i> Exit full screen</button></div><div class="msmi-slide-lightbox-stage"><img id="msmiSlideLightboxImage" alt="MSMI update"></div>';document.body.append(box);}
+ const close=()=>{box.classList.remove('open');$('msmiSlideLightboxImage').src='';document.body.style.overflow='';};
+ const open=img=>{if(!img?.src)return;$('msmiSlideLightboxImage').src=img.currentSrc||img.src;$('msmiSlideLightboxImage').alt=img.alt||'MSMI update';$('msmiSlideLightboxTitle').textContent=img.alt||'MSMI update';box.classList.add('open');document.body.style.overflow='hidden';window.lucide?.createIcons?.();};
+ $('msmiSlideLightboxExit')?.addEventListener('click',close);
+ box.addEventListener('click',e=>{if(e.target===box)close();});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&box.classList.contains('open'))close();});
+ document.addEventListener('click',e=>{const img=e.target.closest('#msmiOverviewSlideshow img,#msmiDiscoverGallery img');if(img){e.preventDefault();open(img);}});
+ // Add descriptive accessible names to compact icon-only toolbar controls.
+ [['msmiSidebarToggle','Toggle navigation sidebar'],['msmiQuickNotifications','Open notifications'],['msmiMotionToggle','Toggle motion effects']].forEach(([id,label])=>{const el=$(id);if(el){el.title=label;el.setAttribute('aria-label',label);}});
+})();
+</script>
+
 </body>
 </html>
