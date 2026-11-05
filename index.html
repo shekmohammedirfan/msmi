@@ -540,7 +540,7 @@ body[data-msmi-glow="on"] .dash-card,body[data-msmi-glow="on"] .feature-sidebar,
       <section class="portal-page portal-page-active" id="overviewPage">
       <div class="dash-head" id="dashboardOverview">
         <div><div class="eyebrow" style="color:#a80e27">MSMI MEMBER AREA</div><h2 style="margin-top:8px">Welcome to MSMI</h2><p class="sub" style="margin:5px 0 0">Your account, community updates and messages in one place.</p></div>
-        <span class="pill">SIGNED IN</span>
+        <div class="msmi-overview-head-actions"><span class="pill">SIGNED IN</span><button type="button" id="msmiOverviewRefresh" class="msmi-overview-refresh" title="Refresh profile, members, activity and slideshow"><i data-lucide="refresh-cw"></i><span>Refresh overview</span></button></div>
       </div>
       <div class="msmi-v13-overview-top">
         <article class="msmi-v13-profile-card">
@@ -2004,7 +2004,12 @@ body[data-msmi-glow="on"] .dash-card,body[data-msmi-glow="on"] .feature-sidebar,
  },true);
 
  let slides=[],slideIndex=0,slideTimer=null;
- const publicImage=path=>client().storage.from('msmi-discover-assets').getPublicUrl(path).data.publicUrl;
+ const publicImage=path=>{try{return client().storage.from('msmi-discover-assets').getPublicUrl(String(path||'').replace(/^\/+/, '')).data.publicUrl||'';}catch(_){return '';}};
+ const setSlideImage=(img,slide)=>{
+   const candidates=[slide?.image_url,slide?.image_path?publicImage(slide.image_path):''].filter((v,i,a)=>v&&a.indexOf(v)===i);
+   let index=0;img.onerror=()=>{index++;if(candidates[index])img.src=candidates[index];else{img.alt='Image could not be loaded';img.classList.add('msmi-image-load-error');}};
+   if(candidates.length)img.src=candidates[0];else{img.alt='Image unavailable';img.classList.add('msmi-image-load-error');}
+ };
  const renderSlides=()=>{
    const hero=$('msmiOverviewSlideshow'),gallery=$('msmiDiscoverGallery'),dots=$('msmiSlideDots');
    if(hero){
@@ -2013,7 +2018,7 @@ body[data-msmi-glow="on"] .dash-card,body[data-msmi-glow="on"] .feature-sidebar,
      else{
        slideIndex=(slideIndex+slides.length)%slides.length;const s=slides[slideIndex];
        const frame=document.createElement('article');frame.className='msmi-overview-slide';
-       const img=document.createElement('img');img.src=s.image_url||publicImage(s.image_path);img.alt=s.title||'MSMI update';img.loading='lazy';
+       const img=document.createElement('img');setSlideImage(img,s);img.alt=s.title||'MSMI update';img.loading='eager';img.decoding='async';
        const copy=document.createElement('div');copy.className='msmi-overview-slide-copy';
        const h=document.createElement('h3');h.textContent=s.title||'MSMI Update';
        const p=document.createElement('p');p.textContent=s.description||'Discover the latest from MSMI.';
@@ -2027,7 +2032,7 @@ body[data-msmi-glow="on"] .dash-card,body[data-msmi-glow="on"] .feature-sidebar,
      if(!slides.length){const empty=document.createElement('div');empty.className='message-empty';empty.textContent='No MSMI updates are available yet. The administrator can publish updates from Admin Console.';gallery.append(empty);}
      slides.forEach(s=>{
        const card=document.createElement('article');card.className='msmi-discover-card';
-       const img=document.createElement('img');img.src=s.image_url||publicImage(s.image_path);img.alt=s.title||'MSMI update';img.loading='lazy';
+       const img=document.createElement('img');setSlideImage(img,s);img.alt=s.title||'MSMI update';img.loading='lazy';img.decoding='async';
        const copy=document.createElement('div');copy.className='msmi-discover-card-copy';
        const h=document.createElement('h3');h.textContent=s.title||'MSMI Update';
        const p=document.createElement('p');p.textContent=s.description||'Discover the latest from MSMI.';
@@ -2255,6 +2260,83 @@ body.msmi-sidebar-collapsed .feature-sidebar{display:block!important}
  const modeBtn=$('msmiDisplayModeBtn');if(modeBtn){modeBtn.setAttribute('aria-label','Change display mode: Auto, Mobile, PC');modeBtn.title='Cycle display mode: Auto → Mobile → PC';}
  // Keep the admin quick-access tile synchronized with the actual admin navigation visibility.
  const adminNav=$('adminNavItem'),adminTile=$('overviewAdminQuick');if(adminNav&&adminTile){const sync=()=>adminTile.classList.toggle('hidden',adminNav.classList.contains('hidden'));new MutationObserver(sync).observe(adminNav,{attributes:true,attributeFilter:['class']});sync();}
+})();
+</script>
+
+
+<style id="msmi-v14-reliability-fixes">
+/* V14 reliability: overview refresh, profile loading, member/chat layout and slide image recovery. */
+.msmi-overview-head-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.msmi-overview-refresh{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid #e8b7c0!important;border-radius:10px!important;padding:8px 12px!important;background:#fff!important;color:#a20d28!important;font-weight:800!important;font-size:11px!important;cursor:pointer;min-height:36px}
+.msmi-overview-refresh:disabled{opacity:.6;cursor:wait}.msmi-overview-refresh svg{width:15px;height:15px}
+.msmi-overview-refresh.is-busy svg{animation:msmiRefreshSpin .8s linear infinite}@keyframes msmiRefreshSpin{to{transform:rotate(360deg)}}
+.msmi-image-load-error{display:block;min-height:180px;background:linear-gradient(135deg,#76091d,#c8102e);object-fit:contain;color:#fff}
+#memberContactList{min-width:0;overflow-y:auto;overscroll-behavior:contain}
+.member-contact{width:100%;min-width:0;display:flex;align-items:center;gap:10px;text-align:left;overflow:hidden}
+.member-contact>span{min-width:0;overflow:hidden}.member-contact strong,.member-contact small{display:block;overflow-wrap:anywhere;word-break:break-word}
+.member-workspace,.member-list-panel,.member-detail-panel,.member-chat{min-width:0!important;max-width:100%}
+.member-chat{overflow:hidden}.member-chat-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}.member-chat-head>*{min-width:0}.msmi-chat-head-actions{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.member-chat-thread{width:100%;min-width:0;overflow-x:hidden;overflow-y:auto;overflow-wrap:anywhere;scroll-behavior:smooth}
+.chat-bubble{max-width:min(82%,680px);min-width:0;overflow-wrap:anywhere;word-break:break-word}.chat-actions{display:flex;gap:5px;flex-wrap:wrap}
+.member-chat-compose{display:grid!important;grid-template-columns:auto auto minmax(0,1fr) auto!important;align-items:end!important;gap:7px!important;width:100%;min-width:0;box-sizing:border-box}
+.member-chat-compose textarea{width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+.member-chat-compose .msmi-attach-label,.member-chat-compose button{min-width:0!important;max-width:none!important;white-space:normal!important;justify-content:center}
+#sendChatAttachmentsBtn{grid-column:1/-1;width:100%!important}
+@media(max-width:760px){
+ .msmi-overview-head-actions{width:100%;justify-content:space-between}.msmi-overview-refresh{min-height:40px}
+ .member-list-panel{height:auto!important;max-height:none!important}.member-list-panel #memberContactList{max-height:42vh!important;min-height:150px!important}
+ .member-chat{width:100%!important;max-width:100%!important;height:auto!important;min-height:0!important;max-height:none!important}
+ .member-chat.open{display:flex!important;min-height:62vh!important}
+ .member-chat-head{align-items:flex-start!important}.msmi-chat-head-actions{width:100%;margin-left:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .msmi-chat-head-actions button{width:100%;min-width:0!important;padding:8px 6px!important;font-size:11px!important}
+ .member-chat-thread{min-height:300px!important;max-height:52vh!important;padding:12px!important}
+ .member-chat-compose{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important;padding:9px!important}
+ .member-chat-compose textarea{grid-column:1/-1!important;grid-row:1!important;min-height:70px!important;max-height:120px!important}
+ .member-chat-compose label{min-height:38px!important;font-size:11px!important}
+ .member-chat-compose #memberChatSend{min-height:38px!important;width:100%!important}
+ #sendChatAttachmentsBtn{grid-column:1/-1!important;min-height:38px!important}
+ .member-chat .msmi-progress-wrap{margin:0 8px 8px!important}
+ .member-detail-panel{overflow-wrap:anywhere}
+}
+@media(max-width:390px){.member-chat-compose{grid-template-columns:1fr 1fr!important}.member-chat-compose label{padding:8px 5px!important}.member-chat-compose #memberChatSend{padding:8px 5px!important}}
+</style>
+<script id="msmi-v14-reliability-behaviour">
+(()=>{'use strict';
+ const $=id=>document.getElementById(id);
+ let refreshBusy=false, refreshTimer=null;
+ const setText=(id,value)=>{const el=$(id);if(el)el.textContent=value;};
+ const avatarInitials=value=>String(value||'MS').trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'MS';
+ async function refreshOverview(){
+   if(refreshBusy)return;refreshBusy=true;const button=$('msmiOverviewRefresh');if(button){button.disabled=true;button.classList.add('is-busy');}
+   const results=[];
+   try{
+     const client=(typeof supabaseClient!=='undefined')?supabaseClient:null;if(!client)throw new Error('Supabase is not ready. Refresh the page and sign in again.');
+     const {data:sessionData,error:sessionError}=await client.auth.getSession();if(sessionError)throw sessionError;const user=sessionData.session?.user;if(!user)throw new Error('Your session has expired. Please sign in again.');
+     // Load the overview profile independently from other dashboard requests.
+     try{
+       const {data,error}=await client.from('profiles').select('username,display_name,bio,status_message,avatar_url').eq('id',user.id).maybeSingle();if(error)throw error;
+       const name=data?.display_name||data?.username||user.email||'MSMI Member';setText('overviewName',name);setText('overviewStatus',data?.status_message||'MSMI member');setText('overviewBio',data?.bio||'Complete your About Me in Advanced profile.');
+       const avatar=$('overviewAvatar');if(avatar){avatar.replaceChildren();avatar.textContent=avatarInitials(name);const raw=String(data?.avatar_url||'').trim();if(raw){let url=raw;if(!/^https?:\/\//i.test(raw)){const path=raw.replace(/^msmi-avatars\//,'').replace(/^\/+/, '');url=client.storage.from('msmi-avatars').getPublicUrl(path).data.publicUrl;}const img=new Image();img.alt='Your profile photo';img.loading='eager';img.referrerPolicy='no-referrer';img.onerror=()=>img.remove();img.src=url;avatar.append(img);}}
+       results.push('profile');
+     }catch(e){setText('overviewName','Profile unavailable');setText('overviewStatus','Could not load profile');setText('overviewBio',e.message||'Check profile permissions.');console.warn('Overview profile refresh:',e);}
+     // Refresh directory, Discover carousel and recent activity independently.
+     try{if(typeof window.MSMI_loadMemberDirectory==='function'){await window.MSMI_loadMemberDirectory();results.push('members');}}catch(e){console.warn('Member directory refresh:',e);}
+     try{if(typeof window.MSMI_loadDiscoverUpdates==='function'){await window.MSMI_loadDiscoverUpdates();results.push('slideshow');}}catch(e){console.warn('Discover refresh:',e);}
+     try{if(typeof window.MSMI_loadDriveLinks==='function'){await window.MSMI_loadDriveLinks();results.push('drive');}}catch(e){console.warn('Drive refresh:',e);}
+     try{const {data,error}=await client.from('portal_notifications').select('id,title,body,created_at,read_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(10);if(error)throw error;const target=$('msmiRecentActivity');if(target){target.replaceChildren();if(!data?.length){const p=document.createElement('p');p.className='msmi-v13-activity-empty';p.textContent='You are all caught up. New messages and updates will appear here.';target.append(p);}else data.slice(0,5).forEach(row=>{const item=document.createElement('div');item.className='msmi-v13-activity-item';const copy=document.createElement('div');const strong=document.createElement('strong');strong.textContent=row.title||'MSMI activity';const small=document.createElement('small');small.textContent=(row.body||'')+' · '+new Date(row.created_at).toLocaleString();copy.append(strong,small);item.append(copy);target.append(item);});}results.push('activity');}catch(e){console.warn('Recent activity refresh:',e);}
+     const msg=results.length?'Overview refreshed: '+results.join(', ')+'.':'Overview refresh finished with no sections updated.';
+     const status=$('msmiOverviewRefreshStatus');if(status)status.textContent=msg;else if(button)button.title=msg;
+   }catch(e){if(button)button.title=e.message||'Refresh failed';console.error('MSMI overview refresh:',e);}
+   finally{refreshBusy=false;if(button){button.disabled=false;button.classList.remove('is-busy');}}
+ }
+ $('msmiOverviewRefresh')?.addEventListener('click',refreshOverview);
+ // Run after the existing auth/session boot so the overview does not remain stuck on placeholders.
+ const dashboard=$('dashboardView');if(dashboard){const observer=new MutationObserver(()=>{if(!dashboard.classList.contains('hidden')){clearTimeout(refreshTimer);refreshTimer=setTimeout(refreshOverview,700);}});observer.observe(dashboard,{attributes:true,attributeFilter:['class']});}
+ window.addEventListener('load',()=>setTimeout(()=>{if($('dashboardView')&&!$('dashboardView').classList.contains('hidden'))refreshOverview();},1800));
+ // When Discover is opened, request a fresh query rather than relying on stale cached image URLs.
+ document.addEventListener('click',e=>{if(e.target.closest('[data-open-page="discoverUpdatesPage"]'))setTimeout(()=>window.MSMI_loadDiscoverUpdates?.(),350);});
+ // Keep member list dimensions stable and prevent a selected conversation from disappearing after resize.
+ window.addEventListener('resize',()=>{const chat=$('memberChatPanel');if(chat?.classList.contains('open'))chat.style.minWidth='0';},{passive:true});
 })();
 </script>
 
