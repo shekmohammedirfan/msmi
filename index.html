@@ -417,8 +417,27 @@ body[data-msmi-glow="on"] .dash-card,body[data-msmi-glow="on"] .feature-sidebar,
 #adminUsers{overflow:auto;white-space:normal}#adminUsers table{width:100%;border-collapse:collapse;font-size:12px;min-width:620px}#adminUsers th,#adminUsers td{padding:9px;border-bottom:1px solid var(--line,#eadde0);text-align:left;vertical-align:top}#adminUsers th{position:sticky;top:0;background:var(--soft,#fff5f6)}
 @media(max-width:650px){.public-drive-card{align-items:flex-start}.public-drive-open{width:100%}.msmi-announcement-file img{max-height:52vh}}
 
+
+/* MSMI V16 Code Studio and score history */
+.CodeMirror{height:460px;border:1px solid #34343b;border-radius:12px;font:14px/1.55 "Cascadia Code",Consolas,monospace;box-shadow:0 8px 28px #0002;z-index:1}
+.CodeMirror-gutters{background:#202127;border-right:1px solid #393943}.CodeMirror-linenumber{color:#858595}
+.msmi-score-history{margin-top:16px;padding:16px;border:1px solid var(--line,#eadde0);border-radius:14px;background:var(--card,#fff)}
+.msmi-score-history table{width:100%;border-collapse:collapse}.msmi-score-history td,.msmi-score-history th{padding:9px;border-bottom:1px solid var(--line,#eadde0);text-align:left}
+.msmi-points-member{display:grid;grid-template-columns:minmax(180px,1fr) auto auto;gap:10px;align-items:center;padding:12px;border-bottom:1px solid var(--line,#eadde0)}
+.msmi-points-member input{max-width:90px}.msmi-points-actions{display:flex;gap:6px;flex-wrap:wrap}
+@media(max-width:600px){.msmi-points-member{grid-template-columns:1fr 1fr}.msmi-points-member .msmi-points-actions{grid-column:1/-1}.CodeMirror{height:360px}}
+
 </style>
 <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+
 </head>
 <body>
   <header class="topbar">
@@ -639,6 +658,7 @@ body[data-msmi-glow="on"] .dash-card,body[data-msmi-glow="on"] .feature-sidebar,
         <p class="note-meta">Formatting is applied to the published announcement preview. Message content remains plain text.</p>
         <div class="msmi-upload-tools"><label for="adminAnnouncementFiles" class="tool-btn">＋ Attach files / images</label><input id="adminAnnouncementFiles" type="file" multiple hidden><label for="adminAnnouncementFolder" class="tool-btn">＋ Attach folder</label><input id="adminAnnouncementFolder" type="file" webkitdirectory directory multiple hidden><span id="adminAnnouncementSelection" class="note-meta">No attachments selected</span></div><div class="msmi-progress-wrap hidden" id="adminAnnouncementProgressWrap"><div class="msmi-progress-label"><span id="adminAnnouncementProgressLabel">Uploading…</span><strong id="adminAnnouncementProgressValue">0%</strong></div><progress id="adminAnnouncementProgress" max="100" value="0"></progress></div><div id="adminAnnouncementPreview" class="msmi-attachment-preview"></div><div class="v10-existing-assets"><strong>Published attachments</strong><div id="v10ExistingAnnouncementAssets" class="v2-list"><small class="note-meta">Loading attachments…</small></div></div>
         <button class="primary" id="saveAnnouncementBtn" type="button" style="margin-top:10px">Publish announcement</button><p class="message" id="adminStatus" role="status"></p>
+        <div class="v2-panel" id="msmiAdminPointsManager" style="margin-top:16px"><div class="section-title"><div><h3>Member points management</h3><p class="note-meta">Adjust a member’s total points. Every adjustment is recorded in the audit history.</p></div><button type="button" class="tool-btn" id="msmiRefreshPointsMembers">Refresh members</button></div><div id="msmiAdminPointsMembers" class="v2-list"><p class="note-meta">Loading members…</p></div><p class="message" id="msmiAdminPointsStatus" role="status"></p></div>
         <div class="admin-grid" style="margin-top:16px"><div><h3>Registered members</h3><div id="adminUsers" class="admin-data">Loading…</div></div><div><h3>Private notes & messages</h3><div id="adminPrivateData" class="admin-data">Loading…</div></div></div><div class="v2-panel" id="publicDriveAdminSettings"><div class="section-title"><h3>Public Drive link</h3><span class="pill">ADMIN CONTROL</span></div><p class="note-meta">Set the HTTPS drive URL that members can open from the Public Drive page. This is a link launcher; files at the destination remain governed by that provider.</p><label for="adminPublicDriveUrl">Public drive URL</label><input id="adminPublicDriveUrl" type="url" maxlength="1000" placeholder="https://drive.google.com/... or your public storage URL"><label for="adminPublicDriveLabel">Button label</label><input id="adminPublicDriveLabel" maxlength="80" value="Open MSMI Public Drive"><button class="primary" id="savePublicDriveSettings" type="button">Save public drive settings</button><p class="message" id="publicDriveAdminStatus" role="status"></p></div><div class="v2-panel" id="msmiAdminDriveManager"><div class="section-title"><h3>MSMI Drive Links</h3><span class="pill">ADMIN CONTROL</span></div><p class="note-meta">Add multiple HTTPS destinations. Members can open each saved link from the Public Drive page.</p><label for="msmiDriveLinkTitle">Link name</label><input id="msmiDriveLinkTitle" maxlength="80" placeholder="Example: ECE Notes / Project Files"><label for="msmiDriveLinkUrl">Drive URL</label><input id="msmiDriveLinkUrl" type="url" maxlength="1200" placeholder="https://..."><button class="primary compact-action" id="msmiSaveDriveLink" type="button">Save drive link</button><div id="msmiAdminDriveList" class="v2-list"><p class="note-meta">Loading drive links…</p></div><p id="msmiDriveAdminStatus" class="message" role="status"></p></div>
          <div class="v2-panel" id="msmiAdminSlideshow"><div class="section-title"><h3>Discover MSMI Slideshow</h3><span class="pill">ADMIN CONTROL</span></div><p class="note-meta">Upload multiple images. They will appear in the Overview slideshow and Discover MSMI Updates page. Admins can remove any slide.</p><label for="msmiSlideTitle">Slide title</label><input id="msmiSlideTitle" maxlength="100" placeholder="MSMI project showcase"><label for="msmiSlideDescription">Description</label><textarea id="msmiSlideDescription" rows="2" maxlength="500" placeholder="Describe this update…"></textarea><label for="msmiSlideFiles">Choose images</label><input id="msmiSlideFiles" type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple><div class="msmi-progress-wrap hidden" id="msmiSlideProgressWrap"><div class="msmi-progress-label"><span id="msmiSlideProgressLabel">Uploading slideshow images…</span><strong id="msmiSlideProgressValue">0%</strong></div><progress id="msmiSlideProgress" max="100" value="0"></progress></div><button class="primary compact-action" id="msmiUploadSlides" type="button">Upload & publish slides</button><div id="msmiAdminSlideList" class="v2-list"><p class="note-meta">Loading slides…</p></div><p id="msmiSlideAdminStatus" class="message" role="status"></p></div>
          <div class="v2-panel msmi-admin-coding" id="msmiAdminCodingManager"><div class="section-title"><div><h3>MSMI Skill Lab — Challenge Manager</h3><p class="note-meta">Create coding problems, define private test cases and choose points awarded for each problem.</p></div><button type="button" class="primary compact-action" id="adminOpenCodingProblemForm">＋ Add coding problem</button></div><div id="adminCodingProblemForm" class="hidden"><label for="adminCodeProblemTitle">Problem title</label><input id="adminCodeProblemTitle" maxlength="120" placeholder="Example: Sum of two integers"><label for="adminCodeProblemDescription">Problem statement</label><textarea id="adminCodeProblemDescription" rows="5" maxlength="10000" placeholder="Describe the task, input and expected output…"></textarea><div class="msmi-form-grid"><div><label for="adminCodeProblemDifficulty">Difficulty</label><select id="adminCodeProblemDifficulty"><option>Beginner</option><option>Easy</option><option>Medium</option><option>Hard</option></select></div><div><label for="adminCodeProblemPoints">Points for this problem</label><input id="adminCodeProblemPoints" type="number" min="1" max="1000" value="10"></div></div><label for="adminCodeProblemLanguages">Allowed languages</label><select id="adminCodeProblemLanguages" multiple size="3"><option value="c" selected>C</option><option value="cpp" selected>C++</option><option value="python" selected>Python</option></select><label for="adminCodeProblemInputFormat">Input format (optional)</label><textarea id="adminCodeProblemInputFormat" rows="2" placeholder="Describe input format"></textarea><label for="adminCodeProblemOutputFormat">Output format (optional)</label><textarea id="adminCodeProblemOutputFormat" rows="2" placeholder="Describe output format"></textarea><label for="adminCodeProblemConstraints">Constraints (optional)</label><textarea id="adminCodeProblemConstraints" rows="2" placeholder="Example: 1 ≤ A, B ≤ 10⁶"></textarea><label for="adminCodeProblemTests">Private test cases — JSON</label><textarea id="adminCodeProblemTests" rows="8" spellcheck="false" placeholder='[{"input":"2 3\n","output":"5\n"},{"input":"10 20\n","output":"30\n"}]'></textarea><p class="note-meta">Expected outputs are stored in an admin-only table and are never sent to members' browsers.</p><label class="msmi-checkline"><input id="adminCodeProblemPublish" type="checkbox" checked> Publish immediately for members</label><div class="v2-actions"><button type="button" class="primary" id="adminSaveCodingProblem">Save coding problem</button><button type="button" class="tool-btn" id="adminCancelCodingProblem">Cancel</button></div><p class="message" id="adminCodingStatus" role="status"></p></div><h4>Published and draft problems</h4><div id="adminCodingProblemList" class="v2-list"><p class="note-meta">Loading challenges…</p></div></div><div class="v2-panel" id="adminAnalyticsPanel"><div class="section-title"><h3>Portal analytics</h3><button class="tool-btn" id="refreshAdminAnalytics" type="button">Refresh analytics</button></div><div class="v2-stats" id="adminAnalytics"><p class="note-meta">Loading analytics…</p></div></div>
@@ -709,7 +729,7 @@ body[data-msmi-glow="on"] .dash-card,body[data-msmi-glow="on"] .feature-sidebar,
         <p class="message" id="notificationStatus" role="status"></p>
       </section>
 
-      <section class="v2-panel portal-page" id="v2Profile">
+      <section class="v2-panel portal-page" id="v2Profile"><div class="msmi-score-history"><div class="section-title"><div><h3>Your score history</h3><p class="note-meta">Challenge awards and administrator adjustments.</p></div><button type="button" class="tool-btn" id="msmiRefreshScoreHistory">Refresh</button></div><div id="msmiScoreHistoryList" class="v2-list"><p class="note-meta">Loading score history…</p></div></div>
         <div class="msmi-profile-score"><div><span class="msmi-skill-eyebrow">MSMI SKILL LAB</span><h3>Your coding score</h3><p>Points earned from administrator-published challenges.</p></div><strong id="profileCodingPoints">0 pts</strong><button type="button" class="tool-btn" data-open-page="msmiLeaderboard">Open leaderboard</button><button type="button" class="primary compact-action" data-open-page="msmiChallenges">Solve problems</button></div>
         <div class="section-title"><div><h2>Advanced profile</h2><p class="sub">Add a display name, short bio, status and profile photo.</p></div><span class="pill">PROFILE</span></div>
         <div class="v2-profile-grid"><div><div class="v2-avatar" id="profileAvatarPreview">MS</div><label for="profileAvatarFile">Profile photo</label><input type="file" id="profileAvatarFile" accept="image/png,image/jpeg,image/webp"><div class="msmi-progress-wrap hidden" id="profileAvatarProgressWrap"><div class="msmi-progress-label"><span id="profileAvatarProgressLabel">Uploading profile photo…</span><strong id="profileAvatarProgressValue">0%</strong></div><progress id="profileAvatarProgress" max="100" value="0"></progress></div></div><div><label for="profileDisplayName">Display name</label><input id="profileDisplayName" maxlength="60" placeholder="Your display name"><label for="profileStatus">Status</label><input id="profileStatus" maxlength="100" placeholder="Available / Studying / Busy"><label for="profileBio">About me</label><textarea id="profileBio" maxlength="1000" rows="3" placeholder="Write a short bio..."></textarea><label for="profileHeadline">Headline</label><input id="profileHeadline" maxlength="100" placeholder="ECE student · Developer · Designer"><label for="profileLocation">Location</label><input id="profileLocation" maxlength="100" placeholder="City / Region"><label for="profilePhone">Phone number</label><input id="profilePhone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="+91 98765 43210"><small class="note-meta">Your phone number is stored in your profile and is not added to public member listings by this upgrade.</small><label for="profileOrganization">College / Organization</label><input id="profileOrganization" maxlength="120" placeholder="College or organization"><label for="profileWebsite">Website / Portfolio URL</label><input id="profileWebsite" type="url" maxlength="250" placeholder="https://example.com"><label for="profileSkills">Skills</label><input id="profileSkills" maxlength="250" placeholder="Electronics, C, Python…"><label for="profileInterests">Interests</label><input id="profileInterests" maxlength="250" placeholder="Robotics, AI, design…"><label for="profileTimezone">Time zone</label><input id="profileTimezone" maxlength="60" placeholder="Asia/Kolkata"><label for="profileVisibility">Profile visibility</label><select id="profileVisibility"><option value="members">MSMI members</option><option value="private">Only me</option></select><button class="primary" id="saveAdvancedProfile" type="button">Save profile</button></div></div>
@@ -758,7 +778,7 @@ body[data-msmi-glow="on"] .dash-card,body[data-msmi-glow="on"] .feature-sidebar,
         <div class="v2-actions"><button class="primary" id="generatePdfBtn" type="button">Generate / Save PDF</button><button class="tool-btn" id="pdfClearBtn" type="button">Clear</button></div><p class="note-meta">For a true PDF download, select “Save as PDF” in the system print dialog. This tool does not upload your document.</p>
       </section>
       <section class="v2-panel portal-page" id="publicNotesHub"><div class="section-title"><div><h2>MSMI Public Notes</h2><p class="sub">A shared library of notes visible to signed-in MSMI members. Create, edit and delete your own notes.</p></div><button type="button" class="primary compact-action" id="publicNoteNew">＋ Write public note</button></div><div class="msmi-notes-layout"><aside><div id="publicNotesList" class="v2-list"><p class="note-meta">Loading public notes…</p></div></aside><section class="msmi-note-editor"><label for="publicNoteTitleV15">Note title</label><input id="publicNoteTitleV15" maxlength="120" placeholder="Give your note a title"><label for="publicNoteContentV15">Write your public note</label><div class="msmi-editor-actions"><button type="button" class="tool-btn" data-format="bold" data-target="publicNoteContentV15"><b>B</b></button><button type="button" class="tool-btn" data-format="italic" data-target="publicNoteContentV15"><i>I</i></button><button type="button" class="tool-btn" data-format="code" data-target="publicNoteContentV15">Code</button><button type="button" class="tool-btn" id="publicNoteCopyV15">Copy</button><button type="button" class="tool-btn" id="publicNoteDownloadV15">Download</button></div><textarea id="publicNoteContentV15" rows="14" maxlength="50000" placeholder="Share useful notes, study material, project ideas or code snippets…"></textarea><div class="v2-actions"><button type="button" class="primary" id="publicNoteSaveV15">Save public note</button><button type="button" class="tool-btn danger-btn" id="publicNoteDeleteV15">Delete note</button><button type="button" class="tool-btn" id="publicNoteClearV15">Clear editor</button></div><p class="message" id="publicNoteStatusV15" role="status"></p></section></div></section>
-      <section class="v2-panel portal-page" id="msmiCodeStudio"><div class="section-title"><div><h2>MSMI Code Studio</h2><p class="sub">A browser-based editor for C, C++ and Python with a remote sandboxed runner.</p></div><span class="pill">CODE · RUN · SAVE</span></div><div class="msmi-code-toolbar"><label>Language<select id="msmiCodeLanguage"><option value="c">C (GCC)</option><option value="cpp" selected>C++ (G++)</option><option value="python">Python 3</option></select></label><label>File name<input id="msmiCodeFileName" value="main.cpp" maxlength="80"></label><label>Saved snippets<select id="msmiSavedCodeSelect"><option value="">Choose saved code…</option></select></label></div><label for="msmiCodeEditor">Code editor</label><textarea id="msmiCodeEditor" class="msmi-code-editor" spellcheck="false" autocapitalize="off" autocomplete="off">#include &lt;iostream&gt;
+      <section class="v2-panel portal-page" id="msmiCodeStudio"><div class="section-title"><div><h2>MSMI Code Studio</h2><p class="sub">A browser-based editor for C, C++ and Python with a remote sandboxed runner.</p></div><span class="pill">CODE · RUN · SAVE</span></div><div class="msmi-code-toolbar"><label>Language<select id="msmiCodeLanguage"><option value="c">C (GCC)</option><option value="cpp" selected>C++ (G++)</option><option value="python">Python 3</option></select></label><label>Save title / file name<input id="msmiCodeFileName" value="main.cpp" maxlength="80"></label><label>Saved snippets<select id="msmiSavedCodeSelect"><option value="">Choose saved code…</option></select></label></div><label for="msmiCodeEditor">Code editor</label><textarea id="msmiCodeEditor" class="msmi-code-editor" spellcheck="false" autocapitalize="off" autocomplete="off">#include &lt;iostream&gt;
 using namespace std;
 int main(){
     cout &lt;&lt; "Hello, MSMI!" &lt;&lt; endl;
@@ -2417,96 +2437,82 @@ body.msmi-sidebar-collapsed .feature-sidebar{display:block!important}
  const dashboard=$('dashboardView');if(dashboard)new MutationObserver(()=>{if(!dashboard.classList.contains('hidden'))boot();}).observe(dashboard,{attributes:true,attributeFilter:['class']});
  document.addEventListener('DOMContentLoaded',()=>{if($('dashboardView')&&!$('dashboardView').classList.contains('hidden'))boot();});
  // If auth state changes to another member, refresh admin visibility before the next paint.
- client()?.auth.onAuthStateChange((_event,session)=>{if(!session){isAdmin=false;applyAdminVisibility();return;}me=session.user;isAdmin=(me.email||'').toLowerCase()===ADMIN_EMAIL;applyAdminVisibility();});
- window.MSMI_V15={loadPublicNotes,loadSavedCode,loadChallenges,loadLeaderboard,refreshScores};
-})();
-</script>
+ client()?.auth.onAuthStateChange((_event,session)=>{if(!session){isAdmin=false;msmiAdminUnlocked=false;applyAdminVisibility();return;}me=session.user;isAdmin=(me.email||'').toLowerCase()===ADMIN_EMAIL;applyAdminVisibility();});
 
+ // V16: admin visibility, password re-authentication, points and score history.
+ let msmiAdminUnlocked=false;
+ function adminPageGuard(){
+   const panel=$('adminPanel'),nav=$('adminNavItem'),tile=$('overviewAdminQuick');
+   const allowed=!!(me && (me.email||'').toLowerCase()===ADMIN_EMAIL);
+   [nav,tile].forEach(el=>{if(el)el.classList.toggle('hidden',!allowed);});
+   if(panel)panel.classList.toggle('hidden',!allowed || !msmiAdminUnlocked);
+   if(!allowed)msmiAdminUnlocked=false;
+ }
+ async function unlockAdminAndOpen(link){
+   await getUser(); if(!isAdmin)throw new Error('Administrator access is restricted to the MSMI administrator account.');
+   if(!msmiAdminUnlocked){
+     const password=window.prompt('Enter the password for '+ADMIN_EMAIL+' to unlock Admin Console:');
+     if(password===null)return;
+     const {error}=await client().auth.signInWithPassword({email:me.email,password});
+     if(error)throw new Error('Password verification failed. Check the administrator account password.');
+     msmiAdminUnlocked=true;
+   }
+   $('adminPanel')?.classList.remove('hidden');
+   if(typeof openPortalFeature==='function')openPortalFeature('adminPanel',link||$('adminNavItem'));
+   if(typeof loadAdminConsole==='function')await loadAdminConsole();
+   await loadAdminPointsMembers(); await loadAdminProblems();
+ }
+ // Capture both the sidebar link and overview shortcut before legacy navigation handlers.
+ document.addEventListener('click',async ev=>{
+   const navLink=ev.target.closest('#adminNavItem');
+   const shortcut=ev.target.closest('[data-open-page="adminPanel"]');
+   if(!navLink&&!shortcut)return;
+   ev.preventDefault();ev.stopPropagation();ev.stopImmediatePropagation();
+   try{await unlockAdminAndOpen(navLink||$('adminNavItem'));}catch(err){window.alert(err.message||String(err));}
+ },true);
+ async function loadAdminPointsMembers(){
+   if(!(await getUser())||!isAdmin)throw new Error('Administrator access required.');
+   const result=await edge({action:'admin_list_members'}),box=$('msmiAdminPointsMembers');box.replaceChildren();
+   (result.members||[]).forEach(m=>{
+     const row=node('div','msmi-points-member');
+     const info=node('div');info.append(node('strong','',m.display_name||m.username||m.email||'MSMI Member'),node('small','',m.email||m.user_id));
+     const total=node('strong','',Number(m.points||0)+' pts');
+     const amount=node('input');amount.type='number';amount.min='1';amount.max='10000';amount.step='1';amount.value='1';amount.setAttribute('aria-label','Points amount');
+     const reason=node('input');reason.type='text';reason.maxLength=160;reason.placeholder='Reason (required)';reason.style.minWidth='150px';
+     const actions=node('div','msmi-points-actions');
+     for(const [label,delta] of [['+ Add',1],['− Remove',-1]]){const b=node('button','tool-btn',label);b.type='button';b.addEventListener('click',async()=>{try{const n=Number(amount.value);if(!Number.isInteger(n)||n<1||n>10000)throw new Error('Enter a whole number from 1 to 10000.');if(!reason.value.trim())throw new Error('Enter a reason for the points adjustment.');b.disabled=true;const r=await edge({action:'admin_adjust_points',user_id:m.user_id,points_delta:delta*n,reason:reason.value.trim()});total.textContent=Number(r.total_points)+' pts';reason.value='';say('msmiAdminPointsStatus',(delta>0?'Added ':'Removed ')+(n)+' point(s) for '+(m.email||'member')+'.','success');}catch(e){say('msmiAdminPointsStatus',e.message,'error');}finally{b.disabled=false;}});actions.append(b);}
+     row.append(info,total,amount,reason,actions);box.append(row);
+   });
+   if(!result.members?.length)box.append(node('p','note-meta','No members returned.'));
+ }
+ $('msmiRefreshPointsMembers')?.addEventListener('click',()=>loadAdminPointsMembers().catch(e=>say('msmiAdminPointsStatus',e.message,'error')));
+ async function loadScoreHistory(){
+   await getUser();const r=await edge({action:'score_history'}),box=$('msmiScoreHistoryList');box.replaceChildren();
+   (r.history||[]).forEach(h=>{const row=node('article','v2-item');const delta=Number(h.points_delta??h.points??0);row.append(node('strong','',((delta>0?'+':'')+delta+' points')),node('small','',(h.source==='admin_adjustment'?'Administrator adjustment':'Challenge award')+' · '+new Date(h.created_at||h.awarded_at).toLocaleString()),node('span','',h.description||h.problem_title||h.reason||''));box.append(row);});
+   if(!r.history?.length)box.append(node('p','note-meta','No score activity yet.'));
+ }
+ $('msmiRefreshScoreHistory')?.addEventListener('click',()=>loadScoreHistory().catch(e=>console.warn(e)));
+ // Keep the textarea API compatible with existing save/run code while using CodeMirror.
+ function installProfessionalEditor(id,mode){
+   const ta=$(id);if(!ta||!window.CodeMirror||ta.dataset.cmReady)return;
+   const cm=CodeMirror.fromTextArea(ta,{theme:'material-darker',mode, lineNumbers:true,indentUnit:4,tabSize:4,indentWithTabs:false,smartIndent:true, electricChars:true,autoCloseBrackets:true,matchBrackets:true,styleActiveLine:true,lineWrapping:false,extraKeys:{Tab:cm=>cm.execCommand('indentMore'),'Shift-Tab':cm=>cm.execCommand('indentLess'),'Ctrl-S':()=> $('msmiCodeSave')?.click(),'Cmd-S':()=> $('msmiCodeSave')?.click()}});
+   ta.dataset.cmReady='1';cm.on('change',()=>{cm.save();});
+   const nativeValue=Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype,'value');
+   Object.defineProperty(ta,'value',{configurable:true,get(){return cm.getValue();},set(v){cm.setValue(String(v??''));}});
+   cm.setSize('100%',id==='msmiChallengeCode'?390:460);ta._msmiCodeMirror=cm;
+ }
+ function refreshEditorMode(){const mode=$('msmiCodeLanguage')?.value==='python'?'python':$('msmiCodeLanguage')?.value==='c'?'text/x-csrc':'text/x-c++src';if($('msmiCodeEditor')?._msmiCodeMirror)$('msmiCodeEditor')._msmiCodeMirror.setOption('mode',mode);}
+ function initV16Editors(){installProfessionalEditor('msmiCodeEditor','text/x-c++src');installProfessionalEditor('msmiChallengeCode','text/x-c++src');refreshEditorMode();}
+ $('msmiCodeLanguage')?.addEventListener('change',refreshEditorMode);
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initV16Editors);else initV16Editors();
+ // Include admin adjustments in displayed personal totals and load history with profile visits.
+ const oldRefreshScores=refreshScores;
+ refreshScores=async function(){const result=await oldRefreshScores();try{const summary=await edge({action:'score_summary'});const pts=Number(summary.total_points||0),solved=Number(summary.problems_solved||0);['overviewCodingPoints','profileCodingPoints','msmiLeaderboardMyPoints'].forEach(id=>{if($(id))$(id).textContent=id==='profileCodingPoints'?pts+' pts':String(pts);});if($('msmiMyPointsChip'))$('msmiMyPointsChip').textContent=pts+' POINTS';if($('msmiLeaderboardSolved'))$('msmiLeaderboardSolved').textContent=String(solved);return {pts,solved};}catch(e){return result;}};
+ document.addEventListener('click',ev=>{if(ev.target.closest('[data-open-page="v2Profile"]')||ev.target.closest('#featureSidebarNav a[href="#v2Profile"]'))setTimeout(()=>loadScoreHistory().catch(console.warn),250);});
+ const oldApplyAdminVisibility=applyAdminVisibility;
+ applyAdminVisibility=function(){oldApplyAdminVisibility();adminPageGuard();};
 
-<script id="msmi-admin-console-navigation-fix">
-/*
- * MSMI V15 Admin Console navigation repair.
- * This is a UI/navigation fix; all privileged database actions must still
- * be protected by Supabase RLS / the Edge Function.
- */
-(() => {
-  const ADMIN_EMAIL = "shekmohammedirfan412@gmail.com";
-  const panel = document.getElementById("adminPanel");
-  const nav = document.getElementById("adminNavItem");
-  const quickTile = document.getElementById("overviewAdminQuick");
-  const sidebar = document.getElementById("featureSidebarNav");
-
-  const isAdminUser = user =>
-    !!user && String(user.email || "").trim().toLowerCase() === ADMIN_EMAIL;
-
-  function showAdminPage() {
-    if (!panel) return;
-    panel.classList.remove("hidden");
-    document.querySelectorAll("#dashboardView .portal-page").forEach(page => {
-      page.classList.toggle("portal-page-active", page === panel);
-    });
-    sidebar?.querySelectorAll("a.sidebar-link").forEach(link => {
-      link.classList.toggle("active", link === nav);
-    });
-    panel.scrollIntoView({ behavior: "smooth", block: "start" });
-
-    // Refresh the existing admin data and Skill Lab problem list when possible.
-    document.getElementById("refreshAdminAllBtn")?.click();
-    window.MSMI_V15?.loadAdminProblems?.();
-  }
-
-  async function authorizeAndOpen(event) {
-    const trigger = event.target.closest(
-      '#adminNavItem, [data-open-page="adminPanel"], #overviewAdminQuick'
-    );
-    if (!trigger) return;
-
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-
-    try {
-      if (!window.supabase || typeof supabaseClient === "undefined" || !supabaseClient) {
-        throw new Error("Supabase is not configured. Please reload the portal.");
-      }
-      const { data, error } = await supabaseClient.auth.getUser();
-      if (error) throw error;
-      if (!isAdminUser(data?.user)) {
-        panel?.classList.add("hidden");
-        nav?.classList.add("hidden");
-        quickTile?.classList.add("hidden");
-        alert("Administrator access required.");
-        return;
-      }
-
-      // Restore the admin-only navigation elements for the verified admin.
-      panel?.classList.remove("hidden");
-      nav?.classList.remove("hidden");
-      quickTile?.classList.remove("hidden");
-      showAdminPage();
-    } catch (error) {
-      console.error("MSMI Admin Console:", error);
-      alert(error?.message || "Could not open Admin Console. Please sign in again.");
-    }
-  }
-
-  // Capture the click before older page-navigation handlers. This prevents
-  // the old hidden-class check from silently swallowing the Admin Console click.
-  document.addEventListener("click", authorizeAndOpen, true);
-
-  // Keep the admin-only items correct when the authentication state changes.
-  if (typeof supabaseClient !== "undefined" && supabaseClient?.auth) {
-    supabaseClient.auth.onAuthStateChange((_event, session) => {
-      const allowed = isAdminUser(session?.user);
-      panel?.classList.toggle("hidden", !allowed);
-      nav?.classList.toggle("hidden", !allowed);
-      quickTile?.classList.toggle("hidden", !allowed);
-      if (!allowed && panel?.classList.contains("portal-page-active")) {
-        document.getElementById("overviewPage")?.classList.add("portal-page-active");
-        panel.classList.remove("portal-page-active");
-      }
-    });
-  }
+ window.MSMI_V15={loadPublicNotes,loadSavedCode,loadChallenges,loadLeaderboard,refreshScores,loadScoreHistory,loadAdminPointsMembers};
 })();
 </script>
 
