@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSMI AI - Advanced Intelligence Studio v4.1</title>
+    <title>MSMI AI - Advanced Intelligence Studio</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -15,7 +15,7 @@
     <!-- Highlight.js for Code Highlighting -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <!-- KaTeX for Math Rendering -->
+    <!-- KaTeX for High-Speed Math Rendering -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
@@ -53,13 +53,33 @@
             0%, 100% { box-shadow: 0 0 15px rgba(220, 38, 38, 0.2); }
             50% { box-shadow: 0 0 30px rgba(220, 38, 38, 0.5); }
         }
-        .animate-glow { animation: pulseGlow 3s infinite ease-in-out; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #f8fafc; }
-        ::-webkit-scrollbar-thumb { background: #fca5a5; border-radius: 9999px; }
-        ::-webkit-scrollbar-thumb:hover { background: #dc2626; }
+
+        .animate-glow {
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fca5a5;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #dc2626;
+        }
+
         .markdown-body p { margin-bottom: 0.85rem; line-height: 1.65; }
-        .markdown-body h1, .markdown-body h2, .markdown-body h3 { font-weight: 700; margin-top: 1.2rem; margin-bottom: 0.6rem; color: #991b1b; }
+        .markdown-body h1, .markdown-body h2, .markdown-body h3 { 
+            font-weight: 700; 
+            margin-top: 1.2rem; 
+            margin-bottom: 0.6rem; 
+            color: #991b1b; 
+        }
         .markdown-body h1 { font-size: 1.5rem; border-bottom: 2px solid #fee2e2; padding-bottom: 0.3rem; }
         .markdown-body h2 { font-size: 1.25rem; }
         .markdown-body h3 { font-size: 1.1rem; }
@@ -69,7 +89,16 @@
         .markdown-body th, .markdown-body td { border: 1px solid #fecdd3; padding: 0.5rem 0.8rem; text-align: left; }
         .markdown-body th { background-color: #fff1f2; font-weight: 600; color: #991b1b; }
         .markdown-body blockquote { border-left: 4px solid #dc2626; padding-left: 1rem; color: #4b5563; font-style: italic; background: #fff1f2; margin: 0.8rem 0; padding-top: 0.4rem; padding-bottom: 0.4rem; border-radius: 0 0.375rem 0.375rem 0; }
-        .streaming-cursor::after { content: '❚'; display: inline-block; margin-left: 2px; color: #dc2626; animation: blink 0.8s infinite; }
+
+        .katex-display { margin: 0.8em 0; overflow-x: auto; overflow-y: hidden; padding: 0.4rem 0; }
+        
+        .streaming-cursor::after {
+            content: '❚';
+            display: inline-block;
+            margin-left: 2px;
+            color: #dc2626;
+            animation: blink 0.8s infinite;
+        }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     </style>
 </head>
@@ -84,31 +113,25 @@
             <div>
                 <div class="flex items-center space-x-2">
                     <h1 class="font-extrabold text-xl tracking-tight text-slate-900">MSMI <span class="text-brand-600">AI</span></h1>
-                    <span class="px-2 py-0.5 text-xs font-semibold bg-red-100 text-brand-700 rounded-full border border-red-200">v4.1 GitHub Optimized</span>
+                    <span class="px-2 py-0.5 text-xs font-semibold bg-red-100 text-brand-700 rounded-full border border-red-200">v3.8 Ultra</span>
                 </div>
-                <p class="text-xs text-slate-500 hidden sm:block">Smart Programming, File/Vision Analysis, Image Generation & Google Images</p>
+                <p class="text-xs text-slate-500 hidden sm:block">Smart Programming & General Reasoning Studio</p>
             </div>
         </div>
 
         <!-- Action Controls -->
         <div class="flex items-center space-x-2 sm:space-x-3">
-            <!-- Image Gen Modal Trigger -->
-            <button id="openImageGenBtn" title="AI Image Studio" class="flex items-center space-x-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-brand-700 border border-red-200 rounded-lg font-medium text-xs sm:text-sm transition-all">
-                <i class="fa-solid fa-wand-magic-sparkles text-brand-600"></i>
-                <span class="hidden md:inline">Image Studio</span>
-            </button>
-
             <!-- Clear Chat Button -->
             <button id="clearChatBtn" title="Clear Conversation" class="p-2 text-slate-500 hover:text-brand-600 hover:bg-red-50 rounded-lg transition-colors duration-200">
                 <i class="fa-solid fa-trash-can text-lg"></i>
             </button>
 
-            <!-- Mode Selector -->
+            <!-- System Prompt / Reasoning Presets -->
             <select id="modePreset" class="text-xs sm:text-sm bg-slate-100 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium text-slate-700 focus:outline-none focus:border-brand-500 transition-all">
                 <option value="programming">💻 Smart Programming</option>
                 <option value="general">🧠 General Questions</option>
-                <option value="analysis">🔍 File & Vision Analysis</option>
                 <option value="math">🧮 Math & Science Expert</option>
+                <option value="concise">⚡ Ultra Fast & Concise</option>
             </select>
 
             <!-- Settings Button -->
@@ -122,12 +145,12 @@
     <!-- Main Workspace Area -->
     <div class="flex-1 flex overflow-hidden relative">
 
-        <!-- Sidebar (Quick Prompts & History) -->
+        <!-- Sidebar (History & Quick Prompts) -->
         <aside id="sidebar" class="w-72 bg-white border-r border-slate-200 flex flex-col transition-all duration-300 transform -translate-x-full md:translate-x-0 absolute md:relative z-10 h-full">
             <div class="p-4 border-b border-slate-100 flex justify-between items-center">
-                <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Advanced Workspaces</span>
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Quick Templates</span>
                 <button id="newChatBtn" class="text-xs font-semibold text-brand-600 hover:text-brand-800 flex items-center gap-1">
-                    <i class="fa-solid fa-plus"></i> New Chat
+                    <i class="fa-solid fa-plus"></i> New Prompt
                 </button>
             </div>
             
@@ -135,41 +158,41 @@
                 <div class="text-xs font-semibold text-slate-500 px-2 py-1">Smart Programming</div>
                 <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
                     <i class="fa-code text-brand-500"></i>
-                    Build Full-Stack Node.js REST API
+                    Write Clean Asynchronous API in Node.js
                 </button>
                 <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
                     <i class="fa-solid fa-microchip text-brand-500"></i>
-                    Optimize React App Performance & State
+                    Optimize C++ Memory & Data Structures
                 </button>
 
-                <div class="text-xs font-semibold text-slate-500 px-2 py-1 mt-4">File & Vision Analysis</div>
+                <div class="text-xs font-semibold text-slate-500 px-2 py-1 mt-4">General Questions & Reasoning</div>
                 <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
-                    <i class="fa-solid fa-file-arrow-up text-brand-500"></i>
-                    Analyze Uploaded Code / CSV Data
+                    <i class="fa-solid fa-brain text-brand-500"></i>
+                    Explain Quantum Computing Principles
                 </button>
                 <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
-                    <i class="fa-solid fa-image text-brand-500"></i>
-                    Inspect UI Design Screenshot
+                    <i class="fa-solid fa-chart-line text-brand-500"></i>
+                    Analyze System Architecture Scalability
                 </button>
 
-                <div class="text-xs font-semibold text-slate-500 px-2 py-1 mt-4">Image Generation & Search</div>
-                <button id="quickGenModalBtn" class="w-full text-left p-2.5 rounded-lg text-xs bg-red-50 hover:bg-red-100 text-brand-700 border border-red-200 transition-colors font-medium flex items-center gap-2">
-                    <i class="fa-solid fa-wand-magic-sparkles text-brand-600"></i>
-                    Open AI Image Generator
+                <div class="text-xs font-semibold text-slate-500 px-2 py-1 mt-4">Mathematics & Logic</div>
+                <button class="preset-prompt w-full text-left p-2.5 rounded-lg text-xs bg-slate-50 hover:bg-red-50 hover:text-brand-700 border border-slate-100 transition-colors text-slate-700 font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-square-root-variable text-brand-500"></i>
+                    Solve Matrix Eigenvalues & Eigenvectors
                 </button>
             </div>
 
             <div class="p-3 border-t border-slate-100 bg-slate-50">
                 <div class="flex items-center justify-between text-xs text-slate-500">
                     <span class="flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Gemini 3 Flash Active
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Engine Ready
                     </span>
-                    <span id="keyStatusBadge" class="text-brand-600 font-medium">Key Missing</span>
+                    <span id="keyStatusBadge" class="text-emerald-600 font-medium">Key Active</span>
                 </div>
             </div>
         </aside>
 
-        <!-- Mobile Sidebar Toggle -->
+        <!-- Sidebar Toggle Overlay (Mobile) -->
         <button id="mobileSidebarToggle" class="md:hidden absolute bottom-20 right-4 z-30 w-12 h-12 bg-brand-600 text-white rounded-full shadow-lg flex items-center justify-center focus:outline-none">
             <i class="fa-solid fa-bars text-lg"></i>
         </button>
@@ -179,43 +202,35 @@
             <!-- Messages Container -->
             <div id="chatMessages" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
 
-                <!-- Welcome Banner -->
+                <!-- Welcome Card -->
                 <div id="welcomeBanner" class="max-w-2xl mx-auto my-8 p-6 rounded-2xl bg-gradient-to-b from-red-50 to-white border border-red-100 text-center shadow-sm">
                     <div class="w-16 h-16 bg-brand-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-black shadow-glow-red animate-glow">
                         MSMI
                     </div>
-                    <h2 class="text-2xl font-extrabold text-slate-900 mb-2">Welcome to MSMI AI Advanced v4.1</h2>
-                    <p class="text-sm text-slate-600 mb-4 leading-relaxed">
-                        GitHub Pages Ready! If this is your first time loading on GitHub, click <b>API Settings</b> below to enter your Gemini API key (since local storage is domain-isolated).
+                    <h2 class="text-2xl font-extrabold text-slate-900 mb-2">Welcome to MSMI AI</h2>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        An ultra-responsive AI agent tailored for smart programming, general questions, complex mathematical calculations, and deep logical analysis. Powered by Gemini 3 Flash Preview.
                     </p>
-                    <div class="mb-6">
-                        <button id="bannerSettingsBtn" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-xl shadow-md transition-all">
-                            <i class="fa-solid fa-key mr-1.5"></i> Configure API Key Now
-                        </button>
-                    </div>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
                         <div class="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
                             <i class="fa-solid fa-code text-brand-600 mb-1 text-base"></i>
                             <h3 class="text-xs font-bold text-slate-800">Smart Programming</h3>
-                            <p class="text-xs text-slate-500">Production-grade architecture & algorithms.</p>
+                            <p class="text-xs text-slate-500">Production-grade code & architecture.</p>
                         </div>
                         <div class="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
-                            <i class="fa-solid fa-file-arrow-up text-brand-600 mb-1 text-base"></i>
-                            <h3 class="text-xs font-bold text-slate-800">File & Vision Upload</h3>
-                            <p class="text-xs text-slate-500">Analyze images, PDFs, code, and datasets.</p>
+                            <i class="fa-solid fa-brain text-brand-600 mb-1 text-base"></i>
+                            <h3 class="text-xs font-bold text-slate-800">General Questions</h3>
+                            <p class="text-xs text-slate-500">Comprehensive answers & insights.</p>
                         </div>
                         <div class="p-3 bg-white rounded-xl border border-red-100 shadow-xs">
-                            <i class="fa-solid fa-images text-brand-600 mb-1 text-base"></i>
-                            <h3 class="text-xs font-bold text-slate-800">Image Gen & Search</h3>
-                            <p class="text-xs text-slate-500">Generate art & fetch related Google images.</p>
+                            <i class="fa-solid fa-bolt text-brand-600 mb-1 text-base"></i>
+                            <h3 class="text-xs font-bold text-slate-800">Gemini 3 Flash</h3>
+                            <p class="text-xs text-slate-500">Ultra-fast low latency inference.</p>
                         </div>
                     </div>
                 </div>
 
             </div>
-
-            <!-- Attached Files Preview Bar -->
-            <div id="attachmentPreviewContainer" class="px-4 pt-2 hidden flex flex-wrap gap-2 max-w-4xl mx-auto w-full"></div>
 
             <!-- Input Controls Area -->
             <div class="border-t border-slate-100 p-3 sm:p-4 bg-white">
@@ -224,17 +239,9 @@
                     <!-- Prompt Textarea Wrapper -->
                     <div class="relative flex items-end bg-slate-50 border border-slate-200 rounded-2xl shadow-sm focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-red-100 transition-all">
                         
-                        <!-- Hidden File Input -->
-                        <input type="file" id="fileInput" multiple class="hidden" accept="image/*,.pdf,.txt,.md,.json,.js,.py,.html,.css,.csv,.xml">
-
-                        <textarea id="userInput" rows="1" placeholder="Ask MSMI AI anything, upload files/images, or request image generation..." 
-                            class="w-full pl-12 pr-28 py-3.5 bg-transparent resize-none text-slate-800 text-sm focus:outline-none max-h-48 overflow-y-auto font-sans"></textarea>
+                        <textarea id="userInput" rows="1" placeholder="Ask MSMI AI anything (e.g. general questions, write smart programming code)..." 
+                            class="w-full pl-4 pr-24 py-3.5 bg-transparent resize-none text-slate-800 text-sm focus:outline-none max-h-48 overflow-y-auto font-sans"></textarea>
                         
-                        <!-- Attach File Button -->
-                        <button id="attachBtn" title="Upload File or Image" class="absolute left-3 bottom-3 p-2 text-slate-400 hover:text-brand-600 hover:bg-white rounded-xl transition-all">
-                            <i class="fa-solid fa-paperclip text-base"></i>
-                        </button>
-
                         <div class="absolute right-2 bottom-2 flex items-center space-x-1.5 pb-0.5">
                             <!-- Voice Input Button -->
                             <button id="voiceBtn" title="Voice Input" class="p-2 text-slate-400 hover:text-brand-600 hover:bg-white rounded-xl transition-all">
@@ -255,64 +262,6 @@
                 </div>
             </div>
         </main>
-    </div>
-
-    <!-- AI Image Generation Studio Modal -->
-    <div id="imageGenModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-red-100 transform scale-95 transition-transform duration-200">
-            <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
-                <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 rounded-lg bg-red-100 text-brand-700 flex items-center justify-center font-bold">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    </div>
-                    <h3 class="font-bold text-lg text-slate-900">AI Image Creation Studio</h3>
-                </div>
-                <button id="closeImageGenModal" class="text-slate-400 hover:text-slate-600 p-1">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Image Prompt Description</label>
-                    <textarea id="imagePromptInput" rows="3" placeholder="e.g. futuristic cyberpunk cityscape with neon red lighting, highly detailed..." class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-red-100"></textarea>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Aspect Ratio</label>
-                        <select id="imageAspectSelect" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-brand-500">
-                            <option value="1:1">1:1 Square</option>
-                            <option value="16:9">16:9 Landscape</option>
-                            <option value="9:16">9:16 Portrait</option>
-                            <option value="4:3">4:3 Standard</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Style / Quality</label>
-                        <select id="imageStyleSelect" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-brand-500">
-                            <option value="photorealistic">Photorealistic</option>
-                            <option value="digital-art">Digital Art / Cyberpunk</option>
-                            <option value="oil-painting">Oil Painting</option>
-                            <option value="anime">Anime / Concept Sketch</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="imageGenPreviewContainer" class="hidden mt-4 text-center">
-                    <div class="inline-block p-2 bg-slate-50 border border-slate-200 rounded-xl">
-                        <img id="generatedImageResult" src="" alt="Generated AI Art" class="max-h-64 rounded-lg shadow-md mx-auto">
-                        <p id="generatedImageCaption" class="text-xs text-slate-500 mt-2 font-mono"></p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-6 flex justify-end space-x-2 border-t border-slate-100 pt-4">
-                <button id="generateImageSubmitBtn" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl text-sm shadow-md transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-sparkles"></i> Generate Image Now
-                </button>
-            </div>
-        </div>
     </div>
 
     <!-- API Settings Modal -->
@@ -339,13 +288,13 @@
                             <i class="fa-solid fa-eye"></i>
                         </button>
                     </div>
-                    <p class="text-xs text-slate-500 mt-1">Stored securely in local browser storage for GitHub Pages.</p>
+                    <p class="text-xs text-slate-500 mt-1">Your API Key is kept in local browser memory and never displayed publicly.</p>
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Model Selection</label>
                     <select id="modelSelect" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-brand-500 font-medium">
-                        <option value="gemini-3-flash-preview">gemini-3-flash-preview (Latest Vision & Code Engine)</option>
+                        <option value="gemini-3-flash-preview">gemini-3-flash-preview (Latest Engine)</option>
                         <option value="gemini-2.5-flash">gemini-2.5-flash (Ultra Fast & Precise)</option>
                     </select>
                 </div>
@@ -356,6 +305,7 @@
                         <input type="range" id="tempInput" min="0" max="1" step="0.1" value="0.3" class="w-full accent-brand-600">
                         <span id="tempVal" class="text-xs font-mono font-bold text-brand-700 min-w-[2rem]">0.3</span>
                     </div>
+                    <p class="text-xs text-slate-400">Balanced values provide optimal reasoning and programming assistance.</p>
                 </div>
             </div>
 
@@ -369,7 +319,13 @@
 
     <!-- JavaScript Application Core Logic -->
     <script>
-        const DEFAULT_API_KEY = "AQ.Ab8RN6JdYbnt54bWKLfkp9W5nWvAK71pQz90IrymIQWsLbV1QQABCDEFGH"; 
+        /************************************************************************
+         * MSMI AI HARDCODED API KEY PLACEHOLDER
+         * Note: Automatically truncates the last 8 characters as configured.
+         ************************************************************************/
+        const DEFAULT_API_KEY = "AQ.Ab8RN6JdYbnt54bWKLfkp9W5nWvAK71pQz90IrymIQWsLbV1QQABCDEFGHABCDEFGH"; 
+
+        // State Management with Gemini 3 Flash Preview default and stripping last 8 characters of default key if present
         const resolvedDefaultKey = (DEFAULT_API_KEY && DEFAULT_API_KEY !== "PASTE THE MSMI ANNOUCEMENT BOARD KEY") 
             ? DEFAULT_API_KEY.slice(0, -8) 
             : '';
@@ -380,10 +336,10 @@
             temperature: parseFloat(localStorage.getItem('MSMI_TEMP')) || 0.3,
             mode: 'programming',
             history: [],
-            isGenerating: false,
-            attachments: []
+            isGenerating: false
         };
 
+        // Initialize Marked.js Options
         marked.setOptions({
             highlight: function(code, lang) {
                 const language = hljs.getLanguage(lang) ? lang : 'plaintext';
@@ -392,11 +348,19 @@
             breaks: true
         });
 
+        // System Prompt Presets (Smart Programming & General Questions focused)
         const SYSTEM_PROMPTS = {
-            programming: `You are MSMI AI, an elite Smart Programming and Software Architecture assistant. Provide clean, robust production-grade code with time/space complexity analysis.`,
-            general: `You are MSMI AI, an advanced general intelligence and reasoning system. Answer accurately with clear structure.`,
-            analysis: `You are MSMI AI File and Vision Analysis Expert. Inspect uploaded documents, code files, datasets, and images with rigorous precision.`,
-            math: `You are MSMI AI, a premier mathematical computing engine using LaTeX syntax ($...$ and $$...$$).`
+            programming: `You are MSMI AI, an elite Smart Programming and Software Architecture assistant.
+- Provide clean, robust, highly optimized, and production-grade code across all languages and frameworks.
+- Explain algorithms clearly with comments and time/space complexity analysis (Big-O notation).
+- Format code blocks properly with language specifiers.`,
+            general: `You are MSMI AI, an advanced general intelligence and reasoning system.
+- Answer all general questions accurately, articulately, and comprehensively.
+- Structure information with clear headings and bullet points for maximum clarity.`,
+            math: `You are MSMI AI, a premier mathematical and analytical computing engine. 
+- Always express mathematical concepts using LaTeX syntax ($...$ for inline and $$...$$ for block equations).
+- Show step-by-step rigorous proofs, calculations, and explanations.`,
+            concise: `You are MSMI AI. Provide ultra-concise, rapid direct answers with zero filler text.`
         };
 
         // DOM Elements
@@ -404,11 +368,7 @@
         const userInput = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
         const voiceBtn = document.getElementById('voiceBtn');
-        const attachBtn = document.getElementById('attachBtn');
-        const fileInput = document.getElementById('fileInput');
-        const attachmentPreviewContainer = document.getElementById('attachmentPreviewContainer');
         const settingsBtn = document.getElementById('settingsBtn');
-        const bannerSettingsBtn = document.getElementById('bannerSettingsBtn');
         const settingsModal = document.getElementById('settingsModal');
         const closeSettingsBtn = document.getElementById('closeSettingsBtn');
         const saveSettingsBtn = document.getElementById('saveSettingsBtn');
@@ -424,19 +384,7 @@
         const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
         const sidebar = document.getElementById('sidebar');
 
-        // Image Gen Modal Elements
-        const openImageGenBtn = document.getElementById('openImageGenBtn');
-        const quickGenModalBtn = document.getElementById('quickGenModalBtn');
-        const imageGenModal = document.getElementById('imageGenModal');
-        const closeImageGenModal = document.getElementById('closeImageGenModal');
-        const generateImageSubmitBtn = document.getElementById('generateImageSubmitBtn');
-        const imagePromptInput = document.getElementById('imagePromptInput');
-        const imageAspectSelect = document.getElementById('imageAspectSelect');
-        const imageStyleSelect = document.getElementById('imageStyleSelect');
-        const imageGenPreviewContainer = document.getElementById('imageGenPreviewContainer');
-        const generatedImageResult = document.getElementById('generatedImageResult');
-        const generatedImageCaption = document.getElementById('generatedImageCaption');
-
+        // Initialize Application
         window.addEventListener('DOMContentLoaded', () => {
             updateKeyStatusUI();
             setupEventListeners();
@@ -453,18 +401,6 @@
             }
         }
 
-        function openSettingsModal() {
-            apiKeyInput.value = localStorage.getItem('MSMI_GEMINI_KEY') || '';
-            modelSelect.value = appState.model;
-            tempInput.value = appState.temperature;
-            tempVal.textContent = appState.temperature;
-            settingsModal.classList.remove('hidden');
-            setTimeout(() => {
-                settingsModal.classList.remove('opacity-0');
-                settingsModal.firstElementChild.classList.remove('scale-95');
-            }, 10);
-        }
-
         function setupEventListeners() {
             sendBtn.addEventListener('click', handleSendMessage);
             userInput.addEventListener('keydown', (e) => {
@@ -479,22 +415,18 @@
                 autoResizeTextarea();
             });
 
-            // File Attachment Handling
-            attachBtn.addEventListener('click', () => fileInput.click());
-            fileInput.addEventListener('change', handleFileSelection);
-
-            // Image Gen Modal
-            openImageGenBtn.addEventListener('click', openImageModal);
-            quickGenModalBtn.addEventListener('click', () => {
-                sidebar.classList.add('-translate-x-full');
-                openImageModal();
+            // Settings Modal Open/Close - Do NOT show the hardcoded API key in settings
+            settingsBtn.addEventListener('click', () => {
+                apiKeyInput.value = localStorage.getItem('MSMI_GEMINI_KEY') || '';
+                modelSelect.value = appState.model;
+                tempInput.value = appState.temperature;
+                tempVal.textContent = appState.temperature;
+                settingsModal.classList.remove('hidden');
+                setTimeout(() => {
+                    settingsModal.classList.remove('opacity-0');
+                    settingsModal.firstElementChild.classList.remove('scale-95');
+                }, 10);
             });
-            closeImageGenModal.addEventListener('click', closeImageModal);
-            generateImageSubmitBtn.addEventListener('click', handleGenerateImageAPI);
-
-            // Settings Modal
-            settingsBtn.addEventListener('click', openSettingsModal);
-            if (bannerSettingsBtn) bannerSettingsBtn.addEventListener('click', openSettingsModal);
 
             closeSettingsBtn.addEventListener('click', closeSettings);
 
@@ -522,8 +454,13 @@
                 closeSettings();
             });
 
-            tempInput.addEventListener('input', () => { tempVal.textContent = tempInput.value; });
-            modePreset.addEventListener('change', (e) => { appState.mode = e.target.value; });
+            tempInput.addEventListener('input', () => {
+                tempVal.textContent = tempInput.value;
+            });
+
+            modePreset.addEventListener('change', (e) => {
+                appState.mode = e.target.value;
+            });
 
             clearChatBtn.addEventListener('click', () => {
                 appState.history = [];
@@ -533,13 +470,13 @@
 
             document.querySelectorAll('.preset-prompt').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    userInput.value = btn.innerText.trim();
+                    const text = btn.innerText.trim();
+                    userInput.value = text;
                     autoResizeTextarea();
                     handleSendMessage();
                 });
             });
 
-            // Voice Recognition
             if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 const recognition = new SpeechRecognition();
@@ -547,12 +484,19 @@
                 recognition.interimResults = false;
 
                 recognition.onresult = (e) => {
-                    userInput.value += (userInput.value ? ' ' : '') + e.results[0][0].transcript;
+                    const transcript = e.results[0][0].transcript;
+                    userInput.value += (userInput.value ? ' ' : '') + transcript;
                     autoResizeTextarea();
                     voiceBtn.classList.remove('text-brand-600', 'animate-pulse');
                 };
-                recognition.onerror = () => voiceBtn.classList.remove('text-brand-600', 'animate-pulse');
-                recognition.onend = () => voiceBtn.classList.remove('text-brand-600', 'animate-pulse');
+
+                recognition.onerror = () => {
+                    voiceBtn.classList.remove('text-brand-600', 'animate-pulse');
+                };
+
+                recognition.onend = () => {
+                    voiceBtn.classList.remove('text-brand-600', 'animate-pulse');
+                };
 
                 voiceBtn.addEventListener('click', () => {
                     voiceBtn.classList.add('text-brand-600', 'animate-pulse');
@@ -562,27 +506,17 @@
                 voiceBtn.style.display = 'none';
             }
 
-            mobileSidebarToggle.addEventListener('click', () => sidebar.classList.toggle('-translate-x-full'));
+            mobileSidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
         }
 
         function closeSettings() {
             settingsModal.classList.add('opacity-0');
             settingsModal.firstElementChild.classList.add('scale-95');
-            setTimeout(() => settingsModal.classList.add('hidden'), 200);
-        }
-
-        function openImageModal() {
-            imageGenModal.classList.remove('hidden');
             setTimeout(() => {
-                imageGenModal.classList.remove('opacity-0');
-                imageGenModal.firstElementChild.classList.remove('scale-95');
-            }, 10);
-        }
-
-        function closeImageModal() {
-            imageGenModal.classList.add('opacity-0');
-            imageGenModal.firstElementChild.classList.add('scale-95');
-            setTimeout(() => imageGenModal.classList.add('hidden'), 200);
+                settingsModal.classList.add('hidden');
+            }, 200);
         }
 
         function autoResizeTextarea() {
@@ -590,114 +524,9 @@
             userInput.style.height = Math.min(userInput.scrollHeight, 192) + 'px';
         }
 
-        async function handleFileSelection(e) {
-            const files = Array.from(e.target.files);
-            for (const file of files) {
-                const reader = new FileReader();
-                if (file.type.startsWith('image/')) {
-                    reader.onload = (event) => {
-                        const base64String = event.target.result.split(',')[1];
-                        appState.attachments.push({
-                            name: file.name,
-                            type: 'image',
-                            mimeType: file.type,
-                            data: base64String,
-                            preview: event.target.result
-                        });
-                        renderAttachmentPreviews();
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    reader.onload = (event) => {
-                        appState.attachments.push({
-                            name: file.name,
-                            type: 'text',
-                            mimeType: file.type || 'text/plain',
-                            data: event.target.result,
-                            preview: null
-                        });
-                        renderAttachmentPreviews();
-                    };
-                    reader.readAsText(file);
-                }
-            }
-            fileInput.value = '';
-        }
-
-        function renderAttachmentPreviews() {
-            attachmentPreviewContainer.innerHTML = '';
-            if (appState.attachments.length > 0) {
-                attachmentPreviewContainer.classList.remove('hidden');
-                appState.attachments.forEach((att, idx) => {
-                    const chip = document.createElement('div');
-                    chip.className = 'flex items-center gap-2 bg-red-50 border border-red-200 px-3 py-1.5 rounded-xl text-xs text-brand-800 font-medium';
-                    if (att.preview) {
-                        chip.innerHTML = `<img src="${att.preview}" class="w-6 h-6 object-cover rounded"> <span>${att.name}</span> <button onclick="removeAttachment(${idx})" class="text-brand-600 hover:text-red-900 ml-1"><i class="fa-solid fa-xmark"></i></button>`;
-                    } else {
-                        chip.innerHTML = `<i class="fa-solid fa-file-lines text-brand-600"></i> <span>${att.name}</span> <button onclick="removeAttachment(${idx})" class="text-brand-600 hover:text-red-900 ml-1"><i class="fa-solid fa-xmark"></i></button>`;
-                    }
-                    attachmentPreviewContainer.appendChild(chip);
-                });
-            } else {
-                attachmentPreviewContainer.classList.add('hidden');
-            }
-        }
-
-        window.removeAttachment = function(index) {
-            appState.attachments.splice(index, 1);
-            renderAttachmentPreviews();
-        }
-
-        async function fetchRelatedImages(query) {
-            try {
-                const encoded = encodeURIComponent(query);
-                return [
-                    `https://source.unsplash.com/featured/600x400/?${encoded}`,
-                    `https://picsum.photos/seed/${encodeURIComponent(query)}/600/400`,
-                    `https://loremflickr.com/600/400/${encoded}`
-                ];
-            } catch (e) {
-                return [];
-            }
-        }
-
-        async function handleGenerateImageAPI() {
-            const prompt = imagePromptInput.value.trim();
-            if (!prompt) {
-                alert("Please enter an image prompt description.");
-                return;
-            }
-            if (!appState.apiKey) {
-                alert("Please configure your Gemini API Key in API Settings first.");
-                settingsBtn.click();
-                return;
-            }
-
-            generateImageSubmitBtn.disabled = true;
-            generateImageSubmitBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Generating AI Art...';
-
-            try {
-                const style = imageStyleSelect.value;
-                const fullPrompt = `${prompt}, ${style} style, high resolution, masterwork`;
-                const encodedPrompt = encodeURIComponent(fullPrompt);
-                const imageUrl = `https://pollinations.ai/p/${encodedPrompt}?width=1024&height=1024&nologo=true`;
-                
-                generatedImageResult.src = imageUrl;
-                generatedImageCaption.textContent = `Prompt: "${prompt}" (${style})`;
-                imageGenPreviewContainer.classList.remove('hidden');
-
-                appendImageMessage(prompt, imageUrl);
-            } catch (err) {
-                alert("Image generation failed: " + err.message);
-            } finally {
-                generateImageSubmitBtn.disabled = false;
-                generateImageSubmitBtn.innerHTML = '<i class="fa-solid fa-sparkles"></i> Generate Image Now';
-            }
-        }
-
         async function handleSendMessage() {
             const text = userInput.value.trim();
-            if ((!text && appState.attachments.length === 0) || appState.isGenerating) return;
+            if (!text || appState.isGenerating) return;
 
             if (!appState.apiKey) {
                 alert("Please click on 'API Settings' to enter your Google Gemini API Key.");
@@ -705,35 +534,15 @@
                 return;
             }
 
-            if (welcomeBanner && welcomeBanner.parentNode) welcomeBanner.remove();
+            if (welcomeBanner && welcomeBanner.parentNode) {
+                welcomeBanner.remove();
+            }
 
-            const parts = [];
-            if (text) parts.push({ text: text });
-
-            const currentAttachments = [...appState.attachments];
-            currentAttachments.forEach(att => {
-                if (att.type === 'image') {
-                    parts.push({
-                        inlineData: {
-                            mimeType: att.mimeType,
-                            data: att.data
-                        }
-                    });
-                } else {
-                    parts.push({
-                        text: `\n[Attached File: ${att.name}]\n\`\`\`\n${att.data}\n\`\`\`\n`
-                    });
-                }
-            });
-
-            appendMessage('user', text, currentAttachments);
-
+            appendMessage('user', text);
             userInput.value = '';
-            appState.attachments = [];
-            renderAttachmentPreviews();
             autoResizeTextarea();
 
-            const botMessageEl = appendMessage('assistant', '', []);
+            const botMessageEl = appendMessage('assistant', '');
             const contentDiv = botMessageEl.querySelector('.markdown-body');
             contentDiv.classList.add('streaming-cursor');
 
@@ -744,9 +553,9 @@
                 const payloadContents = [
                     ...appState.history.map(msg => ({
                         role: msg.role === 'user' ? 'user' : 'model',
-                        parts: typeof msg.content === 'string' ? [{ text: msg.content }] : msg.parts
+                        parts: [{ text: msg.content }]
                     })),
-                    { role: 'user', parts: parts }
+                    { role: 'user', parts: [{ text: text }] }
                 ];
 
                 const systemInstructionText = SYSTEM_PROMPTS[appState.mode] || SYSTEM_PROMPTS.programming;
@@ -758,13 +567,15 @@
                     body: JSON.stringify({
                         contents: payloadContents,
                         systemInstruction: { parts: [{ text: systemInstructionText }] },
-                        generationConfig: { temperature: appState.temperature }
+                        generationConfig: {
+                            temperature: appState.temperature,
+                        }
                     })
                 });
 
                 if (!response.ok) {
                     const errData = await response.json().catch(() => ({}));
-                    throw new Error(errData.error?.message || `API Error: ${response.status}. Note: If hosted on GitHub Pages, ensure your API key allows your GitHub domain in Google AI Studio referrer settings.`);
+                    throw new Error(errData.error?.message || `API Error: ${response.status}`);
                 }
 
                 const reader = response.body.getReader();
@@ -806,23 +617,8 @@
                 }
 
                 contentDiv.classList.remove('streaming-cursor');
-
-                if (text.toLowerCase().includes('image') || text.toLowerCase().includes('photo') || text.toLowerCase().includes('show') || text.toLowerCase().includes('visualize') || text.toLowerCase().includes('example')) {
-                    const images = await fetchRelatedImages(text);
-                    if (images.length > 0) {
-                        const imgGalleryDiv = document.createElement('div');
-                        imgGalleryDiv.className = 'mt-4 pt-3 border-t border-red-100';
-                        imgGalleryDiv.innerHTML = `
-                            <p class="text-xs font-bold text-brand-700 uppercase tracking-wider mb-2"><i class="fa-solid fa-images mr-1"></i> Related Google Images & Visual References</p>
-                            <div class="grid grid-cols-3 gap-2">
-                                ${images.map(img => `<a href="${img}" target="_blank" class="block rounded-lg overflow-hidden border border-slate-200 hover:shadow-md transition-all"><img src="${img}" class="w-full h-28 object-cover hover:scale-105 transition-transform" alt="Related Image"></a>`).join('')}
-                            </div>
-                        `;
-                        botMessageEl.querySelector('.bg-slate-50').appendChild(imgGalleryDiv);
-                    }
-                }
-
-                appState.history.push({ role: 'user', parts: parts });
+                
+                appState.history.push({ role: 'user', content: text });
                 appState.history.push({ role: 'assistant', content: fullResponseText });
 
                 attachCopyButtons(botMessageEl);
@@ -838,28 +634,14 @@
             }
         }
 
-        function appendMessage(role, content, attachments = []) {
+        function appendMessage(role, content) {
             const wrapper = document.createElement('div');
             wrapper.className = `flex gap-3 max-w-4xl mx-auto ${role === 'user' ? 'justify-end' : 'justify-start'}`;
-
-            let attachmentsHtml = '';
-            if (attachments && attachments.length > 0) {
-                attachmentsHtml = '<div class="flex flex-wrap gap-2 mt-2">';
-                attachments.forEach(att => {
-                    if (att.preview) {
-                        attachmentsHtml += `<img src="${att.preview}" class="w-20 h-20 object-cover rounded-lg border border-red-200">`;
-                    } else {
-                        attachmentsHtml += `<div class="bg-red-700 text-white px-2.5 py-1 rounded-lg text-xs font-mono"><i class="fa-solid fa-file-lines mr-1"></i> ${att.name}</div>`;
-                    }
-                });
-                attachmentsHtml += '</div>';
-            }
 
             if (role === 'user') {
                 wrapper.innerHTML = `
                     <div class="max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 bg-brand-600 text-white shadow-sm font-sans text-sm">
                         ${escapeHtml(content).replace(/\n/g, '<br>')}
-                        ${attachmentsHtml}
                     </div>
                     <div class="w-8 h-8 rounded-xl bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs flex-shrink-0">
                         You
@@ -881,29 +663,12 @@
             return wrapper;
         }
 
-        function appendImageMessage(prompt, imageUrl) {
-            const wrapper = document.createElement('div');
-            wrapper.className = `flex gap-3 max-w-4xl mx-auto justify-start`;
-            wrapper.innerHTML = `
-                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-700 to-brand-500 text-white flex items-center justify-center font-black text-xs shadow-glow-red flex-shrink-0 mt-1">
-                    M
-                </div>
-                <div class="max-w-[85%] sm:max-w-[85%] bg-slate-50 border border-red-50 rounded-2xl px-5 py-4 text-slate-800 shadow-sm">
-                    <p class="text-xs font-bold text-brand-700 uppercase tracking-wider mb-2"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Generated AI Art: "${escapeHtml(prompt)}"</p>
-                    <img src="${imageUrl}" class="rounded-xl shadow-md max-h-80 mx-auto mb-2" alt="Generated Image">
-                    <a href="${imageUrl}" target="_blank" class="text-xs text-brand-600 hover:underline font-semibold"><i class="fa-solid fa-download mr-1"></i> Open Full Resolution Image</a>
-                </div>
-            `;
-            chatMessages.appendChild(wrapper);
-            scrollToBottom();
-        }
-
         function scrollToBottom() {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         function escapeHtml(str) {
-            return str ? str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : '';
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
 
         function attachCopyButtons(container) {
@@ -919,7 +684,9 @@
                     const code = pre.querySelector('code')?.innerText || pre.innerText;
                     navigator.clipboard.writeText(code).then(() => {
                         button.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> Copied!';
-                        setTimeout(() => button.innerHTML = '<i class="fa-regular fa-copy"></i> Copy', 2000);
+                        setTimeout(() => {
+                            button.innerHTML = '<i class="fa-regular fa-copy"></i> Copy';
+                        }, 2000);
                     });
                 });
                 pre.appendChild(button);
